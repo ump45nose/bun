@@ -38,6 +38,7 @@
 
 extern "C" void Bun__NodeHTTP__onReadsResumable(int ssl, struct us_socket_t *s);
 extern "C" void Bun__NodeHTTP__onReadParsed(int ssl, struct us_socket_t *s);
+extern "C" void Bun__NodeHTTP__halfCloseAfterDrain(int ssl, struct us_socket_t *s);
 
 namespace uWS {
 
@@ -245,6 +246,12 @@ private:
         us_socket_close(s, LIBUS_SOCKET_CLOSE_CODE_FAST_SHUTDOWN, nullptr);
     }
 
+    /* node:http socket.end() behind queued bytes (HTTP_NODE_SHUTDOWN_AFTER_DRAIN) sends its FIN when they are out and leaves the reads as they were.
+     * Call it under `if constexpr (IsNodeHttp)` only: a call in the Bun.serve handlers changes the code the compiler emits for them. */
+    static bool readsBehindDeferredFin(HttpResponseData<SSL> *httpResponseData) {
+        return (httpResponseData->state & HttpResponseData<SSL>::HTTP_NODE_SHUTDOWN_AFTER_DRAIN) != 0;
+    }
+
     template <bool IsNodeHttp>
     static us_socket_t *onClose(us_socket_t *s, int code, void * /*reason*/) {
         ((AsyncSocket<SSL> *)s)->uncorkWithoutSending();
@@ -333,10 +340,14 @@ private:
         bool isHalfOpenTunnel = false;
         if constexpr (IsNodeHttp) isHalfOpenTunnel = httpResponseData->isConnectRequest;
         if (us_socket_is_shut_down((us_socket_t *) s) && !isHalfOpenTunnel) {
-            /* Balance the us_socket_ref above — every other return path
-             * reaches the unref via returnedData. */
-            us_socket_unref(s);
-            return s;
+            bool stillReads = false;
+            if constexpr (IsNodeHttp) stillReads = readsBehindDeferredFin(httpResponseData);
+            if (!stillReads) {
+                /* Balance the us_socket_ref above — every other return path
+                 * reaches the unref via returnedData. */
+                us_socket_unref(s);
+                return s;
+            }
         }
 
         /* HTTP/2: a cleartext connection that opens with the prior-knowledge
@@ -595,7 +606,11 @@ private:
 
             /* We absolutely have to terminate parsing if shutdown */
             if (us_socket_is_shut_down((us_socket_t *) s)) {
-                return nullptr;
+                bool stillReads = false;
+                if constexpr (IsNodeHttp) stillReads = readsBehindDeferredFin(httpResponseData);
+                if (!stillReads) {
+                    return nullptr;
+                }
             }
 
             /* node:http compat: the pipelined-dispatch marker is only meaningful
@@ -687,7 +702,11 @@ private:
 
                 /* We absolutely have to terminate parsing if shutdown */
                 if (us_socket_is_shut_down((us_socket_t *) user)) {
-                    return nullptr;
+                    bool stillReads = false;
+                    if constexpr (IsNodeHttp) stillReads = readsBehindDeferredFin(httpResponseData);
+                    if (!stillReads) {
+                        return nullptr;
+                    }
                 }
 
                 /* If we were given the last data chunk, reset data handler to ensure following
@@ -989,6 +1008,17 @@ private:
                  * not the response in flight ever ends. */
                 if (httpResponseData->state & HttpResponseData<SSL>::HTTP_NODE_CLOSE_AFTER_DRAIN) {
                     responseDone = true;
+                }
+                /* socket.end() issued while bytes were queued: Node half-closes
+                 * once they are out, whether or not the response in flight
+                 * ever ends, and keeps the socket until the peer's FIN. */
+                if (!responseDone
+                    && (httpResponseData->state & HttpResponseData<SSL>::HTTP_NODE_SHUTDOWN_AFTER_DRAIN)
+                    && httpResponseData->onWritable == nullptr
+                    && !us_socket_is_shut_down(s)
+                    && asyncSocket->hasFullyDrained()) {
+                    Bun__NodeHTTP__halfCloseAfterDrain(SSL, s);
+                    return s;
                 }
             }
             if (responseDone && asyncSocket->hasFullyDrained()) {
