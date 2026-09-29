@@ -12,17 +12,25 @@ import { type Diagnostic, type InputFile, toWriterInput } from "../../error-base
 import type { Check, CheckContext, CheckDiagnostics, CheckFailure, CheckInput, CheckOutput } from "./check";
 import { failure } from "./check";
 
-// Strongest first. "whole": the whole baseline. "top": its first section. Both: the run had the options of the
-// instance and reported its stand-ins. "loose": the first section, from a run that had not or did not.
-export type Level = "whole" | "top" | "loose";
-export const levels: readonly Level[] = ["whole", "top", "loose"];
+// Strongest first. "baseline": every byte of the baseline. "first-section": the baseline starts with the first
+// section of the run. The level of a result follows from what the result holds, before anything is compared.
+export type Level = "baseline" | "first-section";
+export const levels: readonly Level[] = ["baseline", "first-section"];
 
 export function atLeast(level: Level, wanted: Level): boolean {
   return levels.indexOf(level) <= levels.indexOf(wanted);
 }
 
 export type Kind = "E" | "C";
-export type Status = "pass" | "fail" | "provisional" | "failure";
+// "unsupported": the check could not run the instance as it is, for one: it could not hand its options over.
+export type Status = "pass" | "fail" | "provisional" | "error" | "unsupported";
+
+// The first section of a run that did not have the options of the instance. It is a report and never a pass.
+export interface Loose {
+  equal: boolean;
+  reason: string;
+  diff?: string;
+}
 
 export type Oracle = { kind: "E"; bytes: Uint8Array; path: string } | { kind: "C" };
 
@@ -31,12 +39,13 @@ export interface RunResult {
   suite: string;
   kind: Kind;
   status: Status;
-  // The level of the comparison. Absent for a failure.
+  // The level of the comparison. Absent when nothing was compared.
   level?: Level;
   reason: string;
   diff?: string;
   failure?: CheckFailure;
   standIns?: string[];
+  loose?: Loose;
   // True: the diagnostics of the checker are equal and diagnostics of rules are the only difference.
   onlyRules?: boolean;
   ignoredRuleDiagnostics?: number;
@@ -70,8 +79,7 @@ function unitNames(input: CheckInput): Set<string> {
 }
 
 export function levelOf(out: CheckDiagnostics, pretty: boolean, units: ReadonlySet<string>): Level {
-  if (out.configured !== true || out.standIns === undefined) return "loose";
-  return out.diagnostics.every(d => spansKnown(d, pretty, units)) ? "whole" : "top";
+  return out.diagnostics.every(d => spansKnown(d, pretty, units)) ? "baseline" : "first-section";
 }
 
 // Path and start, and nothing that a run without spans does not know: the order of the input decides a tie.
@@ -134,13 +142,31 @@ export function diffLines(expected: string, actual: string, context = 3, most = 
   return out.join("\n");
 }
 
-export function compare(input: CheckInput, oracle: Oracle, out: CheckOutput): RunResult {
+export function compare(input: CheckInput, oracle: Oracle, out: CheckOutput, loose = false): RunResult {
   const base = { name: input.name, suite: input.suite, kind: oracle.kind };
-  if (out.kind === "failure") return { ...base, status: "failure", reason: `${out.failure}: ${out.reason}`, failure: out };
+  if (out.kind === "failure") {
+    const status: Status = out.failure === "unsupported" ? "unsupported" : "error";
+    return { ...base, status, reason: `${out.failure}: ${out.reason}`, failure: out };
+  }
+  if (out.configured !== true) {
+    const r: RunResult = { ...base, status: "unsupported", reason: "the run did not have the options of the instance" };
+    if (loose) {
+      const c = compareConfigured(input, oracle, out, "first-section");
+      r.loose = { equal: c.status === "pass", reason: c.status === "pass" ? "" : `${c.status}: ${c.reason}` };
+      if (c.diff !== undefined) r.loose.diff = c.diff;
+    }
+    return r;
+  }
+  return compareConfigured(input, oracle, out, undefined);
+}
+
+function compareConfigured(input: CheckInput, oracle: Oracle, out: CheckDiagnostics, most: Level | undefined): RunResult {
+  const base = { name: input.name, suite: input.suite, kind: oracle.kind };
   const pretty = isPretty(input);
   const units = unitNames(input);
-  const level = levelOf(out, pretty, units);
-  if (out.standIns !== undefined && out.standIns.length > 0) {
+  const own = levelOf(out, pretty, units);
+  const level = most !== undefined && atLeast(own, most) ? most : own;
+  if (out.standIns.length > 0) {
     return { ...base, status: "provisional", level, reason: `reached ${out.standIns.length} stand-ins`, standIns: out.standIns };
   }
   // error_baseline.go:44-48
@@ -172,7 +198,7 @@ export function compare(input: CheckInput, oracle: Oracle, out: CheckOutput): Ru
     return { ...base, status: "fail", level, reason: `a diagnostic has no place: ${(e as Error).message}` };
   }
   try {
-    if (level === "whole") {
+    if (level === "baseline") {
       const actual = getErrorBaseline(rules, written.files, written.diagnostics, pretty);
       if (actual.failedChecks.length > 0) {
         return { ...base, status: "fail", level, reason: `the writer: ${actual.failedChecks.join("; ")}`, diff: diffLines(expected, actual.text) };
@@ -180,7 +206,7 @@ export function compare(input: CheckInput, oracle: Oracle, out: CheckOutput): Ru
       if (actual.text === expected) return pass();
       return { ...base, status: "fail", level, reason: "the baseline differs", diff: diffLines(expected, actual.text) };
     }
-    const known = out.diagnostics.every(d => spansKnown(d, pretty, units));
+    const known = own === "baseline";
     if (pretty && !known) {
       return { ...base, status: "fail", level, reason: "the first section of a baseline in the pretty form needs spans" };
     }
@@ -202,6 +228,8 @@ function compareWhole(a: WriterDiagnostic, b: WriterDiagnostic): number {
 }
 
 export interface RunOptions {
+  // True: a run without the options of the instance is compared for the report. It stays "unsupported".
+  loose?: boolean;
   timeoutMs?: number;
   // Calls of the check at the same time.
   concurrency?: number;
@@ -233,9 +261,9 @@ export async function runInstances(inputs: readonly CheckInput[], check: Check, 
       batch.forEach((input, i) => {
         let r: RunResult;
         try {
-          r = compare(input, options.oracle(input), outs[i]);
+          r = compare(input, options.oracle(input), outs[i], options.loose === true);
         } catch (e) {
-          r = { name: input.name, suite: input.suite, kind: "E", status: "failure", reason: `the runner threw: ${String(e)}` };
+          r = { name: input.name, suite: input.suite, kind: "E", status: "error", reason: `the runner threw: ${String(e)}` };
         }
         results.set(input, r);
         options.onResult?.(r);

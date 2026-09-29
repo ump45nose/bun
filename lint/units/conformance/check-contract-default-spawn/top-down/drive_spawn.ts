@@ -15,11 +15,11 @@ const command = [process.execPath, join(import.meta.dir, "fakes", "lints.ts")];
 const env = { ...process.env } as Record<string, string | undefined>;
 const check = protocol === "manifest" ? createManifestCheck({ command, env, directory: below + "/manifests", batchSize: 64 }) : createSpawnCheck({ command, env });
 const t0 = performance.now();
-const results = await runInstances(built.inputs, check, { oracle: oracleOf, concurrency: 8, timeoutMs: 60_000 });
+const results = await runInstances(built.inputs, check, { oracle: oracleOf, concurrency: 8, timeoutMs: 60_000, loose: true });
 const ms = performance.now() - t0;
 const count: Record<string, number> = {};
 for (const r of results) {
-  const key = `${r.kind} ${r.status}${r.level !== undefined ? " at " + r.level : ""}`;
+  const key = `${r.kind} ${r.status}${r.level !== undefined ? " at " + r.level : ""}${r.loose !== undefined ? (r.loose.equal ? ", loose equal" : ", loose differs") : ""}`;
   count[key] = (count[key] ?? 0) + 1;
 }
 console.log(`${only}: ${built.inputs.length} instances, ${protocol}, ${Math.round(ms)} ms, ${(ms / built.inputs.length).toFixed(1)} ms each`);

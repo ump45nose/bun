@@ -54,10 +54,7 @@ export function plainReplayCheck(oracle: (input: CheckInput) => Oracle, configur
       toVirtual: p => (p === root ? "/" : p.startsWith(root + "/") ? (/^\/[a-z]:\//i.test(p.slice(root.length)) ? p.slice(root.length + 1) : p.slice(root.length)) : undefined),
       mapText: t => t,
     });
-    if (out.kind === "diagnostics" && configured) {
-      out.configured = true;
-      out.standIns ??= [];
-    }
+    if (out.kind === "diagnostics" && configured) out.configured = true;
     return out;
   });
 }

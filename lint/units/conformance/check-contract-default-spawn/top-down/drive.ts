@@ -20,15 +20,15 @@ const check =
   which === "replay" ? replayCheck(oracle)
   : which === "empty" ? emptyCheck()
   : plainReplayCheck(oracle, which === "plain-configured");
-const results = await runInstances(built.inputs, check, { oracle, concurrency: 1 });
+const results = await runInstances(built.inputs, check, { oracle, concurrency: 1, loose: true });
 const t2 = performance.now();
 const count: Record<string, number> = {};
 const examples: Record<string, string[]> = {};
 for (const r of results) {
-  const key = `${r.kind} ${r.status}${r.level !== undefined ? " at " + r.level : ""}`;
+  const key = `${r.kind} ${r.status}${r.level !== undefined ? " at " + r.level : ""}${r.loose !== undefined ? (r.loose.equal ? ", loose equal" : ", loose differs") : ""}`;
   count[key] = (count[key] ?? 0) + 1;
   if (r.status !== "pass") {
-    const why = `${key}: ${r.reason.replace(/\d+/g, "n").slice(0, 90)}`;
+    const why = `${key}: ${(r.loose?.reason || r.reason).replace(/\d+/g, "n").slice(0, 90)}`;
     (examples[why] ??= []).push(r.suite + "/" + r.name);
   }
 }

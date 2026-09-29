@@ -68,8 +68,8 @@ export interface CheckDiagnostics {
   // File names are virtual. A start is in UTF-8 bytes; line and character are 1-based, the character in UTF-16 units.
   diagnostics: Diagnostic[];
   rules?: RuleDiagnostic[];
-  // Names of the stand-ins that the run reached. Absent: the check cannot tell.
-  standIns?: string[];
+  // Names of the stand-ins that the run reached.
+  standIns: string[];
   // True: the run had the options of the instance. Absent or false: it had the options of the command.
   configured?: boolean;
   // Diagnostics of rules that the caller named and the check left out.
@@ -244,9 +244,8 @@ export function toCheckDiagnostics(
     if (location !== undefined) d.location = location;
     diagnostics.push(d);
   }
-  const out: CheckDiagnostics = { kind: "diagnostics", diagnostics };
+  const out: CheckDiagnostics = { kind: "diagnostics", diagnostics, standIns };
   if (rules.length > 0) out.rules = rules;
-  if (standIns.length > 0) out.standIns = standIns;
   if (ignored > 0) out.ignoredRuleDiagnostics = ignored;
   return out;
 }
