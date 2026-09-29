@@ -21,7 +21,7 @@ checker.go:25504	getEnumLiteralType	K-LIT	panic("Unhandled case in getEnumLitera
 evaluator.go:153	AnyToString	K1	panic("Unhandled case in AnyToString")	Panic for LiteralValue::Nil; return the empty text
 evaluator.go:167	IsTruthy	K1	panic("Unhandled case in IsTruthy")	Panic for LiteralValue::Nil; return false
 checker.go:25469-25482	getStringLiteralValue, getNumberLiteralValue, getBigIntLiteralValue, getBooleanLiteralValue	K-LIT	type assertion t.AsLiteralType().value.(T)	BadCast; return the empty text, 0, the zero PseudoBigInt, false
-checker.go:17969 23028 and every x.AsT() on a type of another kind	casts of types.go 705-734	all	nil dereference or failed type assertion	BadCast; the read goes to the nil section of the kind, a write goes to the scratch section (conventions: casts)
+every x.AsT() on a type of another kind	casts of types.go 705-734	all	nil dereference or failed type assertion	BadCast; the read goes to the nil section of the kind, a write goes to the scratch section (conventions: casts)
 checker.go:23770-23774	getTypeAliasInstantiation	T-TYPENODE	links.instantiations[key] = instantiation on a nil map (alias without type parameters or with a circular declared type)	NilMapWrite; the instantiation is returned uncached
 checker.go:22625	getConditionalTypeInstantiation	K-COND	root.instantiations[key] = result on a nil map (before 24416 ran)	NilMapWrite; the result is returned uncached
 checker.go:23968-23969	getDeclaredTypeOfTypeAlias	T-DECLARED	declaration.Type() when no declaration is a type alias declaration	nil node: get_type_from_type_node(NIL) gives error_type through the default arm of 23009, no fault
