@@ -39,3 +39,7 @@ START 31b-linkprobe-all 2026-09-29T18:08:43Z load=291.55 264.33 245.94 cmd: carg
 END   32-psize rc=0 wall=95s lockwait=55s run=40s 2026-09-29T18:09:20Z load=299.18 269.69 248.52
 START 33-clippy-pitfall 2026-09-29T18:09:20Z load=299.18 269.69 248.52 cmd: /tmp/parser-base/clippy-pitfall.sh
 END   31b-linkprobe-all rc=101 wall=44s lockwait=37s run=7s 2026-09-29T18:09:27Z load=295.80 269.48 248.56
+END   33-clippy-pitfall rc=0 wall=47s lockwait=12s run=35s 2026-09-29T18:10:07Z load=269.19 266.41 248.44
+START 34-gd-targeted-debug 2026-09-29T18:10:07Z load=269.19 266.41 248.44 cmd: sh -c cd /workspace/notes/lint/units/parser/grammar-diff && BUN_DEBUG_QUIET_LOGS=1 /workspace/wt/parser/build/debug/bun-debug harness.mjs corpus.targeted.json /tmp/parser-base/gd-a/debug.targeted.jsonl.gz --jobs=8
+END   34-gd-targeted-debug rc=0 wall=35s lockwait=6s run=29s 2026-09-29T18:10:42Z load=257.46 263.50 248.11
+START 35-release-rebuild 2026-09-29T18:10:44Z load=257.46 263.50 248.11 cmd: /tmp/parser-base/rebuild.sh

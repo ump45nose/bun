@@ -10,6 +10,7 @@ import { readErrorBaseline } from "./reader";
 
 const GO = "/workspace/ref/typescript-go/testdata/baselines/reference/submodule";
 const gt = process.argv[2];
+const isMain = import.meta.main;
 const mode = process.argv[3] ?? "corpus";
 const rules = tsgoRules;
 
@@ -60,6 +61,9 @@ function toJson(c: Case): string {
 
 // Deterministic generator.
 let seed = Number(process.argv[5] ?? 12345);
+export function setSeed(n: number): void {
+  seed = n;
+}
 function rnd(n: number): number {
   seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
   return Math.floor((seed / 0x100000000) * n);
@@ -87,7 +91,13 @@ function genContent(): string {
   return out;
 }
 
-const messagePool = [
+const saneMessages = [
+  "Type 'A' is not assignable to type 'B'.",
+  "Cannot find name 'x'.",
+  utf8("Unicode \u00e9\u4e2d\ud83d\ude00 text."),
+  "';' expected.",
+];
+const trickyMessages = [
   "Type 'A' is not assignable to type 'B'.",
   "Cannot find name 'x'.",
   utf8("Unicode \u00e9\u4e2d\ud83d\ude00 text."),
@@ -113,7 +123,7 @@ function genChain(depth: number, file: FileLike | undefined): Diagnostic[] {
       end: 0,
       code: 1000 + rnd(9000),
       category: 1,
-      messageText: pick(messagePool),
+      messageText: pick(generator.sane ? saneMessages : trickyMessages),
       messageChain: genChain(depth + 1, file),
       relatedInformation: [],
     });
@@ -136,7 +146,9 @@ function genPos(text: string, wild: boolean): [number, number] {
   return [pos, end];
 }
 
-function genCase(index: number, wild: boolean): Case {
+export const generator = { sane: false };
+
+export function genCase(index: number, wild: boolean): Case {
   const names = ["/.src/a.ts", "/.src/b.ts", "/.src/A.ts", "/.src/dir/c.tsx", "/.src/tsconfig.json", "/.src/lib.d.ts", "/abs/d.ts", "/.src/a.ts", "/.src/./e.ts", "/.lib/react.d.ts", "/.src/lib.es5.d.ts"];
   const inputs: TestFile[] = [];
   const files: FileLike[] = [];
@@ -177,7 +189,7 @@ function genCase(index: number, wild: boolean): Case {
         end: re,
         code: 1000 + rnd(9000),
         category: 3,
-        messageText: pick(messagePool),
+        messageText: pick(generator.sane ? saneMessages : trickyMessages),
         messageChain: rnd(5) === 0 ? genChain(1, rf) : [],
         relatedInformation: [],
       });
@@ -188,7 +200,7 @@ function genCase(index: number, wild: boolean): Case {
       end,
       code: rnd(30) === 0 ? 1490 : rnd(40) === 0 ? -1 : 1000 + rnd(9000),
       category: pick([1, 1, 1, 1, 0, 2, 3]),
-      messageText: pick(messagePool),
+      messageText: pick(generator.sane ? saneMessages : trickyMessages),
       messageChain: genChain(1, file),
       relatedInformation: related,
     });
@@ -199,6 +211,7 @@ function genCase(index: number, wild: boolean): Case {
   return { name: `fuzz-${index}`, pretty: rnd(4) === 0, files, inputs, diagnostics };
 }
 
+async function main(): Promise<void> {
 const cases: Case[] = [];
 if (mode === "corpus") {
   for (const suite of ["compiler", "conformance"]) {
@@ -290,3 +303,5 @@ if (mode === "corpus") console.log(`   ground truth equals the baseline bytes: $
 console.log("   panics of the ground truth:", JSON.stringify(panicKinds));
 for (const s of shown) console.log("  DIFF " + s);
 writeFileSync(join(import.meta.dir, `crosscheck-${mode}-mismatches.json`), JSON.stringify(mismatches.slice(0, 50), null, 1));
+}
+if (isMain) await main();

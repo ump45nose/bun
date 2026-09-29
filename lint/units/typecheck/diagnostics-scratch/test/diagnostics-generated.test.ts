@@ -24,7 +24,16 @@ test("the merged table has the counts of typescript-go", () => {
     sorted: entries.every((e, i) => i === 0 || entries[i - 1].code < e.code),
     first: entries[0].code,
     last: entries.at(-1)!.code,
-  }).toEqual({ total: 2206, error: 1379, message: 807, suggestion: 20, warning: 0, sorted: true, first: 1002, last: 100068 });
+  }).toEqual({
+    total: 2206,
+    error: 1379,
+    message: 807,
+    suggestion: 20,
+    warning: 0,
+    sorted: true,
+    first: 1002,
+    last: 100068,
+  });
 });
 
 test("an extra message replaces the TypeScript message with the same code", () => {
@@ -45,12 +54,20 @@ test("an extra message replaces the TypeScript message with the same code", () =
 
 test("names and keys follow convertPropertyName of generate.go", () => {
   expect(convertPropertyName("'{0}' expected.", 1005)).toEqual({ name: "X_0_expected", key: "_0_expected_1005" });
-  expect(convertPropertyName("'*/' expected.", 1010)).toEqual({ name: "Asterisk_Slash_expected", key: "Asterisk_Slash_expected_1010" });
+  expect(convertPropertyName("'*/' expected.", 1010)).toEqual({
+    name: "Asterisk_Slash_expected",
+    key: "Asterisk_Slash_expected_1010",
+  });
   expect(convertPropertyName("Type '{0}' is not assignable to type '{1}'.", 2322)).toEqual({
     name: "Type_0_is_not_assignable_to_type_1",
     key: "Type_0_is_not_assignable_to_type_1_2322",
   });
-  expect(convertPropertyName("'await' expressions are only allowed within async functions and at the top levels of modules.", 1308).name).toStartWith("X_await_expressions");
+  expect(
+    convertPropertyName(
+      "'await' expressions are only allowed within async functions and at the top levels of modules.",
+      1308,
+    ).name,
+  ).toStartWith("X_await_expressions");
   const long = merge(messages, extra).filter(e => e.name.length > 100);
   expect(long.length).toBe(292);
   expect(long.every(e => e.key === e.name.replace(/^X_(?=[a-z])|^X(?=_)/, "").slice(0, 100) + "_" + e.code)).toBe(true);
