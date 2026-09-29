@@ -1,0 +1,53 @@
+layer	where	signature	asked for by	depth grows with	value when the stack test fails
+E-CORE	checker.go:7647	checkExpressionEx(node *ast.Node, checkMode CheckMode) *Type	the type layers unit	expression nesting: 4 frames per nested binary expression (checkExpressionEx, checkExpressionWorker, checkBinaryExpression, checkBinaryLikeExpression)	errorType, before currentNode is saved
+E-CORE	checker.go:7607	checkExpressionCachedEx(node *ast.Node, checkMode CheckMode) *Type	the type layers unit	as checkExpressionEx	errorType, links.resolvedType is not written
+E-CORE	checker.go:7427	getTypeOfExpression(node *ast.Node) *Type	the type layers unit	as checkExpressionEx	errorType, flowTypeCache is not written
+F-NARROW	flow.go:81	getFlowTypeOfReferenceEx(reference *ast.Node, declaredType *Type, initialType *Type, flowContainer *ast.Node, flowNode *ast.FlowNode) *Type	the type layers unit	nested flow analyses (a narrowing expression that reads another reference)	errorType, as the exits at flow.go:83 and :126; no FlowState is taken
+E-CTX	checker.go:29466	getContextualType(node *ast.Node, contextFlags ContextFlags) *Type	the type layers unit	parent chain of parenthesized, non-null, spread and const assertion nodes; re-entry through call resolution	nil (no contextual type)
+E-FACTS	checker.go:31097	getTypeFacts(t *Type, mask TypeFacts) TypeFacts	the type layers unit	as getTypeFactsWorker	TypeFactsUnknownFacts & mask
+E-FACTS	checker.go:31273	getTypeWithFacts(t *Type, include TypeFacts) *Type	the type layers unit	as getTypeFactsWorker	t
+F-NARROW	flow.go:117	getTypeAtFlowNode(f *FlowState, flow *ast.FlowNode) FlowType	the cycle analysis (recursion.txt)	flow graph, at most 2000 per FlowState by its own counter; each level is 2 frames or more	FlowType{errorType}; flowAnalysisDisabled is NOT set and TS2563 is NOT reported; the test comes before the depth == 2000 test
+E-OPER	checker.go:12643	checkDestructuringAssignment(node *ast.Node, sourceType *Type, checkMode CheckMode, rightIsThis bool) *Type	the cycle analysis (recursion.txt)	nesting of destructuring targets	errorType
+F-NARROW	flow.go:2288	getAssignedType(node *ast.Node) *Type	the cycle analysis (recursion.txt)	nesting of destructuring targets, upwards	errorType (its own default at flow.go:2309)
+E-CTX	checker.go:31020	isContextSensitive(node *ast.Node) bool	the cycle analysis (recursion.txt)	expression nesting (object and array literals, conditional, ||, ??, parentheses, function bodies)	false
+E-CTX	checker.go:30809	getApparentTypeOfContextualType(node *ast.Node, contextFlags ContextFlags) *Type	the cycle analysis (recursion.txt)	object literal methods inside object literals	nil
+F-NARROW	flow.go:2122	getTypeOfDottedName(node *ast.Node, diagnostic *ast.Diagnostic) *Type	the cycle analysis (recursion.txt)	length of a dotted name	nil
+F-NARROW	flow.go:2155	getExplicitTypeOfSymbol(symbol *ast.Symbol, diagnostic *ast.Diagnostic) *Type	the cycle analysis (recursion.txt)	chain of mapped symbol origins, for-of declarations	nil, the symbol is not added to resolvingExplicitTypeOfSymbol
+F-NARROW	flow.go:377	narrowType(f *FlowState, t *Type, expr *ast.Node, assumeTrue bool) *Type	the cycle analysis (recursion.txt)	nesting of the condition expression, plus 5 inlined aliases	t
+E-CTX	checker.go:29561	getContextualTypeForVariableLikeDeclaration(declaration *ast.Node, contextFlags ContextFlags) *Type	the cycle analysis (recursion.txt)	nesting of binding patterns	nil
+F-NARROW	flow.go:2234	getInitialType(node *ast.Node) *Type	the cycle analysis (recursion.txt)	nesting of binding patterns	errorType
+E-FACTS	checker.go:31105	getTypeFactsWorker(t *Type, callerOnlyNeeds TypeFacts) TypeFacts	the cycle analysis (recursion.txt)	nesting of unions, intersections and constraints	TypeFactsUnknownFacts (the value of the last line, 31238)
+F-NARROW	flow.go:846	getNarrowedType(t *Type, candidate *Type, assumeTrue bool, checkDerived bool) *Type	the cycle analysis (recursion.txt)	unions inside the candidate	t
+E-FUNC	checker.go:10520	assignBindingElementTypes(pattern *ast.Node, parentType *Type)	the cycle analysis (recursion.txt)	nesting of binding patterns	return
+E-ACCESS	checker.go:11997	forEachProperty(prop *ast.Symbol, callback func(p *ast.Symbol) bool) bool	the cycle analysis (recursion.txt)	nesting of union and intersection properties	false
+E-ACCESS	checker.go:11768	getEntityNameForExtendingInterface(node *ast.Node) *ast.Node	the cycle analysis (recursion.txt)	length of a property access chain	nil
+E-CTX	checker.go:29694	getMutableArrayOrTupleType(t *Type) *Type	the cycle analysis (recursion.txt)	unions of unions do not exist: depth 2	t
+E-CORE	checker.go:7451	getQuickTypeOfExpression(node *ast.Node) *Type	the cycle analysis (recursion.txt)	chain of await expressions	nil
+F-NARROW	flow.go:1861	getReferenceCandidate(node *ast.Node) *ast.Node	the cycle analysis (recursion.txt)	parentheses, assignments and comma chains	node
+F-NARROW	flow.go:1876	getReferenceRoot(node *ast.Node) *ast.Node	the cycle analysis (recursion.txt)	parent chain of accesses, parentheses, non-null and comma	node
+E-LITERAL	checker.go:13488	getSpreadType(left *Type, right *Type, symbol *ast.Symbol, objectFlags ObjectFlags, readonly bool) *Type	the cycle analysis (recursion.txt)	unions on both sides: depth 3; intersections: one more per last member	errorType, as the cross product exits at 13508 and 13517
+E-OPER	checker.go:13039	getSyntacticNullishnessSemantics(node *ast.Node) PredicateSemantics	the cycle analysis (recursion.txt)	expression nesting	PredicateSemanticsSometimes
+E-OPER	checker.go:12977	getSyntacticTruthySemantics(node *ast.Node) PredicateSemantics	the cycle analysis (recursion.txt)	expression nesting	PredicateSemanticsSometimes
+E-LITERAL	checker.go:13709	hasDefaultValue(node *ast.Node) bool	the cycle analysis (recursion.txt)	shorthand and property assignments	false
+E-CTX	checker.go:30978	instantiateInstantiableTypes(t *Type, mapper *TypeMapper) *Type	the cycle analysis (recursion.txt)	nesting of unions and intersections	t
+E-LITERAL	checker.go:13716	isConstContext(node *ast.Node) bool	the cycle analysis (recursion.txt)	parent chain of literals, spreads, property assignments and template spans	false
+E-LITERAL	checker.go:13746	isConstTypeVariable(t *Type, depth int) bool	the cycle analysis (recursion.txt)	has its own depth argument, limit 5 at 13749	false
+F-NARROW	flow.go:1814	isConstantReference(node *ast.Node) bool	the cycle analysis (recursion.txt)	length of an access chain	false
+E-CTX	checker.go:30747	isExcludedMappedPropertyName(t *Type, propertyNameType *Type) bool	the cycle analysis (recursion.txt)	nesting of unions	false
+F-REACH	flow.go:2589	isFalseExpression(expr *ast.Node) bool	the cycle analysis (recursion.txt)	nesting of && and ||	false
+F-NARROW	checker.go:31642	isGenericTypeWithUnionConstraint(t *Type) bool	the cycle analysis (recursion.txt)	nesting of intersections	false
+F-NARROW	checker.go:31649	isGenericTypeWithoutNullableConstraint(t *Type) bool	the cycle analysis (recursion.txt)	nesting of intersections	false
+F-NARROW	flow.go:1597	isMatchingReference(source *ast.Node, target *ast.Node) bool	the cycle analysis (recursion.txt)	length of access chains, parentheses, assignment and comma chains	false
+E-CTX	checker.go:30925	isPossiblyDiscriminantValue(node *ast.Node) bool	the cycle analysis (recursion.txt)	property access chain and parentheses	false
+F-REACH	flow.go:2611	isPostSuperFlowNodeWorker(f *FlowState, flow *ast.FlowNode, noCacheCheck bool) bool	the cycle analysis (recursion.txt)	nesting of branch labels and reduce labels in one function, no limit upstream	true (no TS2376 or TS17009 follows)
+F-REACH	flow.go:2522	isReachableFlowNodeWorker(f *FlowState, flow *ast.FlowNode, noCacheCheck bool) bool	the cycle analysis (recursion.txt)	nesting of branch labels and reduce labels in one function, no limit upstream	true (no TS7027 and no unreachableNeverType follows)
+E-OPER	checker.go:13102	isSideEffectFree(node *ast.Node) bool	the cycle analysis (recursion.txt)	expression nesting, both operands of a binary expression	false (no TS2695 follows)
+F-NARROW	checker.go:31598	isSomeSymbolAssignedWorker(node *ast.Node) bool	the cycle analysis (recursion.txt)	nesting of binding patterns	true (no narrowing by destructured discriminant follows)
+E-LITERAL	checker.go:8093	isTemplateLiteralContext(node *ast.Node) bool	the cycle analysis (recursion.txt)	chain of parentheses	false
+E-LITERAL	checker.go:13724	isValidConstAssertionArgument(node *ast.Node) bool	the cycle analysis (recursion.txt)	parentheses, unary minus, access chain	true (no TS1355 follows)
+E-LITERAL	checker.go:13605	isValidSpreadType(t *Type) bool	the cycle analysis (recursion.txt)	unions and intersections	true (no TS2698 follows)
+F-NARROW	flow.go:2703	markNodeAssignmentsWorker(node *ast.Node) bool	the cycle analysis (recursion.txt)	the whole tree of a function or source file: tree depth, 2 frames per level with the child visitor	false (the walk goes on with the siblings)
+F-NARROW	flow.go:338	narrowTypeByAssertion(f *FlowState, t *Type, expr *ast.Node) *Type	the cycle analysis (recursion.txt)	nesting of && and || in an asserted condition	t
+E-CALL	checker.go:8770	typeHasProtectedAccessibleBase(target *ast.Symbol, t *Type) bool	the cycle analysis (recursion.txt)	base class chain and intersection members	true (no TS2674 follows)
+F-NARROW	flow.go:1665	writeFlowCacheKey(b *keyBuilder, node *ast.Node, declaredType *Type, initialType *Type, flowContainer *ast.Node) bool	the cycle analysis (recursion.txt)	length of an access chain	false (the key becomes nonDottedNameCacheKey, the declared type is used at a loop label)
+E-OPER	checker.go:10777	the two local recursive closures getInstantiatedType and getInstantiatedTypePart of getInstantiationExpressionType	read of the source (closures are not in the call graph)	constraint chain, unions, intersections	t
