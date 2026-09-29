@@ -365,6 +365,7 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
   }
 
   // The sections.
+  const usedUnits = new Set<TestFile>();
   const testFiles: TestFile[] = [];
   const sameFile = (a: string, b: string): boolean => comparePaths(ops.stripPrefixes(a), ops.stripPrefixes(b), comparePathsOptions) === 0;
   for (const section of sections) {
@@ -372,8 +373,28 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
     if (fileErrors.length !== section.errorCount) {
       fail(`the header of ${section.unitName} counts ${section.errorCount} errors and the first section has ${fileErrors.length}`);
     }
-    const unit = options.units?.find(u => sameFile(u.unitName, section.unitName));
-    const result = readSection(section, fileErrors, ops, ambiguities, unit);
+    // Two units can have one name: the section belongs to the first of them that is free and that it reads with.
+    const candidates = (options.units ?? []).filter(u => sameFile(u.unitName, section.unitName));
+    candidates.sort((a, b) => Number(usedUnits.has(a)) - Number(usedUnits.has(b)));
+    let unit: TestFile | undefined;
+    let result: SectionResult | undefined;
+    let firstError: unknown;
+    for (const candidate of candidates) {
+      try {
+        result = readSection(section, fileErrors, ops, ambiguities, candidate);
+        unit = candidate;
+        usedUnits.add(candidate);
+        break;
+      } catch (e) {
+        if (!(e instanceof BaselineReadError)) throw e;
+        firstError ??= e;
+      }
+    }
+    if (result === undefined) {
+      if (firstError !== undefined) throw firstError;
+      if (options.units !== undefined) fail(`no unit has the name ${section.unitName}`);
+      result = readSection(section, fileErrors, ops, ambiguities, undefined);
+    }
     const content = unit !== undefined ? unit.content : result.content;
     fileErrors.forEach((d, k) => {
       const span = result.spans[k];
