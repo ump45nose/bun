@@ -3,8 +3,13 @@
 import gzip, json, sys
 reduce = len(sys.argv) > 3 and sys.argv[3] == "nontrivial"
 lines = []
-for l in open(sys.argv[1]):
-    r = json.loads(l)
+# the reference walks Go maps, so the order of the instances of one case changes from run to run: sort them by name
+rows = [json.loads(l) for l in open(sys.argv[1])]
+order = {}
+for r in rows:
+    order.setdefault((r["suite"], r["casePath"]), len(order))
+rows.sort(key=lambda r: (order[(r["suite"], r["casePath"])], r["configuredName"].encode()))
+for r in rows:
     o = {"suite": r["suite"], "name": r["configuredName"], "casePath": r["casePath"]}
     if r.get("stop"):
         o["stop"] = r["stop"]
