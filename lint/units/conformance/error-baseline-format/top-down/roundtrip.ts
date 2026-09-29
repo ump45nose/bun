@@ -1,0 +1,82 @@
+// Round trip of every baseline through the reader and the writer: write(read(bytes)) against bytes.
+// usage: bun roundtrip.ts [ts|go|godiff] [name filter]
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { WriterPanic } from "./diagnosticwriter";
+import { getErrorBaseline } from "./error_baseline";
+import { ReadError, goReadOptions, readErrorBaseline } from "./reader";
+
+const TS = "/workspace/ref/typescript-go/_submodules/TypeScript/tests/baselines/reference";
+const GO = "/workspace/ref/typescript-go/testdata/baselines/reference/submodule";
+
+function list(dir: string): string[] {
+  return readdirSync(dir)
+    .filter(f => f.endsWith(".errors.txt"))
+    .sort()
+    .map(f => join(dir, f));
+}
+
+const which = process.argv[2] ?? "all";
+const filter = process.argv[3];
+const sets: Record<string, string[]> = {};
+if (which === "ts" || which === "all") sets.ts = list(TS);
+if (which === "go" || which === "all") sets.go = [...list(join(GO, "compiler")), ...list(join(GO, "conformance"))];
+if (which === "godiff") {
+  sets.godiff = [...list(join(GO, "compiler")), ...list(join(GO, "conformance"))].filter(f => {
+    const name = f.split("/").pop()!;
+    try {
+      return !readFileSync(join(TS, name)).equals(readFileSync(f));
+    } catch {
+      return true;
+    }
+  });
+}
+
+const report: Record<string, unknown> = {};
+for (const [setName, files] of Object.entries(sets)) {
+  let ok = 0;
+  const failures: { file: string; kind: string; detail: string }[] = [];
+  const decisionCounts: Record<string, string[]> = {};
+  const failedChecks: Record<string, string[]> = {};
+  for (const f of files) {
+    const short = f.split("/").pop()!.replace(".errors.txt", "");
+    if (filter !== undefined && !short.includes(filter)) continue;
+    const bytes = readFileSync(f);
+    const text = bytes.toString("latin1");
+    try {
+      const parsed = readErrorBaseline(text, goReadOptions);
+      for (const d of new Set(parsed.decisions.map(x => x.replace(/ in .*?(:|$)/, " in <file>$1")))) {
+        (decisionCounts[d] ??= []).push(short);
+      }
+      const written = getErrorBaseline(parsed.files, parsed.diagnostics, parsed.pretty);
+      for (const c of written.failedChecks) (failedChecks[c.replace(/ in .*?:/, " in <file>:").replace(/\d+ != \d+/, "n != m")] ??= []).push(short);
+      if (written.text === text) {
+        ok++;
+      } else {
+        const a = text.split("\r\n");
+        const b = written.text.split("\r\n");
+        let k = 0;
+        while (k < a.length && k < b.length && a[k] === b[k]) k++;
+        failures.push({
+          file: short,
+          kind: "bytes differ",
+          detail: `line ${k + 1}: expected ${JSON.stringify(a[k])?.slice(0, 200)} got ${JSON.stringify(b[k])?.slice(0, 200)}`,
+        });
+      }
+    } catch (e) {
+      if (e instanceof ReadError) failures.push({ file: short, kind: "reader", detail: e.message.slice(0, 300) });
+      else if (e instanceof WriterPanic) failures.push({ file: short, kind: "writer panic", detail: e.message });
+      else throw e;
+    }
+  }
+  console.log(`== ${setName}: ${ok} of ${ok + failures.length} round trip`);
+  for (const x of failures) console.log(`  FAIL ${x.file}: ${x.kind}: ${x.detail}`);
+  for (const [d, names] of Object.entries(decisionCounts)) {
+    console.log(`  decision (${names.length}): ${d}  e.g. ${names.slice(0, 6).join(", ")}`);
+  }
+  for (const [d, names] of Object.entries(failedChecks)) {
+    console.log(`  failed check (${names.length}): ${d}  e.g. ${names.slice(0, 6).join(", ")}`);
+  }
+  report[setName] = { ok, failures, decisionCounts, failedChecks };
+}
+writeFileSync(join(import.meta.dir, `roundtrip-${which}.json`), JSON.stringify(report, null, 1));

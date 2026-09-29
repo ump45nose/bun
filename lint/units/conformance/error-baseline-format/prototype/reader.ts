@@ -1,7 +1,7 @@
 // The reader of .errors.txt baselines: bytes to diagnostics and files, the inverse of getErrorBaseline.
-import { Category, type Diagnostic, type FileLike, computeECMALineStarts, flattenDiagnosticMessage } from "./diagnosticwriter";
-import { type Rules, type TestFile, isDefaultLibraryFile, removeTestPathPrefixes } from "./error_baseline";
-import { type ByteString, decodeRune, replaceNonWhitespace, runeCount, utf16Len } from "./go_compat";
+import { Category, type Diagnostic, type FileLike, categoryName, computeECMALineStarts, flattenDiagnosticMessage } from "./diagnosticwriter";
+import { type Rules, type TestFile, removeTestPathPrefixes } from "./error_baseline";
+import { type ByteString, decodeRune, replaceNonWhitespace, utf16Len } from "./go_compat";
 import * as tsc from "./tsc_rules";
 import { comparePaths } from "./tspath";
 
@@ -20,7 +20,7 @@ export interface ParsedDiagnostic extends Diagnostic {
   character: number | undefined;
   // False when the baseline does not give the length of the span (no section, or a related span in the plain format).
   hasLength: boolean;
-  // The index in the first section.
+  // The index in the first section; -1 for chain elements and related information.
   order: number;
 }
 
@@ -35,7 +35,7 @@ export interface ParsedBaseline {
 
 export interface ReadOptions {
   rules?: Rules;
-  // The units of the case, when the caller has them: name as the header prints it, and content.
+  // The units of the case, when the caller has them: name and content.
   units?: TestFile[];
 }
 
@@ -52,7 +52,7 @@ const categories: Record<string, Category> = {
   message: Category.Message,
 };
 
-const headPattern = /^(?:([^]*?)\((\d+|--),(\d+|--)\): )?(error|warning|suggestion|message) TS(-?\d+): ([^]*)$/;
+const headPattern = /^([^]*?)\((\d+|--),(\d+|--)\): (error|warning|suggestion|message) TS(-?\d+): ([^]*)$/;
 const globalHeadPattern = /^(error|warning|suggestion|message) TS(-?\d+): ([^]*)$/;
 const sectionHeaderPattern = /^==== ([^]*) \((\d+) errors\) ====$/;
 const relatedPattern = /^!!! related TS(-?\d+)(?: ([^]*?):(\d+|--):(\d+|--))?: ([^]*)$/;
@@ -67,9 +67,27 @@ interface Head {
   messageLines: string[];
 }
 
+function newDiagnostic(category: Category, code: number, message: string): ParsedDiagnostic {
+  return {
+    file: undefined,
+    pos: 0,
+    end: 0,
+    code,
+    category,
+    source: "",
+    message,
+    messageChain: [],
+    relatedInformation: [],
+    line: undefined,
+    character: undefined,
+    hasLength: false,
+    order: -1,
+  };
+}
+
 // The flattened text of a message and its chain: one line per chain element, two spaces per level.
-function parseFlattenedMessage(lines: string[], make: (message: string) => ParsedDiagnostic): ParsedDiagnostic {
-  const root = make(lines[0]);
+function parseFlattenedMessage(lines: string[], category: Category, code: number): ParsedDiagnostic {
+  const root = newDiagnostic(category, code, lines[0]);
   const stack: ParsedDiagnostic[] = [root];
   let last = root;
   for (let i = 1; i < lines.length; i++) {
@@ -82,7 +100,7 @@ function parseFlattenedMessage(lines: string[], make: (message: string) => Parse
       last.message += "\r\n" + line;
       continue;
     }
-    const node = make(line.slice(level * 2));
+    const node = newDiagnostic(category, code, line.slice(level * 2));
     stack.length = level;
     stack[level - 1].messageChain.push(node);
     stack.push(node);
@@ -111,14 +129,13 @@ class StandInFile implements ParsedFile {
   private columns = new Map<number, number>();
   private users: { d: ParsedDiagnostic; line: number; character: number }[] = [];
   constructor(public fileName: string) {}
-  use(d: ParsedDiagnostic, line: number | undefined, character: number | undefined): void {
-    if (line === undefined || character === undefined) {
-      d.pos = 0;
-      d.end = 0;
-      return;
-    }
-    this.columns.set(line, Math.max(this.columns.get(line) ?? 0, character));
-    this.users.push({ d, line, character });
+  use(d: ParsedDiagnostic): void {
+    d.file = this;
+    d.pos = 0;
+    d.end = 0;
+    if (d.line === undefined || d.character === undefined) return;
+    this.columns.set(d.line, Math.max(this.columns.get(d.line) ?? 0, d.character));
+    this.users.push({ d, line: d.line, character: d.character });
   }
   finish(): void {
     let maxLine = 0;
@@ -131,7 +148,6 @@ class StandInFile implements ParsedFile {
       if (line < maxLine) text += "\n";
     }
     this.text = text;
-    this.ecmaLineMap = undefined;
     for (const { d, line, character } of this.users) {
       d.pos = starts[line - 1] + character - 1;
       d.end = d.pos;
@@ -141,7 +157,7 @@ class StandInFile implements ParsedFile {
 
 interface RuleOps {
   stripPrefixes(text: string): string;
-  // The squiggle line of the writer without its four spaces, for a span of `length` bytes from `squiggleStart`.
+  // What the writer prints in front of the tildes for a span that starts `squiggleStart` bytes into the line.
   squigglePrefix(line: ByteString, squiggleStart: number): ByteString;
   // The number of bytes that `count` tildes cover from `squiggleStart`.
   bytesOfTildes(line: ByteString, squiggleStart: number, count: number): number;
@@ -186,6 +202,59 @@ interface Section {
   lines: string[];
 }
 
+interface MessageBlock {
+  next: number;
+  related: ParsedDiagnostic[];
+  printed: string;
+}
+
+// The file name that a line of related information prints, until the files are known.
+const relatedFileName = new WeakMap<ParsedDiagnostic, string>();
+
+// The message lines of a diagnostic and its related information, from block[i].
+// acceptChainLine is asked about each line that the text alone cannot tell from a line of the file.
+function readMessageBlock(ops: RuleOps, block: string[], i: number, d: ParsedDiagnostic, acceptChainLine: (at: number) => boolean): MessageBlock {
+  const first = i;
+  const message = flattenDiagnosticMessage(d, "\r\n");
+  for (let line of ops.stripPrefixes(message).split("\n")) {
+    if (line.endsWith("\r")) line = line.slice(0, -1);
+    if (line.length === 0) continue;
+    const expected = `!!! ${categoryName(d.category)} TS${d.code}: ${line}`;
+    if (block[i] !== expected) fail(`message line ${JSON.stringify(block[i])} is not ${JSON.stringify(expected)}`);
+    i++;
+  }
+  const related: ParsedDiagnostic[] = [];
+  while (i < block.length && block[i].startsWith("!!! related TS")) {
+    const m = relatedPattern.exec(block[i]);
+    if (m === null) fail(`related line ${JSON.stringify(block[i])}`);
+    i++;
+    const messageLines = [m[5]];
+    let level = 0;
+    while (i < block.length) {
+      const line = block[i];
+      if (line.startsWith("!!! ") || line.startsWith("==== ")) break;
+      let spaces = 0;
+      while (spaces < line.length && line[spaces] === " ") spaces++;
+      // A line of the file has four spaces in front; a chain line of the first level has two.
+      if (spaces >= 4 && (level === 0 || spaces === line.length || !acceptChainLine(i))) break;
+      messageLines.push(line);
+      level = Math.max(1, Math.min(spaces >> 1, level + 1));
+      i++;
+    }
+    // The category of related information is not printed.
+    const r = parseFlattenedMessage(messageLines, Category.Message, Number(m[1]));
+    if (m[2] !== undefined) {
+      relatedFileName.set(r, m[2]);
+      if (m[3] !== "--") {
+        r.line = Number(m[3]);
+        r.character = Number(m[4]);
+      }
+    }
+    related.push(r);
+  }
+  return { next: i, related, printed: block.slice(first, i).join("\r\n") };
+}
+
 export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): ParsedBaseline {
   const rules = options.rules ?? "tsgo";
   const ops = rules === "tsc" ? tscOps : tsgoOps;
@@ -197,69 +266,31 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
   const top = text.slice(0, split.index);
   let rest = text.slice(split.index + 4);
 
-  let summary: string | undefined;
   if (pretty) {
+    // The summary is a function of the diagnostics: the reader drops it and the writer makes it again.
     const at = rest.lastIndexOf("\r\nFound ");
     if (at < 0) fail("a pretty baseline without a summary");
-    summary = rest.slice(at);
     rest = rest.slice(0, at);
   }
 
-  const files = new Map<string, ParsedFile>();
-  const standIns: StandInFile[] = [];
-  const fileFor = (name: string): ParsedFile => {
-    let file = files.get(name);
-    if (file === undefined) {
-      const standIn = new StandInFile(name);
-      standIns.push(standIn);
-      files.set(name, (file = standIn));
-    }
-    return file;
-  };
-
-  let order = 0;
-  const make = (head: Omit<Head, "messageLines">, message: string): ParsedDiagnostic => ({
-    file: head.fileName === undefined ? undefined : fileFor(head.fileName),
-    pos: 0,
-    end: 0,
-    code: head.code,
-    category: head.category,
-    source: "",
-    message,
-    messageChain: [],
-    relatedInformation: [],
-    line: head.line,
-    character: head.character,
-    hasLength: false,
-    order: -1,
-  });
-
-  const prettyRelated = new Map<ParsedDiagnostic, PrettyRelated[]>();
-  const diagnostics: ParsedDiagnostic[] = [];
+  // The first section.
+  const heads: Head[] = [];
+  const prettyTops: PrettyTop[] = [];
   if (pretty) {
     for (const p of rules === "tsc" ? readPrettyTopTsc(top) : readPrettyTopTsgo(top)) {
-      const chainHead = { ...p.head, fileName: undefined, line: undefined, character: undefined };
-      const d = parseFlattenedMessage(p.head.messageLines, message => make(chainHead, message));
-      d.file = p.head.fileName === undefined ? undefined : fileFor(p.head.fileName);
-      d.line = p.head.line;
-      d.character = p.head.character;
-      d.order = order++;
-      diagnostics.push(d);
-      prettyRelated.set(d, p.related);
-      (d as { tscEmptyRelated?: boolean }).tscEmptyRelated = p.emptyRelatedBlock;
+      heads.push(p.head);
+      prettyTops.push(p);
     }
   } else {
     if (!top.endsWith("\r\n")) fail("the first section does not end with a line break");
-    const topLines = top.slice(0, -2).split("\r\n");
-    const heads: Head[] = [];
-    for (const line of topLines) {
+    for (const line of top.slice(0, -2).split("\r\n")) {
       const g = globalHeadPattern.exec(line);
       if (g !== null) {
         heads.push({ fileName: undefined, line: undefined, character: undefined, category: categories[g[1]], code: Number(g[2]), messageLines: [g[3]] });
         continue;
       }
       const m = headPattern.exec(line);
-      if (m !== null && m[1] !== undefined) {
+      if (m !== null) {
         const masked = m[2] === "--" || m[3] === "--";
         if (masked && (m[2] !== "--" || m[3] !== "--")) fail("a position that is half masked");
         heads.push({
@@ -275,22 +306,23 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
       if (heads.length === 0) fail("the first section starts with a line that is not a diagnostic");
       heads[heads.length - 1].messageLines.push(line);
     }
-    for (const head of heads) {
-      const chainHead = { ...head, fileName: undefined, line: undefined, character: undefined };
-      const d = parseFlattenedMessage(head.messageLines, message => make(chainHead, message));
-      d.file = head.fileName === undefined ? undefined : fileFor(head.fileName);
-      d.line = head.line;
-      d.character = head.character;
-      d.order = order++;
-      diagnostics.push(d);
-    }
   }
 
+  const diagnostics: ParsedDiagnostic[] = [];
+  const fileNameOf = new Map<ParsedDiagnostic, string>();
+  heads.forEach((head, index) => {
+    const d = parseFlattenedMessage(head.messageLines, head.category, head.code);
+    d.line = head.line;
+    d.character = head.character;
+    d.order = index;
+    if (head.fileName !== undefined) fileNameOf.set(d, head.fileName);
+    diagnostics.push(d);
+  });
+
   // The lines after the first section: the global block, then one block per input file.
-  const lines = rest.split("\r\n");
   const sections: Section[] = [];
   const globalLines: string[] = [];
-  for (const line of lines) {
+  for (const line of rest.split("\r\n")) {
     const h = line.startsWith("==== ") ? sectionHeaderPattern.exec(line) : null;
     if (h !== null) {
       sections.push({ unitName: h[1], errorCount: Number(h[2]), lines: [] });
@@ -301,175 +333,115 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
     }
   }
 
-  const pendingRelated = new Map<ParsedDiagnostic, { fileName: string; line: number | undefined; character: number | undefined }>();
-  const readBlocks = new Map<ParsedDiagnostic, string>();
-
-  // The message lines of a diagnostic and its related information, from block[i]. Returns the next index.
-  // acceptChainLine is asked about each line that the text alone cannot tell from a line of the file.
-  const readMessageBlock: ReadMessageBlock = (block, i, d, acceptChainLine) => {
-    const first = i;
-    const message = flattenDiagnosticMessage(d, "\r\n");
-    for (let line of ops.stripPrefixes(message).split("\n")) {
-      if (line.endsWith("\r")) line = line.slice(0, -1);
-      if (line.length === 0) continue;
-      const expected = `!!! ${categoryNameOf(d.category)} TS${d.code}: ${line}`;
-      if (block[i] !== expected) fail(`message line ${JSON.stringify(block[i])} is not ${JSON.stringify(expected)}`);
-      i++;
-    }
-    const related: ParsedDiagnostic[] = [];
-    while (i < block.length && block[i].startsWith("!!! related TS")) {
-      const m = relatedPattern.exec(block[i]);
-      if (m === null) fail(`related line ${JSON.stringify(block[i])}`);
-      i++;
-      const messageLines = [m[5]];
-      let level = 0;
-      while (i < block.length) {
-        const line = block[i];
-        if (line.startsWith("!!! ") || line.startsWith("==== ")) break;
-        let spaces = 0;
-        while (spaces < line.length && line[spaces] === " ") spaces++;
-        // A line of the file has four spaces in front; a chain line of the first level has two.
-        if (spaces >= 4 && (level === 0 || spaces === line.length || !acceptChainLine(i))) break;
-        messageLines.push(line);
-        level = Math.max(1, Math.min(spaces >> 1, level + 1));
-        i++;
-      }
-      const masked = m[3] === "--";
-      const head = {
-        fileName: undefined,
-        line: m[2] === undefined || masked ? undefined : Number(m[3]),
-        character: m[2] === undefined || masked ? undefined : Number(m[4]),
-        category: Category.Message,
-        code: Number(m[1]),
-      };
-      const chainHead = { ...head, line: undefined, character: undefined };
-      const r = parseFlattenedMessage(messageLines, message => make(chainHead, message));
-      r.line = head.line;
-      r.character = head.character;
-      if (m[2] !== undefined) {
-        pendingRelated.set(r, { fileName: m[2], line: head.line, character: head.character });
-      }
-      related.push(r);
-    }
-    const printed = block.slice(first, i).join("\r\n");
-    const before = readBlocks.get(d);
+  const printedBlocks = new Map<ParsedDiagnostic, string>();
+  const commit = (d: ParsedDiagnostic, block: MessageBlock): void => {
+    const before = printedBlocks.get(d);
     if (before === undefined) {
-      d.relatedInformation = related;
-      readBlocks.set(d, printed);
-    } else if (before !== printed) {
+      d.relatedInformation = block.related;
+      printedBlocks.set(d, block.printed);
+    } else if (before !== block.printed) {
       fail("two sections print one diagnostic with different messages");
     }
-    return i;
   };
 
   // Global diagnostics.
   {
     let i = 0;
     for (const d of diagnostics) {
-      if (d.file !== undefined) continue;
-      i = readMessageBlock(globalLines, i, d, () => true);
+      if (fileNameOf.has(d)) continue;
+      const block = readMessageBlock(ops, globalLines, i, d, () => true);
+      commit(d, block);
+      i = block.next;
     }
-    if (i !== globalLines.length && !(i === 0 && globalLines.length === 1 && globalLines[0] === "")) {
-      fail(`${globalLines.length - i} lines of the global block are left`);
-    }
+    if (i !== globalLines.length) fail(`${globalLines.length - i} lines of the global block are left`);
   }
 
+  // The sections.
   const testFiles: TestFile[] = [];
+  const sameFile = (a: string, b: string): boolean => comparePaths(ops.stripPrefixes(a), ops.stripPrefixes(b), comparePathsOptions) === 0;
   for (const section of sections) {
-    const fileErrors = diagnostics.filter(d => d.file !== undefined && comparePaths(ops.stripPrefixes(d.file.fileName), ops.stripPrefixes(section.unitName), comparePathsOptions) === 0);
+    const fileErrors = diagnostics.filter(d => fileNameOf.has(d) && sameFile(fileNameOf.get(d)!, section.unitName));
     if (fileErrors.length !== section.errorCount) {
       fail(`the header of ${section.unitName} counts ${section.errorCount} errors and the first section has ${fileErrors.length}`);
     }
-    const unit = options.units?.find(u => comparePaths(ops.stripPrefixes(u.unitName), ops.stripPrefixes(section.unitName), comparePathsOptions) === 0);
-    const content = readSection(section, fileErrors, ops, readMessageBlock, ambiguities, unit);
+    const unit = options.units?.find(u => sameFile(u.unitName, section.unitName));
+    const result = readSection(section, fileErrors, ops, ambiguities, unit);
+    const content = unit !== undefined ? unit.content : result.content;
+    fileErrors.forEach((d, k) => {
+      const span = result.spans[k];
+      if (printedBlocks.has(d)) {
+        if (d.pos !== span.pos || d.end !== span.end) fail("two sections print one diagnostic with different spans");
+      } else {
+        d.pos = span.pos;
+        d.end = span.end;
+        d.hasLength = true;
+      }
+      commit(d, span.block!);
+    });
     testFiles.push({ unitName: section.unitName, content });
-    for (const d of fileErrors) {
-      const file = d.file!;
-      if (file instanceof StandInFile) {
-        const real: ParsedFile = { fileName: file.fileName, text: content, hasText: true };
-        files.set(file.fileName, real);
-        standIns.splice(standIns.indexOf(file), 1);
-        for (const other of diagnostics) if (other.file === file) other.file = real;
-      }
-    }
   }
 
-  // A section whose file has no diagnostic still gives the text of related positions.
-  const textOf = (fileName: string): ParsedFile | undefined => {
-    for (const f of testFiles) {
-      if (comparePaths(ops.stripPrefixes(f.unitName), fileName, comparePathsOptions) === 0) {
-        let file = files.get(fileName);
-        if (file === undefined || !file.hasText) {
-          const real: ParsedFile = { fileName, text: f.content, hasText: true };
-          if (file !== undefined) {
-            standIns.splice(standIns.indexOf(file as StandInFile), 1);
-            for (const other of diagnostics) if (other.file === file) other.file = real;
-          }
-          files.set(fileName, (file = real));
-        }
-        return file;
+  // Files: one object per name, with the text of the first section of that name, else a stand-in.
+  const byName = new Map<string, ParsedFile>();
+  const standIns: StandInFile[] = [];
+  const fileFor = (name: string): ParsedFile => {
+    let file = byName.get(name);
+    if (file === undefined) {
+      const section = testFiles.find(f => sameFile(f.unitName, name));
+      if (section !== undefined) {
+        file = { fileName: name, text: section.content, hasText: true };
+      } else {
+        const standIn = new StandInFile(name);
+        standIns.push(standIn);
+        file = standIn;
       }
+      byName.set(name, file);
     }
-    return undefined;
+    return file;
   };
-
   for (const d of diagnostics) {
-    if (d.file !== undefined && !d.file.hasText) {
-      const real = textOf(d.file.fileName);
-      if (real === undefined) (d.file as StandInFile).use(d, d.line, d.character);
-    }
+    const name = fileNameOf.get(d);
+    if (name === undefined) continue;
+    const file = fileFor(name);
+    if (file instanceof StandInFile) file.use(d);
+    else d.file = file;
   }
-  const relatedOf = (list: ParsedDiagnostic[]): ParsedDiagnostic[] => list.flatMap(d => d.relatedInformation);
-  for (const d of relatedOf(diagnostics)) {
-    const where = pendingRelated.get(d);
-    if (where === undefined) continue;
-    const { fileName, line, character } = where;
-    const real = textOf(fileName);
-    if (real !== undefined) {
-      d.file = real;
-      if (line === undefined || character === undefined) fail("a masked related position in a file that has a section");
-      const starts = computeECMALineStarts(real.text);
-      if (line > starts.length) fail(`related line ${line} is outside of ${fileName}`);
-      d.pos = byteOffsetOfUtf16Column(real.text, starts[line - 1], character - 1);
-      d.end = d.pos;
-    } else {
-      const standIn = fileFor(fileName) as StandInFile;
-      d.file = standIn;
-      standIn.use(d, line, character);
+  for (const d of diagnostics) {
+    for (const r of d.relatedInformation) {
+      const name = relatedFileName.get(r);
+      if (name === undefined) continue;
+      const file = fileFor(name);
+      if (file instanceof StandInFile) {
+        file.use(r);
+        continue;
+      }
+      r.file = file;
+      if (r.line === undefined || r.character === undefined) fail("a masked related position in a file that has a section");
+      const starts = computeECMALineStarts(file.text);
+      if (r.line > starts.length) fail(`related line ${r.line} is outside of ${name}`);
+      r.pos = byteOffsetOfUtf16Column(file.text, starts[r.line - 1], r.character - 1);
+      r.end = r.pos;
     }
   }
   for (const standIn of standIns) standIn.finish();
 
   if (pretty) {
-    applyPrettyRelated(diagnostics, prettyRelated, rules);
+    applyPrettyTops(diagnostics, prettyTops, rules);
   }
-  void summary;
-  void isDefaultLibraryFile;
 
   return { pretty, rules, diagnostics, files: testFiles, ambiguities };
 }
 
-function categoryNameOf(category: Category): string {
-  return category === Category.Warning ? "warning" : category === Category.Error ? "error" : category === Category.Suggestion ? "suggestion" : "message";
-}
-
-type ReadMessageBlock = (block: string[], i: number, d: ParsedDiagnostic, acceptChainLine: (at: number) => boolean) => number;
-
-interface SectionState {
-  i: number;
-  contentLines: string[];
-  lineStarts: number[];
-  // Per diagnostic of the file: 0 pending, 1 active, 2 done.
-  state: number[];
-  spans: { pos: number; end: number; hasLength: boolean; related: ParsedDiagnostic[] }[];
-  // The decisions taken so far at the lines that the text does not decide, in order.
-  decisions: boolean[];
+interface SectionResult {
+  content: ByteString;
+  spans: { pos: number; end: number; block: MessageBlock | undefined }[];
+  taken: boolean[];
 }
 
 // One section: the lines of the file, each followed by the squiggles and messages of the spans that touch it.
 // A chain line of related information with four spaces or more looks like a line of the file: the reader tries
 // both readings, the chain first, and keeps the first one with which the rest of the section reads.
-function readSection(section: Section, fileErrors: ParsedDiagnostic[], ops: RuleOps, readMessageBlock: ReadMessageBlock, ambiguities: string[], unit: TestFile | undefined): ByteString {
+function readSection(section: Section, fileErrors: ParsedDiagnostic[], ops: RuleOps, ambiguities: string[], unit: TestFile | undefined): SectionResult {
   const raw = section.lines;
   const unitLines = unit?.content.split(/\r?\n/).map(l => (l.endsWith("\r") ? l.slice(0, -1) : l));
   const unitLineStarts = unit === undefined ? undefined : computeECMALineStarts(unit.content);
@@ -477,13 +449,12 @@ function readSection(section: Section, fileErrors: ParsedDiagnostic[], ops: Rule
     if (d.line === undefined || d.character === undefined) fail(`a masked position in ${section.unitName}, which has a section`);
   }
 
-  // Reads the section with the given decisions for the undecided lines; further ones take the default.
-  const attempt = (decisions: boolean[]): { content: ByteString; undecided: number; taken: boolean[] } => {
-    const taken: boolean[] = [];
-    let undecided = 0;
+  // Reads the section with the given decisions for the undecided lines; further ones take the chain reading.
+  const attempt = (decisions: boolean[], taken: boolean[]): SectionResult => {
     const contentLines: string[] = [];
     const lineStarts: number[] = [0];
-    const state = fileErrors.map(() => 0);
+    const state = fileErrors.map(() => 0); // 0 pending, 1 active, 2 done
+    const spans = fileErrors.map(() => ({ pos: 0, end: 0, block: undefined as MessageBlock | undefined }));
     let i = 0;
     while (i < raw.length) {
       const rawLine = raw[i];
@@ -505,10 +476,10 @@ function readSection(section: Section, fileErrors: ParsedDiagnostic[], ops: Rule
         if (state[k] === 0) {
           if (d.line! - 1 < lineIndex) fail(`the span at line ${d.line} of ${section.unitName} has no squiggle`);
           if (d.line! - 1 !== lineIndex) continue;
-          d.pos = byteOffsetOfUtf16Column(line, 0, d.character! - 1) + thisLineStart;
+          spans[k].pos = byteOffsetOfUtf16Column(line, 0, d.character! - 1) + thisLineStart;
           state[k] = 1;
         }
-        const errStart = d.pos;
+        const errStart = spans[k].pos;
         const squiggleStart = Math.max(0, errStart - thisLineStart);
         const prefix = ops.squigglePrefix(line, squiggleStart);
         if (i >= raw.length) fail(`the squiggle line of a span is missing in ${section.unitName}`);
@@ -518,18 +489,19 @@ function readSection(section: Section, fileErrors: ParsedDiagnostic[], ops: Rule
         if (!/^~*$/.test(tildes)) fail(`squiggle line ${JSON.stringify(squiggleLine)} has text after column ${d.character}`);
         i++;
         const covered = ops.bytesOfTildes(line, Math.min(squiggleStart, line.length), tildes.length);
-        const ends = i < raw.length && raw[i].startsWith("!!! ");
-        if (ends) {
-          d.end = Math.max(errStart, thisLineStart) + covered;
-          d.hasLength = true;
+        if (i < raw.length && raw[i].startsWith("!!! ")) {
+          // The span ends on this line: at the last tilde, which the end of the line can cut short.
+          spans[k].end = Math.max(errStart, thisLineStart) + covered;
           state[k] = 2;
-          i = readMessageBlock(raw, i, d, () => {
-            const n = taken.length;
-            const decision = n < decisions.length ? decisions[n] : true;
-            if (n >= decisions.length) undecided++;
+          const block = readMessageBlock(ops, raw, i, d, () => {
+            const decision = taken.length < decisions.length ? decisions[taken.length] : true;
             taken.push(decision);
             return decision;
           });
+          spans[k].block = block;
+          i = block.next;
+        } else if (squiggleStart + covered < line.length) {
+          fail(`a span of ${section.unitName} goes on after line ${lineIndex + 1} and its squiggle stops before the end of the line`);
         }
       }
     }
@@ -537,65 +509,41 @@ function readSection(section: Section, fileErrors: ParsedDiagnostic[], ops: Rule
       if (state[k] !== 2) fail(`a span of ${section.unitName} at line ${fileErrors[k].line} has no message`);
     }
     if (unitLines !== undefined && unitLines.length !== contentLines.length) fail(`${section.unitName} has ${contentLines.length} lines and the unit has ${unitLines.length}`);
-    return { content: contentLines.join("\n"), undecided, taken };
+    return { content: contentLines.join("\n"), spans, taken };
   };
 
-  // Depth-first over the undecided lines: the chain reading first, then the text reading.
-  const search = (decisions: boolean[]): { content: ByteString; taken: boolean[] } => {
+  // Depth-first over the undecided lines.
+  const search = (decisions: boolean[]): SectionResult => {
+    const taken: boolean[] = [];
     let firstError: unknown;
     try {
-      const result = attempt(decisions);
-      return result;
+      return attempt(decisions, taken);
     } catch (e) {
       if (!(e instanceof BaselineReadError)) throw e;
       firstError = e;
     }
-    // Find the decisions that the failed attempt took by default and flip the last of them.
-    const probe = probeDecisions(decisions);
-    for (let n = probe.length - 1; n >= decisions.length; n--) {
-      const flipped = [...probe.slice(0, n), false];
+    for (let n = taken.length - 1; n >= decisions.length; n--) {
       try {
-        return search(flipped);
+        return search([...taken.slice(0, n), false]);
       } catch (e) {
         if (!(e instanceof BaselineReadError)) throw e;
       }
     }
     throw firstError;
   };
-  // The decisions that an attempt takes until it fails or ends.
-  const probeDecisions = (decisions: boolean[]): boolean[] => {
-    const seen: boolean[] = [];
-    const saved = fileErrors.map(d => ({ pos: d.pos, end: d.end, hasLength: d.hasLength }));
-    try {
-      const raw2 = attemptRecording(decisions, seen);
-      void raw2;
-    } catch (e) {
-      if (!(e instanceof BaselineReadError)) throw e;
-    }
-    fileErrors.forEach((d, k) => Object.assign(d, saved[k]));
-    return seen;
-  };
-  const attemptRecording = (decisions: boolean[], seen: boolean[]): void => {
-    const original = readMessageBlock;
-    void original;
-    const result = attemptWith(decisions, seen);
-    void result;
-  };
-  const attemptWith = (decisions: boolean[], seen: boolean[]): void => {
-    // The same walk as attempt, which records each decision in `seen` before it can fail.
-    const recording: ReadMessageBlock = (block, i, d, accept) => readMessageBlock(block, i, d, at => {
-      const decision = accept(at);
-      seen.push(decision);
-      return decision;
-    });
-    readSectionOnce(section, fileErrors, ops, recording, unitLines, unitLineStarts, decisions);
-  };
 
   const result = search([]);
-  if (result.taken.length > 0) {
+  if (result.taken.length > 0 && unit === undefined) {
     ambiguities.push(`${section.unitName}: ${result.taken.length} lines after related information read as ${result.taken.map(t => (t ? "chain" : "text")).join(",")}`);
   }
-  return result.content;
+  return result;
+}
+
+interface SnippetRow {
+  line: number;
+  text: string;
+  spaces: number;
+  tildes: number;
 }
 
 interface PrettyRelated {
@@ -603,48 +551,39 @@ interface PrettyRelated {
   line: number;
   character: number;
   messageLines: string[];
-  // The last line and column of the span in UTF-16 units, from the code snippet.
-  lastLine: number;
-  lastCharacter: number;
-  snippet: { line: number; text: string }[];
+  rows: SnippetRow[];
 }
 
 interface PrettyTop {
   head: Head;
   related: PrettyRelated[];
-  emptyRelatedBlock: boolean;
-  snippet: { lastLine: number; lastCharacter: number } | undefined;
+  rows: SnippetRow[];
 }
 
 const ESC = "\u001b";
 const locationPattern = new RegExp(`^${ESC}\\[96m([^]*?)${ESC}\\[0m:${ESC}\\[93m(\\d+)${ESC}\\[0m:${ESC}\\[93m(\\d+)${ESC}\\[0m`);
 const categoryPattern = new RegExp(`^${ESC}\\[9[1304]m(error|warning|suggestion|message)${ESC}\\[0m${ESC}\\[90m TS(-?\\d+): ${ESC}\\[0m([^]*)$`);
-const gutterPattern = new RegExp(`^( *)${ESC}\\[7m( *)(\\d+|\\.\\.\\.|)${ESC}\\[0m ([^]*)$`);
+const gutterPattern = new RegExp(`^( *)${ESC}\\[7m *(\\d+|\\.\\.\\.|)${ESC}\\[0m ([^]*)$`);
 const squigglePattern = new RegExp(`^${ESC}\\[9[0-6]m( *)(~*)${ESC}\\[0m$`);
 
-function readSnippet(lines: string[], i: number, indent: string): { next: number; rows: { line: number; text: string; spaces: number; tildes: number }[] } {
-  const rows: { line: number; text: string; spaces: number; tildes: number }[] = [];
-  while (i + 1 < lines.length) {
+function readSnippet(lines: string[], i: number, indent: string): { next: number; rows: SnippetRow[] } {
+  const rows: SnippetRow[] = [];
+  while (i < lines.length) {
     const g = gutterPattern.exec(lines[i]);
-    if (g === null || g[1] !== indent) break;
-    if (g[3] === "...") {
+    if (g === null || g[1] !== indent || g[2] === "") break;
+    if (g[2] === "...") {
+      if (g[3] !== "") fail(`ellipsis line ${JSON.stringify(lines[i])}`);
       i++;
       continue;
     }
-    if (g[3] === "") break;
-    const s = gutterPattern.exec(lines[i + 1]);
-    if (s === null || s[1] !== indent || s[3] !== "") fail(`snippet line ${JSON.stringify(lines[i + 1])}`);
-    const q = squigglePattern.exec(s[4]);
+    const s = i + 1 < lines.length ? gutterPattern.exec(lines[i + 1]) : null;
+    if (s === null || s[1] !== indent || s[2] !== "") fail(`snippet line ${JSON.stringify(lines[i + 1])}`);
+    const q = squigglePattern.exec(s[3]);
     if (q === null) fail(`snippet squiggle ${JSON.stringify(lines[i + 1])}`);
-    rows.push({ line: Number(g[3]), text: g[4], spaces: q[1].length, tildes: q[2].length });
+    rows.push({ line: Number(g[2]), text: g[3], spaces: q[1].length, tildes: q[2].length });
     i += 2;
   }
   return { next: i, rows };
-}
-
-function snippetEnd(rows: { line: number; spaces: number; tildes: number }[]): { lastLine: number; lastCharacter: number } {
-  const last = rows[rows.length - 1];
-  return { lastLine: last.line, lastCharacter: rows.length === 1 ? last.spaces + last.tildes : last.tildes };
 }
 
 function readPrettyHead(line: string): Head | undefined {
@@ -674,21 +613,20 @@ function readPrettyTopTsgo(top: string): PrettyTop[] {
     const head = readPrettyHead(lines[i]);
     if (head === undefined) fail(`pretty line ${JSON.stringify(lines[i])} is not a diagnostic`);
     i++;
-    while (i < lines.length && lines[i] !== "" && readPrettyHead(lines[i]) === undefined && !lines[i].startsWith(`  ${ESC}[96m`)) {
-      head.messageLines.push(lines[i++]);
-    }
-    const entry: PrettyTop = { head, related: [], emptyRelatedBlock: false, snippet: undefined };
+    while (i < lines.length && lines[i] !== "" && readPrettyHead(lines[i]) === undefined) head.messageLines.push(lines[i++]);
+    const entry: PrettyTop = { head, related: [], rows: [] };
     if (head.fileName !== undefined && head.code !== 1490) {
       if (lines[i] !== "") fail("no empty line before the code snippet");
       i++;
       const snippet = readSnippet(lines, i, "");
       if (snippet.rows.length === 0) fail("no code snippet");
-      entry.snippet = snippetEnd(snippet.rows);
+      entry.rows = snippet.rows;
       i = snippet.next;
-    }
-    // Each related entry: an empty line, then two spaces, the location, " - ", the message, and its snippet.
-    while (i + 1 < lines.length && lines[i] === "" && lines[i + 1].startsWith(`  ${ESC}[96m`)) {
+      if (lines[i] !== "") fail("no line break after the code snippet");
       i++;
+    }
+    // Each related entry: a line break, two spaces, the location, " - ", the message, its snippet, a line break.
+    while (i < lines.length && lines[i].startsWith(`  ${ESC}[96m`)) {
       const loc = locationPattern.exec(lines[i].slice(2));
       if (loc === null || !lines[i].startsWith(" - ", 2 + loc[0].length)) fail(`related line ${JSON.stringify(lines[i])}`);
       const messageLines = [lines[i].slice(2 + loc[0].length + 3)];
@@ -697,18 +635,11 @@ function readPrettyTopTsgo(top: string): PrettyTop[] {
       const snippet = readSnippet(lines, i, "    ");
       if (snippet.rows.length === 0) fail("no code snippet of related information");
       i = snippet.next;
-      entry.related.push({
-        fileName: loc[1],
-        line: Number(loc[2]),
-        character: Number(loc[3]),
-        messageLines,
-        ...snippetEnd(snippet.rows),
-        snippet: snippet.rows,
-      });
+      entry.related.push({ fileName: loc[1], line: Number(loc[2]), character: Number(loc[3]), messageLines, rows: snippet.rows });
+      if (lines[i] !== "") fail("no line break after related information");
+      i++;
     }
     result.push(entry);
-    // The separator between two diagnostics is one line break; a diagnostic with a file ends with one of its own.
-    if (i < lines.length && lines[i] === "" && (head.fileName !== undefined || entry.related.length > 0)) i++;
   }
   return result;
 }
@@ -723,38 +654,30 @@ function readPrettyTopTsc(top: string): PrettyTop[] {
     const head = readPrettyHead(lines[i]);
     if (head === undefined) fail(`pretty line ${JSON.stringify(lines[i])} is not a diagnostic`);
     i++;
-    while (i < lines.length && lines[i] !== "" && readPrettyHead(lines[i]) === undefined) {
-      head.messageLines.push(lines[i++]);
-    }
-    const entry: PrettyTop = { head, related: [], emptyRelatedBlock: false, snippet: undefined };
+    while (i < lines.length && lines[i] !== "" && readPrettyHead(lines[i]) === undefined) head.messageLines.push(lines[i++]);
+    const entry: PrettyTop = { head, related: [], rows: [] };
     if (head.fileName !== undefined && head.code !== 1490) {
       if (lines[i] !== "") fail("no empty line before the code snippet");
       i++;
       const snippet = readSnippet(lines, i, "");
       if (snippet.rows.length === 0) fail("no code snippet");
-      entry.snippet = snippetEnd(snippet.rows);
+      entry.rows = snippet.rows;
       i = snippet.next;
     }
     if (i < lines.length && lines[i] === "") {
       // The related block: an empty line, then per entry the location, the snippet and the indented message.
       i++;
-      entry.emptyRelatedBlock = true;
-      while (i < lines.length && (lines[i].startsWith(`  ${ESC}[96m`) || (lines[i].startsWith("    ") && readPrettyHead(lines[i]) === undefined))) {
-        entry.emptyRelatedBlock = false;
-        if (lines[i].startsWith(`  ${ESC}[96m`)) {
-          const loc = locationPattern.exec(lines[i].slice(2));
-          if (loc === null || lines[i].length !== 2 + loc[0].length) fail(`related line ${JSON.stringify(lines[i])}`);
-          i++;
-          const snippet = readSnippet(lines, i, "    ");
-          if (snippet.rows.length === 0) fail("no code snippet of related information");
-          i = snippet.next;
-          if (!lines[i].startsWith("    ")) fail("no message of related information");
-          const messageLines = [lines[i++].slice(4)];
-          while (i < lines.length && lines[i].startsWith("  ") && !lines[i].startsWith(`  ${ESC}[96m`) && readPrettyHead(lines[i]) === undefined) messageLines.push(lines[i++]);
-          entry.related.push({ fileName: loc[1], line: Number(loc[2]), character: Number(loc[3]), messageLines, ...snippetEnd(snippet.rows), snippet: snippet.rows });
-        } else {
-          fail("related information without a file in a pretty baseline");
-        }
+      while (i < lines.length && lines[i].startsWith(`  ${ESC}[96m`)) {
+        const loc = locationPattern.exec(lines[i].slice(2));
+        if (loc === null || lines[i].length !== 2 + loc[0].length) fail(`related line ${JSON.stringify(lines[i])}`);
+        i++;
+        const snippet = readSnippet(lines, i, "    ");
+        if (snippet.rows.length === 0) fail("no code snippet of related information");
+        i = snippet.next;
+        if (i >= lines.length || !lines[i].startsWith("    ")) fail("no message of related information");
+        const messageLines = [lines[i++].slice(4)];
+        while (i < lines.length && lines[i].startsWith("  ") && !lines[i].startsWith(`  ${ESC}[96m`)) messageLines.push(lines[i++]);
+        entry.related.push({ fileName: loc[1], line: Number(loc[2]), character: Number(loc[3]), messageLines, rows: snippet.rows });
       }
     }
     result.push(entry);
@@ -762,32 +685,36 @@ function readPrettyTopTsc(top: string): PrettyTop[] {
   return result;
 }
 
-// The spans of related information: the plain lines give the start, the pretty snippet gives the end.
-function applyPrettyRelated(diagnostics: ParsedDiagnostic[], prettyRelated: Map<ParsedDiagnostic, PrettyRelated[]>, rules: Rules): void {
-  void rules;
-  for (const d of diagnostics) {
-    const list = prettyRelated.get(d) ?? [];
-    const withFile = d.relatedInformation.filter(r => r.file !== undefined);
-    if (d.file !== undefined && d.file.hasText && withFile.length !== list.length) {
-      fail(`the first section has ${list.length} related entries and the section has ${withFile.length}`);
-    }
-    for (let k = 0; k < withFile.length && k < list.length; k++) {
-      const r = withFile[k];
-      const p = list[k];
-      const file = r.file!;
-      if (!file.hasText) fail("related information of a pretty baseline in a file without a section");
-      const starts = computeECMALineStarts(file.text);
-      const firstLineChar = utf16Len(file.text.slice(starts[p.line - 1], r.pos));
-      let lastCharacter = p.lastCharacter;
-      if (p.lastLine === p.line && lastCharacter === firstLineChar + 1) {
-        // One tilde is what a span of no length and a span of one code unit both draw.
-        const next = r.pos < file.text.length ? decodeRune(file.text, r.pos) : [0, 0];
-        if (next[1] === 0 || next[0] === 0x0a || next[0] === 0x0d) lastCharacter = firstLineChar;
-      }
-      r.end = byteOffsetOfUtf16Column(file.text, starts[p.lastLine - 1], lastCharacter);
-      r.hasLength = true;
-    }
-  }
+// The end of a span from the rows of its snippet: last line, and the column after the last tilde.
+function snippetEnd(rows: SnippetRow[]): { lastLine: number; lastCharacter: number } {
+  const last = rows[rows.length - 1];
+  return { lastLine: last.line, lastCharacter: rows.length === 1 ? last.spaces + last.tildes : last.tildes };
 }
 
-export { runeCount };
+// The spans of related information: the section gives the start, the snippet of the first section gives the end.
+function applyPrettyTops(diagnostics: ParsedDiagnostic[], tops: PrettyTop[], rules: Rules): void {
+  diagnostics.forEach((d, index) => {
+    const top = tops[index];
+    const withFile = d.relatedInformation.filter(r => r.file !== undefined);
+    if (d.file !== undefined && d.file.hasText && withFile.length !== top.related.length) {
+      fail(`the first section has ${top.related.length} related entries and the section has ${withFile.length}`);
+    }
+    for (let k = 0; k < withFile.length; k++) {
+      const r = withFile[k];
+      const p = top.related[k];
+      const file = r.file!;
+      if (!file.hasText) fail("related information of a pretty baseline in a file without a section");
+      if (r.line !== p.line || r.character !== p.character) fail("the two prints of related information name different positions");
+      const starts = computeECMALineStarts(file.text);
+      const firstLineChar = utf16Len(file.text.slice(starts[p.line - 1], r.pos));
+      let { lastLine, lastCharacter } = snippetEnd(p.rows);
+      if (rules === "tsgo" && lastLine === p.line && lastCharacter === firstLineChar + 1) {
+        // One tilde is what a span of no length and a span of one code unit both draw: see the text.
+        const [next, size] = r.pos < file.text.length ? decodeRune(file.text, r.pos) : [0, 0];
+        if (size === 0 || next === 0x0a || next === 0x0d) lastCharacter = firstLineChar;
+      }
+      r.end = byteOffsetOfUtf16Column(file.text, starts[lastLine - 1], lastCharacter);
+      r.hasLength = true;
+    }
+  });
+}
