@@ -1,7 +1,8 @@
-# Adds a "diagnostics only" mode to a copy of the reference's test harness: with CTP_MODE=diag a case is checked
+# Adds two "diagnostics only" modes to a copy of the reference's test harness. With CTP_MODE=diag a case is checked
 # once (config, program, syntactic, semantic and global diagnostics, suggestions when the case asks), nothing is
 # emitted, no declaration diagnostics are made, an incremental case uses the plain program, and only the error
-# baseline is compared. Without CTP_MODE the harness is unchanged.
+# baseline is compared. CTP_MODE=diagdecl is the same plus the declaration diagnostics of a case that emits
+# declarations (the declaration transform runs, nothing is printed). Without CTP_MODE the harness is unchanged.
 # usage: python3 patch.py <copy of the reference>
 import sys
 T=sys.argv[1]
@@ -14,7 +15,7 @@ a='''	ctx := context.Background()
 assert s.count(a)==1
 s=s.replace(a,'''	ctx := context.Background()
 
-	if os.Getenv("CTP_MODE") == "diag" {
+	if strings.HasPrefix(os.Getenv("CTP_MODE"), "diag") {
 		diagProgram := createProgram(host, config)
 		var diagErrors []*ast.Diagnostic
 		diagErrors = append(diagErrors, diagProgram.GetConfigFileParsingDiagnostics()...)
@@ -22,6 +23,9 @@ s=s.replace(a,'''	ctx := context.Background()
 		diagErrors = append(diagErrors, diagProgram.GetSyntacticDiagnostics(ctx, nil)...)
 		diagErrors = append(diagErrors, diagProgram.GetSemanticDiagnostics(ctx, nil)...)
 		diagErrors = append(diagErrors, diagProgram.GetGlobalDiagnostics(ctx)...)
+		if os.Getenv("CTP_MODE") == "diagdecl" && diagProgram.Options().GetEmitDeclarations() {
+			diagErrors = append(diagErrors, diagProgram.GetDeclarationDiagnostics(ctx, nil)...)
+		}
 		if harnessOptions.CaptureSuggestions {
 			diagErrors = append(diagErrors, diagProgram.GetSuggestionDiagnostics(ctx, nil)...)
 		}
@@ -33,7 +37,7 @@ s=s.replace(a,'''	ctx := context.Background()
 ''')
 a='	if config.CompilerOptions().Incremental.IsTrue() {\n		oldProgram := incremental.ReadBuildInfoProgram'
 assert s.count(a)==1
-s=s.replace(a,'	if os.Getenv("CTP_MODE") != "diag" && config.CompilerOptions().Incremental.IsTrue() {\n		oldProgram := incremental.ReadBuildInfoProgram')
+s=s.replace(a,'	if !strings.HasPrefix(os.Getenv("CTP_MODE"), "diag") && config.CompilerOptions().Incremental.IsTrue() {\n		oldProgram := incremental.ReadBuildInfoProgram')
 open(p,'w').write(s)
 p=T+'/internal/testrunner/compiler_runner.go'
 s=open(p).read()
@@ -41,7 +45,7 @@ a='''	compilerTest.verifyDiagnostics(t, r.testSuitName, r.isSubmodule)
 	compilerTest.verifyContentMapper'''
 assert s.count(a)==1
 s=s.replace(a,'''	compilerTest.verifyDiagnostics(t, r.testSuitName, r.isSubmodule)
-	if os.Getenv("CTP_MODE") == "diag" {
+	if strings.HasPrefix(os.Getenv("CTP_MODE"), "diag") {
 		return
 	}
 	compilerTest.verifyContentMapper''')

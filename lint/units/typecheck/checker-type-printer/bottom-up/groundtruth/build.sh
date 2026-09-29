@@ -1,7 +1,7 @@
 #!/bin/sh
 # Measures which functions of the type printer family the reference executes, per function, in two runs of its own
-# compiler and conformance cases: "diag" (checker diagnostics only, see patch.py) and "full" (the unchanged harness:
-# emit, declaration emit, .types and .symbols baselines). Also builds the typed call graph of the family.
+# compiler and conformance cases: "diag" (checker diagnostics only, see patch.py), "diagdecl" (diag plus declaration
+# diagnostics without emit) and "full" (the unchanged harness: emit, declaration emit, .types and .symbols baselines). Also builds the typed call graph of the family.
 # The Go hosts of Google are not reachable from the build machine: the toolchain and the modules come from GitHub.
 # usage: sh build.sh [work dir, default /tmp/ctp]     (about 70 MB of downloads, 15 minutes to build, 2 minutes per run)
 # results: <work dir>/family.tsv panics.tsv diag.external-callees.tsv, copied to ../data by hand when they change
@@ -63,12 +63,14 @@ export PATH="$W/go126/bin:$PATH" GOROOT="$W/go126" GOTOOLCHAIN=local GOFLAGS=-mo
 M=github.com/microsoft/typescript-go/internal
 (cd "$T" && /workspace/tools/lk go test -c -cover -covermode=set -coverpkg=$M/checker,$M/printer,$M/nodebuilder,$M/pseudochecker,$M/modulespecifiers -o "$W/testrunner.cover.test" ./internal/testrunner)
 (cd "$T/internal/testrunner" && CTP_MODE=diag /workspace/tools/lk "$W/testrunner.cover.test" -test.run '^(TestSubmodule|TestLocal)$' -test.count=1 -test.timeout 120m -test.coverprofile="$W/cover.diag.out" > "$W/run.diag.log" 2>&1) || true
+(cd "$T/internal/testrunner" && CTP_MODE=diagdecl /workspace/tools/lk "$W/testrunner.cover.test" -test.run '^(TestSubmodule|TestLocal)$' -test.count=1 -test.timeout 120m -test.coverprofile="$W/cover.diagdecl.out" > "$W/run.diagdecl.log" 2>&1) || true
 (cd "$T/internal/testrunner" && /workspace/tools/lk "$W/testrunner.cover.test" -test.run '^(TestSubmodule|TestLocal)$' -test.count=1 -test.timeout 120m -test.coverprofile="$W/cover.full.out" > "$W/run.full.log" 2>&1) || true
 (cd "$T/internal/testrunner" && CTP_MODE=diag /workspace/tools/lk "$W/testrunner.cover.test" -test.run '^TestSubmodule$/^typeCheckExportsVariable.ts$' -test.count=1 -test.coverprofile="$W/cover.k4.out" > "$W/run.k4.log" 2>&1) || true
 (cd "$HERE/../goanal" && go build -o "$W/goanal" .)
 (cd "$W" && "$W/goanal" "$W/fns.json" checker printer nodebuilder pseudochecker modulespecifiers)
-python3 "$HERE/../py/cover.py" "$W/fns.json" "$W/family.tsv" diag="$W/cover.diag.out" full="$W/cover.full.out" k4="$W/cover.k4.out"
+python3 "$HERE/../py/cover.py" "$W/fns.json" "$W/family.tsv" diag="$W/cover.diag.out" full="$W/cover.full.out" k4="$W/cover.k4.out" diagdecl="$W/cover.diagdecl.out"
 python3 "$HERE/../py/panics.py" "$W/fns.json" "$W/family.tsv" "$W/panics.tsv"
 python3 "$HERE/../py/deps.py" "$W/fns.json" "$W/family.tsv" "$W/diag"
 echo "diag run: $(grep -c '^    --- FAIL' "$W/run.diag.log") instances differ from the reference baseline (they need the emit or declaration diagnostics)"
+echo "diagdecl run: $(grep -c '^    --- FAIL' "$W/run.diagdecl.log") instances differ from the reference baseline (their diagnostics depend on the emit having run first)"
 tail -3 "$W/run.full.log"

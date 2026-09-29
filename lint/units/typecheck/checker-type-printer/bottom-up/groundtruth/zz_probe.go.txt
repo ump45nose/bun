@@ -1,0 +1,6 @@
+
+// Research probe only: the text of the type of a type node, printed three ways.
+func (c *Checker) ProbeTypeNodeToStrings(node *ast.Node) (string, string, string) {
+	t := c.getTypeFromTypeNode(node)
+	return c.TypeToString(t), c.typeToStringEx(t, nil, TypeFormatFlagsUseFullyQualifiedType, nil), c.typeToString(t, node.Parent)
+}

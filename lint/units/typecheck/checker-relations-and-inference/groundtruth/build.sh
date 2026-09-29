@@ -44,5 +44,6 @@ MOD
 export GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off GOFLAGS=-mod=mod GOROOT="$R/go126" PATH="$R/go126/bin:$PATH"
 (cd "$W/mod" && /workspace/tools/lk go build -o "$W/relprobe" ./cmd/relprobe)
 echo "built $W/relprobe"
-(cd "$W/mod" && /workspace/tools/lk go build -cover -covermode=atomic -coverpkg=github.com/microsoft/typescript-go/internal/checker,github.com/microsoft/typescript-go/internal/binder -o "$W/relprobe-cover" ./cmd/relprobe)
+# The main package must be in -coverpkg, or runtime/coverage has no counters to clear.
+(cd "$W/mod" && /workspace/tools/lk go build -cover -covermode=atomic -coverpkg=github.com/microsoft/typescript-go/cmd/relprobe,github.com/microsoft/typescript-go/internal/checker,github.com/microsoft/typescript-go/internal/binder,github.com/microsoft/typescript-go/internal/printer,github.com/microsoft/typescript-go/internal/nodebuilder,github.com/microsoft/typescript-go/internal/evaluator,github.com/microsoft/typescript-go/internal/jsnum -o "$W/relprobe-cover" ./cmd/relprobe)
 echo "built $W/relprobe-cover"
