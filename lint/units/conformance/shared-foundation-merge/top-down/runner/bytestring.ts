@@ -1,5 +1,5 @@
 // A Go string as a JavaScript string whose char codes are its bytes, with Go's unicode/utf8 and the byte-level calls of the reference.
-import { isSpace } from "./gostrings";
+import { isAscii, isSpace } from "./gostrings";
 
 export type ByteString = string;
 
@@ -22,11 +22,6 @@ export function toByteString(bytes: Uint8Array): ByteString {
 
 export function fromByteString(s: ByteString): Buffer {
   return Buffer.from(s, "latin1");
-}
-
-export function isAscii(s: string): boolean {
-  for (let i = 0; i < s.length; i++) if (s.charCodeAt(i) >= RuneSelf) return false;
-  return true;
 }
 
 // A lone surrogate has no UTF-8 form: Buffer would write U+FFFD for it.

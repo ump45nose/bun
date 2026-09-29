@@ -7,6 +7,7 @@ use super::context::Context;
 use super::rules;
 use super::Diagnostic;
 
+#[allow(clippy::disallowed_methods)]
 pub(crate) fn run(context: Context<'_, '_>, stmts: &[Stmt]) -> Vec<Diagnostic> {
     let mut linter = Linter {
         context,

@@ -112,13 +112,15 @@ for (const [a, b, fold, ci, cs] of sec("pairs").cases as [string, string, boolea
   check("strings.Compare, pairs as byte strings", go.compareStrings(go.utf8ToByteString(a), go.utf8ToByteString(b)), cs, d);
   check("Buffer.compare of the UTF-8 forms is strings.Compare", Math.sign(Buffer.compare(Buffer.from(a), Buffer.from(b))), cs, d);
 }
-for (const [s, trimSpace, trimRight, lower, fileLower, trimSuffix] of sec("strings").cases as string[][]) {
+for (const [s, trimSpace, trimRight, lower, fileLower, trimSuffix, trimFunc, trimPrefix] of sec("strings").cases as string[][]) {
   const d = () => JSON.stringify(s);
   check("strings.TrimSpace", go.trimSpace(s), trimSpace, d);
   check("strings.TrimRightFunc(IsSpace) on a byte string", go.byteStringToUtf8(go.trimRightSpace(go.utf8ToByteString(s))), trimRight, d);
   check("strings.ToLower, strings", go.toLower(s), lower, d);
   check("tspath.ToFileNameLowerCase, strings", tp.toFileNameLowerCase(s), fileLower, d);
   check("strings.TrimSuffix", go.trimSuffix(go.trimSpace(s), ";"), trimSuffix, d);
+  check("strings.TrimFunc(IsWhiteSpaceLike)", go.trimFunc(s, su.isWhiteSpaceLike), trimFunc, d);
+  check("strings.TrimPrefix", go.trimPrefix(s, " "), trimPrefix, d);
 }
 
 // utf8.DecodeRuneInString and utf8.DecodeLastRuneInString on every string of a class of byte strings.

@@ -50,6 +50,8 @@ for (const f of files) {
 		console.log(`bun-rejects ${f}`);
 		continue;
 	}
+	// A message without a rule is ESLint speaking about a directive comment.
+	messages = messages.filter(m => m.ruleId !== null);
 	const theirs = messages.map(m => `${m.line}:${m.column} ${m.ruleId} ${m.message}`).sort();
 	const ours = b.reports.slice().sort();
 	tally.eslintReports += theirs.length;

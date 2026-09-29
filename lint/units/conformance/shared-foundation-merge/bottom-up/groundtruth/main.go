@@ -170,9 +170,9 @@ func stringVectors() {
 	for range 8000 {
 		s := randString(spaces, 3) + randString(both, 5) + randString(spaces, 3)
 		trims = append(trims, []any{s, strings.TrimSpace(s), strings.TrimRightFunc(s, unicode.IsSpace), strings.ToLower(s), tspath.ToFileNameLowerCase(s),
-			strings.TrimSuffix(strings.TrimSpace(s), ";")})
+			strings.TrimSuffix(strings.TrimSpace(s), ";"), strings.TrimFunc(s, stringutil.IsWhiteSpaceLike), strings.TrimPrefix(s, " ")})
 	}
-	emit(map[string]any{"s": "strings", "fields": "s trimSpace trimRightSpace toLower toFileNameLowerCase trimSuffix", "cases": trims})
+	emit(map[string]any{"s": "strings", "fields": "s trimSpace trimRightSpace toLower toFileNameLowerCase trimSuffix trimFuncIsWhiteSpaceLike trimPrefixSpace", "cases": trims})
 }
 
 func decodeAll(prefix string, tails [][]byte) {

@@ -62,6 +62,31 @@ fn main() {
                 println!("PARSE_ERROR");
             }
         }
+        Some("tokens-batch") => {
+            for path in std::fs::read_to_string(&args[2]).unwrap().lines() {
+                let Ok(text) = std::fs::read(path) else { continue };
+                let done = with_parsed(&text, path.ends_with("x"), |parsed, source, arena| {
+                    let stmts: Vec<&bun_ast::Stmt> = parsed.stmts.iter().collect();
+                    let spans = tokens::Spans::under(source.contents(), &[], &stmts);
+                    let mut log = bun_ast::Log::init();
+                    let mut tokens = tokens::Tokens::new(&mut log, source, arena, &spans, 0);
+                    let mut line = String::new();
+                    while let Some(token) = tokens.next() {
+                        let tag = match token.kind {
+                            tokens::Kind::Jsx => "J",
+                            tokens::Kind::RegExp => "R",
+                            _ => "",
+                        };
+                        line.push_str(&format!("{}-{}{} ", token.start, token.end, tag));
+                    }
+                    if tokens.failed() {
+                        line.push_str("FAILED");
+                    }
+                    line
+                });
+                println!("{path}\t{}", done.unwrap_or_else(|| "PARSE_ERROR".into()));
+            }
+        }
         Some("lint") => {
             let cases = std::fs::read_to_string(&args[2]).unwrap();
             for line in cases.lines() {

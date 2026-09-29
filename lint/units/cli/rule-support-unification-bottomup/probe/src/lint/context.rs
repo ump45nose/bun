@@ -233,6 +233,7 @@ impl<'p, 'a> Context<'p, 'a> {
         }
     }
 
+    #[allow(clippy::disallowed_macros, clippy::disallowed_methods)]
     pub(crate) fn stress_report(&self) {
         eprintln!(
             "stress: {} binaries, {} members, {} indexes, {} cases ({} with the keyword found), {} failed",

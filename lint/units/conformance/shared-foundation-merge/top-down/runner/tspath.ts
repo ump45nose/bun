@@ -1,5 +1,5 @@
 // Port of internal/tspath/path.go and extension.go of microsoft/typescript-go at 89d5d5b: the functions the runner calls.
-import { unicodeToLower } from "./gostrings";
+import { isAscii, unicodeToLower } from "./gostrings";
 import {
   compareStringsCaseInsensitive,
   equateStringCaseInsensitive,
@@ -344,14 +344,7 @@ export function getCanonicalFileName(fileName: string, useCaseSensitiveFileNames
 
 // U+0130 stays, every other rune takes unicode.ToLower.
 export function toFileNameLowerCase(fileName: string): string {
-  let ascii = true;
-  for (let i = 0; i < fileName.length; i++) {
-    if (fileName.charCodeAt(i) >= 0x80) {
-      ascii = false;
-      break;
-    }
-  }
-  if (ascii) return fileName.toLowerCase();
+  if (isAscii(fileName)) return fileName.toLowerCase();
   let out = "";
   for (const ch of fileName) {
     const r = ch.codePointAt(0)!;

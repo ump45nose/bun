@@ -50,13 +50,13 @@ pub(crate) fn s_switch(cx: &mut Context<'_, '_>, node: &S::Switch, loc: Loc) {
             format_args!("'switch(NaN)' can never match a case clause. Use Number.isNaN instead of the switch."),
         );
     }
-    for case in node.cases.slice() {
+    for (index, case) in node.cases.slice().iter().enumerate() {
         let Some(value) = &case.value else { continue };
         let needs = nan(cx, value);
         if needs.is_none() {
             continue;
         }
-        let at = cx.case_loc(value);
+        let at = cx.case_loc(node, index);
         cx.report_if_global(needs, NAME, at, format_args!("'case NaN' can never match. Use Number.isNaN before the switch."));
     }
 }

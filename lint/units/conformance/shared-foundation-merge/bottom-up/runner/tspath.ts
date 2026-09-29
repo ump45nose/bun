@@ -336,7 +336,8 @@ export function normalizePath(path: string): string {
   const simple = simpleNormalizePath(path);
   if (simple !== undefined) return simple;
   let normalized = getNormalizedAbsolutePath(path, "");
-  if (normalized !== "" && hasTrailingDirectorySeparator(path)) normalized = ensureTrailingDirectorySeparator(normalized);
+  if (normalized !== "" && hasTrailingDirectorySeparator(path))
+    normalized = ensureTrailingDirectorySeparator(normalized);
   return normalized;
 }
 
@@ -583,7 +584,12 @@ export function fileExtensionIsOneOf(path: string, extensions: readonly string[]
   return false;
 }
 
-export function changeAnyExtension(path: string, ext: string, extensions: readonly string[], ignoreCase: boolean): string {
+export function changeAnyExtension(
+  path: string,
+  ext: string,
+  extensions: readonly string[],
+  ignoreCase: boolean,
+): string {
   const pathext = getAnyExtensionFromPath(path, extensions, ignoreCase);
   if (pathext !== "") {
     const result = path.slice(0, path.length - pathext.length);

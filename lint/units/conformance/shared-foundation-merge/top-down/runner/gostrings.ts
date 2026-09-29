@@ -68,14 +68,14 @@ export function foldKey(r: number): number {
   return mapped(foldRanges, r);
 }
 
-function isAsciiText(s: string): boolean {
+export function isAscii(s: string): boolean {
   for (let i = 0; i < s.length; i++) if (s.charCodeAt(i) >= 0x80) return false;
   return true;
 }
 
 // strings.ToLower: one code point at a time, so U+0130 lowers to "i" and no final sigma rule applies.
 export function toLower(s: string): string {
-  if (isAsciiText(s)) return s.toLowerCase();
+  if (isAscii(s)) return s.toLowerCase();
   let out = "";
   for (const ch of s) out += String.fromCodePoint(unicodeToLower(ch.codePointAt(0)!));
   return out;

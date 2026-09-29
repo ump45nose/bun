@@ -39,20 +39,13 @@ function lineStartsUtf16(text: string): number[] {
   while (pos < text.length) {
     const ch = text.charCodeAt(pos);
     pos++;
-    switch (ch) {
-      case 0x0d:
-        if (text.charCodeAt(pos) === 0x0a) pos++;
-      // falls through
-      case 0x0a:
-        result.push(lineStart);
-        lineStart = pos;
-        break;
-      default:
-        if (ch > 0x7f && (ch === 0x2028 || ch === 0x2029)) {
-          result.push(lineStart);
-          lineStart = pos;
-        }
-        break;
+    if (ch === 0x0d) {
+      if (text.charCodeAt(pos) === 0x0a) pos++;
+      result.push(lineStart);
+      lineStart = pos;
+    } else if (ch === 0x0a || ch === 0x2028 || ch === 0x2029) {
+      result.push(lineStart);
+      lineStart = pos;
     }
   }
   result.push(lineStart);

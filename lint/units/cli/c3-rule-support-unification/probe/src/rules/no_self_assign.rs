@@ -7,7 +7,11 @@ use bun_ast::{E, Expr, G, OpCode};
 
 const NAME: &str = "no-self-assign";
 
-pub(crate) fn e_binary(cx: &mut Context<'_, '_>, node: &E::Binary) {
+pub(crate) fn e_binary(cx: &mut Context<'_, '_>, node: &E::Binary, is_default: bool) {
+    // `[a = a] = b`: the inner `=` gives a default.
+    if is_default {
+        return;
+    }
     if matches!(
         node.op,
         OpCode::BinAssign | OpCode::BinLogicalAndAssign | OpCode::BinLogicalOrAssign | OpCode::BinNullishCoalescingAssign
@@ -59,6 +63,10 @@ fn each_self_assignment(cx: &mut Context<'_, '_>, left: &Expr, right: &Expr, sta
                     {
                         continue;
                     }
+                    // `{a = 1}`: a default.
+                    if left_property.initializer.is_some() {
+                        continue;
+                    }
                     let (Some(left_key), Some(right_key)) = (&left_property.key, &right_property.key) else { continue };
                     let (Some(left_value), Some(right_value)) = (&left_property.value, &right_property.value) else { continue };
                     if static_key_name(left_key, left_property.flags.contains(Flag::IsComputed), cx.arena(), &mut left_name)
@@ -87,6 +95,16 @@ fn is_same_reference(cx: &Context<'_, '_>, left: &Expr, right: &Expr, stack: bun
         (ExprData::EThis(_), ExprData::EThis(_)) | (ExprData::ESuper(_), ExprData::ESuper(_)) => true,
         (ExprData::EIdentifier(a), ExprData::EIdentifier(b)) => cx.name(a.ref_) == cx.name(b.ref_),
         (ExprData::EPrivateIdentifier(a), ExprData::EPrivateIdentifier(b)) => cx.name(a.ref_) == cx.name(b.ref_),
+        // ESLint: equalLiteralValue. A template is no literal.
+        (ExprData::EString(a), ExprData::EString(b)) => !a.prefer_template && !b.prefer_template && a.eql_string(b),
+        (ExprData::ENumber(a), ExprData::ENumber(b)) => a.value() == b.value(),
+        (ExprData::EBigInt(_), ExprData::EBigInt(_)) => {
+            let (mut a, mut b) = (Vec::new(), Vec::new());
+            static_key_name(left, false, cx.arena(), &mut a) && static_key_name(right, false, cx.arena(), &mut b) && a == b
+        }
+        (ExprData::ENull(_), ExprData::ENull(_)) => true,
+        (ExprData::EBoolean(a), ExprData::EBoolean(b)) => a.value == b.value,
+        (ExprData::ERegExp(a), ExprData::ERegExp(b)) => *a.value == *b.value,
         _ if is_member(left) && is_member(right) => {
             let (left_target, right_target) = (member_target(left), member_target(right));
             let (mut left_name, mut right_name) = (Vec::new(), Vec::new());

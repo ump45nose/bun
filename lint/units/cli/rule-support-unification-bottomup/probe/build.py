@@ -54,5 +54,11 @@ env = dict(os.environ)
 env.update(unit["env"])
 env["CARGO_CRATE_NAME"] = "lintprobe"
 os.makedirs(out, exist_ok=True)
-r = subprocess.run([unit["rustc"]] + args, cwd=wt, env=env)
+driver = unit["rustc"]
+if os.environ.get("CLIPPY"):
+    # clippy-driver takes rustc's arguments: the lints of the workspace with clippy.toml, and no link.
+    driver = os.path.join(os.path.dirname(unit["rustc"]), "clippy-driver")
+    env["CLIPPY_CONF_DIR"] = wt
+    args = [x for x in args if not x.startswith("--emit=")] + ["--emit=metadata"]
+r = subprocess.run([driver] + args, cwd=wt, env=env)
 sys.exit(r.returncode)

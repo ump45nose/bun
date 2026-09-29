@@ -117,6 +117,10 @@ impl<'a, 'p> Context<'a, 'p> {
             bun_ast::ExprData::EArray(array) => self.targets.push(core::ptr::from_ref(&**array) as usize),
             bun_ast::ExprData::EObject(object) => self.targets.push(core::ptr::from_ref(&**object) as usize),
             bun_ast::ExprData::ESpread(spread) => self.mark_target(&spread.value),
+            // `[a = 1] = b`: a default, not an assignment.
+            bun_ast::ExprData::EBinary(binary) if binary.op == bun_ast::OpCode::BinAssign => {
+                self.targets.push(core::ptr::from_ref(&**binary) as usize);
+            }
             _ => {}
         }
     }
@@ -151,7 +155,7 @@ impl<'a, 'p> Context<'a, 'p> {
         self.token_at(at).map_or(0, |token| token.end - token.start)
     }
 
-    /// The tokens of `[from, to)`; `under` are the expressions whose text that is.
+    /// The tokens that start in `[from, to)`; `under` are the expressions whose text that is.
     pub(crate) fn between(&self, from: u32, to: u32, under: &[&Expr]) -> Option<Between> {
         let spans = self.spans(under, &[]);
         let mut log = bun_ast::Log::init();
@@ -159,15 +163,8 @@ impl<'a, 'p> Context<'a, 'p> {
         let mut depth: i64 = 0;
         let mut lowest: i64 = 0;
         let mut found = Between { unmatched: 0, last_end: from, before_last_end: from, last_kind: None };
-        loop {
-            let Some(token) = tokens.next() else {
-                // The text up to `to` is tokens: running out of them is a failure.
-                return None;
-            };
+        while let Some(token) = tokens.next() {
             if token.start >= to {
-                if token.start > to {
-                    return None;
-                }
                 break;
             }
             match token.kind {
@@ -181,6 +178,10 @@ impl<'a, 'p> Context<'a, 'p> {
             found.before_last_end = found.last_end;
             found.last_end = token.end;
             found.last_kind = Some(token.kind);
+        }
+        // A token across `to` means the text was not read the way the parser read it.
+        if tokens.failed() || found.last_end > to {
+            return None;
         }
         found.unmatched = u32::try_from(-lowest).ok()?;
         Some(found)
@@ -200,13 +201,125 @@ impl<'a, 'p> Context<'a, 'p> {
         }
     }
 
-    /// Where the clause of a case test starts: its `case` when that is found, else the test.
-    pub(crate) fn case_loc(&self, test: &Expr) -> Loc {
+    /// Where clause `index` of a switch starts: the `case` before its test.
+    pub(crate) fn case_loc(&self, node: &bun_ast::S::Switch, index: usize) -> Loc {
+        let Some(test) = node.cases.slice().get(index).and_then(|case| case.value.as_ref()) else { return Loc::EMPTY };
         let Ok(at) = u32::try_from(test.loc.start) else { return test.loc };
-        match self.case_keyword_before(at) {
+        match self.case_keyword_before(at).or_else(|| self.case_keyword_scanned(node, index)) {
             Some(start) => Loc { start: start as i32 },
             None => test.loc,
         }
+    }
+
+    /// The tokens of a case test from its first own token: `each` gets a token and whether it is a `)` whose `(`
+    /// stands before the test. Answers where the `:` of the clause ends.
+    pub(crate) fn case_test(&self, test: &Expr, mut each: impl FnMut(&Token, bool)) -> Option<u32> {
+        let from = u32::try_from(test.loc.start).ok()?;
+        let spans = self.spans(&[test], &[]);
+        let mut log = bun_ast::Log::init();
+        let mut tokens = self.tokens(&mut log, &spans, from);
+        let (mut braces, mut parens, mut conditionals) = (0u32, 0u32, 0u32);
+        loop {
+            let token = tokens.next()?;
+            let mut closes_outer = false;
+            match token.kind {
+                Kind::Code(T::TOpenBrace | T::TTemplateHead) => braces += 1,
+                Kind::Code(T::TCloseBrace) | Kind::TemplateTail => braces = braces.checked_sub(1)?,
+                Kind::Code(T::TOpenParen) => parens += 1,
+                Kind::Code(T::TCloseParen) => match parens.checked_sub(1) {
+                    Some(open) => parens = open,
+                    None => closes_outer = true,
+                },
+                // Outside braces a `:` belongs to a `?`, or it ends the test.
+                Kind::Code(T::TQuestion) if braces == 0 => conditionals += 1,
+                Kind::Code(T::TColon) if braces == 0 => match conditionals.checked_sub(1) {
+                    Some(open) => conditionals = open,
+                    None => return Some(token.end),
+                },
+                _ => {}
+            }
+            each(&token, closes_outer);
+        }
+    }
+
+    fn token_after(&self, at: u32) -> Option<Token> {
+        let spans = Spans::default();
+        let mut log = bun_ast::Log::init();
+        self.tokens(&mut log, &spans, at).next()
+    }
+
+    /// The `case`, `default` or `}` that follows the statement that ends a clause.
+    fn keyword_after_statement(&self, stmt: &Stmt) -> Option<Token> {
+        let from = u32::try_from(stmt.loc.start).ok()?;
+        let spans = self.spans(&[], &[stmt]);
+        let mut log = bun_ast::Log::init();
+        let mut tokens = self.tokens(&mut log, &spans, from);
+        // A statement may start inside parentheses: the next clause is at the lowest depth the scan reaches.
+        let (mut depth, mut lowest) = (0i64, 0i64);
+        let mut after_dot = false;
+        loop {
+            let token = tokens.next()?;
+            match token.kind {
+                Kind::Code(T::TOpenParen | T::TOpenBracket | T::TOpenBrace | T::TTemplateHead) => depth += 1,
+                Kind::Code(T::TCloseParen | T::TCloseBracket) | Kind::TemplateTail => {
+                    depth -= 1;
+                    lowest = lowest.min(depth);
+                }
+                Kind::Code(T::TCloseBrace) => {
+                    if depth == lowest {
+                        return Some(token);
+                    }
+                    depth -= 1;
+                }
+                // `a.case` is a property.
+                Kind::Code(T::TCase | T::TDefault) if depth == lowest && !after_dot => return Some(token),
+                _ => {}
+            }
+            after_dot = matches!(token.kind, Kind::Code(T::TDot | T::TQuestionDot));
+        }
+    }
+
+    /// The keyword of the clause after `case`; `keyword_end` is where the keyword of `case` ends, when that is known.
+    fn keyword_after_clause(&self, case: &bun_ast::Case, keyword_end: Option<u32>) -> Option<Token> {
+        if let Some(last) = case.body.slice().last() {
+            return self.keyword_after_statement(last);
+        }
+        let colon_end = match &case.value {
+            Some(test) => self.case_test(test, |_, _| {})?,
+            None => {
+                let colon = self.token_after(keyword_end?)?;
+                if colon.kind != Kind::Code(T::TColon) {
+                    return None;
+                }
+                colon.end
+            }
+        };
+        self.token_after(colon_end)
+    }
+
+    /// Reads forward from the nearest place the tree knows to the keyword of clause `index`.
+    fn case_keyword_scanned(&self, node: &bun_ast::S::Switch, index: usize) -> Option<u32> {
+        let cases = node.cases.slice();
+        let known = (0..index).rev().find(|&j| !cases[j].body.slice().is_empty() || cases[j].value.is_some());
+        let (mut token, mut next) = match known {
+            Some(j) => (self.keyword_after_clause(&cases[j], None)?, j + 1),
+            None => {
+                let open = self.token_after(u32::try_from(node.body_loc.start).ok()?)?;
+                if open.kind != Kind::Code(T::TOpenBrace) {
+                    return None;
+                }
+                (self.token_after(open.end)?, 0)
+            }
+        };
+        while next < index {
+            // Only a `default` without statements is between.
+            if token.kind != Kind::Code(T::TDefault) {
+                return None;
+            }
+            token = self.keyword_after_clause(&cases[next], Some(token.end))?;
+            next += 1;
+        }
+        (token.kind == Kind::Code(T::TCase)).then_some(token.start)
     }
 
     /// After `from`, past any `)`, the end of the `]` that closes an index.

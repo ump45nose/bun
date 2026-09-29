@@ -15,12 +15,12 @@ pub(crate) fn s_switch(cx: &mut Context<'_, '_>, node: &S::Switch) {
         return;
     }
     let mut seen: Vec<Test> = Vec::new();
-    for case in cases {
+    for (index, case) in cases.iter().enumerate() {
         let Some(value) = &case.value else { continue };
         // A test that cannot be read again is compared with nothing.
         let Some(test) = test_tokens(cx, value) else { continue };
         if seen.contains(&test) {
-            let at = cx.case_loc(value);
+            let at = cx.case_loc(node, index);
             cx.report(NAME, at, format_args!("Duplicate case label."));
         } else {
             seen.push(test);
@@ -30,34 +30,12 @@ pub(crate) fn s_switch(cx: &mut Context<'_, '_>, node: &S::Switch) {
 
 /// From the first token of the test to the `:` of its clause, without the `)` of parentheses around all of it.
 fn test_tokens(cx: &Context<'_, '_>, value: &Expr) -> Option<Test> {
-    let from = u32::try_from(value.loc.start).ok()?;
-    let spans = cx.spans(&[value], &[]);
-    let mut log = bun_ast::Log::init();
-    let mut tokens = cx.tokens(&mut log, &spans, from);
     let text = cx.text();
     let mut test: Test = Vec::new();
     // Per token: a `)` whose `(` stands before the test.
     let mut unmatched: Vec<bool> = Vec::new();
-    let (mut braces, mut parens, mut conditionals) = (0u32, 0u32, 0u32);
-    loop {
-        let token = tokens.next()?;
-        let mut closes_outer = false;
-        match token.kind {
-            Kind::Code(T::TOpenBrace | T::TTemplateHead) => braces += 1,
-            Kind::Code(T::TCloseBrace) | Kind::TemplateTail => braces = braces.checked_sub(1)?,
-            Kind::Code(T::TOpenParen) => parens += 1,
-            Kind::Code(T::TCloseParen) => match parens.checked_sub(1) {
-                Some(open) => parens = open,
-                None => closes_outer = true,
-            },
-            Kind::Code(T::TQuestion) if braces == 0 => conditionals += 1,
-            Kind::Code(T::TColon) if braces == 0 => match conditionals.checked_sub(1) {
-                Some(open) => conditionals = open,
-                None => break,
-            },
-            _ => {}
-        }
-        let raw = text.get(token.start as usize..token.end as usize)?;
+    cx.case_test(value, |token, closes_outer| {
+        let raw = text.get(token.start as usize..token.end as usize).unwrap_or(b"");
         let spelled = match token.kind {
             // ESLint compares the name of an identifier, not how it is escaped.
             Kind::Code(T::TIdentifier) if raw.contains(&b'\\') => unescape_identifier(raw),
@@ -65,7 +43,7 @@ fn test_tokens(cx: &Context<'_, '_>, value: &Expr) -> Option<Test> {
         };
         test.push((token.kind, spelled));
         unmatched.push(closes_outer);
-    }
+    })?;
     while unmatched.last() == Some(&true) {
         unmatched.pop();
         test.pop();

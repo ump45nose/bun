@@ -145,6 +145,7 @@ impl<'ast> Visitor<'ast> for Linter<'_, '_> {
         walk::walk_e_object(self, node);
     }
     fn visit_e_binary(&mut self, node: &'ast E::Binary, loc: Loc) -> Option<&'ast Expr> {
+        let is_default = self.cx.take_target(node);
         if node.op == OpCode::BinAssign {
             self.cx.mark_target(&node.left);
         }
@@ -152,7 +153,7 @@ impl<'ast> Visitor<'ast> for Linter<'_, '_> {
         rules::use_isnan::e_binary(&mut self.cx, node, loc);
         rules::valid_typeof::e_binary(&mut self.cx, node);
         rules::no_unsafe_negation::e_binary(&mut self.cx, node);
-        rules::no_self_assign::e_binary(&mut self.cx, node);
+        rules::no_self_assign::e_binary(&mut self.cx, node, is_default);
         walk::walk_e_binary(self, node)
     }
 }

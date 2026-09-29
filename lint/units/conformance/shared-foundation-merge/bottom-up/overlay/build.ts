@@ -1,11 +1,13 @@
 // Builds a copy of the prototypes of the unit in which every old copy of the bottom layer is a shim over ../runner.
 // The upper prototypes stay as they are but for the patches listed below, so their verifiers run against the merged set.
-// usage: bun build.ts <directory of the notes of the unit> <output directory> [--no-patches]
+// usage: bun build.ts <directory of the notes of the unit> <output directory> [--no-patches | --without=<group of patches>]
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 
 const [notes, out, flag] = process.argv.slice(2);
 const withPatches = flag !== "--no-patches";
+// --without=<group> leaves one group of patches out: rename, decode-paths, go-case, compare-once.
+const without = flag?.startsWith("--without=") ? flag.slice("--without=".length) : undefined;
 const merged = join(import.meta.dir, "..", "runner");
 
 rmSync(out, { recursive: true, force: true });
@@ -320,13 +322,17 @@ export { isSpace } from "${m(f, "gostrings")}";
 
 // Patches of upper modules: [file, old text, new text, times the old text occurs]. A patch that does not apply is an error.
 type Patch = [file: string, oldText: string, newText: string, times: number];
-const patches: Patch[] = [
+const groups: [name: string, patches: Patch[]][] = [];
+const group = (name: string, patches: Patch[]) => groups.push([name, patches]);
+group("rename", [
   // The split of an input file into lines is not stringutil.SplitLines: it does not carry that name.
   ["error-baseline-format/top-down/error_baseline.ts", "model.splitLines(", "model.contentLines(", 1],
   ["error-baseline-format/top-down/reader.ts", "model.splitLines(", "model.contentLines(", 1],
   ["error-baseline-format/top-down/reader_fuzz.ts", "model.splitLines(", "model.contentLines(", 1],
   ["error-baseline-format/top-down/stats_spans.ts", "model.splitLines(", "model.contentLines(", 1],
-  // The comparers of tspath fold runes, so a name of the model is decoded before it is compared.
+]);
+// The comparers of tspath fold runes, so a name of the model is decoded before it is compared.
+group("decode-paths", [
   [
     "error-baseline-format/top-down/error_baseline.ts",
     `import { comparePaths, ensureTrailingDirectorySeparator, getBaseFileName } from "./tspath";\n`,
@@ -347,7 +353,9 @@ const patches: Patch[] = [
   ["error-baseline-format/top-down/shape.ts", `import { type TestFile, isDefaultLibraryFile, removeTestPathPrefixes } from "./error_baseline";`, `import { type TestFile, comparePathsOf, isDefaultLibraryFile, removeTestPathPrefixes } from "./error_baseline";`, 1],
   ["error-baseline-format/top-down/shape.ts", `import { comparePaths } from "./tspath";\n`, "", 1],
   ["error-baseline-format/top-down/shape.ts", "comparePaths(shown, removeTestPathPrefixes(rules, f.unitName), caseInsensitive)", "comparePathsOf(rules, shown, removeTestPathPrefixes(rules, f.unitName), caseInsensitive)", 1],
-  // Go's strings.ToLower and strings.EqualFold in place of the methods of JavaScript.
+]);
+// Go's strings.ToLower and strings.EqualFold in place of the methods of JavaScript.
+group("go-case", [
   ...["enumerator/prototype", "instance-materialisation/prototype", "instance-materialisation/bottom-up/prototype"].flatMap((d): Patch[] => [
     [
       d + "/harnessutil.ts",
@@ -356,7 +364,9 @@ const patches: Patch[] = [
       1,
     ],
   ]),
-  // strings.Compare once: the local comparers on the UTF-8 forms give way to compareStrings.
+]);
+// strings.Compare once: the local comparers on the UTF-8 forms give way to compareStrings.
+group("compare-once", [
   ...["enumerator/prototype", "instance-materialisation/prototype", "instance-materialisation/bottom-up/prototype"].flatMap((d): Patch[] => [
     [
       d + "/harnessutil.ts",
@@ -373,11 +383,14 @@ const patches: Patch[] = [
       1,
     ],
   ]),
+]);
+group("go-case", [
   ...["instance-materialisation/prototype", "instance-materialisation/bottom-up/prototype"].flatMap((d): Patch[] => [
     [d + "/vfsmatch.ts", "if (!p.caseSensitive) lit = lit.toLowerCase();", "if (!p.caseSensitive) lit = toLower(lit);", 1],
     [d + "/vfsmatch.ts", `import type { MemFs } from "./memfs";\n`, `import type { MemFs } from "./memfs";\nimport { toLower } from "${m(d + "/vfsmatch.ts", "gostrings")}";\n`, 1],
   ]),
-];
+]);
+const patches = groups.filter(([name]) => name !== without).flatMap(([, list]) => list);
 const applied: string[] = [];
 if (withPatches) {
   for (const [file, oldText, newText, times] of patches) {
