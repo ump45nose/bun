@@ -3,6 +3,7 @@ use crate::arena::Arena;
 use crate::core::TextRange;
 use crate::diagnostics::{self, Category, Locale, MessageId};
 use crate::ids::{DiagnosticId, NodeId};
+use crate::slices::{binary_search_func, sort_func, sort_stable_func};
 use core::cmp::Ordering;
 use std::collections::BTreeMap as MapImpl;
 
@@ -294,6 +295,30 @@ impl DiagnosticStore {
 }
 
 const MAX_NESTING: u32 = 200;
+
+// strings.Compare
+fn compare_strings(a: &[u8], b: &[u8]) -> isize {
+    match a.cmp(b) {
+        Ordering::Less => -1,
+        Ordering::Equal => 0,
+        Ordering::Greater => 1,
+    }
+}
+
+// slices.Compare over string slices
+fn compare_string_slices(a: &[Box<[u8]>], b: &[Box<[u8]>]) -> isize {
+    for (x, y) in a.iter().zip(b) {
+        let c = compare_strings(x, y);
+        if c != 0 {
+            return c;
+        }
+    }
+    compare_lengths(a.len(), b.len())
+}
+
+fn compare_lengths(a: usize, b: usize) -> isize {
+    (a as isize).wrapping_sub(b as isize)
+}
 
 pub struct Diagnostics<'a, F: ?Sized> {
     pub store: &'a DiagnosticStore,

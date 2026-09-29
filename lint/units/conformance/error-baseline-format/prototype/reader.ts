@@ -1,6 +1,6 @@
 // The reader of .errors.txt baselines: bytes to diagnostics and files, the inverse of getErrorBaseline.
 import { Category, type Diagnostic, type FileLike, categoryName, computeECMALineStarts, flattenDiagnosticMessage } from "./diagnosticwriter";
-import { type Rules, type TestFile, removeTestPathPrefixes } from "./error_baseline";
+import { type Rules, type TestFile, getErrorBaseline, removeTestPathPrefixes } from "./error_baseline";
 import { type ByteString, decodeRune, replaceNonWhitespace, utf16Len } from "./go_compat";
 import * as tsc from "./tsc_rules";
 import { comparePaths } from "./tspath";
@@ -257,6 +257,24 @@ function readMessageBlock(ops: RuleOps, block: string[], i: number, d: ParsedDia
   return { next: i, related, printed: block.slice(first, i).join("\r\n") };
 }
 
+// Reads a baseline and checks the reading: the writer must give back the bytes.
+// Without options.rules the rules of the Go harness are tried first, then those of TypeScript's harness.
+export function readErrorBaselineChecked(text: ByteString, options: ReadOptions = {}): ParsedBaseline {
+  let firstError: unknown;
+  for (const rules of options.rules !== undefined ? [options.rules] : (["tsgo", "tsc"] as Rules[])) {
+    try {
+      const parsed = readErrorBaseline(text, { ...options, rules });
+      const written = getErrorBaseline(parsed.files, parsed.diagnostics, (a, b) => (a as ParsedDiagnostic).order - (b as ParsedDiagnostic).order, parsed.pretty, rules);
+      if (written.text === text) return parsed;
+      firstError ??= new BaselineReadError(`the writer does not give back the bytes with the rules ${rules}`);
+    } catch (e) {
+      if (!(e instanceof BaselineReadError) && !(e instanceof RangeError)) throw e;
+      firstError ??= e;
+    }
+  }
+  throw firstError;
+}
+
 export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): ParsedBaseline {
   const rules = options.rules ?? "tsgo";
   const ops: RuleOps = rules === "tsc" ? { ...tscOps } : tsgoOps;
@@ -276,9 +294,9 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
 
   if (pretty) {
     // The summary is a function of the diagnostics: the reader drops it and the writer makes it again.
+    // A baseline without a diagnostic of the category error has no summary.
     const at = rest.lastIndexOf("\r\nFound ");
-    if (at < 0) fail("a pretty baseline without a summary");
-    rest = rest.slice(0, at);
+    if (at >= 0) rest = rest.slice(0, at);
   }
 
   // The first section.

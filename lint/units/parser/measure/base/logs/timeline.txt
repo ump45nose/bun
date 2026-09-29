@@ -29,3 +29,5 @@ END   24-test-decorators rc=0 wall=509s lockwait=482s run=27s 2026-09-29T17:51:1
 START 25-test-type-export 2026-09-29T17:51:16Z load=134.93 219.03 278.43 cmd: bun bd test test/js/bun/typescript/type-export.test.ts --timeout 180000
 END   25-test-type-export rc=0 wall=308s lockwait=237s run=71s 2026-09-29T17:56:24Z load=138.97 168.66 240.09
 START 26-test-transpiler-stack-overflow 2026-09-29T17:56:24Z load=138.97 168.66 240.09 cmd: bun bd test test/bundler/transpiler/transpiler-stack-overflow.test.ts --timeout 180000
+END   26-test-transpiler-stack-overflow rc=0 wall=383s lockwait=333s run=50s 2026-09-29T18:02:47Z load=201.23 180.35 220.85
+START 27-test-transpiler-cache 2026-09-29T18:02:47Z load=201.23 180.35 220.85 cmd: bun bd test test/cli/run/transpiler-cache.test.ts --timeout 180000

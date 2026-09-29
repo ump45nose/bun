@@ -75,6 +75,8 @@ const diagnosticsLocationPattern = /(lib[^\n]*\.d\.ts):\d+:\d+/gi;
 
 export interface ErrorBaselineResult {
   text: ByteString;
+  // The pieces of the text: first section, global block, one per input file, and the summary when pretty.
+  parts: ByteString[];
   // The checks that the reference makes with assert.Check: a failure marks the test and the text is still made.
   failedChecks: string[];
 }
@@ -109,7 +111,7 @@ export function getErrorBaseline(
       outputLines.push(summary);
     }
   }
-  return { text: outputLines.join(""), failedChecks };
+  return { text: outputLines.join(""), parts: outputLines, failedChecks };
 }
 
 function iterateErrorBaseline(
