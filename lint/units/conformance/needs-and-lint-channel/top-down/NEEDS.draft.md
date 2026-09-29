@@ -88,9 +88,9 @@ Ask. For `bun --lint <files>` with stdout and stderr that are no terminal:
    position, then code". The end has to come before the code: of the 7,027 baselines of the oracle 474 hold
    two diagnostics at one start, in 105 their ends differ, and in 37 the order by code is the reverse of the
    order by end (first: `compiler/TransportStream.ts`, `compiler/arithmeticOnInvalidTypes.ts`).
-7. A lint run prints nothing about the `bunfig.toml`, `package.json`, `tsconfig.json` or `jsconfig.json` of the
-   current directory. The cases have broken ones on purpose: 73 run instances have a configuration file and
-   504 have a `package.json`.
+7. A lint run prints nothing of its own about a `bunfig.toml`, `package.json`, `tsconfig.json` or
+   `jsconfig.json` in or above the current directory. The instances bring their own: 73 run instances have a
+   configuration file and 504 a `package.json`, and 19 of the 493 such units of the cases are no strict JSON.
 8. For each name of the stand-in log of the run one line without a file, `error internal-stand-in: <name>`,
    and the exit code 2. For a ported panic or assert one line `error internal-error: <text>`. (typecheck
    gives the data: CH-3.)
@@ -450,13 +450,16 @@ these lanes for:
   `core.longpaths` is set. The longest path of the repository today is 159.
 - CI-2, line endings (Windows). A checkout with `core.autocrlf=true` has to leave the corpus byte for byte.
   Proved only by simulation (`git -c core.autocrlf=true archive`, `corpus-repo-hazards/prove-corpus.sh`).
-- CI-3, links (Windows). 19 run instances make links. Without the right to make links their status has to be
-  "unsupported on this platform", not "fail" (5 instances by the count of the materialisation research).
+- CI-3, links (Windows). 19 run instances make links. By the count of the materialisation research 5 of them
+  need the right to make links to a file. Without that right their status has to be "unsupported on this
+  platform", not "fail".
 - CI-4, case rules (macOS, Windows). The harness runs every instance with case-sensitive names
-  (`harnessutil.go:105`) and the disk is not: an instance with two units whose names differ only by case
-  cannot be written, and a check that reads the disk finds `A.ts` for `a.ts`. Predicted, not measured: 182
-  run instances cannot be written on macOS, 183 to 188 on Windows, 185 on Linux (mostly the 175 with
-  absolute paths). No two paths of the corpus itself differ only by case.
+  (`harnessutil.go:105`) and the disk of these systems is not: a check that reads the disk finds `A.ts` for
+  `a.ts`, so a diagnostic about the casing of a file name can differ. Which instances that hits was not
+  measured. No run instance has two units whose full names differ only by case, and no two paths of the
+  corpus do. Predicted by the materialisation research, not measured there: 182 run instances cannot be
+  written to disk on macOS, 183 on Windows (188 without the right to make links), 185 on Linux; 175 of them
+  are the instances with absolute paths.
 - CI-5, names in the output (Windows). A path in a diagnostic has a drive and may have back slashes; a path
   in a message text has forward slashes. The directory of temporary files may be a short name
   (`RUNNER~1`). The mapping from real to virtual names was tested on Linux only.

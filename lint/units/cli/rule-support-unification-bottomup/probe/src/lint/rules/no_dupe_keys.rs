@@ -3,10 +3,10 @@
 use bun_ast::flags::Property as Flag;
 use bun_ast::{E, Expr, ExprData, G};
 
+use crate::lint::ast_utils::{self, Name};
 use crate::lint::context::Context;
 use crate::lint::rule::{Category, Rule};
 use crate::lint::rules::text;
-use crate::lint::static_name::{self, Name};
 
 static RULE: Rule = Rule {
     name: "no-dupe-keys",
@@ -29,7 +29,7 @@ pub(crate) fn e_object(context: &mut Context<'_, '_>, node: &E::Object) {
         let Some(key) = &property.key else {
             continue;
         };
-        let Some(name) = static_name::of_key(key) else {
+        let Some(name) = ast_utils::get_static_string_value(key) else {
             continue;
         };
         // `__proto__: value` sets the prototype: it is not a key.

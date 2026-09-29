@@ -45,13 +45,19 @@ function* seqSet(set: string): Generator<ByteString> {
 }
 for (const v of rows) {
   if (v.k === "seq") {
-    const d = createHash("sha256");
+    let sum = 2166136261;
     for (const s of seqSet(v.set)) {
       const [r, size] = decodeRune(s, 0);
       const [lr, lsize] = decodeLastRune(s, 0, s.length);
-      d.update(`${hex(s)} ${r} ${size} ${lr} ${lsize} ${runeCount(s)} ${validString(s)} ${utf16Len(s)}\n`, "latin1");
+      sum = Math.imul(sum ^ r, 16777619);
+      sum = Math.imul(sum ^ size, 16777619);
+      sum = Math.imul(sum ^ lr, 16777619);
+      sum = Math.imul(sum ^ lsize, 16777619);
+      sum = Math.imul(sum ^ runeCount(s), 16777619);
+      sum = Math.imul(sum ^ (validString(s) ? 1 : 0), 16777619);
+      sum = Math.imul(sum ^ utf16Len(s), 16777619);
     }
-    if (d.digest("hex") !== v.digest) bad++;
+    if (sum >>> 0 !== v.sum32) bad++;
   }
 }
 const t3 = performance.now();

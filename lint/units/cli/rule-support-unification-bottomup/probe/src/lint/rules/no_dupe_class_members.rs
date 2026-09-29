@@ -3,11 +3,11 @@
 use bun_ast::flags::Property as Flag;
 use bun_ast::{Expr, G};
 
+use crate::lint::ast_utils::{self, Name};
 use crate::lint::context::Context;
 use crate::lint::rule::{Category, Rule};
 use crate::lint::rules::no_dupe_keys::key_len;
 use crate::lint::rules::text;
-use crate::lint::static_name::{self, Name};
 
 static RULE: Rule = Rule {
     name: "no-dupe-class-members",
@@ -32,7 +32,7 @@ pub(crate) fn class(context: &mut Context<'_, '_>, class: &G::Class) {
         let Some(key) = &property.key else {
             continue;
         };
-        let Some(name) = static_name::of_key(key) else {
+        let Some(name) = ast_utils::get_static_string_value(key) else {
             continue;
         };
         let is_static = property.flags.contains(Flag::IsStatic);

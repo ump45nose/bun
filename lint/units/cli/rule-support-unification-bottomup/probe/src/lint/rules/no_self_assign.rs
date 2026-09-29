@@ -3,10 +3,10 @@
 use bun_ast::flags::Property as Flag;
 use bun_ast::{E, Expr, ExprData, G, OpCode};
 
+use crate::lint::ast_utils::{self, is_same_reference};
 use crate::lint::context::Context;
 use crate::lint::rule::{Category, Rule};
 use crate::lint::rules::text;
-use crate::lint::static_name;
 
 static RULE: Rule = Rule {
     name: "no-self-assign",
@@ -91,85 +91,14 @@ fn each_property(context: &mut Context<'_, '_>, left: &G::Property, right: &G::P
         return;
     };
     let same = match (
-        static_name::of_key(left_key),
-        static_name::of_key(right_key),
+        ast_utils::get_static_string_value(left_key),
+        ast_utils::get_static_string_value(right_key),
     ) {
         (Some(left), Some(right)) => left.bytes() == right.bytes(),
         _ => false,
     };
     if same {
         each_self_assignment(context, left_value, right_value);
-    }
-}
-
-/// ESLint's `isSameReference` (lib/rules/utils/ast-utils.js): `a?.b` and `a.b` are one reference.
-fn is_same_reference(context: &Context<'_, '_>, left: &Expr, right: &Expr) -> bool {
-    if !context.stack_check.is_safe_to_recurse() {
-        return false;
-    }
-    match (&left.data, &right.data) {
-        (ExprData::EThis(_), ExprData::EThis(_)) | (ExprData::ESuper(_), ExprData::ESuper(_)) => {
-            true
-        }
-        (ExprData::EIdentifier(l), ExprData::EIdentifier(r)) => {
-            context.name_of(l.ref_) == context.name_of(r.ref_)
-        }
-        (ExprData::EPrivateIdentifier(l), ExprData::EPrivateIdentifier(r)) => {
-            context.name_of(l.ref_) == context.name_of(r.ref_)
-        }
-        (ExprData::EDot(_) | ExprData::EIndex(_), ExprData::EDot(_) | ExprData::EIndex(_)) => {
-            let (Some(left_target), Some(right_target)) = (target_of(left), target_of(right))
-            else {
-                return false;
-            };
-            if let Some(name) = static_name::of_member(left) {
-                return static_name::of_member(right)
-                    .is_some_and(|other| other.bytes() == name.bytes())
-                    && is_same_reference(context, left_target, right_target);
-            }
-            let (ExprData::EIndex(l), ExprData::EIndex(r)) = (&left.data, &right.data) else {
-                return false;
-            };
-            // `a.#b` is not computed, `a[b]` is.
-            let is_private = |index: &Expr| matches!(index.data, ExprData::EPrivateIdentifier(_));
-            is_private(&l.index) == is_private(&r.index)
-                && is_same_reference(context, left_target, right_target)
-                && is_same_reference(context, &l.index, &r.index)
-        }
-        _ => is_same_literal(left, right),
-    }
-}
-
-fn target_of(member: &Expr) -> Option<&Expr> {
-    match &member.data {
-        ExprData::EDot(dot) => Some(&dot.target),
-        ExprData::EIndex(index) => Some(&index.target),
-        _ => None,
-    }
-}
-
-/// ESLint's `equalLiteralValue` for two nodes that ESTree calls `Literal`.
-fn is_same_literal(left: &Expr, right: &Expr) -> bool {
-    match (&left.data, &right.data) {
-        (ExprData::ERegExp(l), ExprData::ERegExp(r)) => l.value.slice() == r.value.slice(),
-        (ExprData::EBigInt(l), ExprData::EBigInt(r)) => {
-            match (static_name::of_key(left), static_name::of_key(right)) {
-                (Some(l), Some(r)) => l.bytes() == r.bytes(),
-                _ => l.value.slice() == r.value.slice(),
-            }
-        }
-        (ExprData::ENull(_), ExprData::ENull(_)) => true,
-        (ExprData::EBoolean(l), ExprData::EBoolean(r)) => l.value == r.value,
-        (ExprData::ENumber(l), ExprData::ENumber(r)) => l.value() == r.value(),
-        (ExprData::EString(l), ExprData::EString(r))
-            if !l.prefer_template && !r.prefer_template =>
-        {
-            match (static_name::of_key(left), static_name::of_key(right)) {
-                (Some(l), Some(r)) => l.bytes() == r.bytes(),
-                _ => false,
-            }
-        }
-        _ => false,
     }
 }
 

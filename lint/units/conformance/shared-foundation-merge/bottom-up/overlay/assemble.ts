@@ -323,6 +323,118 @@ const edits: Edit[] = [
   ["test/cli/lint/conformance.test.ts", "getConfigNameFromFileName(u.name)", "directives.getConfigNameFromFileName(u.name)", 1],
 ];
 
+// Rule 5 of the unit: one comment line at a time, and no word of the research. [file, old text, new text].
+const t = "test/cli/lint/conformance.test.ts";
+const sw = "test/cli/lint/conformance/sweep.ts";
+const comments: [file: string, oldText: string, newText: string][] = [
+  [
+    r("diagnosticwriter.ts"),
+    `// Port of internal/diagnosticwriter/diagnosticwriter.go with the parts of core.go, scanner.go and ast/diagnostic.go it calls.\n// Rules "tsgo" are the port. Rules "tsc" are the functions of TypeScript's program.ts and watch.ts that wrote TypeScript's baselines.\n`,
+    `// Port of internal/diagnosticwriter/diagnosticwriter.go of typescript-go 89d5d5b (rules "tsgo"); rules "tsc" are the writers of program.ts and watch.ts of TypeScript 5848bc5.\n`,
+  ],
+  [
+    r("diagnosticwriter.ts"),
+    `// If the error spans over 5 lines, we'll only show the first 2 and last 2 lines,\n    // so we'll skip ahead to the second-to-last line.\n`,
+    `// If the error spans over 5 lines, only the first 2 and the last 2 lines are shown: skip ahead to the second-to-last line.\n`,
+  ],
+  [
+    r("diagnosticwriter.ts"),
+    `// If we're on the last line, then limit it to the last character of the last line.\n      // Otherwise, we'll just squiggle the rest of the line, giving 'slice' no end position.\n`,
+    `// On the last line the squiggle ends at the last character; otherwise it runs to the end of the line.\n`,
+  ],
+  [r("diagnosticwriter.ts"), `// Fill with spaces until the first character,\n      // then squiggle the remainder of the line.\n`, `// Fill with spaces until the first character, then squiggle the remainder of the line.\n`],
+  [
+    r("diagnosticwriter.ts"),
+    `// ast.CompareDiagnostics up to the category. What follows there compares the message key and its arguments,\n// which a diagnostic read from text does not have: the sort is stable and a tie keeps the order of the input.\n`,
+    `// ast.CompareDiagnostics up to the category; its later keys, the message key and its arguments, are not in a diagnostic read from text, so a tie keeps the order of the input.\n`,
+  ],
+  [
+    r("error_baseline.ts"),
+    `// Port of internal/testutil/tsbaseline/error_baseline.go and util.go: the writer of .errors.txt baselines.\n// Rules "tsc" are the rules of TypeScript's src/harness/harnessIO.ts where they differ.\n`,
+    `// Port of internal/testutil/tsbaseline/error_baseline.go and util.go of typescript-go 89d5d5b; rules "tsc" are those of src/harness/harnessIO.ts of TypeScript 5848bc5 where they differ.\n`,
+  ],
+  [
+    r("reader.ts"),
+    `// The summary ends the text: "Found ..." and an empty line, then the table of files and an empty line.\n    // Nothing is read from it: the writer derives it from the diagnostics.\n`,
+    `// The summary ends the text ("Found ...", an empty line, the table of files, an empty line); nothing is read from it, the writer derives it.\n`,
+  ],
+  [
+    r("reader.ts"),
+    `// Per entry with a file: a line break, "  location - message", chain lines, the snippet. The line break\n      // ends the snippet before it, or is an empty line when a snippet or an entry without a file is before it.\n`,
+    `// Per entry with a file: a line break (the end of the snippet before it, or an empty line), "  location - message", chain lines, the snippet.\n`,
+  ],
+  [
+    r("reader.ts"),
+    `// The same for a line that may be a source line: a chain line is 2 spaces per level and a text that is not\n// empty and does not start with a space.\n`,
+    `// The same for a line that may be a source line: a chain line is 2 spaces per level, then text that is not empty and does not start with a space.\n`,
+  ],
+  [
+    r("reader.ts"),
+    `// A message never follows a source line, so this is a squiggle line of a diagnostic of a later line:\n          // the writer does that on the last line only.\n`,
+    `// A message never follows a source line, so this is a squiggle line of a diagnostic of a later line, which the writer makes on the last line only.\n`,
+  ],
+  [
+    r("shape.ts"),
+    `// The shape that the runner and its check function exchange, and its conversion to the input of the writer.\n// Plain data: strings are JavaScript strings, nothing depends on the identity of an object.\n`,
+    `// The plain data that the runner and a check function exchange (JavaScript strings, no identity of objects), and its conversion to the input of the writer.\n`,
+  ],
+  [
+    r("shape.ts"),
+    `// Offset and length in the unit of the rules: UTF-8 bytes (tsgo), UTF-16 code units (tsc).\n  // start is absent when the text of the file is not known; length is absent when it is not known.\n`,
+    `// Offset and length in UTF-8 bytes (tsgo) or UTF-16 code units (tsc); start is absent when the text of the file is not known, length when it is not known.\n`,
+  ],
+  [
+    r("plain.ts"),
+    `// Research prototype: reader of the plain format of tsc, as a lint run prints it on stderr when stderr is no terminal.\n// A text that has a line of no known form is refused whole: a crash report must never read as an empty list.\n`,
+    `// Reader of the plain format of tsc on stderr; a text with a line of no known form is refused whole, so that a crash report never reads as an empty list.\n`,
+  ],
+  [
+    r("plain.ts"),
+    `// A line that starts with a category has no file; else the first "(line,column): category code: " ends the name.\n// A code is "TS" and a number, or a name: of a rule, or of the command for what is no diagnostic of TypeScript.\n`,
+    `// A line that starts with a category has no file, else the first "(line,column): category code: " ends the name; a code is "TS" and a number, or the name of a rule or of the command.\n`,
+  ],
+  [
+    r("check.ts"),
+    `// Research prototype: the contract between the runner and a check function, and the check that spawns a command.\n// It imports nothing of the test harness: the command and the environment are given by the caller.\n`,
+    `// The contract between the runner and a check function, and the check that spawns a command; the caller gives the command and the environment.\n`,
+  ],
+  [
+    r("run.ts"),
+    `// Strongest first. "baseline": every byte of the baseline. "first-section": the baseline starts with the first\n// section of the run. The level of a result follows from what the result holds, before anything is compared.\n`,
+    `// Strongest first: "baseline" is every byte of the baseline, "first-section" is its first section; the level follows from what a result holds, before anything is compared.\n`,
+  ],
+  [
+    r("index.ts"),
+    `// Research prototype of runner/index.ts: the one module that conformance.test.ts and sweep.ts import.\n// Every name below is re-exported from a prototype of the first wave or is glue that the runner has to own.\n`,
+    `// The one module that conformance.test.ts and sweep.ts import.\n`,
+  ],
+  [
+    sw,
+    `// Research prototype of test/cli/lint/conformance/sweep.ts, wired to the prototypes of the first wave and to the reference clone.\n// In the repository: "./runner" for "./index", the committed corpus for referenceLayout() when --reference is absent.\n`,
+    `// The full run over the corpus: the pass counts by directory and by diagnostic code, and the report file.\n`,
+  ],
+  [sw, `// The prototype takes this switch before the options of the first wave are read: parseSweepArgs has to learn it.\n`, `// --round-trip is read here and not by parseSweepArgs.\n`],
+  [
+    t,
+    `// Research prototype of test/cli/lint/conformance.test.ts, wired to the prototypes of the first wave and to the reference clone.\n// In the repository: "harness" for the absolute import, "./conformance/runner" for "./index", the committed corpus for referenceLayout().\n`,
+    "",
+  ],
+  [t, `// Two switches of the prototype alone: other lists, and the check that replays the oracle in place of the binary.\n`, `// Two switches for work on the runner: other lists, and the check that replays the oracle in place of the binary.\n`],
+  [r("baseline.ts"), `// Prototype of runner/baseline.ts: the list reader`, `// The list reader`],
+  [r("checks.ts"), `// Research prototype: checks that need no command. They prove the pipeline before a linter exists.`, `// Checks that need no command: they prove the pipeline without a linter.`],
+  [r("compiler_runner.ts"), `// Prototype port of the enumeration in internal/testrunner/compiler_runner.go and compiler_runner_test.go.`, `// Port of the enumeration in internal/testrunner/compiler_runner.go and compiler_runner_test.go of typescript-go 89d5d5b.`],
+  [r("compiler_test.ts"), `// Research prototype: port of newCompilerTest (compiler_runner.go:266) and of the part of CompileFilesEx that builds the file system.`, `// Port of newCompilerTest (compiler_runner.go:266) and of the part of CompileFilesEx (harnessutil.go) that builds the file system, of typescript-go 89d5d5b.`],
+  [r("config_files.ts"), `// Research prototype: the file names that a config unit selects`, `// The file names that a config unit selects`],
+  [r("expectations.ts"), `// Prototype of runner/expectations.ts: the two lists`, `// The two lists`],
+  [r("harnessutil.ts"), `// Prototype port of the parts of internal/testutil/harnessutil/harnessutil.go that enumeration and the skip rule reach.`, `// Port of the parts of internal/testutil/harnessutil/harnessutil.go of typescript-go 89d5d5b that enumeration and the skip rule reach.`],
+  [r("manifest.ts"), `// Research prototype: the batch form. One process`, `// The batch form: one process`],
+  [r("materialize.ts"), `// Research prototype: the file system of an instance`, `// The file system of an instance`],
+  [r("run.ts"), `// Research prototype: one instance through a check`, `// One instance through a check`],
+  [r("sweep_args.ts"), `// Prototype of the command line of sweep.ts`, `// The command line of sweep.ts`],
+  [r("tsconfig.ts"), `// Prototype of the smallest config reader that the skip rule needs (tsoptions/tsconfigparsing.go, eight options and the extends chain).`, `// The smallest config reader that the skip rule needs: eight options and the extends chain of internal/tsoptions/tsconfigparsing.go of typescript-go 89d5d5b.`],
+  [r("vfsmatch.ts"), `// Research prototype: port of internal/vfs/vfsmatch/vfsmatch.go, same names and order.`, `// Port of internal/vfs/vfsmatch/vfsmatch.go of typescript-go 89d5d5b, same names and order.`],
+];
+
 if (import.meta.main) {
   rmSync(out, { recursive: true, force: true });
   const texts = new Map<string, string>();
@@ -349,6 +461,14 @@ if (import.meta.main) {
     if (found !== times) throw new Error(`${file}: the text of an edit occurs ${found} times, not ${times}: ${oldText.slice(0, 90)}`);
     texts.set(file, text.replaceAll(oldText, newText));
   }
+  for (const [file, oldText, newText] of comments) {
+    const text = texts.get(file);
+    if (text === undefined) throw new Error("comment of a file that is not in the module map: " + file);
+    if (!text.includes(oldText)) throw new Error(`${file}: no such comment: ${oldText.slice(0, 90)}`);
+    texts.set(file, text.replaceAll(oldText, newText));
+  }
+  // test_case_parser.ts came without a first line.
+  texts.set(r("test_case_parser.ts"), "// Port of internal/testrunner/test_case_parser.go of typescript-go 89d5d5b.\n" + texts.get(r("test_case_parser.ts"))!);
   for (const [file, text] of texts) writeFileSync(join(out, file), text);
   const edited = new Map<string, number>();
   for (const [file] of edits) edited.set(file, (edited.get(file) ?? 0) + 1);

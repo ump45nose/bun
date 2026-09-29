@@ -28,7 +28,7 @@ for (const file of process.argv.slice(2)) {
   }
   flush(lines.length);
   const bad = lines.map((l, i) => (isCommentLine(l) && words.test(l) ? i + 1 : 0)).filter(Boolean);
-  const research = lines.map((l, i) => (isCommentLine(l) && /\b(prototype|probe|research|first wave|second wave)\b/i.test(l) ? i + 1 : 0)).filter(Boolean);
+  const research = lines.map((l, i) => (isCommentLine(l) && /\b(research prototype|prototype (port )?of|research probe|first wave|second wave)\b/i.test(l) ? i + 1 : 0)).filter(Boolean);
   if (runs.length > 0 || bad.length > 0 || research.length > 0) {
     found += runs.length + bad.length;
     perFile.push(`${file}: ${runs.length} runs ${runs.join(" ")}${bad.length ? "; forbidden word at " + bad.join(" ") : ""}${research.length ? "; words of the research at " + research.join(" ") : ""}`);

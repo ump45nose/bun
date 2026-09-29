@@ -2,10 +2,10 @@
 
 use bun_ast::{E, Expr, ExprData, OpCode};
 
+use crate::lint::ast_utils;
 use crate::lint::context::{Context, Globals};
 use crate::lint::rule::{Category, Rule};
 use crate::lint::rules::is_equality;
-use crate::lint::static_name;
 
 static RULE: Rule = Rule {
     name: "valid-typeof",
@@ -49,7 +49,9 @@ fn sibling(context: &mut Context<'_, '_>, value: &Expr) {
     };
     let names = match &value.data {
         ExprData::EString(_) => {
-            if static_name::of_key(value).is_some_and(|name| is_type_name(name.bytes())) {
+            if ast_utils::get_static_string_value(value)
+                .is_some_and(|name| is_type_name(name.bytes()))
+            {
                 return;
             }
             Globals::NONE

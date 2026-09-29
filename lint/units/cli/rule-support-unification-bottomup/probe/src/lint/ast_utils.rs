@@ -1,6 +1,8 @@
-//! ESLint's `getStaticPropertyName` and `getStaticStringValue` (lib/rules/utils/ast-utils.js) on Bun's nodes.
+//! Ported from ESLint lib/rules/utils/ast-utils.js: the helpers that the rules share, on Bun's nodes.
 
 use bun_ast::{E, Expr, ExprData};
+
+use super::context::Context;
 
 /// The name of a property as the program would see it, in UTF-8.
 pub(crate) enum Name<'a> {
@@ -18,8 +20,9 @@ impl Name<'_> {
     }
 }
 
-/// The name that a key or an index gives, when that is known without running the program.
-pub(crate) fn of_key(key: &Expr) -> Option<Name<'_>> {
+/// `getStaticStringValue`, and `getStaticPropertyName` of a property: the name that a key or an index gives, when
+/// that is known without running the program. A key that is a plain name is a string in Bun's tree.
+pub(crate) fn get_static_string_value(key: &Expr) -> Option<Name<'_>> {
     match &key.data {
         ExprData::EString(string) => of_string(string),
         ExprData::ENumber(number) => {
@@ -40,11 +43,11 @@ pub(crate) fn of_key(key: &Expr) -> Option<Name<'_>> {
     }
 }
 
-/// The name of the property that a member expression reads.
-pub(crate) fn of_member(member: &Expr) -> Option<Name<'_>> {
+/// `getStaticPropertyName` of a member expression.
+pub(crate) fn get_static_property_name(member: &Expr) -> Option<Name<'_>> {
     match &member.data {
         ExprData::EDot(dot) => Some(Name::Borrowed(dot.name.slice())),
-        ExprData::EIndex(index) => of_key(&index.index),
+        ExprData::EIndex(index) => get_static_string_value(&index.index),
         _ => None,
     }
 }
@@ -136,4 +139,81 @@ fn of_reg_exp(reg_exp: &E::RegExp) -> Name<'_> {
         flags.sort_unstable();
     }
     Name::Owned(out)
+}
+
+/// `isSameReference`: `a?.b` and `a.b` are one reference.
+pub(crate) fn is_same_reference(context: &Context<'_, '_>, left: &Expr, right: &Expr) -> bool {
+    if !context.stack_check.is_safe_to_recurse() {
+        return false;
+    }
+    match (&left.data, &right.data) {
+        (ExprData::EThis(_), ExprData::EThis(_)) | (ExprData::ESuper(_), ExprData::ESuper(_)) => {
+            true
+        }
+        (ExprData::EIdentifier(l), ExprData::EIdentifier(r)) => {
+            context.name_of(l.ref_) == context.name_of(r.ref_)
+        }
+        (ExprData::EPrivateIdentifier(l), ExprData::EPrivateIdentifier(r)) => {
+            context.name_of(l.ref_) == context.name_of(r.ref_)
+        }
+        (ExprData::EDot(_) | ExprData::EIndex(_), ExprData::EDot(_) | ExprData::EIndex(_)) => {
+            let (Some(left_target), Some(right_target)) = (target_of(left), target_of(right))
+            else {
+                return false;
+            };
+            if let Some(name) = get_static_property_name(left) {
+                return get_static_property_name(right)
+                    .is_some_and(|other| other.bytes() == name.bytes())
+                    && is_same_reference(context, left_target, right_target);
+            }
+            let (ExprData::EIndex(l), ExprData::EIndex(r)) = (&left.data, &right.data) else {
+                return false;
+            };
+            // `a.#b` is not computed, `a[b]` is.
+            let is_private = |index: &Expr| matches!(index.data, ExprData::EPrivateIdentifier(_));
+            is_private(&l.index) == is_private(&r.index)
+                && is_same_reference(context, left_target, right_target)
+                && is_same_reference(context, &l.index, &r.index)
+        }
+        _ => equal_literal_value(left, right),
+    }
+}
+
+fn target_of(member: &Expr) -> Option<&Expr> {
+    match &member.data {
+        ExprData::EDot(dot) => Some(&dot.target),
+        ExprData::EIndex(index) => Some(&index.target),
+        _ => None,
+    }
+}
+
+/// `equalLiteralValue`, for two nodes that ESTree calls `Literal`.
+fn equal_literal_value(left: &Expr, right: &Expr) -> bool {
+    match (&left.data, &right.data) {
+        (ExprData::ERegExp(l), ExprData::ERegExp(r)) => l.value.slice() == r.value.slice(),
+        (ExprData::EBigInt(l), ExprData::EBigInt(r)) => {
+            match (
+                get_static_string_value(left),
+                get_static_string_value(right),
+            ) {
+                (Some(l), Some(r)) => l.bytes() == r.bytes(),
+                _ => l.value.slice() == r.value.slice(),
+            }
+        }
+        (ExprData::ENull(_), ExprData::ENull(_)) => true,
+        (ExprData::EBoolean(l), ExprData::EBoolean(r)) => l.value == r.value,
+        (ExprData::ENumber(l), ExprData::ENumber(r)) => l.value() == r.value(),
+        (ExprData::EString(l), ExprData::EString(r))
+            if !l.prefer_template && !r.prefer_template =>
+        {
+            match (
+                get_static_string_value(left),
+                get_static_string_value(right),
+            ) {
+                (Some(l), Some(r)) => l.bytes() == r.bytes(),
+                _ => false,
+            }
+        }
+        _ => false,
+    }
 }

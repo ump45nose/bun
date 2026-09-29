@@ -264,7 +264,7 @@ Until then: such an instance fails through the binary and can pass through K5.
 
 RP-1. test/tsconfig.json:39-47 ("exclude")
 To: integrator. Ask: the entries "cli/lint/conformance/corpus" and "cli/lint/typecheck/fixtures".
-Why. "include" is **/*.ts, **/*.tsx, **/*.mts, **/*.cts (lines 27-38). Proved with tsc 6.0.2 on a scratch tree
+Why. "include" is **/*.ts, **/*.tsx, **/*.mts, **/*.cts (lines 26-38). Proved with tsc 6.0.2 on a scratch tree
 with the same include and exclude: the entry "fixtures" of line 40 excludes only test/fixtures, a case below
 cli/lint/conformance/corpus and a file below cli/lint/typecheck/fixtures are part of the project, and with the
 two entries they are not. The corpus adds 12,444 .ts and .tsx files. No workflow runs `bun run typecheck`
@@ -290,7 +290,7 @@ Until then: @alii is asked for a review. Nothing fails.
 RP-4. test/no-validate-leaksan.txt
 To: cli (keep the lint path free of leaks at exit), integrator for the stopgap. No line is asked for now.
 Why. For a test file that is not in that list the runner sets ASAN_OPTIONS=...:detect_leaks=1:abort_on_error=1
-(scripts/runner.node.ts:2200-2206), in the ASAN lane and locally, and test/harness.ts:94-96 keeps a value that is
+(scripts/runner.node.ts:2201-2205), in the ASAN lane and locally, and test/harness.ts:95 keeps a value that is
 set, so every `bun --lint` child runs under LeakSanitizer.
 Measured with the debug build at e3566be88 and those settings: `bun-debug build --no-bundle ok.ts` (exit 0),
 `bun-debug build --no-bundle bad.ts` (exit 1) and `bun-debug bad.ts` (exit 1) print no LeakSanitizer line. So a
@@ -393,7 +393,7 @@ CR LF, 362 mix CR LF and LF, 3,203 are LF, 8 have a lone CR, 9 a NUL byte, 7 a U
 UTF-8 byte order mark. Proved in a scratch repository with the root .gitattributes: `git add` stores
 compiler/assignmentToObject.ts as blob 31990f31 below typecheck/fixtures and as upstream's blob 38206f54 below a
 directory with `* -text`; its .symbols baseline keeps upstream's blob 9a0baea6 and becomes 98b99e89 with
-core.autocrlf=true, the setting of Git for Windows and of the autofix workflow (format.yml:29-32).
+core.autocrlf=true, the setting of Git for Windows and of the autofix workflow (format.yml:30-32).
 Every byte offset after the first line break then differs from upstream.
 
 
@@ -416,7 +416,7 @@ corpus is copied byte for byte:
 Ask: the check leaves out test/cli/lint/conformance/corpus/ and test/cli/lint/typecheck/fixtures/, for example
 with the pathspecs `:(exclude)test/cli/lint/conformance/corpus` and `:(exclude)test/cli/lint/typecheck/fixtures`.
 The runner, sweep.ts and conformance.test.ts are checked as any other file. The workflow comment-cop.yml reads
-only paths that start with `src/` (line 108), so CI needs no change.
+only paths that start with `src/` (line 99), so CI needs no change.
 
 
 7. What only CI can verify
@@ -431,7 +431,7 @@ Linux as a statement about them. Watch the first run of these lanes for:
    has to leave the corpus byte for byte: proved by simulation only (prove-corpus.sh).
  - CI-3, links (Windows). 22 case files make links. Without the right to make links the status has to be
    "unsupported on this platform", not "fail" (5 run instances link to a file, by the materialisation research).
- - CI-4, case rules (macOS, Windows). The harness runs with case-sensitive names (harnessutil.go:103) and the
+ - CI-4, case rules (macOS, Windows). The harness runs with case-sensitive names (harnessutil.go:105) and the
    disk is not: 2 run instances have units that differ only by case. The 6 cases that ask for names without
    case can be right only there.
  - CI-5, names in the output (Windows). Drive letters, back slashes, a short name of the temporary directory

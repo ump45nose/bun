@@ -242,12 +242,16 @@ for (const line of load(vecPath).split("\n")) {
     }
   } else if (k === "seq") {
     const h = createHash("sha256");
+    let sum = 2166136261;
     let n = 0;
     for (const s of seqSet(v.set)) {
       h.update(seqLine(s), "latin1");
+      const [r, size] = decodeRune(s, 0);
+      const [lr, lsize] = decodeLastRune(s, 0, s.length);
+      for (const x of [r, size, lr, lsize, runeCount(s), validString(s) ? 1 : 0, utf16Len(s)]) sum = Math.imul(sum ^ x, 16777619) >>> 0;
       n++;
     }
-    eq("utf8 on the set " + v.set, [n, h.digest("hex")], [v.count, v.digest], v.set);
+    eq("utf8 on the set " + v.set, [n, h.digest("hex"), sum], [v.count, v.digest, v.sum32], v.set);
   } else if (k === "pair") {
     const x = byteStringToUtf8(b(v.a));
     const y = byteStringToUtf8(b(v.b));

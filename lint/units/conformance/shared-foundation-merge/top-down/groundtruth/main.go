@@ -169,6 +169,21 @@ type seqDigest struct {
 	Set    string `json:"set"`
 	Count  int    `json:"count"`
 	Digest string `json:"digest"`
+	Sum32  uint32 `json:"sum32"`
+}
+
+// The same facts as seqLine in a sum that costs no text: FNV-1a over 32-bit words.
+func seqSum(h uint32, s string) uint32 {
+	r, size := utf8.DecodeRuneInString(s)
+	lr, lsize := utf8.DecodeLastRuneInString(s)
+	valid := 0
+	if utf8.ValidString(s) {
+		valid = 1
+	}
+	for _, v := range []int{int(r), size, int(lr), lsize, utf8.RuneCountInString(s), valid, int(UTF16Len(s))} {
+		h = (h ^ uint32(v)) * 16777619
+	}
+	return h
 }
 
 // One line per sequence: hex, rune and size of the first rune, rune and size of the last rune, rune count, validity, UTF-16 length.
@@ -183,12 +198,14 @@ var edge = []byte{0x00, 0x41, 0x7f, 0x80, 0x8f, 0x90, 0x9f, 0xa0, 0xbf, 0xc0, 0x
 func seqSets(emit func(any)) {
 	digest := func(set string, gen func(yield func(string))) {
 		h := sha256.New()
+		sum := uint32(2166136261)
 		n := 0
 		gen(func(s string) {
 			h.Write([]byte(seqLine(s)))
+			sum = seqSum(sum, s)
 			n++
 		})
-		emit(seqDigest{K: "seq", Set: set, Count: n, Digest: hex.EncodeToString(h.Sum(nil))})
+		emit(seqDigest{K: "seq", Set: set, Count: n, Digest: hex.EncodeToString(h.Sum(nil)), Sum32: sum})
 	}
 	digest("one", func(yield func(string)) {
 		for a := 0; a < 256; a++ {

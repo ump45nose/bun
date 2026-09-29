@@ -2,10 +2,10 @@
 
 use bun_ast::{E, Expr, ExprData, Loc, OpCode, S};
 
+use crate::lint::ast_utils;
 use crate::lint::context::{Context, Globals};
 use crate::lint::rule::{Category, Rule};
 use crate::lint::rules::is_comparison;
-use crate::lint::static_name;
 
 static RULE: Rule = Rule {
     name: "use-isnan",
@@ -34,7 +34,7 @@ fn nan(context: &Context<'_, '_>, expr: &Expr) -> Globals {
         return Globals::NONE;
     };
     if context.name_of(object.ref_) == b"Number"
-        && static_name::of_member(expr).is_some_and(|name| name.bytes() == b"NaN")
+        && ast_utils::get_static_property_name(expr).is_some_and(|name| name.bytes() == b"NaN")
     {
         return Globals::NUMBER;
     }

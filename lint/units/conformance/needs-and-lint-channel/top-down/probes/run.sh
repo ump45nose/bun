@@ -29,6 +29,7 @@ echo "== files of the run instances"
 bun prog.ts | head -6
 bun more.ts
 bun single.ts
+bun badjson.ts
 echo "== run instances that name /.lib/"
 zcat "$unit/enumerator/vectors/instances.tsv.gz" | bun libinst.ts
 echo "== baselines that the plain format can rebuild"

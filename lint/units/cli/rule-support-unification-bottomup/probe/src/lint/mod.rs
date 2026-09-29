@@ -1,10 +1,10 @@
 //! Stand-in for `src/lint/lib.rs`: the entry, and the two types that milestone C2 owns (`Diagnostic`, `Severity`).
 
+mod ast_utils;
 mod context;
 mod linter;
 mod rule;
 mod rules;
-mod static_name;
 mod tokens;
 
 use bun_js_parser::parse::parse_entry::ParsedOnly;
