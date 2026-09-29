@@ -234,6 +234,7 @@ eq("selection: a selector that takes nothing", sel(["noSuchCase.ts", "compiler/"
 eq("selection: a directory is not a prefix of a name", sel(["conformance/types/tup/"]).instances.length, 0);
 eq("selection: tag and kind", [sel([], { tag: "post-emit-order" }).instances.length, sel([], { tag: "triaged", kind: "C" }).instances.map(i => i.name)], [3, ["augmentExportEquals2.ts"]]);
 eq("the command of the report", updateCommand(["--bin", "build/debug/bun-debug", "abstractProperty(target=es2015).ts", "--update"]), "bun test/cli/lint/conformance/sweep.ts --bin build/debug/bun-debug 'abstractProperty(target=es2015).ts' --update");
+eq("the command of the report names the binary", updateCommand(["compiler/"], "/w/build/release/bun"), "bun test/cli/lint/conformance/sweep.ts --bin /w/build/release/bun compiler/ --update");
 
 console.log(failed === 0 ? "\nall checks passed" : `\n${failed} checks FAILED`);
 process.exit(failed === 0 ? 0 : 1);

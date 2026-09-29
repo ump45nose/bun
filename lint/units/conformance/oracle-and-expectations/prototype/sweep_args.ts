@@ -19,7 +19,7 @@ An instance is swept when one selector takes it. Without a selector every instan
   --kind <E|C>           only the instances of that kind
   --tag <tag>            only the instances with that tag: accepted, triaged, post-emit-order
   --update               add to expectations.json the names that pass, are not listed and may enter
-  --report <directory>   where the report goes (default: a new directory below the temporary directory)
+  --report <path>        file of the report (default: lint-conformance-report.json in the temporary directory)
   --since <revision>     compare the lists with expectations.json of that revision: a removed name fails
   --no-run               run no instance: check the lists against the corpus, and --since
   --expectations <path>  the lists (default: expectations.json beside this script)
@@ -161,8 +161,11 @@ export function select(all: readonly InstanceFacts[], o: Pick<SweepOptions, "sel
 }
 
 // The command that a report prints: the command line of this run with --update.
-export function updateCommand(argv: readonly string[]): string {
+export function updateCommand(argv: readonly string[], binaryOfDefaultCheck?: string): string {
   const quote = (a: string) => (/^[A-Za-z0-9_\/.,:=@%+-]+$/.test(a) ? a : `'${a.replaceAll("'", `'\\''`)}'`);
   const rest = argv.filter(a => a !== "--update");
-  return ["bun", "test/cli/lint/conformance/sweep.ts", ...rest.map(quote), "--update"].join(" ");
+  const named = rest.some(a => a === "--bin" || a.startsWith("--bin=") || a === "--check" || a.startsWith("--check="));
+  // the binary that ran this script may not be the one that runs the printed command
+  const bin = !named && binaryOfDefaultCheck !== undefined ? ["--bin", binaryOfDefaultCheck] : [];
+  return ["bun", "test/cli/lint/conformance/sweep.ts", ...[...bin, ...rest].map(quote), "--update"].join(" ");
 }
