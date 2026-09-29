@@ -3,6 +3,7 @@ import {
   type Diagnostic as WriterDiagnostic,
   type Rules,
   WriterPanic,
+  compareDiagnostics,
   formatDiagnosticsWithColorAndContext,
   tsgoRules,
   writeFormatDiagnostics,
@@ -91,7 +92,7 @@ function compareByStart(a: WriterDiagnostic, b: WriterDiagnostic): number {
   return a.pos - b.pos;
 }
 
-// error_baseline.go:139-143, the first section with the two line breaks that end it.
+// error_baseline.go:143-147, the first section with the two line breaks that end it.
 function topOf(sorted: WriterDiagnostic[], pretty: boolean): string {
   let top = pretty
     ? formatDiagnosticsWithColorAndContext(rules, sorted, formatOpts)
@@ -222,7 +223,6 @@ function compareConfigured(input: CheckInput, oracle: Oracle, out: CheckDiagnost
   }
 }
 
-import { compareDiagnostics } from "../../error-baseline-format/top-down/diagnosticwriter";
 function compareWhole(a: WriterDiagnostic, b: WriterDiagnostic): number {
   return compareDiagnostics(rules, a, b);
 }
