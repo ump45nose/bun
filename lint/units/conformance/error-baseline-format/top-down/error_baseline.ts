@@ -1,10 +1,11 @@
-// Port of internal/testutil/tsbaseline/error_baseline.go and util.go (the writer), Go rules only.
+// Port of internal/testutil/tsbaseline/error_baseline.go and util.go: the writer of .errors.txt baselines.
+// Rules "tsc" are the rules of TypeScript's src/harness/harnessIO.ts where they differ.
 import {
   type Diagnostic,
   type FormattingOptions,
+  type Rules,
   categoryName,
   compareDiagnostics,
-  computeECMALineStarts,
   flattenDiagnosticMessage,
   formatDiagnosticsWithColorAndContext,
   writeErrorSummaryText,
@@ -12,7 +13,6 @@ import {
   writeLocation,
   WriterPanic,
 } from "./diagnosticwriter";
-import { type ByteString, replaceNonWhitespace, runeCount } from "./go_compat";
 import { comparePaths, ensureTrailingDirectorySeparator, getBaseFileName } from "./tspath";
 
 export const harnessNewLine = "\r\n";
@@ -24,17 +24,17 @@ export const formatOpts: FormattingOptions = {
 };
 
 export interface TestFile {
-  unitName: ByteString;
-  content: ByteString;
+  unitName: string;
+  content: string;
 }
 
-// (?im)^(lib.*\.d\.ts)\(\d+,\d+\) on bytes: Go's ^ is the start or after LF, its dot is all but LF, its (?i) folds s with U+017F.
-const diagnosticsLocationPrefix =
+// (?im)^(lib.*\.d\.ts)\(\d+,\d+\): Go's ^ is the start or after LF, its dot is all but LF, its (?i) folds s with U+017F.
+const diagnosticsLocationPrefixGo =
   /(?<![^\n])([lL][iI][bB][^\n]*\.[dD]\.[tT](?:[sS]|\xc5\xbf))\(\d+,\d+\)/g;
 // (?i)(lib.*\.d\.ts):\d+:\d+
-const diagnosticsLocationPattern = /([lL][iI][bB][^\n]*\.[dD]\.[tT](?:[sS]|\xc5\xbf)):\d+:\d+/g;
-
-const lineDelimiter = /\r?\n/;
+const diagnosticsLocationPatternGo = /([lL][iI][bB][^\n]*\.[dD]\.[tT](?:[sS]|\xc5\xbf)):\d+:\d+/g;
+const diagnosticsLocationPrefixTsc = /^(lib.*\.d\.ts)\(\d+,\d+\)/gim;
+const diagnosticsLocationPatternTsc = /(lib.*\.d\.ts):\d+:\d+/i;
 
 const libFolder = "built/local/";
 const builtFolder = "/.ts";
@@ -42,63 +42,71 @@ const builtFolder = "/.ts";
 // strings.NewReplacer: at each position the first pair in argument order that matches wins, without overlap.
 const testPathPrefixReplacer =
   /\/\.ts\/|\/\.lib\/|\/\.src\/|bundled:\/\/\/libs\/|file:\/\/\/\.\/ts\/|file:\/\/\/\.\/lib\/|file:\/\/\/\.\/src\//g;
+const testPathPrefixRegExpTsc = /(?:(file:\/{3})|\/)\.(?:ts|lib|src)\//g;
 
-export function removeTestPathPrefixes(text: ByteString, retainTrailingDirectorySeparator: boolean): ByteString {
+export function removeTestPathPrefixes(rules: Rules, text: string, retainTrailingDirectorySeparator = false): string {
+  if (rules.name === "tsc") {
+    return text.replace(testPathPrefixRegExpTsc, (_, scheme) => scheme || (retainTrailingDirectorySeparator ? "/" : ""));
+  }
   return text.replace(testPathPrefixReplacer, match => {
     if (match.startsWith("file:")) return "file:///";
-    return retainTrailingDirectorySeparator ? "/" : "";
+    return retainTrailingDirectorySeparator && !match.startsWith("file:") ? "/" : "";
   });
 }
 
-export function isDefaultLibraryFile(filePath: ByteString): boolean {
+export function isDefaultLibraryFile(filePath: string): boolean {
   const fileName = getBaseFileName(filePath);
   return fileName.startsWith("lib.") && fileName.endsWith(".d.ts");
 }
 
-export function isBuiltFile(filePath: ByteString): boolean {
+export function isBuiltFile(filePath: string): boolean {
   return filePath.startsWith(libFolder) || filePath.startsWith(ensureTrailingDirectorySeparator(builtFolder));
 }
 
-export function isTsConfigFile(path: ByteString): boolean {
+export function isTsConfigFile(path: string): boolean {
   return path.includes("tsconfig") && path.includes("json");
 }
 
 export interface ErrorBaselineResult {
-  text: ByteString;
-  // The two assert.Check calls of the reference: a failed check fails the test and still writes the text.
+  // In the text model of the rules; rules.model.toBytes gives the bytes of the file.
+  text: string;
+  // The two assert.Check calls of the reference: a failed check fails the test and the text is still written.
   failedChecks: string[];
 }
 
-function minimalDiagnosticsToString(diagnostics: Diagnostic[], pretty: boolean): ByteString {
+function minimalDiagnosticsToString(rules: Rules, diagnostics: Diagnostic[], pretty: boolean): string {
   if (pretty) {
-    return formatDiagnosticsWithColorAndContext(diagnostics, formatOpts);
+    return formatDiagnosticsWithColorAndContext(rules, diagnostics, formatOpts);
   }
-  return writeFormatDiagnostics(diagnostics, formatOpts);
+  return writeFormatDiagnostics(rules, diagnostics, formatOpts);
 }
 
 export function getErrorBaseline(
+  rules: Rules,
   inputFiles: TestFile[],
   diagnostics: Diagnostic[],
   pretty: boolean,
 ): ErrorBaselineResult {
   const failedChecks: string[] = [];
-  const outputLines = iterateErrorBaseline(inputFiles, diagnostics, pretty, failedChecks);
+  const outputLines = iterateErrorBaseline(rules, inputFiles, diagnostics, pretty, failedChecks);
 
   if (pretty) {
-    const summary = removeTestPathPrefixes(writeErrorSummaryText(diagnostics, formatOpts), false);
+    const summary = removeTestPathPrefixes(rules, writeErrorSummaryText(rules, diagnostics, formatOpts));
     outputLines.push(summary);
   }
   return { text: outputLines.join(""), failedChecks };
 }
 
 function iterateErrorBaseline(
+  rules: Rules,
   inputFiles: TestFile[],
   inputDiagnostics: Diagnostic[],
   pretty: boolean,
   failedChecks: string[],
-): ByteString[] {
+): string[] {
+  const model = rules.model;
   const diagnostics = inputDiagnostics.slice();
-  diagnostics.sort(compareDiagnostics);
+  diagnostics.sort((a, b) => compareDiagnostics(rules, a, b));
 
   let outputLines = "";
   // Count up all errors that were found in files other than lib.d.ts so we don't miss any
@@ -114,13 +122,13 @@ function iterateErrorBaseline(
     return "\r\n";
   };
 
-  const result: ByteString[] = [];
+  const result: string[] = [];
 
   const outputErrorText = (diag: Diagnostic): void => {
     const message = flattenDiagnosticMessage(diag, harnessNewLine);
 
-    const errLines: ByteString[] = [];
-    for (let line of removeTestPathPrefixes(message, false).split("\n")) {
+    const errLines: string[] = [];
+    for (let line of removeTestPathPrefixes(rules, message).split("\n")) {
       if (line.endsWith("\r")) line = line.slice(0, -1);
       if (line.length === 0) {
         continue;
@@ -131,11 +139,14 @@ function iterateErrorBaseline(
     for (const info of diag.relatedInformation) {
       let location = "";
       if (info.file !== undefined) {
-        location = " " + writeLocation(info.file, info.pos, formatOpts, text => text);
+        location = " " + writeLocation(rules, info.file, info.pos, formatOpts, text => text);
       }
-      location = removeTestPathPrefixes(location, false);
+      location = removeTestPathPrefixes(rules, location);
       if (location.length > 0 && isDefaultLibraryFile(info.file!.fileName)) {
-        location = location.replace(diagnosticsLocationPattern, "$1:--:--");
+        location = location.replace(
+          rules.name === "tsc" ? diagnosticsLocationPatternTsc : diagnosticsLocationPatternGo,
+          "$1:--:--",
+        );
       }
       errLines.push(`!!! related TS${info.code}${location}: ${flattenDiagnosticMessage(info, harnessNewLine)}`);
     }
@@ -154,9 +165,12 @@ function iterateErrorBaseline(
     }
   };
 
-  let topDiagnostics = minimalDiagnosticsToString(diagnostics, pretty);
-  topDiagnostics = removeTestPathPrefixes(topDiagnostics, false);
-  topDiagnostics = topDiagnostics.replace(diagnosticsLocationPrefix, "$1(--,--)");
+  let topDiagnostics = minimalDiagnosticsToString(rules, diagnostics, pretty);
+  topDiagnostics = removeTestPathPrefixes(rules, topDiagnostics);
+  topDiagnostics = topDiagnostics.replace(
+    rules.name === "tsc" ? diagnosticsLocationPrefixTsc : diagnosticsLocationPrefixGo,
+    "$1(--,--)",
+  );
 
   result.push(topDiagnostics + harnessNewLine + harnessNewLine);
 
@@ -176,22 +190,21 @@ function iterateErrorBaseline(
     const fileErrors = diagnostics.filter(
       e =>
         e.file !== undefined &&
-        comparePaths(
-          removeTestPathPrefixes(e.file.fileName, false),
-          removeTestPathPrefixes(inputFile.unitName, false),
-          { useCaseSensitiveFileNames: false, currentDirectory: "" },
-        ) === 0,
+        comparePaths(removeTestPathPrefixes(rules, e.file.fileName), removeTestPathPrefixes(rules, inputFile.unitName), {
+          useCaseSensitiveFileNames: false,
+          currentDirectory: "",
+        }) === 0,
     );
 
     // Header
-    outputLines += `${newLine()}==== ${removeTestPathPrefixes(inputFile.unitName, false)} (${fileErrors.length} errors) ====`;
+    outputLines += `${newLine()}==== ${removeTestPathPrefixes(rules, inputFile.unitName)} (${fileErrors.length} errors) ====`;
 
     // Make sure we emit something for every error
     let markedErrorCount = 0;
     // For each line, emit the line followed by any error squiggles matching this line
 
-    const lineStarts = computeECMALineStarts(inputFile.content);
-    const lines = inputFile.content.split(lineDelimiter);
+    const lineStarts = model.lineStarts(inputFile.content);
+    const lines = model.splitLines(inputFile.content);
 
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
       let line = lines[lineIndex];
@@ -219,15 +232,21 @@ function iterateErrorBaseline(
           const squiggleStart = Math.max(0, relativeOffset);
           outputLines += newLine();
           outputLines += "    ";
-          if (squiggleStart > line.length) {
-            throw new WriterPanic(
-              `slice bounds out of range [:${squiggleStart}] with length ${line.length} in ${inputFile.unitName} line ${lineIndex + 1}`,
-            );
+          if (rules.name === "tsc") {
+            const count = Math.min(length, line.length - squiggleStart) + 1;
+            if (count < 0) throw new WriterPanic("RangeError: Invalid array length");
+            outputLines += model.blankNonWhitespace(line.substr(0, squiggleStart)) + new Array(count).join("~");
+          } else {
+            if (squiggleStart > line.length) {
+              throw new WriterPanic(
+                `slice bounds out of range [:${squiggleStart}] with length ${line.length}: ${inputFile.unitName} line ${lineIndex + 1}`,
+              );
+            }
+            outputLines += model.blankNonWhitespace(line.slice(0, squiggleStart));
+            // This was `new Array(count).join("~")`; which maps 0 to "", 1 to "", 2 to "~", 3 to "~~", etc.
+            const squiggleEnd = Math.max(squiggleStart, Math.min(squiggleStart + length, line.length));
+            outputLines += "~".repeat(model.squiggleCount(line.slice(squiggleStart, squiggleEnd)));
           }
-          outputLines += replaceNonWhitespace(line.slice(0, squiggleStart));
-          // This was `new Array(count).join("~")`; which maps 0 to "", 1 to "", 2 to "~", 3 to "~~", etc.
-          const squiggleEnd = Math.max(squiggleStart, Math.min(squiggleStart + length, line.length));
-          outputLines += "~".repeat(runeCount(line.slice(squiggleStart, squiggleEnd)));
           // If the error ended here, or we're at the end of the file, emit its message
           if (lineIndex === lines.length - 1 || nextLineStart > end) {
             outputErrorText(errDiagnostic);
@@ -248,9 +267,7 @@ function iterateErrorBaseline(
   const numLibraryDiagnostics = diagnostics.filter(
     d => d.file !== undefined && (isDefaultLibraryFile(d.file.fileName) || isBuiltFile(d.file.fileName)),
   ).length;
-  const numTsconfigDiagnostics = diagnostics.filter(
-    d => d.file !== undefined && isTsConfigFile(d.file.fileName),
-  ).length;
+  const numTsconfigDiagnostics = diagnostics.filter(d => d.file !== undefined && isTsConfigFile(d.file.fileName)).length;
   // Verify we didn't miss any errors in total
   const total = totalErrorsReportedInNonLibraryNonTsconfigFiles + numLibraryDiagnostics + numTsconfigDiagnostics;
   if (total !== diagnostics.length) {
