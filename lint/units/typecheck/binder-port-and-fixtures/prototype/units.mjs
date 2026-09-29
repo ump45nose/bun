@@ -63,6 +63,7 @@ for (const suite of ["compiler", "conformance"]) {
       if (u.name.includes("node_modules")) { bump("unit in node_modules"); return; }
       if (u.content.trim() === "") { bump("unit is empty"); return; }
       if (/^\/\/\/\s*<reference\s/m.test(u.content)) { bump("unit has a triple-slash reference"); return; }
+      if (/@ts-(ignore|expect-error|nocheck)/.test(u.content)) { bump("unit has a @ts- directive comment"); return; }
       const lang = m[1] === "d.ts" ? "dts" : m[1];
       if ((lang === "js" || lang === "jsx") && u.content.includes("/**")) { bump("JavaScript unit with JSDoc"); return; }
       if (units.filter(o => path.basename(o.name) === base).length !== 1) { bump("unit base name is not unique"); return; }
