@@ -1,0 +1,3 @@
+08-declare-namespace-enum: 2704 inputs, 10037 ms
+09-decorators: 4100 inputs, 15027 ms
+10-declaration-files: 380 inputs, 4590 ms

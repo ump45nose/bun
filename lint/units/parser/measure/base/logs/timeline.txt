@@ -1,0 +1,17 @@
+START 01-bun-install 2026-09-29T16:01:51Z load=591.12 430.81 367.69 cmd: bun install
+END   01-bun-install rc=0 wall=397s lockwait=396s run=1s 2026-09-29T16:08:28Z load=444.23 456.64 406.09
+START 02-test-bun-install 2026-09-29T16:08:28Z load=444.23 456.64 406.09 cmd: sh -c cd test && bun install
+END   02-test-bun-install rc=0 wall=496s lockwait=494s run=2s 2026-09-29T16:16:44Z load=235.03 331.23 369.60
+START 03-bun-bd-version 2026-09-29T16:16:44Z load=235.03 331.23 369.60 cmd: bun bd --version
+END   03-bun-bd-version rc=0 wall=21s lockwait=19s run=2s 2026-09-29T16:17:05Z load=223.68 322.39 365.87
+START 10-cargo-check-js_parser 2026-09-29T16:28:17Z load=354.36 319.17 339.84 cmd: cargo check -p bun_js_parser --message-format=short
+END   10-cargo-check-js_parser rc=0 wall=246s lockwait=243s run=3s 2026-09-29T16:32:23Z load=351.52 312.48 330.53
+START 11-cargo-check-ast 2026-09-29T16:32:23Z load=358.68 314.61 331.12 cmd: cargo check -p bun_ast --message-format=short
+END   11-cargo-check-ast rc=0 wall=64s lockwait=64s run=0s 2026-09-29T16:33:27Z load=313.51 310.19 328.61
+START 12-cargo-clippy-js_parser 2026-09-29T16:33:27Z load=313.51 310.19 328.61 cmd: cargo clippy -p bun_js_parser --no-deps --message-format=short
+END   12-cargo-clippy-js_parser rc=0 wall=37s lockwait=37s run=0s 2026-09-29T16:34:04Z load=295.15 305.87 326.38
+START 13-cargo-clippy-ast 2026-09-29T16:34:04Z load=295.15 305.87 326.38 cmd: cargo clippy -p bun_ast --no-deps --message-format=short
+END   13-cargo-clippy-ast rc=0 wall=20s lockwait=20s run=0s 2026-09-29T16:34:24Z load=285.62 303.02 325.01
+START 14-cargo-fmt-js_parser 2026-09-29T16:34:24Z load=285.62 303.02 325.01 cmd: cargo fmt -p bun_js_parser -- --check
+END   14-cargo-fmt-js_parser rc=0 wall=249s lockwait=245s run=4s 2026-09-29T16:38:33Z load=406.25 311.27 319.74
+START 15-cargo-fmt-ast 2026-09-29T16:38:34Z load=406.25 311.27 319.74 cmd: cargo fmt -p bun_ast -- --check

@@ -1,0 +1,3 @@
+02-object-types: 2851 inputs, 34397 ms
+03-signatures: 11880 inputs, 67615 ms
+04-type-params-args: 11073 inputs, 85029 ms
