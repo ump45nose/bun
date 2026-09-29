@@ -27,8 +27,10 @@ export type PlainParse =
   | { ok: false; at: number; text: string; reason: string };
 
 // A line that starts with a category has no file; else the first "(line,column): category code: " ends the name.
-const globalHead = /^(error|warning|suggestion|message) (?:TS(-?\d+)|([^\s:]+)): (.*)$/s;
-const locatedHead = /^(\S.*?)\((\d+),(\d+)\): (error|warning|suggestion|message) (?:TS(-?\d+)|([^\s:]+)): (.*)$/s;
+// A code is "TS" and a number, or a name: of a rule, or of the command for what is no diagnostic of TypeScript.
+const globalHead = /^(error|warning|suggestion|message) (?:TS(-?\d+)|([A-Za-z@][A-Za-z0-9@/_-]*)): (.*)$/s;
+const locatedHead =
+  /^(\S.*?)\((\d+),(\d+)\): (error|warning|suggestion|message) (?:TS(-?\d+)|([A-Za-z@][A-Za-z0-9@/_-]*)): (.*)$/s;
 
 export function parsePlainDiagnostics(text: string): PlainParse {
   const diagnostics: PlainDiagnostic[] = [];

@@ -112,7 +112,7 @@ func relTypeString(t *Type) string {
 	if t == nil {
 		return "nil"
 	}
-	return fmt.Sprintf("#%d[%s]", t.id, strings.Join(strings.Fields(FormatTypeFlags(t.flags)), ""))
+	return fmt.Sprintf("#%d[%s]", t.id, strings.Join(FormatTypeFlags(t.flags), "|"))
 }
 
 // RelProbeStart turns the trace on for one checker.

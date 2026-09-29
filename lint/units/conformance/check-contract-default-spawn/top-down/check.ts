@@ -250,6 +250,8 @@ export function toCheckDiagnostics(
   return out;
 }
 
+export const probeSays = "bun-lint-probe: the file ran";
+
 export interface ProbeResult {
   ok: boolean;
   reason: string;
@@ -263,13 +265,20 @@ export async function probe(options: SpawnCheckOptions): Promise<ProbeResult> {
   const mark = resolve(dir, "ran.txt");
   const ok = resolve(dir, "ok.ts");
   const bad = resolve(dir, "bad.ts");
-  writeFileSync(ok, `import { writeFileSync } from "node:fs";\nwriteFileSync(${JSON.stringify(mark)}, "ran");\nexport {};\n`);
+  // No import and no name that a checker without type packages does not know: TypeScript 6.0.2 reports nothing.
+  writeFileSync(
+    ok,
+    `const probe = globalThis as any;\nprobe.process.stdout.write(${JSON.stringify(probeSays + "\n")});\n` +
+      `void probe.Bun.write(${JSON.stringify(mark)}, "ran");\nexport {};\n`,
+  );
   writeFileSync(bad, "const = ;\n");
   const env = spawnEnvironment(options.env);
   const timeout = options.probeTimeoutMs ?? 60_000;
   try {
     const first = await spawn([...options.command, "--lint", ok], dir, env, timeout);
-    if (existsSync(mark)) return { ok: false, reason: "the command ran the file that it was to check" };
+    if (existsSync(mark) || first.stdout.includes(probeSays)) {
+      return { ok: false, reason: "the command ran the file that it was to check" };
+    }
     const a = readRun(first);
     if (!a.ok) return { ok: false, reason: `a file without an error: ${a.failure.reason}` };
     if (first.exitCode !== 0 || a.diagnostics.length > 0) {
