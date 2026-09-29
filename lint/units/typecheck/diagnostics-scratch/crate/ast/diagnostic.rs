@@ -193,7 +193,38 @@ impl core::ops::IndexMut<DiagnosticId> for DiagnosticStore {
 }
 
 impl DiagnosticStore {
+    pub const MAX_KEPT_FAULTS: usize = 64;
+
+    pub fn fault_count(&self) -> u32 {
+        self.fault_count
+    }
+    // The owner turns each fault into an internal diagnostic.
+    pub fn take_faults(&mut self) -> Vec<InvalidPlaceholderFault> {
+        core::mem::take(&mut self.faults)
+    }
+
     pub fn new_diagnostic(
+        &mut self,
+        file: NodeId,
+        loc: TextRange,
+        message: MessageId,
+        args: &[Arg<'_>],
+    ) -> DiagnosticId {
+        let d = self.new_diagnostic_unchecked(file, loc, message, args);
+        if !args.is_empty() && args.len() < message.argument_count() {
+            self.fault_count = self.fault_count.saturating_add(1);
+            if self.faults.len() < Self::MAX_KEPT_FAULTS {
+                self.faults.push(InvalidPlaceholderFault {
+                    diagnostic: d,
+                    message,
+                    argument_count: u32::try_from(args.len()).unwrap_or(u32::MAX),
+                });
+            }
+        }
+        d
+    }
+
+    fn new_diagnostic_unchecked(
         &mut self,
         file: NodeId,
         loc: TextRange,

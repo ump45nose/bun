@@ -265,6 +265,14 @@ fn ad_hoc_and_out_of_range() {
         diagnostics::Type_0_is_not_assignable_to_type_1,
         &["x".into()],
     );
+    let faults = store.take_faults();
+    assert_eq!(store.fault_count(), 1);
+    assert_eq!(
+        faults
+            .first()
+            .map(|f| (f.diagnostic, f.message, f.argument_count)),
+        Some((short, diagnostics::Type_0_is_not_assignable_to_type_1, 1))
+    );
     assert_eq!(
         plain(&store, &files, &[ad_hoc, beyond, negative, short]),
         b"error TS-1: internal: bad cast {0}\na.ts(1,3): error TS1003: Identifier expected.\na.ts(1,1): error TS1003: Identifier expected.\na.ts(1,1): error TS2322: Type 'x' is not assignable to type '{1}'.\n"

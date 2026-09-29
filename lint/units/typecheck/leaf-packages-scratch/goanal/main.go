@@ -400,7 +400,17 @@ func main() {
 			continue
 		}
 		short := strings.TrimPrefix(r, modPrefix+"internal/")
+		excl := map[string]bool{}
+		for _, x := range strings.Split(os.Getenv("EXCLUDE_FILES"), ",") {
+			if x != "" {
+				excl[x] = true
+			}
+		}
 		for _, f := range pi.files {
+			fn := fset.Position(f.Pos()).Filename
+			if excl[short+"/"+filepath.Base(fn)] {
+				continue
+			}
 			walk(pi, f, 0, "", short, nil)
 		}
 	}

@@ -59,7 +59,7 @@ fn number_to_string(n: f64) -> String {
     out
 }
 
-// Rounds an exact decimal tie to the even digit, as ECMAScript Number::toString requires.
+// Rounds an exact decimal tie to the even digit when both neighbours read back as the same number.
 fn fix_tie(abs: f64, digits: &mut String, exp: i32) {
     let last = digits.as_bytes()[digits.len() - 1];
     if (last - b'0') % 2 == 0 {
@@ -75,35 +75,30 @@ fn fix_tie(abs: f64, digits: &mut String, exp: i32) {
     let k = digits.len() as i32;
     let p = exp - (k - 1);
     let s: u128 = digits.parse::<u128>().unwrap();
-    let odd = 2 * s - 1;
     let tz = m.trailing_zeros() as i32;
     let m_odd = (m >> tz) as u128;
     let two = tz + e + 1;
-    // 2v = m_odd * 2^two ; tie when 2v == odd * 10^p
-    let tie = if p >= 0 {
-        // odd * 5^p * 2^p == m_odd * 2^two
-        if two != p || p > 27 {
-            false
+    // 2v = m_odd * 2^two. A tie is 2v == (2s - 1) * 10^p (std rounded up) or 2v == (2s + 1) * 10^p (std rounded down).
+    let is_tie = |odd: u128| -> bool {
+        if p >= 0 {
+            two == p && p <= 27 && odd.checked_mul(5u128.pow(p as u32)) == Some(m_odd)
         } else {
-            odd.checked_mul(5u128.pow(p as u32)) == Some(m_odd)
-        }
-    } else {
-        // odd == m_odd * 5^(-p) * 2^(two - p)
-        if two - p != 0 || -p > 27 {
-            false
-        } else {
-            m_odd.checked_mul(5u128.pow((-p) as u32)) == Some(odd)
+            two - p == 0 && -p <= 27 && m_odd.checked_mul(5u128.pow((-p) as u32)) == Some(odd)
         }
     };
-    if tie {
-        let n = digits.len();
-        let mut v = digits.clone().into_bytes();
-        v[n - 1] -= 1;
-        let lower = String::from_utf8(v).unwrap();
-        let text = format!("{}e{}", lower, p);
-        if text.parse::<f64>().ok() == Some(abs) {
-            *digits = lower;
-        }
+    let other = if is_tie(2 * s - 1) {
+        s - 1
+    } else if is_tie(2 * s + 1) {
+        s + 1
+    } else {
+        return;
+    };
+    let text = other.to_string();
+    if text.len() != digits.len() {
+        return;
+    }
+    if format!("{}e{}", text, p).parse::<f64>().ok() == Some(abs) {
+        *digits = text;
     }
 }
 

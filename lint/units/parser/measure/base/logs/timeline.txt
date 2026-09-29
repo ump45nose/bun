@@ -33,3 +33,5 @@ END   26-test-transpiler-stack-overflow rc=0 wall=383s lockwait=333s run=50s 202
 START 27-test-transpiler-cache 2026-09-29T18:02:47Z load=201.23 180.35 220.85 cmd: bun bd test test/cli/run/transpiler-cache.test.ts --timeout 180000
 END   27-test-transpiler-cache rc=0 wall=116s lockwait=69s run=47s 2026-09-29T18:04:43Z load=265.77 208.33 226.12
 START 31-linkprobe 2026-09-29T18:04:43Z load=265.77 208.33 226.12 cmd: cargo test --manifest-path /workspace/notes/lint/units/parser/measure/linkprobe/Cargo.toml --offline --target-dir /tmp/parser-base/tgt-linkprobe -- --test-threads=1
+END   31-linkprobe rc=101 wall=182s lockwait=126s run=56s 2026-09-29T18:07:45Z load=328.09 264.30 244.84
+START 32-psize 2026-09-29T18:07:45Z load=328.09 264.30 244.84 cmd: /tmp/parser-base/psize.sh
