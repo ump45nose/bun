@@ -117,6 +117,14 @@ pub fn version() -> *const () {
     CWD.load(Ordering::Acquire).cast()
 }
 
+/// [`version`], if the record holds `path`. A value read from the OS while a
+/// `chdir` on another thread is in flight belongs to no record yet.
+pub fn version_of(path: &[u8]) -> Option<*const ()> {
+    let p = CWD.load(Ordering::Acquire);
+    // SAFETY: `CWD` always points at `EMPTY` or a `set` allocation.
+    (unsafe { entry_bytes(p) } == path).then_some(p.cast_const().cast())
+}
+
 /// [`get`], NUL-terminated.
 #[inline(always)]
 pub fn get_z() -> &'static ZStr {

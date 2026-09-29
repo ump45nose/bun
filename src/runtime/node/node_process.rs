@@ -454,7 +454,17 @@ mod _impl {
     // shim instead of `#[bun_jsc::host_fn]` (caller is not a JSHostFunction).
     #[unsafe(no_mangle)]
     extern "C" fn Bun__Process__getCwd(global_object: &JSGlobalObject) -> JSValue {
-        bun_jsc::to_js_host_fn_result(global_object, get_cwd(global_object))
+        let mut version = core::ptr::null();
+        bun_jsc::to_js_host_fn_result(global_object, get_cwd(global_object, &mut version))
+    }
+
+    /// `version` is the record the result may be cached under, or null.
+    #[unsafe(no_mangle)]
+    extern "C" fn Bun__Process__getCwdForCache(
+        global_object: &JSGlobalObject,
+        version: &mut *const (),
+    ) -> JSValue {
+        bun_jsc::to_js_host_fn_result(global_object, get_cwd(global_object, version))
     }
 
     #[unsafe(no_mangle)]
@@ -462,12 +472,16 @@ mod _impl {
         bun_core::cwd::version()
     }
 
-    fn get_cwd(global_object: &JSGlobalObject) -> JsResult<JSValue> {
+    fn get_cwd(global_object: &JSGlobalObject, version: &mut *const ()) -> JsResult<JSValue> {
+        *version = core::ptr::null();
         // Real syscall (not `bun_core::cwd`): Node's process.cwd() calls
         // uv_cwd(), so a deleted cwd must surface here.
         let mut buf = bun_paths::path_buffer_pool::get();
         match bun_sys::getcwd(&mut buf[..]) {
             bun_sys::Result::Ok(len) => {
+                if let Some(record) = bun_core::cwd::version_of(&buf[..len]) {
+                    *version = record;
+                }
                 bun_string_jsc::create_utf8_for_js(global_object, &buf[..len])
             }
             bun_sys::Result::Err(e) => {

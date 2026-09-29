@@ -4730,6 +4730,7 @@ JSC_DEFINE_CUSTOM_SETTER(setProcessTitle, (JSC::JSGlobalObject * globalObject, J
 }
 
 extern "C" const void* Bun__cwdVersion();
+extern "C" JSC::EncodedJSValue Bun__Process__getCwdForCache(JSC::JSGlobalObject*, const void** version);
 
 JSValue getCachedCwd(JSC::JSGlobalObject* globalObject)
 {
@@ -4738,15 +4739,17 @@ JSValue getCachedCwd(JSC::JSGlobalObject* globalObject)
 
     // https://github.com/nodejs/node/blob/2eff28fb7a93d3f672f80b582f664a7c701569fb/lib/internal/bootstrap/switches/does_own_process_state.js#L142-L146
     auto* processObject = defaultGlobalObject(globalObject)->processObject();
-    const void* version = Bun__cwdVersion();
-    if (auto* cached = processObject->cachedCwd(version)) {
+    if (auto* cached = processObject->cachedCwd(Bun__cwdVersion())) {
         return cached;
     }
 
-    auto cwd = Bun__Process__getCwd(globalObject);
+    // The record this directory belongs to; none while a chdir on another thread is in flight.
+    const void* version = nullptr;
+    auto cwd = Bun__Process__getCwdForCache(globalObject, &version);
     RETURN_IF_EXCEPTION(scope, {});
     JSString* cwdStr = uncheckedDowncast<JSString>(JSValue::decode(cwd));
-    processObject->setCachedCwd(vm, cwdStr, version);
+    if (version)
+        processObject->setCachedCwd(vm, cwdStr, version);
     RELEASE_AND_RETURN(scope, cwdStr);
 }
 
