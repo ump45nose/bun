@@ -156,7 +156,7 @@ function iterateErrorBaseline(
     for (const info of diag.relatedInformation) {
       let location = "";
       if (info.file !== undefined) {
-        location = " " + formatLocation(info.file, info.pos, formatOpts);
+        location = " " + (isTsc ? tsc.formatLocation(info.file, info.pos, text => text) : formatLocation(info.file, info.pos, formatOpts));
       }
       location = stripPrefixes(location);
       if (location.length > 0 && isDefaultLibraryFile(info.file!.fileName)) {
@@ -252,7 +252,7 @@ function iterateErrorBaseline(
           outputLines += newLine();
           outputLines += "    ";
           if (isTsc) {
-            outputLines += tsc.squiggle(line, squiggleStart, length);
+            outputLines += tsc.squiggle(inputFile.content, line, thisLineStart, errStart, end);
           } else {
             if (squiggleStart > line.length) {
               throw new RangeError(`slice bounds out of range [:${squiggleStart}] with length ${line.length}`);

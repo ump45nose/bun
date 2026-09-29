@@ -190,7 +190,7 @@ const tsgoOps: RuleOps = {
 const tscOps: RuleOps = {
   rules: "tsc",
   stripPrefixes: tsc.removeTestPathPrefixes,
-  squigglePrefix: (line, squiggleStart) => tsc.squiggle(line, squiggleStart, 0),
+  squigglePrefix: (line, squiggleStart) => tsc.squiggleInLine(line, squiggleStart, 0),
   bytesOfTildes(line, squiggleStart, count) {
     const pos = tsc.advanceUtf16(line, squiggleStart, count);
     if (pos === undefined) fail("more tildes than UTF-16 code units on the line");

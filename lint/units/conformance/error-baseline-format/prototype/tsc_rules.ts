@@ -106,27 +106,41 @@ export function advanceUtf16(text: ByteString, from: number, units: number): num
 }
 
 // line.substr(0, squiggleStart).replace(/\S/g, " ") + new Array(Math.min(length, line.length - squiggleStart) + 1).join("~")
-// where squiggleStart and length count bytes here and UTF-16 code units in TypeScript.
-export function squiggle(line: ByteString, squiggleStart: number, length: number): ByteString {
+// with squiggleStart and length in UTF-16 code units, as TypeScript counts them.
+export function squiggleOfUnits(line: ByteString, squiggleStart: number, length: number): ByteString {
   let out = "";
-  const prefixEnd = Math.min(squiggleStart, line.length);
-  for (let i = 0; i < prefixEnd; ) {
+  let units = 0;
+  for (let i = 0; i < line.length && units < squiggleStart; ) {
     const [r, size] = decodeRune(line, i);
-    if (size === 4 && i + 2 === prefixEnd) {
+    const width = r >= 0x10000 ? 2 : 1;
+    if (width === 2 && units + 1 === squiggleStart) {
+      // The first half of a surrogate pair alone is not white space.
       out += " ";
       break;
     }
-    out += isJsWhiteSpace(r) ? line.slice(i, i + size) : " ".repeat(r >= 0x10000 ? 2 : 1);
+    out += isJsWhiteSpace(r) ? line.slice(i, i + size) : " ".repeat(width);
+    units += width;
     i += size;
   }
-  const lineUnits = utf16Len(line);
-  // A start one past the end of the line makes new Array(0); further out TypeScript throws a RangeError.
-  const startUnits = utf16Units(line, 0, prefixEnd) + (squiggleStart - prefixEnd);
-  const spanEnd = squiggleStart + length;
-  const count = spanEnd <= line.length ? Math.min(utf16Units(line, squiggleStart, spanEnd), lineUnits - startUnits) : lineUnits - startUnits;
+  const count = Math.min(length, utf16Len(line) - squiggleStart);
+  // new Array(n) throws for a negative n: a start two or more past the end of the line.
   if (count + 1 < 0) throw new RangeError("Invalid array length");
   out += "~".repeat(Math.max(0, count));
   return out;
+}
+
+// The squiggle line of a span, from byte offsets into the text of the file and the line that the harness shows.
+export function squiggle(content: ByteString, line: ByteString, thisLineStart: number, errStart: number, end: number): ByteString {
+  const relativeOffset = errStart >= thisLineStart ? utf16Units(content, thisLineStart, errStart) : -utf16Units(content, errStart, thisLineStart);
+  const length = utf16Units(content, errStart, end) - Math.max(0, -relativeOffset);
+  return squiggleOfUnits(line, Math.max(0, relativeOffset), length);
+}
+
+// The same for a span that starts `squiggleStart` bytes into the line that is shown, as the reader meets it.
+export function squiggleInLine(line: ByteString, squiggleStart: number, length: number): ByteString {
+  const start = utf16Units(line, 0, Math.min(squiggleStart, line.length)) + Math.max(0, squiggleStart - line.length);
+  const end = Math.min(line.length, squiggleStart + length);
+  return squiggleOfUnits(line, start, squiggleStart + length <= line.length ? utf16Units(line, Math.min(squiggleStart, line.length), end) : utf16Len(line) + 1);
 }
 
 // getLineAndCharacterOfPosition: 0-based line and UTF-16 column, for a position that can be a half position.
@@ -171,15 +185,15 @@ function formatColorAndReset(text: string, formatStyle: string): string {
   return formatStyle + text + resetEscapeSequence;
 }
 
-function formatLocation(file: FileLike, start: number): string {
+export function formatLocation(file: FileLike, start: number, color: (text: string, formatStyle: string) => string = formatColorAndReset): string {
   const [firstLine, firstLineChar] = getLineAndCharacterOfPosition(file, start);
   const relativeFileName = convertToRelativePath(file.fileName, formatOpts);
   let output = "";
-  output += formatColorAndReset(relativeFileName, Cyan);
+  output += color(relativeFileName, Cyan);
   output += ":";
-  output += formatColorAndReset(`${firstLine + 1}`, Yellow);
+  output += color(`${firstLine + 1}`, Yellow);
   output += ":";
-  output += formatColorAndReset(`${firstLineChar + 1}`, Yellow);
+  output += color(`${firstLineChar + 1}`, Yellow);
   return output;
 }
 
