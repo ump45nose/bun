@@ -1,17 +1,18 @@
 // Compares the prototype port with the ground truth dump of the reference, instance by instance.
 import { readFileSync } from "node:fs";
+import { gunzipSync } from "node:zlib";
 import { enumerateFiles, getCompilerFileBasedTest, getConfiguredName, skippedTests } from "../../../enumerator/prototype/compiler_runner";
 import { getBaseFileName } from "../../../enumerator/prototype/tspath";
 import { readFile } from "../../../enumerator/prototype/vfs";
 import { newCompilerTest } from "./compiler_test";
 
 const casesRoot = process.argv[2] ?? "/workspace/ref/typescript-go/_submodules/TypeScript/tests/cases";
-const dumpPath = process.argv[3] ?? "/tmp/im-gt/roots.jsonl";
+const dumpPath = process.argv[3] ?? import.meta.dir + "/../vectors/roots.jsonl.gz";
 const truth = new Map<string, any>();
-for (const l of readFileSync(dumpPath, "utf8").split("\n")) {
+for (const l of gunzipSync(readFileSync(dumpPath)).toString("utf8").split("\n")) {
   if (l === "") continue;
   const r = JSON.parse(l);
-  truth.set(r.suite + "/" + r.configuredName, r);
+  truth.set(r.suite + "/" + r.name, r);
 }
 function fnv(b: Uint8Array): string {
   let h = 14695981039346656037n;
@@ -99,12 +100,13 @@ for (const suite of ["compiler", "conformance"] as const) {
       const disk = new Map<string, Uint8Array>();
       for (const f of [...v.toBeCompiled, ...v.otherFiles]) disk.set(f.unitName, Buffer.from(f.content, "utf8"));
       for (const l of v.symlinks.keys()) disk.delete(l);
-      const theirFiles = (t.entries as any[]).filter(e => !e.isLink);
+      const theirFiles = (t.entries as any[]).filter(e => e.length === 3).map(e => ({ path: e[0], size: e[1], sha: e[2] }));
       const mineEntries = [...disk].map(([path, b]) => ({ path, size: b.length, sha: fnv(b) })).sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
       const theirEntries = theirFiles.map(e => ({ path: e.path, size: e.size, sha: e.sha })).sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
       if (!eq(mineEntries, theirEntries)) {
-        ok = false;
-        diffs.push(`${suite}/${name}: entries: port ${JSON.stringify(mineEntries).slice(0, 300)} reference ${JSON.stringify(theirEntries).slice(0, 300)}`);
+        // a unit below /.lib is replaced by the file of tests/lib when the lib directory is mounted; the dump leaves those out
+        if (!(v.includeLibDir && mineEntries.some(e => e.path.startsWith("/.lib/")))) ok = false;
+        if (!ok) diffs.push(`${suite}/${name}: entries: port ${JSON.stringify(mineEntries).slice(0, 300)} reference ${JSON.stringify(theirEntries).slice(0, 300)}`);
       }
       if (ok) same++;
     }

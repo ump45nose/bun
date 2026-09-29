@@ -10,7 +10,7 @@ export function toFileNameLowerCase(fileName: string): string {
   }
   return out;
 }
-const text = gunzipSync(readFileSync("vectors.jsonl.gz")).toString("utf8");
+const text = gunzipSync(readFileSync(import.meta.dir + "/../vectors/paths.jsonl.gz")).toString("utf8");
 let bad = 0, rows = 0;
 for (const l of text.split("\n")) {
   if (!l) continue;

@@ -6,6 +6,9 @@ import { newCompilerTest } from "../prototype/compiler_test";
 import { writeFileSync } from "node:fs";
 
 const casesRoot = "/workspace/ref/typescript-go/_submodules/TypeScript/tests/cases";
+const resolutions = new Map<string, Map<string, string>>([
+  ["compiler/tsconfigExtendsPackageJsonExportsWildcard.ts", new Map([["foo/strict.json", "/node_modules/foo/configs/strict.json"]])],
+]);
 type Row = { name: string; suite: string; casePath: string; run: boolean; causes: string[]; maxPath: number; maxSegment: number; detail: Record<string, string[]> };
 const rows: Row[] = [];
 const winReserved = /^(con|prn|aux|nul|com[0-9¹²³]|lpt[0-9¹²³])(\..*)?$/i;
@@ -24,7 +27,7 @@ for (const suite of ["compiler", "conformance"] as const) {
     for (const config of configs) {
       const name = getConfiguredName(basename, config?.name ?? "");
       const st = getStatus(read.contents, filename, config === undefined ? undefined : new Map(config.config));
-      const r = newCompilerTest(read.contents, filename, config === undefined ? undefined : new Map(config.config));
+      const r = newCompilerTest(read.contents, filename, config === undefined ? undefined : new Map(config.config), resolutions.get(suite + "/" + basename));
       const row: Row = { name, suite, casePath: filename.slice(casesRoot.length + 1), run: st.status === "run", causes: [], maxPath: 0, maxSegment: 0, detail: {} };
       rows.push(row);
       const add = (cause: string, what: string) => {
@@ -97,8 +100,13 @@ for (const suite of ["compiler", "conformance"] as const) {
           if (/(^|,)\s*(\/|[a-zA-Z]:[\\/])/.test(val)) add("rooted-setting", k + "=" + val);
         }
       }
-      // 7. a relative name that climbs above the root
-      for (const u of files) void u;
+      // 7. a relative specifier or reference that climbs above the root of the virtual disk
+      for (const f of files) {
+        const depth = f.unitName.split("/").length - 2;
+        for (const m of f.content.matchAll(/["'`]((?:\.\.\/)+)[^"'`\n]*["'`]/g)) {
+          if (m[1].length / 3 > depth) add("climbs-above-root", f.unitName + ": " + m[0]);
+        }
+      }
     }
   }
 }
@@ -114,4 +122,4 @@ for (const [c, e] of [...causes].sort((a, b) => b[1].all - a[1].all)) console.lo
 const lens = rows.map(r => r.maxPath).sort((a, b) => a - b);
 console.log("longest virtual path per instance: max", lens[lens.length - 1], "p99", lens[Math.floor(lens.length * 0.99)], "median", lens[lens.length >> 1]);
 console.log("instances with a virtual path over 100:", count(r => r.maxPath > 100), "over 150:", count(r => r.maxPath > 150), "over 200:", count(r => r.maxPath > 200), "longest segment bytes", Math.max(...rows.map(r => r.maxSegment)));
-writeFileSync("/tmp/im-gt/survey/rows.json", JSON.stringify(rows));
+writeFileSync(process.argv[2] ?? "/tmp/im-td/rows.json", JSON.stringify(rows));

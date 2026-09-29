@@ -125,8 +125,8 @@ export function toWriterDiagnostics(input: CheckInput, result: Extract<CheckResu
     file: undefined,
     pos: -1,
     end: -1,
-    code: c.code,
-    category: categoryFromName(c.category),
+    code: c.code ?? 0,
+    category: categoryFromName(c.category ?? "message"),
     messageText: model.fromString(c.messageText),
     messageChain: c.messageChain.map(chain),
     relatedInformation: [],
@@ -180,6 +180,8 @@ export function evaluate(input: CheckInput, check: Pick<Check, "level">, result:
       }
     }
   }
+  // error_baseline.go:44: a diagnostic with code -1 records a broken assertion and fails the test after the comparison
+  if (result.diagnostics.some(d => d.code === -1)) return { ...base, status: "error", detail: "diagnostic with code -1", actual, expected };
   if (actual === expected) return { ...base, status: "pass", detail: "", actual, expected };
   return { ...base, status: "fail", detail: firstDifference(expected, actual), actual, expected };
 }

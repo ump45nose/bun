@@ -102,11 +102,11 @@ describe("probe", () => {
 });
 
 describe("spawn check", () => {
-  const check = createSpawnCheck({ command: fixture("fake-lint.ts"), env, timeoutMs: 2000 }, all);
-  const run = async (units: Record<string, string>, more: Partial<CheckInput> = {}) => {
+  const check = createSpawnCheck({ command: fixture("fake-lint.ts"), env }, all);
+  const run = async (units: Record<string, string>, more: Partial<CheckInput> = {}, with_ = check) => {
     const i = input(units, more);
     try {
-      return await check.check(i);
+      return await with_.check(i);
     } finally {
       i.dispose();
     }
@@ -157,9 +157,12 @@ describe("spawn check", () => {
     ["a signal", 'const x: number = "s";\n//! signal: SIGSEGV\n', "signal"],
     ["output on stdout", "//! stdout: hello\n", "stdout"],
     ["an internal error", "//! stderr: error internal-error: assertion failed in check_expression\n", "internal"],
-    ["a run that does not end", "//! spin:\n", "timeout"],
   ])("%s is a failure", async (_, content, kind) => {
     expect(await run({ "/.src/a.ts": content })).toMatchObject({ kind: "failure", failure: kind });
+  });
+  test("a run that does not end is a failure", async () => {
+    const short = createSpawnCheck({ command: fixture("fake-lint.ts"), env, timeoutMs: 300 }, all);
+    expect(await run({ "/.src/a.ts": "//! spin:\n" }, {}, short)).toMatchObject({ kind: "failure", failure: "timeout", signal: "SIGKILL" });
   });
   test("a command that runs its operand gets no case", async () => {
     const bad = createSpawnCheck({ command: fixture("fake-runs-operand.ts"), env }, all);

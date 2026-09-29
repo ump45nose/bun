@@ -1,6 +1,6 @@
 // Writes synthetic cases that reach the parts of the config file matcher and of the roots rule that the corpus does not.
 import { mkdirSync, writeFileSync, rmSync } from "node:fs";
-const out = "/tmp/im-gt/synth/cases/compiler";
+const out = (process.argv[2] ?? "/tmp/im-td/synth/cases") + "/compiler";
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 let n = 0;

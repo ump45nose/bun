@@ -11,6 +11,7 @@ compiler	commonSourceDir2.ts	run	E	dos-root	dos-root	dos-root	dos-root,rooted-se
 compiler	commonSourceDir3.ts	run	C	dos-root,case-insensitive-requested	dos-root,case-collision	dos-root,case-collision	dos-root,case-collision,case-insensitive-requested,rooted-setting	13
 compiler	commonSourceDir4.ts	run	E	dos-root	dos-root,case-collision	dos-root,case-collision	dos-root,case-collision,rooted-setting	13
 compiler	commonSourceDir5.ts	skipped		dos-root,absolute-path-in-text	dos-root,absolute-path-in-text	dos-root,absolute-path-in-text	dos-root,rooted-specifier	9
+compiler	complexNarrowingWithAny.ts	run	C				climbs-above-root	32
 compiler	conditionalTypeVarianceBigArrayConstraintsPerformance.ts	run	E	absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	lib-directory,rooted-reference-lib	62
 compiler	contextuallyTypedJsxAttribute2.tsx	run	C	absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	lib-directory,rooted-reference-lib	40
 compiler	contextuallyTypedJsxChildren.tsx	run	C	absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	lib-directory,rooted-reference-lib	38
@@ -94,6 +95,8 @@ compiler	moduleResolutionAsTypeReferenceDirective.ts	run	C				current-directory,
 compiler	moduleResolutionAsTypeReferenceDirectiveAmbient.ts	run	C				current-directory,rooted-setting	33
 compiler	moduleResolutionAsTypeReferenceDirectiveScoped.ts	run	E				current-directory,rooted-setting	55
 compiler	moduleResolutionWithExtensions_withPaths.ts	skipped		absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	rooted-path-in-json	31
+compiler	moduleResolutionWithRequire.ts	run	C				climbs-above-root	9
+compiler	moduleResolutionWithRequireAndImport.ts	run	C				climbs-above-root	9
 compiler	moduleResolutionWithSuffixes_one_externalModule_withPaths.ts	skipped		absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	rooted-path-in-json	45
 compiler	moduleResolutionWithSymlinks.ts	run	E			link-to-file	link-to-file	46
 compiler	moduleResolutionWithSymlinks_notInNodeModules.ts	run	C			link-to-file	link-to-file	19
@@ -144,7 +147,6 @@ compiler	symlinkedWorkspaceDependenciesNoDirectLinkGeneratesNonrelativeName.ts	r
 compiler	symlinkedWorkspaceDependenciesNoDirectLinkOptionalGeneratesNonrelativeName.ts	run	C				link-to-directory	47
 compiler	symlinkedWorkspaceDependenciesNoDirectLinkPeerGeneratesNonrelativeName.ts	run	C				link-to-directory	47
 compiler	tripleSlashReferenceAbsoluteWindowsPath.ts	run	C	dos-root,absolute-path-in-text	dos-root,absolute-path-in-text	dos-root,absolute-path-in-text	dos-root,rooted-reference	11
-compiler	tsconfigExtendsPackageJsonExportsWildcard.ts	run	E	undecided-roots	undecided-roots	undecided-roots	undecided-roots	0
 compiler	tsxDeepAttributeAssignabilityError.tsx	run	E	absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	lib-directory,rooted-reference-lib	22
 compiler	tsxFragmentChildrenCheck.ts	run	C	absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	lib-directory,rooted-reference-lib	22
 compiler	tsxInvokeComponentType.tsx	run	E	absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	lib-directory,rooted-reference-lib	32
@@ -182,6 +184,8 @@ conformance	esDecorators-classDeclaration-setFunctionName(target=es2015).ts	run	
 conformance	esDecorators-classDeclaration-setFunctionName(target=es5).ts	skipped					unit-name-twice	10
 conformance	typeSatisfaction_js.ts	skipped					rooted-setting	9
 conformance	moduleResolutionWithExtensions.ts	run	C				unit-name-twice	21
+conformance	emit(jsx=react).ts	run	E				climbs-above-root	18
+conformance	emit(jsx=preserve).ts	run	E				climbs-above-root	18
 conformance	jsDeclarationsNonIdentifierInferredNames.ts	run	C	absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	lib-directory,rooted-reference-lib	50
 conformance	jsDeclarationsReactComponents(target=es5).ts	skipped		absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	lib-directory,rooted-reference-lib	40
 conformance	jsDeclarationsReactComponents(target=es2015).ts	run	C	absolute-path-in-text	absolute-path-in-text	absolute-path-in-text	lib-directory,rooted-reference-lib	40

@@ -2,6 +2,7 @@
 import { lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { gunzipSync } from "node:zlib";
 import { enumerateFiles, getCompilerFileBasedTest, getConfiguredName, skippedTests } from "../../../enumerator/prototype/compiler_runner";
 import { getBaseFileName } from "../../../enumerator/prototype/tspath";
 import { readFile } from "../../../enumerator/prototype/vfs";
@@ -9,14 +10,18 @@ import { newCompilerTest } from "./compiler_test";
 import { materialize } from "./materialize";
 
 const casesRoot = process.argv[2] ?? "/workspace/ref/typescript-go/_submodules/TypeScript/tests/cases";
-const dumpPath = process.argv[3] ?? "/tmp/im-gt/roots.jsonl";
+const dumpPath = process.argv[3] ?? import.meta.dir + "/../vectors/roots.jsonl.gz";
 const readsAbsolutePaths = process.argv[4] === "disk";
 const libDirectory = "/workspace/ref/typescript-go/_submodules/TypeScript/tests/lib";
+const resolutions = new Map<string, Map<string, string>>([
+  ["compiler/tsconfigExtendsPackageJsonExportsWildcard.ts", new Map([["foo/strict.json", "/node_modules/foo/configs/strict.json"]])],
+]);
 const truth = new Map<string, any>();
-for (const l of readFileSync(dumpPath, "utf8").split("\n")) {
+for (const l of gunzipSync(readFileSync(dumpPath)).toString("utf8").split("\n")) {
   if (l === "") continue;
   const r = JSON.parse(l);
-  truth.set(r.suite + "/" + r.configuredName, r);
+  if (r.entries !== undefined) r.entries = r.entries.map((e: any[]) => (e.length === 3 ? { path: e[0], size: e[1], sha: e[2] } : { path: e[0], link: e[1], isLink: true }));
+  truth.set(r.suite + "/" + r.name, r);
 }
 function fnv(b: Uint8Array): string {
   let h = 14695981039346656037n;
@@ -51,7 +56,7 @@ for (const suite of ["compiler", "conformance"] as const) {
       n++;
       const name = getConfiguredName(basename, config?.name ?? "");
       const t = truth.get(suite + "/" + name);
-      const r = newCompilerTest(read.contents, filename, config === undefined ? undefined : new Map(config.config));
+      const r = newCompilerTest(read.contents, filename, config === undefined ? undefined : new Map(config.config), resolutions.get(suite + "/" + basename));
       if (!r.ok) { refused[r.status] = (refused[r.status] ?? 0) + 1; continue; }
       const root = base + "/" + n.toString(36);
       mkdirSync(root);

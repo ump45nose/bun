@@ -15,7 +15,7 @@ for r in rows:
         o["stop"] = r["stop"]
     else:
         o.update({
-            "currentDirectory": r["currentDirectory"], "configFiles": r["configFiles"], "roots": r["roots"], "otherFiles": r["otherFiles"],
+            "currentDirectory": r["currentDirectory"], "hasNonDtsFiles": r["hasNonDtsFiles"], "configFiles": r["configFiles"], "roots": r["roots"], "otherFiles": r["otherFiles"],
             "programFileNames": r["programFileNames"], "includeLibDir": r["includeLibDir"], "useCaseSensitiveFileNames": r["useCaseSensitiveFileNames"],
             "symlinks": dict(sorted(r["symlinks"].items())), "configFileNames": r["configFileNames"], "configOptions": r.get("configOptions"),
             "extendedSourceFiles": r.get("extendedSourceFiles") or [],

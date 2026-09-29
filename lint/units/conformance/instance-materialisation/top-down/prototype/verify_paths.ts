@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import * as t from "../../../enumerator/prototype/tspath";
 import * as m from "./tspath_more";
-const file = process.argv[2] ?? "vectors.jsonl.gz";
+const file = process.argv[2] ?? import.meta.dir + "/../vectors/paths.jsonl.gz";
 const raw = readFileSync(file);
 const text = file.endsWith(".gz") ? gunzipSync(raw).toString("utf8") : raw.toString("utf8");
 const fns: Record<string, (name: string, dir: string) => unknown> = {

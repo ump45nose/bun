@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-const rows = JSON.parse(readFileSync("rows.json", "utf8")) as any[];
+const rows = JSON.parse(readFileSync(process.argv[2] ?? "/tmp/im-td/rows.json", "utf8")) as any[];
 const show = (cause: string, max = 40) => {
   console.log("==== " + cause);
   const seen = new Set<string>();

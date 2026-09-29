@@ -47,19 +47,22 @@ export interface Materialised {
 }
 
 export interface CheckMessageChain {
-  code: number;
-  category: CategoryName;
+  // a baseline prints neither of the two for an entry of a chain
+  code?: number;
+  category?: CategoryName;
   messageText: string;
   messageChain: CheckMessageChain[];
 }
 
 export interface CheckRelatedInformation extends CheckMessageChain {
+  code: number;
   file: string | undefined;
   start: number;
   length: number;
 }
 
 export interface CheckDiagnostic extends CheckRelatedInformation {
+  category: CategoryName;
   relatedInformation: CheckRelatedInformation[];
 }
 
@@ -159,10 +162,14 @@ export const standInCode = "internal-stand-in";
 export const internalErrorCode = "internal-error";
 
 export interface SpawnCheckOptions {
+  // the command without --lint and without operands
   command: readonly string[];
+  // the environment of the child; the feature variable is added
   env: Record<string, string | undefined>;
+  // limit of one instance, default 60 s
   timeoutMs?: number;
-  concurrency?: number;
+  // limit of one run of the probe, default 60 s
+  probeTimeoutMs?: number;
   name?: string;
 }
 
@@ -175,8 +182,7 @@ export interface SpawnOutcome {
   spawnError: string | undefined;
 }
 
-export async function spawnLint(options: SpawnCheckOptions, operands: readonly string[], cwd: string): Promise<SpawnOutcome> {
-  const timeout = options.timeoutMs ?? 30_000;
+export async function spawnLint(options: SpawnCheckOptions, operands: readonly string[], cwd: string, timeout = options.timeoutMs ?? 60_000): Promise<SpawnOutcome> {
   const started = performance.now();
   let proc;
   try {
@@ -281,7 +287,7 @@ export async function probe(options: SpawnCheckOptions, libraryRoot = "bundled:/
       ["clean.ts", []],
       ["error.ts", [probeExpected]],
     ] as const) {
-      const outcome = await spawnLint(options, [join(root, name)], root);
+      const outcome = await spawnLint(options, [join(root, name)], root, options.probeTimeoutMs ?? 60_000);
       if (outcome.stdout.includes(probeMarker)) return { ok: false, reason: "executes-operand", detail: "the command ran the operand of --lint" };
       const result = interpret(outcome, m, libraryRoot);
       const same = result.kind === "plain" && result.provisional.length === 0 && JSON.stringify(result.diagnostics) === JSON.stringify(expected);

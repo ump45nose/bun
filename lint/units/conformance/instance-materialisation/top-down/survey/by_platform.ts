@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
-const rows = JSON.parse(readFileSync("rows.json", "utf8")) as any[];
-const tsv = gunzipSync(readFileSync("/workspace/notes/lint/units/conformance/enumerator/vectors/instances.tsv.gz")).toString("utf8").split("\n").filter(Boolean).slice(1).map(l => l.split("\t"));
+const rows = JSON.parse(readFileSync(process.argv[2] ?? "/tmp/im-td/rows.json", "utf8")) as any[];
+const tsv = gunzipSync(readFileSync(import.meta.dir + "/../../../enumerator/vectors/instances.tsv.gz")).toString("utf8").split("\n").filter(Boolean).slice(1).map(l => l.split("\t"));
 const kind = new Map(tsv.map(t => [t[1] + "/" + t[0], t[6]]));
 for (const r of rows) {
   r.kind = kind.get(r.suite + "/" + r.name) ?? "";
@@ -50,7 +50,7 @@ for (const r of rows) {
   if (l.length + d.length + w.length === 0 && r.causes.length === 0) continue;
   lines.push([r.suite, r.name, r.run ? "run" : "skipped", r.kind, l.join(","), d.join(","), w.join(","), r.causes.join(","), r.maxPath].join("\t"));
 }
-writeFileSync("/tmp/im-gt/survey/materialisation.tsv", lines.join("\n") + "\n");
+writeFileSync(process.argv[3] ?? import.meta.dir + "/../vectors/materialisation.tsv", lines.join("\n") + "\n");
 console.log("rows written", lines.length - 1);
 console.log("rooted-setting instances", rows.filter(r => r.causes.includes("rooted-setting")).length, "run", rows.filter(r => r.run && r.causes.includes("rooted-setting")).length);
 console.log("links instances", rows.filter(r => r.causes.some((c: string) => c.startsWith("link-"))).length, "run", rows.filter(r => r.run && r.causes.some((c: string) => c.startsWith("link-"))).length, "link-to-file run", rows.filter(r => r.run && r.causes.includes("link-to-file")).length);
