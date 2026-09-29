@@ -64,6 +64,8 @@ public:
     unsigned heldWriteAwaitsDrain : 1 = 0;
     /* Set by onClose() for the peerEnded / closeError getters: the peer's FIN, the error of a failed read. */
     unsigned peer_ended : 1 = 0;
+    /* restWithPausedRequest() to leaveRest(). */
+    unsigned requestAtRest : 1 = 0;
     int closeReadError = 0;
     /* Tunnel bytes that onData() queued for JS in tasks that have not run yet. */
     size_t queuedTunnelBytes = 0;
@@ -140,6 +142,11 @@ public:
     /* Tells uWS whether this tunnel is idle: no read can come and nothing is left to send. See HttpResponse::setNodeHttpTunnelIdle. */
     void updateTunnelIdle();
     void setTunnelIdle(bool idle);
+    /* JavaScript ended the write side, the request that waits for its body stopped the reads, and nothing is left to
+     * send. Like a libuv handle in that state, the connection and that request do not hold the event loop until the
+     * reads start again. */
+    void restWithPausedRequest();
+    void leaveRest();
     /* uWS still holds bytes of an HTTP response on this connection. A raw write has to go through the same buffer, or it reaches the wire first. */
     bool hasUnsentResponseBytes() const;
     /* Sends the response bytes that are not in the uWS buffer (the zero-copy tail of a res.write(), the cork buffer) to the kernel or into it. A raw write or a FIN then goes out behind them. */
@@ -148,6 +155,8 @@ public:
     bool flushesStreamBufferOnDrain() const { return !!functionToCallOnDrain; }
     /* The WebSocket that adopted the connection reads from here on. */
     void releaseTunnelReadsForUpgrade();
+    /* The reads are paused and uWS still parses this connection: a request holds them back until it reads its body. */
+    bool requestKeepsReadsPaused() const;
 
     /* Trailer fields received after the current request's chunked body, as a
      * flat [name, value, ...] JS array preserving wire casing; jsUndefined()

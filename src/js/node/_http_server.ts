@@ -1955,6 +1955,14 @@ function getNodeHTTPServerSocket() {
         callback();
         return;
       }
+      if (!this[kDestroySoon] && !this[kHandedOff]) {
+        // The reads go on after the FIN, for a request that takes its body. A body that filled the buffer with no
+        // reader is dropped in uWS from here (onDataIncomingMessage has the other edge), and the connection closes at the peer's FIN.
+        const req = this[kRequest];
+        if (req && !req.complete && !req._consuming && req.readableLength >= req.readableHighWaterMark) {
+          handle.stopParsing();
+        }
+      }
       handle.end(this[kDestroySoon]);
       callback();
     }

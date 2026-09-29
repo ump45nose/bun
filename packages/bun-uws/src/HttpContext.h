@@ -238,6 +238,18 @@ private:
         return s;
     }
 
+    /* node:http: socket.end() ends only the writes, like a socket with allowHalfOpen in Node.js. After it a tunnel still
+     * gets its bytes, and a request still gets the body that a handler takes. */
+    static bool nodeHttpReadsAfterShutdown(us_socket_t *s, HttpResponseData<SSL> *httpResponseData) {
+        if (us_socket_is_read_closed(s)) {
+            return false;
+        }
+        if (httpResponseData->isConnectRequest) {
+            return true;
+        }
+        return httpResponseData->inStream != nullptr && !(httpResponseData->state & HttpResponseData<SSL>::HTTP_NODE_PARSING_STOPPED);
+    }
+
     /* Closes a socket that JavaScript destroyed during its parse. The bit goes first: a TLS socket with spilled ciphertext defers its own close, and a second close would drop the spill. */
     static void closeDestroyedNodeHttpSocket(us_socket_t *s, HttpResponseData<SSL> *httpResponseData) {
         httpResponseData->state &= ~HttpResponseData<SSL>::HTTP_NODE_CLOSE_AFTER_MESSAGE;
@@ -329,10 +341,13 @@ private:
         HttpContextData<SSL> *httpContextData = getSocketContextDataS(s);
         HttpResponseData<SSL> *httpResponseData = (HttpResponseData<SSL> *) us_socket_ext(s);
 
-        /* Do not accept any data while in shutdown state. A node:http tunnel is half-open: it still reads after socket.end(). */
-        bool isHalfOpenTunnel = false;
-        if constexpr (IsNodeHttp) isHalfOpenTunnel = httpResponseData->isConnectRequest;
-        if (us_socket_is_shut_down((us_socket_t *) s) && !isHalfOpenTunnel) {
+        /* Do not accept any data while in shutdown state */
+        if constexpr (IsNodeHttp) {
+            if (us_socket_is_shut_down((us_socket_t *) s) && !nodeHttpReadsAfterShutdown(s, httpResponseData)) [[unlikely]] {
+                us_socket_unref(s);
+                return s;
+            }
+        } else if (us_socket_is_shut_down((us_socket_t *) s)) {
             /* Balance the us_socket_ref above — every other return path
              * reaches the unref via returnedData. */
             us_socket_unref(s);
@@ -594,7 +609,13 @@ private:
             }
 
             /* We absolutely have to terminate parsing if shutdown */
-            if (us_socket_is_shut_down((us_socket_t *) s)) {
+            if constexpr (IsNodeHttp) {
+                /* node:http parses on for the body of this request. A tunnel has its head already. */
+                if (us_socket_is_shut_down((us_socket_t *) s)
+                    && (httpResponseData->isConnectRequest || !nodeHttpReadsAfterShutdown((us_socket_t *) s, httpResponseData))) [[unlikely]] {
+                    return nullptr;
+                }
+            } else if (us_socket_is_shut_down((us_socket_t *) s)) {
                 return nullptr;
             }
 
@@ -686,7 +707,18 @@ private:
                 }
 
                 /* We absolutely have to terminate parsing if shutdown */
-                if (us_socket_is_shut_down((us_socket_t *) user)) {
+                if constexpr (IsNodeHttp) {
+                    if (us_socket_is_shut_down((us_socket_t *) user)) [[unlikely]] {
+                        if (!nodeHttpReadsAfterShutdown((us_socket_t *) user, httpResponseData)) {
+                            return nullptr;
+                        }
+                        /* The message is complete. The request behind it is not dispatched on a connection that ended its writes. */
+                        if (fin && !httpResponseData->isConnectRequest) {
+                            httpResponseData->inStream = nullptr;
+                            return nullptr;
+                        }
+                    }
+                } else if (us_socket_is_shut_down((us_socket_t *) user)) {
                     return nullptr;
                 }
 
@@ -730,6 +762,14 @@ private:
              * parsing further requests on this connection. */
             if (IsNodeHttp && httpContextData->onClientError) {
                 httpResponseData->state |= HttpResponseData<SSL>::HTTP_NODE_PARSING_STOPPED;
+                /* The error is in the body of an Upgrade request whose socket the 'upgrade' listener has. Node.js reports
+                 * a parse error only while parser.upgrade is not set: no 'clientError', the body stops there, the
+                 * later bytes go nowhere and the socket stays open. */
+                if (httpResponseData->state & HttpResponseData<SSL>::HTTP_NODE_TUNNEL_AFTER_BODY) {
+                    us_socket_unref(s);
+                    ((AsyncSocket<SSL> *) s)->uncork();
+                    return s;
+                }
                 httpContextData->onClientError(SSL, s, result.parserError, data, length);
                 if (!us_socket_is_closed(s)) {
                     /* Balance the parsing ref taken at the top of onData (the

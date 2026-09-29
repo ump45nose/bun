@@ -19,6 +19,8 @@ extern "C" void Bun__NodeHTTPResponse_setClosed(void* zigResponse);
 extern "C" void Bun__NodeHTTPResponse_onReadParsed(void* zigResponse);
 extern "C" void Bun__NodeHTTPResponse_markTunneled(void* zigResponse);
 extern "C" void Bun__NodeHTTPResponse_spillPendingWrite(void* zigResponse);
+extern "C" bool Bun__NodeHTTPResponse_rest(void* zigResponse);
+extern "C" void Bun__NodeHTTPResponse_leaveRest(void* zigResponse);
 extern "C" void Bun__NodeHTTPResponse_onClose(void* zigResponse, JSC::EncodedJSValue jsValue);
 extern "C" void us_socket_free_stream_buffer(us_socket_stream_buffer_t* streamBuffer);
 extern "C" uint64_t uws_res_get_remote_address_info(void* res, const char** dest, int* port, bool* is_ipv6);
@@ -227,6 +229,20 @@ void JSNodeHTTPServerSocket::didDeliverQueuedTunnelBytes(size_t length)
         tunnelReadsQueuedFull = false;
         applyTunnelReads();
     }
+}
+
+template<bool SSL>
+static bool isParsingStopped(us_socket_t* socket)
+{
+    return (reinterpret_cast<uWS::HttpResponseData<SSL>*>(us_socket_ext(socket))->state & uWS::HttpResponseData<SSL>::HTTP_NODE_PARSING_STOPPED) != 0;
+}
+
+bool JSNodeHTTPServerSocket::requestKeepsReadsPaused() const
+{
+    if (!socket || upgraded || us_socket_is_closed(socket) || !socket->flags.is_paused) {
+        return false;
+    }
+    return !(is_ssl ? isParsingStopped<true>(socket) : isParsingStopped<false>(socket));
 }
 
 void JSNodeHTTPServerSocket::releaseTunnelReadsForUpgrade()
@@ -566,6 +582,9 @@ static void endFloodPreventionPause(us_socket_t* socket, uWS::NodeHttpResponseDa
     if (cell && cell->tunnelReadsPaused()) {
         return;
     }
+    if (cell && cell->requestAtRest) [[unlikely]] {
+        cell->leaveRest();
+    }
     reinterpret_cast<uWS::HttpResponse<SSL>*>(socket)->resume();
 }
 
@@ -869,6 +888,36 @@ void JSNodeHTTPServerSocket::updateTunnelIdle()
     }
 }
 
+void JSNodeHTTPServerSocket::restWithPausedRequest()
+{
+    if (!ended || requestAtRest || upgraded || isClosed() || isTunnel(this) || !socket->flags.is_paused) {
+        return;
+    }
+    const bool sent = streamBuffer.bufferedSize() == 0
+        && (is_ssl ? reinterpret_cast<uWS::AsyncSocket<true>*>(socket)->hasFullyDrained() : reinterpret_cast<uWS::AsyncSocket<false>*>(socket)->hasFullyDrained());
+    if (!sent) {
+        return;
+    }
+    auto* response = currentResponseObject.get();
+    if (!response || !response->m_ctx || !Bun__NodeHTTPResponse_rest(response->m_ctx)) {
+        return;
+    }
+    requestAtRest = true;
+    setTunnelIdle(true);
+}
+
+void JSNodeHTTPServerSocket::leaveRest()
+{
+    requestAtRest = false;
+    if (upgraded || isClosed()) {
+        return;
+    }
+    setTunnelIdle(false);
+    if (auto* response = currentResponseObject.get(); response != nullptr && response->m_ctx != nullptr) {
+        Bun__NodeHTTPResponse_leaveRest(response->m_ctx);
+    }
+}
+
 void JSNodeHTTPServerSocket::onDrain()
 {
     // This function can be called during GC!
@@ -1045,6 +1094,17 @@ extern "C" JSC::EncodedJSValue Bun__getNodeHTTPServerSocketThisValue(bool is_ssl
         return JSValue::encode(getNodeHTTPServerSocket<true>(socket));
     }
     return JSValue::encode(getNodeHTTPServerSocket<false>(socket));
+}
+
+extern "C" void Bun__NodeHTTP__onRequestReadsPaused(int ssl, us_socket_t* socket)
+{
+    if (us_socket_is_closed(socket)) {
+        return;
+    }
+    auto* cell = ssl ? getNodeHTTPServerSocket<true>(socket) : getNodeHTTPServerSocket<false>(socket);
+    if (cell && cell->ended) [[unlikely]] {
+        cell->restWithPausedRequest();
+    }
 }
 
 extern "C" void Bun__NodeHTTP__onReadParsed(int ssl, us_socket_t* socket)

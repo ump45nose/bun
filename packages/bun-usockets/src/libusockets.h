@@ -673,6 +673,10 @@ void us_socket_flush(us_socket_r s) nonnull_fn_decl;
 void us_socket_shutdown(us_socket_r s) nonnull_fn_decl;
 void us_socket_shutdown_read(us_socket_r s) nonnull_fn_decl;
 int us_socket_is_shut_down(us_socket_r s) nonnull_fn_decl;
+/* Whether an open socket delivers no more data: us_socket_close() was called and TLS deferred the close, or TLS can
+ * decrypt nothing more (a fatal error, the SSL is gone). us_socket_is_shut_down() is also true after a FIN or a
+ * close_notify that this side sent, and a socket in that state still reads. */
+int us_socket_is_read_closed(us_socket_r s) nonnull_fn_decl;
 int us_socket_is_closed(us_socket_r s) nonnull_fn_decl;
 
 /* Return codes of us_socket_queued_input. */

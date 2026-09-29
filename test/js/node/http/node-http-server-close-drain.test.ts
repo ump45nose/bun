@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import { bunEnv, bunExe, isWindows, tls as tlsCert } from "harness";
 import { once } from "node:events";
 import { createServer } from "node:http";
@@ -751,6 +751,155 @@ test("an upgraded socket whose request body never ended does not hold the proces
   const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
   expect({ stdout, stderr }).toEqual({ stdout: "end\n", stderr: "" });
   expect(exitCode).toBe(0);
+});
+
+// The listener ended the socket, and the request stopped the reads when its buffer was full, so the
+// rest of the body and the peer's FIN stay unread. In Node.js a handle that does not read and has
+// nothing to send is not active. Every expectation is Node v26.3.0's.
+describe.each(["http", "https"])("%s: a request that stopped the reads of a socket that its listener ended", proto => {
+  const size = 2 * 65536;
+  const fixture = /* js */ `
+    const { PROTO, READ_LATER, CERT, KEY } = process.env;
+    const results = {};
+    const clients = {};
+    let open = 2;
+    const server = PROTO === "https" ? require("node:https").createServer({ cert: CERT, key: KEY }) : require("node:http").createServer();
+    function rejected(kind, req, socket) {
+      const result = (results[kind] = { events: [kind], received: 0 });
+      req.on("data", chunk => (result.received += chunk.length));
+      req.on("end", () => result.events.push("request end"));
+      // A reader that stops: the buffer of the request fills.
+      req.pause();
+      socket.on("error", () => {});
+      socket.on("close", () => result.events.push("socket close"));
+      socket.end("HTTP/1.1 400 Bad Request\\r\\n\\r\\n");
+      (function untilReadsStop() {
+        if (req.readableLength < req.readableHighWaterMark) return setImmediate(untilReadsStop);
+        clients[kind].once("close", () => {
+          if (--open === 0) server.close(() => (results.server = "close"));
+          if (READ_LATER) setImmediate(() => req.resume());
+        });
+        clients[kind].end();
+      })();
+    }
+    server.on("upgrade", (req, socket) => rejected("upgrade", req, socket));
+    server.on("request", req => rejected("request", req, req.socket));
+    server.listen(0, "127.0.0.1", () => {
+      for (const kind of ["upgrade", "request"]) {
+        const to = { port: server.address().port, host: "127.0.0.1", allowHalfOpen: true, rejectUnauthorized: false };
+        const client = (clients[kind] = PROTO === "https" ? require("node:tls").connect(to) : require("node:net").connect(to));
+        client.on("error", () => {});
+        client.once(PROTO === "https" ? "secureConnect" : "connect", () =>
+          client.write(
+            "POST / HTTP/1.1\\r\\nHost: a\\r\\n" +
+              (kind === "upgrade" ? "Connection: Upgrade\\r\\nUpgrade: raw\\r\\n" : "") +
+              "Content-Length: ${size}\\r\\n\\r\\n",
+          ),
+        );
+        // The server's FIN: the listener has run.
+        client.once("end", () => client.write(Buffer.alloc(${size}, "x")));
+        client.resume();
+      }
+    });
+    process.on("exit", () => console.log(JSON.stringify(results)));
+  `;
+
+  async function run(readLater: boolean) {
+    await using proc = Bun.spawn({
+      cmd: [bunExe(), "-e", fixture],
+      env: { ...bunEnv, PROTO: proto, READ_LATER: readLater ? "1" : "", CERT: tlsCert.cert, KEY: tlsCert.key },
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+    return { stdout: stdout.trim() && JSON.parse(stdout), stderr, exitCode, signalCode: proc.signalCode };
+  }
+
+  test("does not keep the process alive after server.close()", async () => {
+    // The sockets are still open, so neither they nor the server emit 'close'.
+    expect(await run(false)).toEqual({
+      stdout: {
+        upgrade: { events: ["upgrade"], received: 0 },
+        request: { events: ["request"], received: 0 },
+      },
+      stderr: "",
+      exitCode: 0,
+      signalCode: null,
+    });
+  });
+
+  test("gets the whole body when it reads again, and the process stays alive until 'close'", async () => {
+    expect(await run(true)).toEqual({
+      stdout: {
+        upgrade: { events: ["upgrade", "request end", "socket close"], received: size },
+        request: { events: ["request", "request end", "socket close"], received: size },
+        server: "close",
+      },
+      stderr: "",
+      exitCode: 0,
+      signalCode: null,
+    });
+  });
+});
+
+// The server closes a connection whose client sent no certificate. That TLS socket stays open until the peer
+// answers the close_notify, and what the client sent behind its handshake is not a request of this server.
+test("https: a request from a client that the server rejected at the handshake is not dispatched", async () => {
+  const urls: string[] = [];
+  const server = createHttpsServer({ ...tlsCert, requestCert: true, rejectUnauthorized: true }, (req, res) => {
+    urls.push(req.url as string);
+    res.end("ok");
+  });
+  server.on("tlsClientError", () => {});
+  await once(server.listen(0, "127.0.0.1"), "listening");
+  const { port } = server.address() as AddressInfo;
+
+  const client = tlsConnect({ port, host: "127.0.0.1", rejectUnauthorized: false });
+  try {
+    client.on("error", () => {});
+    const closed = once(client, "close");
+    client.write("POST /rejected HTTP/1.1\r\nHost: x\r\nContent-Length: 5\r\n\r\nhello");
+    await closed;
+    expect(urls).toEqual([]);
+  } finally {
+    client.destroy();
+    server.closeAllConnections();
+    server.close();
+  }
+});
+
+// A TLS socket stays open after the close that closeIdleConnections() asks for, until the peer answers the
+// close_notify. Nothing that arrives in between is a request of this server.
+test("https: a request that arrives behind closeIdleConnections() is not dispatched", async () => {
+  const urls: string[] = [];
+  const server = createHttpsServer(tlsCert, (req, res) => {
+    urls.push(req.url as string);
+    res.end("ok");
+  });
+  server.keepAliveTimeout = 60000;
+  await once(server.listen(0, "127.0.0.1"), "listening");
+  const { port } = server.address() as AddressInfo;
+
+  const client = tlsConnect({ port, host: "127.0.0.1", rejectUnauthorized: false });
+  try {
+    client.on("error", () => {});
+    await once(client, "secureConnect");
+    let received = "";
+    client.on("data", chunk => (received += chunk));
+    client.write("GET /first HTTP/1.1\r\nHost: x\r\n\r\n");
+    while (!received.includes("ok")) await once(client, "data");
+
+    const closed = once(client, "close");
+    // The server's close_notify and this request cross on the wire.
+    server.closeIdleConnections();
+    client.write("GET /second HTTP/1.1\r\nHost: x\r\n\r\n");
+    await closed;
+    expect(urls).toEqual(["/first"]);
+  } finally {
+    client.destroy();
+    server.closeAllConnections();
+    server.close();
+  }
 });
 
 test("closeAllConnections() on a listening server destroys the connections and keeps the listener", async () => {

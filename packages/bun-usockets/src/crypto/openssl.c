@@ -2671,6 +2671,11 @@ int us_internal_ssl_is_shut_down(struct us_socket_t *s) {
   return !s->ssl || !s_ssl(s) || (SSL_get_shutdown(s_ssl(s)) & SSL_SENT_SHUTDOWN) || s->ssl_fatal_error;
 }
 
+/* The states of us_internal_ssl_is_shut_down() in which us_internal_ssl_on_data() reads no more. */
+int us_internal_ssl_is_read_closed(struct us_socket_t *s) {
+  return !s->ssl || !s_ssl(s) || s->ssl_fatal_error;
+}
+
 int us_internal_ssl_is_handshake_finished(struct us_socket_t *s) {
   if (!s->ssl || !s_ssl(s)) return 0;
   return SSL_is_init_finished(s_ssl(s));

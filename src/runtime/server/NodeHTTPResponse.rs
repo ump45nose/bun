@@ -88,6 +88,11 @@ bitflags! {
         const TUNNELED                            = 1 << 8;
         /// Its dispatch threw while it was queued (pipelining): advanceResponsePipeline decides at its turn.
         const DISPATCH_THREW_WHILE_QUEUED         = 1 << 9;
+        /// The connection rests (JSNodeHTTPServerSocket::restWithPausedRequest): until its reads start again, this
+        /// request holds neither the event loop nor the server's pending count.
+        const RESTING                             = 1 << 10;
+        /// `poll_ref` was held when the request came to rest.
+        const RESTING_HELD_POLL_REF               = 1 << 11;
     }
 }
 
@@ -195,6 +200,8 @@ unsafe extern "C" {
 
     // node:http flood prevention (JSNodeHTTPServerSocket.cpp): unsent response bytes and queued responses hold a paused socket.
     safe fn Bun__NodeHTTP__onReadsPaused(ssl: core::ffi::c_int, socket: *mut c_void);
+    // The request stopped the reads of its connection. A connection that JavaScript ended comes to rest.
+    safe fn Bun__NodeHTTP__onRequestReadsPaused(ssl: core::ffi::c_int, socket: *mut c_void);
     safe fn Bun__NodeHTTP__onReadsResumable(ssl: core::ffi::c_int, socket: *mut c_void);
     // False when no read of this socket is being parsed.
     safe fn Bun__NodeHTTP__notifyWhenReadParsed(ssl: core::ffi::c_int, socket: *mut c_void)
@@ -503,6 +510,50 @@ impl NodeHTTPResponse {
             return;
         }
         raw.pause();
+        Bun__NodeHTTP__onRequestReadsPaused(
+            any_response_is_ssl(&raw) as core::ffi::c_int,
+            raw.socket().cast(),
+        );
+    }
+
+    /// The connection came to rest while this request waits for its body. Returns whether the request rests with it.
+    fn rest(&self) -> bool {
+        let flags = self.flags.get();
+        if flags.intersects(Flags::RESTING | Flags::SOCKET_CLOSED | Flags::UPGRADED)
+            || !flags.contains(Flags::IS_REQUEST_PENDING)
+            || !self.body_still_arriving()
+        {
+            return false;
+        }
+        let vm = vm_get();
+        let held_poll_ref = self.poll_ref.get().has;
+        self.update_flags(|f| {
+            f.insert(Flags::RESTING);
+            f.set(Flags::RESTING_HELD_POLL_REF, held_poll_ref);
+        });
+        self.poll_ref.with_mut(|r| r.unref(vm));
+        self.body_read_ref.with_mut(|r| r.unref(vm));
+        let mut server = self.server;
+        server.on_request_complete();
+        true
+    }
+
+    /// The reads of the connection start again: the request takes back what [`Self::rest`] released.
+    fn leave_rest(&self) {
+        let flags = self.flags.get();
+        if !flags.contains(Flags::RESTING) {
+            return;
+        }
+        self.update_flags(|f| f.remove(Flags::RESTING | Flags::RESTING_HELD_POLL_REF));
+        let vm = vm_get();
+        if flags.contains(Flags::RESTING_HELD_POLL_REF) {
+            self.poll_ref.with_mut(|r| r.r#ref(vm));
+        }
+        if self.body_still_arriving() {
+            self.body_read_ref.with_mut(|r| r.r#ref(vm));
+        }
+        let mut server = self.server;
+        server.on_request_left_rest();
     }
 
     /* Pipelined flood prevention pauses READS on the connection, legal after the in-flight
@@ -775,7 +826,12 @@ impl NodeHTTPResponse {
         self.poll_ref.with_mut(|r| r.unref(vm));
         self.unregister_auto_flush();
 
-        server.on_request_complete();
+        if self.flags.get().contains(Flags::RESTING) {
+            // It gave up its pending count when it came to rest.
+            self.update_flags(|f| f.remove(Flags::RESTING | Flags::RESTING_HELD_POLL_REF));
+        } else {
+            server.on_request_complete();
+        }
 
         if had_async_promise {
             self.deref();
@@ -2553,6 +2609,24 @@ impl Drop for NodeHTTPResponse {
 
         self.promise.with_mut(|p| p.deinit());
     }
+}
+
+/// # Safety
+/// `response` is the live `m_ctx` of a `JSNodeHTTPResponse`.
+#[unsafe(no_mangle)]
+pub(crate) unsafe extern "C" fn Bun__NodeHTTPResponse_rest(
+    response: *mut NodeHTTPResponse,
+) -> bool {
+    // SAFETY: see the function-level contract above.
+    unsafe { &*response }.rest()
+}
+
+/// # Safety
+/// `response` is the live `m_ctx` of a `JSNodeHTTPResponse`.
+#[unsafe(no_mangle)]
+pub(crate) unsafe extern "C" fn Bun__NodeHTTPResponse_leaveRest(response: *mut NodeHTTPResponse) {
+    // SAFETY: see the function-level contract above.
+    unsafe { &*response }.leave_rest();
 }
 
 /// # Safety

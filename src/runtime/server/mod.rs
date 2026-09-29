@@ -1595,6 +1595,16 @@ impl<const SSL: bool, const DEBUG: bool> NewServer<SSL, DEBUG> {
         self.deinit_if_we_can();
     }
 
+    /// A node:http request whose connection rests gives up its pending count ([`Self::on_request_complete`]).
+    /// It takes it back here, when the reads of that connection start again.
+    pub(crate) fn on_request_left_rest(&mut self) {
+        self.on_pending_request();
+        // With a listener open, the loop ref is the user's to drop (`server.unref()`).
+        if !self.has_listener() {
+            self.ref_();
+        }
+    }
+
     pub(crate) fn active_sockets_count(&self) -> u32 {
         self.active_websocket_count.get()
     }
@@ -4050,6 +4060,10 @@ impl AnyServer {
 
     pub(crate) fn on_request_complete(&mut self) {
         any_server_dispatch_mut!(self, |s| s.on_request_complete())
+    }
+
+    pub(crate) fn on_request_left_rest(&mut self) {
+        any_server_dispatch_mut!(self, |s| s.on_request_left_rest())
     }
 
     pub(crate) fn on_static_request_complete(&mut self) {

@@ -315,7 +315,8 @@ JSC_DEFINE_HOST_FUNCTION(jsFunctionNodeHTTPServerSocketEnd, (JSC::JSGlobalObject
         // shutdown+resume below still cycles kqueue's EVFILT_READ (delete then
         // re-add), without which macOS 26 does not deliver the peer's close.
         // Not for a tunnel that paused its reads: the resume that ends that pause is the re-add.
-        const bool cycleReads = !thisObject->upgraded && !thisObject->tunnelReadsPaused();
+        // Not for a request that paused them: it takes its body when it reads again. An unread body is drained (stopParsing).
+        const bool cycleReads = !thisObject->upgraded && !thisObject->tunnelReadsPaused() && !thisObject->requestKeepsReadsPaused();
         if (thisObject->socket && cycleReads) {
             us_socket_pause(thisObject->socket);
         }
@@ -327,6 +328,7 @@ JSC_DEFINE_HOST_FUNCTION(jsFunctionNodeHTTPServerSocketEnd, (JSC::JSGlobalObject
             us_socket_resume(thisObject->socket);
         }
         thisObject->updateTunnelIdle();
+        thisObject->restWithPausedRequest();
         return result;
     }
     return JSValue::encode(JSC::jsUndefined());

@@ -91,6 +91,7 @@ extern void __attribute__((__noreturn__)) Bun__outOfMemory(void);
 #define LIBUS_ECONNRESET ECONNRESET
 #endif
 #include <stdbool.h>
+#include <stddef.h>
 /* Poll type and what it polls for */
 enum {
   /* Three first bits */
@@ -255,6 +256,7 @@ int us_internal_ssl_is_low_prio(us_socket_r s);
 int us_internal_ssl_is_handshake_finished(us_socket_r s);
 int us_internal_ssl_handshake_callback_has_fired(us_socket_r s);
 int us_internal_ssl_is_shut_down(us_socket_r s);
+int us_internal_ssl_is_read_closed(us_socket_r s);
 void us_internal_ssl_shutdown(us_socket_r s);
 int us_internal_ssl_write(us_socket_r s, const char *data, int length);
 int us_internal_ssl_writev(us_socket_r s, const struct us_iovec_t *iov, int count);
@@ -352,6 +354,9 @@ struct us_socket_t {
   /* A hangup that leaves bytes unsent closes the socket even while it is paused (loop.c defers it otherwise).
    * For an owner whose pause can wait for those bytes to drain: node:http's pipelining. */
   unsigned char hangup_closes_unsent : 1;
+  /* us_socket_close() was called. A TLS socket can stay open after that: the close waits for the spill to drain,
+   * for the peer's close_notify, or for BoringSSL to leave the stack. See us_socket_is_read_closed(). */
+  unsigned char close_requested : 1;
   /* The close code passed to the deferred close (e.g. a reset requested from
    * inside a handshake callback must still RST, not FIN, when it is finally
    * performed). */
@@ -373,6 +378,7 @@ struct us_socket_t {
 
 #if defined(LIBUS_USE_EPOLL) || defined(LIBUS_USE_KQUEUE)
 _Static_assert(sizeof(struct us_socket_flags) == 1, "us_socket_flags grew");
+_Static_assert(offsetof(struct us_socket_t, group) == 32, "the bit fields of us_socket_t no longer fit in the gap before group");
 #endif
 
 /* us_socket_adopt relocates a socket whose ext grows and retires the old block

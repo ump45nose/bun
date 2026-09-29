@@ -348,6 +348,7 @@ struct us_socket_t *us_internal_socket_close_raw(struct us_socket_t *s, int code
 }
 
 __attribute__((always_inline)) struct us_socket_t *us_socket_close(struct us_socket_t *s, int code, void *reason) {
+    s->close_requested = 1;
     if (s->ssl && !us_socket_is_closed(s)) {
         return us_internal_ssl_close(s, code, reason);
     }
@@ -471,6 +472,7 @@ struct us_socket_t *us_socket_from_fd(struct us_socket_group_t *group, unsigned 
     s->unclassified_send_failures = 0;
     s->read_eof = 0;
     s->hangup_closes_unsent = 0;
+    s->close_requested = 0;
     s->connect_state = NULL;
 
     /* We always use nodelay */
@@ -725,6 +727,13 @@ __attribute__((always_inline)) int us_socket_is_shut_down(struct us_socket_t *s)
         return us_internal_ssl_is_shut_down(s);
     }
     return us_internal_poll_type(&s->p) == POLL_TYPE_SOCKET_SHUT_DOWN;
+}
+
+__attribute__((always_inline)) int us_socket_is_read_closed(struct us_socket_t *s) {
+    if (s->close_requested) {
+        return 1;
+    }
+    return s->ssl && us_internal_ssl_is_read_closed(s);
 }
 
 int us_connecting_socket_is_shut_down(struct us_connecting_socket_t *c) {
