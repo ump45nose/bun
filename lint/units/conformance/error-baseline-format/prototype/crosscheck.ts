@@ -59,7 +59,8 @@ const byIndex = (list: Diagnostic[]) => (a: Diagnostic, b: Diagnostic): number =
 
 function runAll(cases: Case[], label: string): void {
   const input = `/tmp/ebf/${label}.in.jsonl`;
-  writeFileSync(input, cases.map(toJson).join("\n") + "\n");
+  const inputLines = cases.map(toJson);
+  writeFileSync(input, inputLines.join("\n") + "\n");
   const r = spawnSync(gt, [input], { maxBuffer: 1 << 30, encoding: "utf8" });
   if (r.status !== 0) throw new Error("ground truth failed: " + r.stderr);
   const results = r.stdout
@@ -67,6 +68,12 @@ function runAll(cases: Case[], label: string): void {
     .filter(l => l !== "")
     .map(l => JSON.parse(l) as { name: string; text: string; failed: string[] | null; panic: string });
   if (results.length !== cases.length) throw new Error(`${results.length} results for ${cases.length} cases`);
+  const vectorsAt = process.argv.indexOf("--vectors");
+  if (vectorsAt >= 0) {
+    // One line per case: the input of the writer and what the reference's code makes of it.
+    const lines = inputLines.map((line, i) => JSON.stringify({ ...JSON.parse(line), expected: { text: results[i].text, failed: results[i].failed ?? [], panic: results[i].panic } }));
+    writeFileSync(process.argv[vectorsAt + 1], lines.join("\n") + "\n");
+  }
   let same = 0;
   let samePanic = 0;
   let sameExpected = 0;

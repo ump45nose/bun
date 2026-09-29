@@ -10,6 +10,10 @@ const SKIP = new Set([
   "jsDoc", "jsDocCache", "assertClause", "assertions",
 ]);
 const SOURCE_FILE_KEEP = new Set(["statements", "endOfFileToken"]);
+const RESCAN = new Set([
+  ts.SyntaxKind.StringLiteral, ts.SyntaxKind.NumericLiteral, ts.SyntaxKind.BigIntLiteral, ts.SyntaxKind.RegularExpressionLiteral,
+  ts.SyntaxKind.NoSubstitutionTemplateLiteral, ts.SyntaxKind.TemplateHead, ts.SyntaxKind.TemplateMiddle, ts.SyntaxKind.TemplateTail,
+]);
 const isNode = v => v !== null && typeof v === "object" && typeof v.kind === "number" && typeof v.pos === "number";
 const SK = ts.SyntaxKind;
 
@@ -33,11 +37,22 @@ function fnv1a32(bytes) {
   return (h >>> 0).toString(16).padStart(8, "0");
 }
 
-export function dump(fileName, text, scriptKind = scriptKindOf(fileName), check = true) {
+// options: { jsx, force } are typescript-go's ExternalModuleIndicatorOptions, jsDoc keeps the JSDoc trees.
+export function dump(fileName, text, scriptKind = scriptKindOf(fileName), check = true, options = {}) {
+  const jsx = options.jsx === true, force = options.force === true, jsDoc = options.jsDoc === true;
   const sf = ts.createSourceFile(
     fileName,
     text,
-    { languageVersion: ts.ScriptTarget.Latest, jsDocParsingMode: ts.JSDocParsingMode.ParseAll },
+    {
+      languageVersion: ts.ScriptTarget.Latest,
+      jsDocParsingMode: jsDoc ? ts.JSDocParsingMode.ParseAll : ts.JSDocParsingMode.ParseNone,
+      // Only whether the file is a module matters here: it decides the reparse of top level await.
+      setExternalModuleIndicator: file => {
+        file.externalModuleIndicator =
+          ts.isFileProbablyExternalModule(file) ||
+          (!file.isDeclarationFile && (force || (jsx && (file.transformFlags & ts.TransformFlags.ContainsJsx) !== 0)) ? file : undefined);
+      },
+    },
     /*setParentNodes*/ false,
     scriptKind,
   );
@@ -54,7 +69,7 @@ export function dump(fileName, text, scriptKind = scriptKindOf(fileName), check 
   const recs = [];
   const seen = new Set();
   function rescanFlags(node, parent) {
-    scanner.resetTokenState(ts.skipTrivia(text, node.pos, false, false, true));
+    scanner.resetTokenState(ts.skipTrivia(text, node.pos));
     if (node.kind === SK.StringLiteral && parent !== undefined && parent.kind === SK.JsxAttribute) scanner.scanJsxAttributeValue();
     else if (node.kind === SK.TemplateMiddle || node.kind === SK.TemplateTail) { scanner.scan(); scanner.reScanTemplateToken(false); }
     else if (node.kind === SK.RegularExpressionLiteral) { scanner.scan(); scanner.reScanSlashToken(); }
@@ -103,7 +118,7 @@ export function dump(fileName, text, scriptKind = scriptKindOf(fileName), check 
       else if (typeof v === "number") { n++; rec.push(prop(key), 3, v); }
       else if (typeof v === "boolean") { n++; rec.push(prop(key), 4, v ? 1 : 0); }
     }
-    if (node.kind >= SK.FirstLiteralToken && node.kind <= SK.LastTemplateToken && node.end > node.pos) {
+    if (RESCAN.has(node.kind) && node.end > node.pos) {
       n++;
       rec.push(prop("#tokenFlags"), 3, rescanFlags(node, parentNode));
     }
@@ -129,15 +144,19 @@ export function dump(fileName, text, scriptKind = scriptKindOf(fileName), check 
     for (let i = pending.length - 1; i >= 0; i--) stack.push(pending[i]);
   }
   const utf8 = Buffer.from(text, "utf8");
-  const diag = d => [d.code, d.category, d.start ?? -1, d.length ?? -1, str(ts.flattenDiagnosticMessageText(d.messageText, "\n"))];
+  const one = d => [d.code, d.category, d.start ?? -1, d.length ?? -1, str(ts.flattenDiagnosticMessageText(d.messageText, "\n"))];
+  const diag = d => [...one(d), (d.relatedInformation ?? []).map(one)];
   const header = {
     format: "bun-tsast",
     version: 1,
     typescript: ts.version,
+    kindCount: SK.Count,
     fileName,
     scriptKind,
     languageVariant: sf.languageVariant,
     isDeclarationFile: sf.isDeclarationFile,
+    externalModule: [jsx ? 1 : 0, force ? 1 : 0],
+    jsDoc: jsDoc ? 1 : 0,
     utf16Length: text.length,
     utf8Length: utf8.length,
     textHash: fnv1a32(utf8),

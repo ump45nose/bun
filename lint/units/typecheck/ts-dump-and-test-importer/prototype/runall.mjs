@@ -14,7 +14,7 @@ for (const spec of lists) {
     const name = a.slice(0, eq), path = a.slice(eq + 1);
     const text = fs.readFileSync(path, "utf8");
     let d;
-    try { d = dump("/" + name, text); ok++; bytes += d.text.length; } catch (e) {
+    try { d = dump("/" + name, text, undefined, true, { force: process.env.FORCE === "1", jsx: process.env.JSX === "1", jsDoc: process.env.JSDOC === "1" }); ok++; bytes += d.text.length; } catch (e) {
       failed++;
       const k = String(e.message).replace(/ at \d+/g, "").slice(0, 110);
       errs.set(k, [...(errs.get(k) ?? []), name]);
