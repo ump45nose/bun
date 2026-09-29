@@ -18,3 +18,8 @@ bun difftree.ts '\.(ts|tsx|mts|cts)$'
 NOJSDOC=1 bun difftree.ts '\.(ts|tsx|mts|cts)$'
 bun difftree.ts '\.(js|jsx|mjs|cjs)$'
 CORPUS=$L GOOUT=$W/lib-go-out MASKTAGS=1 bun difftree.ts '\.d\.ts$'
+# The two inputs of ExternalModuleIndicatorOptions, on a part of the corpus (probe flags -force and -jsx):
+#   FORCE=1 EMI=1 NOJSDOC=1 CORPUS=<dir> GOOUT=<dumps made with dumpast -force> bun difftree.ts '\.(ts|tsx|mts|cts)$'
+#   JSX=1 EMI=1 NOJSDOC=1 CORPUS=<dir of .tsx> GOOUT=<dumps made with dumpast -jsx> bun difftree.ts '\.tsx$'
+# File data and parse diagnostics: bun diffhead.ts, bun diagcmp.ts. JSDoc trees of JavaScript units: bun jsdoccmp.ts.
+# Properties that TypeScript nodes carry: bun census.ts. Digests of typescript-go's trees: bun golden.ts.
