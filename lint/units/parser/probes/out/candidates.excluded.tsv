@@ -21,13 +21,11 @@ group	family	input	bun	reason
 05-assertions	nonNull	"const v = this.#x!;"	"Expected identifier but found \"#x\""	private name outside a class body: early error of Bun
 05-assertions	arrow	"const v = a ? (await) : b;"	"Unexpected )"	the name `await`: Bun treats the input as a module
 05-assertions	arrow	"a ? (await) : b;"	"Unexpected )"	the name `await`: Bun treats the input as a module
-05-assertions	arrow	"const v = y ? a ? ((b)) : c => d : z;"	"Expected \":\" but found \";\""	no expected output could be derived
 05-assertions	catch	"try {} catch (e: any = 1) {}"	"Expected \")\" but found \"=\""	initializer on a catch binding: not ECMAScript; tsc reports nothing
 05-assertions	nonNull	"this.#x!;"	"Expected identifier but found \"#x\""	private name outside a class body: early error of Bun
 05-assertions	nonNull	"const v = this.#x!;"	"Expected identifier but found \"#x\""	private name outside a class body: early error of Bun
 05-assertions	arrow	"const v = a ? (await) : b;"	"Unexpected )"	the name `await`: Bun treats the input as a module
 05-assertions	arrow	"a ? (await) : b;"	"Unexpected )"	the name `await`: Bun treats the input as a module
-05-assertions	arrow	"const v = y ? a ? ((b)) : c => d : z;"	"Expected \":\" but found \";\""	no expected output could be derived
 05-assertions	catch	"try {} catch (e: any = 1) {}"	"Expected \")\" but found \"=\""	initializer on a catch binding: not ECMAScript; tsc reports nothing
 06-class-members	member	"class C { [await: string]: T; }"	"Unexpected :"	the name `await`: Bun treats the input as a module
 06-class-members	member	"abstract class C extends B { [await: string]: T; }"	"Unexpected :"	the name `await`: Bun treats the input as a module

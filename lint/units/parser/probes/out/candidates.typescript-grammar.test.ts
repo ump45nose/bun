@@ -184,6 +184,7 @@ describe("assertions, instantiation expressions, generic arrows", () => {
     ["<out, T>(x) => x;", ""], // cast; bun now: The modifier "out" is not valid here; expected: tsc
     ["const v = <out = A>(x) => x;", "const v = (x) => x;\n"], // cast; bun now: The modifier "out" is not valid here; expected: tsc
     ["<out = A>(x) => x;", ""], // cast; bun now: The modifier "out" is not valid here; expected: tsc
+    ["const v = y ? a ? ((b)) : c => d : z;", "const v = y ? a ? b : (c) => d : z;\n"], // arrow; bun now: Expected ":" but found ";"; expected: tsc, printed by the js loader
   ])("ts %j", (source, expected) => {
     expect(transpilers.ts.transformSync(source)).toBe(expected);
   });

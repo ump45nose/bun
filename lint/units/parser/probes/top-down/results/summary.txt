@@ -1,7 +1,7 @@
 bun: /workspace/bun/build/release/bun 1.4.3-canary.1+367d939d9
 tsc: 6.0.2
 
-01-type-forms: 4430 records, 23930 inputs, 193.0s
+01-type-forms: 4430 records, 23930 inputs, 233.8s
   records (whole files, and types as "type X = T;"): A1=69 A2=54 B=94 both-accept=3789 both-accept-checker-grammar=167 both-reject=257
   inputs, primary mode: A1=249 A2=665 B=1096 both-accept=18690 both-accept-checker-grammar=878 both-reject=2352
   inputs, experimentalDecorators + emitDecoratorMetadata on both sides: A1=249 A2=665 B=1096 both-accept=18690 both-accept-checker-grammar=878 both-reject=2352
@@ -168,14 +168,14 @@ tsc: 6.0.2
     m.shape.pred-asserts-is: alias=A2 prop=A1 mparam=A1 mret=both-accept
     m.shape.pred-asserts-this: alias=A2 prop=A1 mparam=A1 mret=both-accept
     m.shape.pred-asserts-this-is: alias=A2 prop=A1 mparam=A1 mret=both-accept
-02-object-types-interfaces-aliases-mapped: 765 records, 1142 inputs, 14.6s
+02-object-types-interfaces-aliases-mapped: 765 records, 1142 inputs, 13.1s
   records (whole files, and types as "type X = T;"): A1=22 A2=45 B=47 both-accept=425 both-accept-checker-grammar=80 both-reject=146
   inputs, primary mode: A1=26 A2=62 B=75 both-accept=654 both-accept-checker-grammar=118 both-reject=207
   inputs, experimentalDecorators + emitDecoratorMetadata on both sides: A1=26 A2=62 B=75 both-accept=654 both-accept-checker-grammar=118 both-reject=207
   inputs, as .tsx (loader tsx): A1=60 A2=28 B=75 both-accept=730 both-accept-checker-grammar=42 both-reject=207
   inputs, as .d.ts (loader ts): A1=60 A2=28 B=75 both-accept=715 both-accept-checker-grammar=57 both-reject=207
   records whose class depends on the context: 0
-03-function-and-constructor-types: 1416 records, 2460 inputs, 34.3s
+03-function-and-constructor-types: 1416 records, 2460 inputs, 27.4s
   records (whole files, and types as "type X = T;"): A1=75 A2=123 B=18 both-accept=689 both-accept-checker-grammar=102 both-reject=409
   inputs, primary mode: A1=197 A2=188 B=54 both-accept=1207 both-accept-checker-grammar=184 both-reject=630
   inputs, experimentalDecorators + emitDecoratorMetadata on both sides: A1=197 A2=188 B=54 both-accept=1207 both-accept-checker-grammar=184 both-reject=630
@@ -187,49 +187,49 @@ tsc: 6.0.2
     sigctx.024: alias=both-accept var=both-accept param=both-accept ret=both-accept arrowp=both-accept arrowr=both-accept as=both-accept satis=both-accept angle=both-reject targ=both-accept tparam=both-accept prop=both-accept mparam=both-accept mret=both-accept
     sigctx.025: alias=A2 var=A2 param=A2 ret=A2 arrowp=A2 arrowr=A2 as=A2 satis=A2 angle=both-reject targ=A2 tparam=A2 prop=A2 mparam=A2 mret=A2
     sigctx.026: alias=both-accept var=both-accept param=both-accept ret=both-accept arrowp=both-accept arrowr=both-accept as=both-accept satis=both-accept angle=both-reject targ=both-accept tparam=both-accept prop=both-accept mparam=both-accept mret=both-accept
-04-type-parameters-and-arguments: 5641 records, 5641 inputs, 66.2s
+04-type-parameters-and-arguments: 5641 records, 5641 inputs, 131.1s
   records (whole files, and types as "type X = T;"): A1=74 A2=610 B=184 both-accept=2857 both-accept-checker-grammar=249 both-reject=1667
   inputs, primary mode: A1=74 A2=610 B=184 both-accept=2857 both-accept-checker-grammar=249 both-reject=1667
   inputs, experimentalDecorators + emitDecoratorMetadata on both sides: A1=74 A2=608 B=190 both-accept=2857 both-accept-checker-grammar=251 both-reject=1661
   inputs, as .tsx (loader tsx): A1=72 A2=577 B=168 both-accept=2787 both-accept-checker-grammar=234 both-reject=1803
   inputs, as .d.ts (loader ts): A1=19 A2=662 B=185 both-accept=775 both-accept-checker-grammar=2298 both-reject=1702
   records whose class depends on the context: 0
-05-assertions-instantiation-arrows: 2207 records, 2207 inputs, 32.1s
+05-assertions-instantiation-arrows: 2207 records, 2207 inputs, 64.9s
   records (whole files, and types as "type X = T;"): A1=58 A2=86 B=83 both-accept=1420 both-accept-checker-grammar=147 both-reject=413
   inputs, primary mode: A1=58 A2=86 B=83 both-accept=1420 both-accept-checker-grammar=147 both-reject=413
   inputs, experimentalDecorators + emitDecoratorMetadata on both sides: A1=58 A2=86 B=83 both-accept=1418 both-accept-checker-grammar=149 both-reject=413
   inputs, as .tsx (loader tsx): A1=37 A2=64 B=61 both-accept=1112 both-accept-checker-grammar=117 both-reject=816
   inputs, as .d.ts (loader ts): A2=147 B=89 both-accept=9 both-accept-checker-grammar=1607 both-reject=355
   records whose class depends on the context: 0
-06-class-members-modifiers-overloads: 2158 records, 2158 inputs, 35.7s
+06-class-members-modifiers-overloads: 2158 records, 2158 inputs, 125.0s
   records (whole files, and types as "type X = T;"): A1=62 A2=201 B=41 both-accept=1176 both-accept-checker-grammar=476 both-reject=202
   inputs, primary mode: A1=62 A2=201 B=41 both-accept=1176 both-accept-checker-grammar=476 both-reject=202
   inputs, experimentalDecorators + emitDecoratorMetadata on both sides: A1=110 A2=215 B=41 both-accept=1128 both-accept-checker-grammar=462 both-reject=202
   inputs, as .tsx (loader tsx): A1=62 A2=201 B=41 both-accept=1171 both-accept-checker-grammar=472 both-reject=211
   inputs, as .d.ts (loader ts): A1=1 A2=262 B=41 both-accept=205 both-accept-checker-grammar=1447 both-reject=202
   records whose class depends on the context: 0
-07-module-syntax: 739 records, 739 inputs, 11.9s
+07-module-syntax: 739 records, 739 inputs, 17.2s
   records (whole files, and types as "type X = T;"): A1=10 A2=24 B=5 both-accept=383 both-accept-checker-grammar=131 both-reject=186
   inputs, primary mode: A1=10 A2=24 B=5 both-accept=383 both-accept-checker-grammar=131 both-reject=186
   inputs, experimentalDecorators + emitDecoratorMetadata on both sides: A1=10 A2=24 B=5 both-accept=383 both-accept-checker-grammar=131 both-reject=186
   inputs, as .tsx (loader tsx): A1=10 A2=24 B=5 both-accept=378 both-accept-checker-grammar=129 both-reject=193
   inputs, as .d.ts (loader ts): A1=10 A2=24 B=5 both-accept=425 both-accept-checker-grammar=89 both-reject=186
   records whose class depends on the context: 0
-08-declare-namespace-enum-ambient: 950 records, 950 inputs, 16.7s
+08-declare-namespace-enum-ambient: 950 records, 950 inputs, 31.7s
   records (whole files, and types as "type X = T;"): A1=32 A2=67 B=8 both-accept=528 both-accept-checker-grammar=141 both-reject=174
   inputs, primary mode: A1=32 A2=67 B=8 both-accept=528 both-accept-checker-grammar=141 both-reject=174
   inputs, experimentalDecorators + emitDecoratorMetadata on both sides: A1=33 A2=67 B=8 both-accept=527 both-accept-checker-grammar=141 both-reject=174
   inputs, as .tsx (loader tsx): A1=32 A2=67 B=8 both-accept=525 both-accept-checker-grammar=140 both-reject=178
   inputs, as .d.ts (loader ts): A1=3 A2=96 B=8 both-accept=144 both-accept-checker-grammar=525 both-reject=174
   records whose class depends on the context: 0
-09-decorators: 956 records, 956 inputs, 34.7s
+09-decorators: 956 records, 956 inputs, 35.4s
   records (whole files, and types as "type X = T;"): A1=5 A2=218 B=9 both-accept=398 both-accept-checker-grammar=165 both-reject=161
   inputs, primary mode: A1=5 A2=218 B=9 both-accept=398 both-accept-checker-grammar=165 both-reject=161
   inputs, experimentalDecorators + emitDecoratorMetadata on both sides: A1=16 A2=68 B=32 both-accept=478 both-accept-checker-grammar=224 both-reject=138
   inputs, as .tsx (loader tsx): A1=5 A2=218 B=9 both-accept=392 both-accept-checker-grammar=163 both-reject=169
   inputs, as .d.ts (loader ts): A1=1 A2=222 B=9 both-accept=15 both-accept-checker-grammar=548 both-reject=161
   records whose class depends on the context: 0
-10-declaration-files: 375 records, 375 inputs, 9.6s
+10-declaration-files: 375 records, 375 inputs, 11.5s
   records (whole files, and types as "type X = T;"): A1=13 A2=8 B=6 both-accept=264 both-accept-checker-grammar=73 both-reject=11
   inputs, primary mode: A1=13 A2=8 B=6 both-accept=264 both-accept-checker-grammar=73 both-reject=11
   inputs, experimentalDecorators + emitDecoratorMetadata on both sides: A1=15 A2=8 B=6 both-accept=262 both-accept-checker-grammar=73 both-reject=11
@@ -237,6 +237,6 @@ tsc: 6.0.2
   inputs, as .d.ts (loader ts): A1=13 A2=8 B=6 both-accept=217 both-accept-checker-grammar=120 both-reject=11
   records whose class depends on the context: 0
 
-decorator metadata, verdict of every compared input: DIFF=2716 n/a=1526 same=7939 same-as-loose-only=1085 same-as-strict-only=78
+decorator metadata, verdict of every compared input: DIFF=2710 n/a=1526 same=7945 same-as-loose-only=1085 same-as-strict-only=78
 A1 inputs for which the checker of tsc reports a code outside the grammar ranges that is not about names or types: 218 records, 382 inputs, codes TS2331=1 TS2332=1 TS2357=1 TS2369=76 TS2371=148 TS2452=6 TS2462=14 TS2499=13 TS2500=52 TS2660=6 TS2680=2 TS2730=17 TS2842=6 TS2858=1 TS5086=28 TS5087=14 TS7061=2
-test candidates (every row fails on the probed bun): 01-type-forms=2642 02-object-types-interfaces-aliases-mapped=18 03-function-and-constructor-types=126 04-type-parameters-and-arguments=65 05-assertions-instantiation-arrows=46 06-class-members-modifiers-overloads=46 08-declare-namespace-enum-ambient=2 10-declaration-files=1
+test candidates (every row fails on the probed bun): 01-type-forms=2640 02-object-types-interfaces-aliases-mapped=17 03-function-and-constructor-types=126 04-type-parameters-and-arguments=65 05-assertions-instantiation-arrows=46 06-class-members-modifiers-overloads=44 08-declare-namespace-enum-ambient=2 10-declaration-files=1

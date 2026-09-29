@@ -10,7 +10,8 @@
 //   - "neutral"    the input stands in a type position: the output of the same input with the form
 //                  replaced by the type `A`, from the installed bun (a type is erased whole);
 //   - "equivalent" the output of the installed bun for another spelling of the same program, named in EQUIVALENT;
-//   - "tsc"        the installed bun prints the JavaScript that ts.transpileModule made from the input;
+//   - "tsc"        the installed bun prints the JavaScript that ts.transpileModule made from the input
+//                  (with the js loader when the TypeScript loader rejects that JavaScript as well);
 //   - "bun without tsconfig"  for `accessor` under experimentalDecorators only: what the installed bun prints
 //                  for the same input without tsconfig. This one is an inference, the row says so.
 // Rows whose only fault is a reserved word in the place of a type name (`let x: if`) are kept apart: tsc builds a
@@ -140,7 +141,12 @@ function expectedFor(e, which) {
   }
   const r = bun(js, which);
   if (r.ok) return { how: "tsc", out: r.out };
-  return null;
+  // The JavaScript of tsc is rejected by the TypeScript loader too: the js loader prints it.
+  try {
+    return { how: "tsc, printed by the js loader", out: new Bun.Transpiler({ loader: which === "tsx" ? "jsx" : "js" }).transformSync(js) };
+  } catch {
+    return null;
+  }
 }
 
 const GROUPS = [
