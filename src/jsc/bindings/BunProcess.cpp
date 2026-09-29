@@ -4753,6 +4753,18 @@ JSValue getCachedCwd(JSC::JSGlobalObject* globalObject)
     RELEASE_AND_RETURN(scope, cwdStr);
 }
 
+extern "C" EncodedJSValue Process__getCachedCwd(JSC::JSGlobalObject* globalObject)
+{
+    return JSValue::encode(getCachedCwd(globalObject));
+}
+
+// The record process.cwd() has a string cached for, if it is the current one.
+extern "C" const void* Process__cachedCwdVersion(JSC::JSGlobalObject* globalObject)
+{
+    const void* version = Bun__cwdVersion();
+    return defaultGlobalObject(globalObject)->processObject()->cachedCwd(version) ? version : nullptr;
+}
+
 JSC_DEFINE_HOST_FUNCTION(Process_functionCwd, (JSC::JSGlobalObject * globalObject, JSC::CallFrame* callFrame))
 {
     return JSValue::encode(getCachedCwd(globalObject));

@@ -125,6 +125,14 @@ pub fn version_of(path: &[u8]) -> Option<*const ()> {
     (unsafe { entry_bytes(p) } == path).then_some(p.cast_const().cast())
 }
 
+/// [`get`], if `version` is the current record.
+#[inline]
+pub fn get_at(version: *const ()) -> Option<&'static [u8]> {
+    let p = CWD.load(Ordering::Acquire);
+    // SAFETY: `CWD` always points at `EMPTY` or a `set` allocation.
+    ptr::eq(p.cast_const().cast(), version).then(|| unsafe { entry_bytes(p) })
+}
+
 /// [`get`], NUL-terminated.
 #[inline(always)]
 pub fn get_z() -> &'static ZStr {

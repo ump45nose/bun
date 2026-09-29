@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { bunEnv, bunExe, isWindows, tempDir } from "harness";
 import assert from "node:assert";
 // import child from "node:child_process";
-import path from "node:path";
+import path, { join } from "node:path";
 // import fixtures from "./common/fixtures.js";
 
 describe("path.resolve", () => {
@@ -202,12 +202,10 @@ describe("path.resolve", () => {
   });
 
   // POSIX-only: Windows refuses to remove a directory that is any process's cwd.
-  test.skipIf(isWindows)("whatever needs the working directory throws when it was removed before startup", async () => {
-    using dir = tempDir("path-resolve-removed-cwd", {});
-    const gone = String(dir);
-    const script = `
+  describe.skipIf(isWindows)("a removed working directory", () => {
+    // Prints what each form that can need the working directory gives.
+    const forms = `
       const path = require("node:path");
-      const out = {};
       const forms = {
         none: () => path.resolve(),
         dot: () => path.resolve("."),
@@ -218,36 +216,77 @@ describe("path.resolve", () => {
         win32RelativeTo: () => path.win32.relative("a", "b"),
         namespaced: () => path.win32.toNamespacedPath("x"),
       };
+      const out = {};
       for (const [name, form] of Object.entries(forms)) {
         try {
           out[name] = form();
         } catch (e) {
-          out[name] = { code: e.code };
+          out[name] = { code: e.code, syscall: e.syscall };
         }
       }
       console.log(JSON.stringify(out));
     `;
-    // The cwd has to go away before the process starts, so a shell wrapper removes it and then execs bun.
-    await using proc = Bun.spawn({
-      cmd: ["/bin/sh", "-c", `cd "${gone}" && rmdir "${gone}" && exec "${bunExe()}" -e "$SCRIPT"`],
-      env: { ...bunEnv, SCRIPT: script },
-      stdout: "pipe",
-      stderr: "pipe",
+    const gone = { code: "ENOENT", syscall: "uv_cwd" };
+    const allThrow = {
+      none: gone,
+      dot: gone,
+      relative: gone,
+      win32: gone,
+      absolute: "/a/b",
+      relativeTo: gone,
+      win32RelativeTo: gone,
+      namespaced: gone,
+    };
+
+    async function run(cmd, env) {
+      await using proc = Bun.spawn({ cmd, env: { ...bunEnv, ...env }, stdout: "pipe", stderr: "pipe" });
+      const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+      return { out: JSON.parse(stdout.trim() || "null"), stderr: exitCode === 0 ? "" : stderr, exitCode };
+    }
+
+    test.concurrent("removed before startup: whatever needs it throws", async () => {
+      using dir = tempDir("path-resolve-removed-before", {});
+      const cwd = String(dir);
+      // A shell wrapper removes the directory and then execs bun.
+      expect(
+        await run(["/bin/sh", "-c", `cd "${cwd}" && rmdir "${cwd}" && exec "${bunExe()}" -e "$SCRIPT"`], {
+          SCRIPT: forms,
+        }),
+      ).toEqual({ out: allThrow, stderr: "", exitCode: 0 });
     });
-    const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
-    expect({ out: JSON.parse(stdout.trim() || "null"), stderr: exitCode === 0 ? "" : stderr, exitCode }).toEqual({
-      out: {
-        none: { code: "ENOENT" },
-        dot: { code: "ENOENT" },
-        relative: { code: "ENOENT" },
-        win32: { code: "ENOENT" },
-        absolute: "/a/b",
-        relativeTo: { code: "ENOENT" },
-        win32RelativeTo: { code: "ENOENT" },
-        namespaced: { code: "ENOENT" },
-      },
-      stderr: "",
-      exitCode: 0,
+
+    test.concurrent("removed after process.chdir(): whatever needs it throws", async () => {
+      using dir = tempDir("path-resolve-removed-after", { "cwd/.keep": "" });
+      const cwd = join(String(dir), "cwd");
+      const script = `
+        const fs = require("node:fs");
+        process.chdir(${JSON.stringify(cwd)});
+        fs.rmSync(${JSON.stringify(cwd)}, { recursive: true });
+        ${forms}
+      `;
+      expect(await run([bunExe(), "-e", script])).toEqual({ out: allThrow, stderr: "", exitCode: 0 });
+    });
+
+    test.concurrent("removed after process.cwd() read it: the directory it read is used", async () => {
+      using dir = tempDir("path-resolve-removed-cached", { "cwd/.keep": "" });
+      const cwd = join(String(dir), "cwd");
+      const script = `
+        const fs = require("node:fs");
+        process.chdir(${JSON.stringify(cwd)});
+        const before = process.cwd();
+        fs.rmSync(before, { recursive: true });
+        const path = require("node:path");
+        console.log(JSON.stringify({
+          none: path.resolve() === before,
+          relative: path.resolve("x") === path.join(before, "x"),
+          relativeTo: path.relative("a", "b"),
+        }));
+      `;
+      expect(await run([bunExe(), "-e", script])).toEqual({
+        out: { none: true, relative: true, relativeTo: "../b" },
+        stderr: "",
+        exitCode: 0,
+      });
     });
   });
 });
