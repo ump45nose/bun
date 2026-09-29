@@ -2475,7 +2475,9 @@ it("native server socket handle accessors return undefined for non-socket receiv
           server.close();
         });
         server.listen(0, "127.0.0.1", () => {
-          fetch("http://127.0.0.1:" + server.address().port + "/").then(r => r.text());
+          // Like in Node, close() in the listener leaves the connection of this request open. The request closes it.
+          const headers = { Connection: "close" };
+          fetch("http://127.0.0.1:" + server.address().port + "/", { headers }).then(r => r.text());
         });
       `,
     ],

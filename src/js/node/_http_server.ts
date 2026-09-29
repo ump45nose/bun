@@ -515,20 +515,26 @@ Server.prototype.getConnections = function (callback) {
   return this;
 };
 
-Server.prototype.closeIdleConnections = function () {
-  http1Fallback?.closeIdleHttp1Connections(this);
-  const server = this[serverSymbol];
-  if (server) {
-    server.closeIdleConnections();
-    return;
-  }
-  const tracked = this[kTrackedConnections];
+// Closes the idle connections of the server. Returns how many of them the listener of `generation` accepted.
+function closeIdleTrackedConnections(self: Server, generation?) {
+  let closed = 0;
+  const tracked = self[kTrackedConnections];
   if (tracked && tracked.size > 0) {
     for (const socket of $Array.from(tracked) as NodeHTTPServerSocket[]) {
-      // uWS knows whether a request is arriving on the connection. A missing _httpMessage does not tell.
-      if (!socket[kHandedOff]) socket[kHandle]?.closeIfIdle();
+      if (socket[kHandedOff]) continue;
+      // Node's parser is busy until its message is complete, so also in the listener of a request without a body:
+      // https://github.com/nodejs/node/blob/v26.3.0/src/node_http_parser.cc#L1153
+      if (socket.parser?.incoming?.complete === false) continue;
+      // uWS knows the rest: a request head or body that arrives, a response in flight. A missing _httpMessage does not tell.
+      if (socket[kHandle]?.closeIfIdle() && socket[kListenerGeneration] === generation) closed++;
     }
   }
+  return closed;
+}
+
+Server.prototype.closeIdleConnections = function () {
+  http1Fallback?.closeIdleHttp1Connections(this);
+  closeIdleTrackedConnections(this);
 };
 
 Server.prototype.close = function (optionalCallback?) {
@@ -549,7 +555,7 @@ Server.prototype.close = function (optionalCallback?) {
   this[kPendingDrainClose] = true;
   // Like Node, a connection that this sweep closes counts as gone, also a TLS one whose close ends later with the peer's close_notify.
   const open = getBunServerOpenCount(server);
-  const swept = server.closeIdleConnections();
+  const swept = closeIdleTrackedConnections(this, generation);
   if (generation) generation.drainedAtClose = open === swept;
   // stop() queues the task that emits 'close', which holds the loop one more turn, as node's uv_close() does.
   server.stop();
@@ -1647,7 +1653,7 @@ function getNodeHTTPServerSocket() {
     #pendingCallback = null;
     #pendingAbortMessage;
     #closeHandled = false;
-    #resetSupported;
+    [kListenerGeneration]: { isUnix: boolean } | undefined = undefined;
     #closeError: Error | undefined = undefined;
     declare encrypted: boolean;
     declare resetAndClosing: boolean;
@@ -1671,7 +1677,7 @@ function getNodeHTTPServerSocket() {
       this._readableState.emitClose = true;
       this._writableState.decodeStrings = true;
       this.server = server;
-      this.#resetSupported = !encrypted && !listenerGeneration?.isUnix;
+      this[kListenerGeneration] = listenerGeneration;
       this[kHandle] = handle;
       this._secureEstablished = !!handle?.secureEstablished;
       handle.onclose = this.#onClose.bind(this);
@@ -2079,7 +2085,7 @@ function getNodeHTTPServerSocket() {
 
     resetAndDestroy() {
       if (this[kHandle]) {
-        if (!this.#resetSupported) {
+        if (this.encrypted || this[kListenerGeneration]?.isUnix) {
           throw $ERR_INVALID_HANDLE_TYPE();
         }
         this.resetAndClosing = true;

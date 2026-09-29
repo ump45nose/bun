@@ -2,6 +2,7 @@ import { createTest } from "node-harness";
 import http from "node:http";
 const { expect } = createTest(import.meta.path);
 
+// Like in Node, close() in the listener leaves the connection of that request open. Without an agent the request closes it.
 await new Promise(resolve => {
   const server = http.createServer((req, res) => {
     const { localAddress, localFamily, localPort } = req.socket;
@@ -13,7 +14,7 @@ await new Promise(resolve => {
     resolve();
   });
   server.listen(0, "127.0.0.1", () => {
-    http.request(`http://localhost:${server.address().port}`).end();
+    http.request(`http://localhost:${server.address().port}`, { agent: false }).end();
   });
 });
 
@@ -28,6 +29,6 @@ await new Promise(resolve => {
     resolve();
   });
   server.listen(0, "::1", () => {
-    http.request(`http://[::1]:${server.address().port}`).end();
+    http.request(`http://[::1]:${server.address().port}`, { agent: false }).end();
   });
 });

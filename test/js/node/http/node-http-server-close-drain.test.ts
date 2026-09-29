@@ -517,12 +517,13 @@ test.each([
 
 // The handler still runs when it calls close(), so Node.js counts its
 // connection as busy. A response that the socket did not take whole must not
-// be cut off.
-test("server.close() in the handler of a response that still drains does not cut the response off", async () => {
+// be cut off, and the connection stays open behind it.
+test("server.close() in the handler of a response that still drains leaves the response and the connection alone", async () => {
   // More than a loopback socket takes in one write.
   const size = 64 * 1024 * 1024;
   const closed = Promise.withResolvers<void>();
   const server = createServer((req, res) => {
+    if (req.url === "/second") return void res.end("second response");
     res.end(Buffer.alloc(size, "a"));
     server.close(() => closed.resolve());
   });
@@ -535,21 +536,379 @@ test("server.close() in the handler of a response that still drains does not cut
   try {
     await once(socket, "connect");
     let received = 0;
-    const done = Promise.withResolvers<void>();
-    socket.on("data", chunk => {
+    let tail = "";
+    const whole = Promise.withResolvers<void>();
+    const answered = Promise.withResolvers<void>();
+    socket.on("data", (chunk: Buffer) => {
       received += chunk.length;
-      if (received > size) done.resolve();
+      tail = (tail + chunk.subarray(-"second response".length).toString("latin1")).slice(-"second response".length);
+      if (received > size) whole.resolve();
+      if (tail === "second response") answered.resolve();
     });
     socket.on("error", () => {});
-    socket.on("close", () => done.resolve());
+    socket.on("close", () => {
+      whole.resolve();
+      answered.resolve();
+    });
     socket.write("GET / HTTP/1.1\r\nHost: x\r\n\r\n");
-    await done.promise;
+    await whole.promise;
     expect(received).toBeGreaterThan(size);
+    socket.write("GET /second HTTP/1.1\r\nHost: x\r\n\r\n");
+    await answered.promise;
+    expect(tail).toBe("second response");
     socket.destroy();
     await closed.promise;
   } finally {
     socket.destroy();
     server.closeAllConnections();
+  }
+});
+
+// Node's parser holds a connection from the first byte of a request to the end of that message. The listener of
+// a request runs in between, also when the request has no body and its response has ended.
+type SweepApi = "closeIdleConnections" | "close";
+type IncomingMessage = import("node:http").IncomingMessage;
+type ServerResponse = import("node:http").ServerResponse;
+type Respond = (sweep: () => void, req: IncomingMessage, res: ServerResponse) => unknown;
+const sweepRequest = "GET /sweep HTTP/1.1\r\nHost: x\r\n\r\n";
+const afterEnd: Respond = (sweep, req, res) => {
+  res.end(req.url);
+  sweep();
+};
+
+// One keep-alive connection sends `request`, and `respond` answers it and calls the sweep. Then the connection
+// sends one more request: "kept" when it gets the response, "closed" when the server closed the connection.
+async function sweepFromListener(options: {
+  respond: Respond;
+  api?: SweepApi;
+  protocol?: "http" | "https";
+  request?: string;
+  event?: "request" | "checkContinue" | "checkExpectation";
+  // close() ran while the connection was busy, so the server has no listener when the sweep runs.
+  afterClose?: boolean;
+}) {
+  const { respond, api = "closeIdleConnections", protocol = "http", request = sweepRequest } = options;
+  const { event = "request" } = options;
+  const swept = Promise.withResolvers<void>();
+  const sweep = () => {
+    server[api]();
+    swept.resolve();
+  };
+  const server = protocol === "https" ? createHttpsServer(tlsCert) : createServer();
+  const listener = (req: IncomingMessage, res: ServerResponse) => {
+    if (req.url === "/sweep") return respond(sweep, req, res);
+    if (req.url === "/hold") server.close();
+    res.end(req.url);
+  };
+  server.on("request", listener);
+  if (event !== "request") server.on(event, listener);
+  server.keepAliveTimeout = 60000;
+  server.listen(0, "127.0.0.1");
+  await once(server, "listening");
+  const { port } = server.address() as AddressInfo;
+
+  const socket =
+    protocol === "https"
+      ? tlsConnect({ port, host: "127.0.0.1", rejectUnauthorized: false })
+      : connect(port, "127.0.0.1");
+  socket.on("error", () => {});
+  try {
+    let received = "";
+    const outcome = Promise.withResolvers<"kept" | "closed">();
+    const held = Promise.withResolvers<void>();
+    socket.on("data", chunk => {
+      received += chunk;
+      if (received.endsWith("/hold")) held.resolve();
+      if (received.endsWith("/second")) outcome.resolve("kept");
+    });
+    socket.on("close", () => outcome.resolve("closed"));
+    await once(socket, protocol === "https" ? "secureConnect" : "connect");
+    if (options.afterClose) {
+      socket.write("GET /hold HTTP/1.1\r\nHost: x\r\n\r\n");
+      await held.promise;
+    }
+    socket.write(request);
+    await swept.promise;
+    socket.write("GET /second HTTP/1.1\r\nHost: x\r\n\r\n");
+    return await outcome.promise;
+  } finally {
+    socket.destroy();
+    server.closeAllConnections();
+    if (server.listening) server.close();
+  }
+}
+
+test.each([
+  ["http", "closeIdleConnections", "a listening server"],
+  ["http", "close", "a listening server"],
+  ["http", "closeIdleConnections", "a server that close() stopped"],
+  ["https", "closeIdleConnections", "a listening server"],
+  ["https", "close", "a listening server"],
+  ["https", "closeIdleConnections", "a server that close() stopped"],
+] as const)(
+  "%s: %s() in a 'request' listener, after res.end(), leaves the connection of that request (%s)",
+  async (protocol, api, state) => {
+    const afterClose = state !== "a listening server";
+    expect(await sweepFromListener({ respond: afterEnd, api, protocol, afterClose })).toBe("kept");
+  },
+);
+
+// Node closes the connection behind a response to Expect: 100-continue that comes without the 100.
+const afterContinue: Respond = (sweep, req, res) => {
+  res.writeContinue();
+  afterEnd(sweep, req, res);
+};
+const sweepHead = "/sweep HTTP/1.1\r\nHost: x\r\n";
+test.each([
+  ["a HEAD request", "request", afterEnd, `HEAD ${sweepHead}\r\n`],
+  ["a DELETE request", "request", afterEnd, `DELETE ${sweepHead}\r\n`],
+  ["a POST request with Content-Length: 0", "request", afterEnd, `POST ${sweepHead}Content-Length: 0\r\n\r\n`],
+  ["a 'checkContinue' listener", "checkContinue", afterContinue, `GET ${sweepHead}Expect: 100-continue\r\n\r\n`],
+  ["a 'checkExpectation' listener", "checkExpectation", afterEnd, `GET ${sweepHead}Expect: meow\r\n\r\n`],
+] as const)(
+  "closeIdleConnections() in the listener of a request, after res.end(), leaves its connection: %s",
+  async (_name, event, respond, request) => {
+    expect(await sweepFromListener({ respond, event, request })).toBe("kept");
+  },
+);
+
+test("closeIdleConnections() twice in the listener of a later request of a connection leaves that connection", async () => {
+  const respond: Respond = (sweep, req, res) => {
+    res.end(req.url);
+    sweep();
+    sweep();
+  };
+  const request = "GET /first HTTP/1.1\r\nHost: x\r\n\r\n" + sweepRequest;
+  expect(await sweepFromListener({ respond, request })).toBe("kept");
+});
+
+// In Node the last chunk of a body reaches the request before the parser completes the message.
+test("closeIdleConnections() in the 'data' listener of the last chunk of a request body leaves its connection", async () => {
+  const respond: Respond = (sweep, req, res) => {
+    res.end(req.url);
+    req.on("data", sweep);
+  };
+  const request = "POST /sweep HTTP/1.1\r\nHost: x\r\nContent-Length: 5\r\n\r\nhello";
+  expect(await sweepFromListener({ respond, request })).toBe("kept");
+});
+
+// Node runs these after its parser completed the message, so the connection is idle.
+test.each<[string, Respond]>([
+  ["process.nextTick", (sweep, req, res) => (res.end(req.url), process.nextTick(sweep))],
+  ["queueMicrotask", (sweep, req, res) => (res.end(req.url), queueMicrotask(sweep))],
+  ["setImmediate", (sweep, req, res) => (res.end(req.url), setImmediate(sweep))],
+  ["the 'finish' listener of the response", (sweep, req, res) => res.on("finish", sweep).end(req.url)],
+  ["the callback of res.end()", (sweep, req, res) => res.end(req.url, sweep)],
+  ["the 'end' listener of the request", (sweep, req, res) => (res.end(req.url), req.on("end", sweep).resume())],
+  ["a setImmediate that ends the response first", (sweep, req, res) => setImmediate(() => afterEnd(sweep, req, res))],
+  [
+    "the listener, behind an await",
+    async (sweep, req, res) => {
+      res.end(req.url);
+      await null;
+      sweep();
+    },
+  ],
+])("closeIdleConnections() from %s closes the connection of a request with no body", async (_name, respond) => {
+  expect(await sweepFromListener({ respond })).toBe("closed");
+});
+
+// The stream destroyer destroys the request and keeps the connection. The parser still completes the message.
+test("closeIdleConnections() closes a connection whose destroyed request has ended", async () => {
+  let first: IncomingMessage | undefined;
+  const server = createServer(async (req, res) => {
+    if (req.url === "/first") {
+      first = req;
+      for await (const _ of req) break;
+    }
+    res.end(req.url);
+  });
+  server.keepAliveTimeout = 60000;
+  server.listen(0, "127.0.0.1");
+  await once(server, "listening");
+  const { port } = server.address() as AddressInfo;
+
+  const open = () => {
+    const socket = connect(port, "127.0.0.1");
+    socket.on("error", () => {});
+    let received = "";
+    socket.on("data", chunk => (received += chunk));
+    return {
+      socket,
+      closed: once(socket, "close"),
+      async until(text: string) {
+        while (!received.endsWith(text)) await once(socket, "data");
+      },
+    };
+  };
+  const destroyed = open();
+  const barrier = open();
+  try {
+    destroyed.socket.write("POST /first HTTP/1.1\r\nHost: x\r\nContent-Length: 10\r\n\r\nhello");
+    await destroyed.until("/first");
+    destroyed.socket.write("world");
+    // One round trip on another connection: the server has read the rest of the body by then.
+    barrier.socket.write("GET /barrier HTTP/1.1\r\nHost: x\r\n\r\n");
+    await barrier.until("/barrier");
+    expect({ destroyed: first!.destroyed, complete: first!.complete }).toEqual({ destroyed: true, complete: true });
+
+    server.closeIdleConnections();
+    await Promise.all([destroyed.closed, barrier.closed]);
+  } finally {
+    destroyed.socket.destroy();
+    barrier.socket.destroy();
+    server.closeAllConnections();
+    server.close();
+  }
+});
+
+test.each(["closeIdleConnections", "close"] as const)(
+  "%s() in the listener of the first of three requests that came in one read: all three get their response",
+  async api => {
+    const server = createServer((req, res) => {
+      res.end(req.url);
+      if (req.url === "/1") server[api]();
+    });
+    server.keepAliveTimeout = 60000;
+    server.listen(0, "127.0.0.1");
+    await once(server, "listening");
+    const { port } = server.address() as AddressInfo;
+
+    const socket = connect(port, "127.0.0.1");
+    try {
+      socket.on("error", () => {});
+      let received = "";
+      socket.on("data", chunk => (received += chunk));
+      const get = (path: string, extra = "") => `GET ${path} HTTP/1.1\r\nHost: x\r\n${extra}\r\n`;
+      socket.write(get("/1") + get("/2") + get("/3", "Connection: close\r\n"));
+      await once(socket, "close");
+      expect(received.split("\r\n\r\n").map(part => part.split("HTTP/1.1")[0])).toEqual(["", "/1", "/2", "/3"]);
+    } finally {
+      socket.destroy();
+      server.closeAllConnections();
+      if (server.listening) server.close();
+    }
+  },
+);
+
+test("closeIdleConnections() in a 'request' listener closes an idle connection and leaves the connection of that request", async () => {
+  const server = createServer((req, res) => {
+    res.end(req.url);
+    if (req.url === "/sweep") server.closeIdleConnections();
+  });
+  server.keepAliveTimeout = 60000;
+  server.listen(0, "127.0.0.1");
+  await once(server, "listening");
+  const { port } = server.address() as AddressInfo;
+
+  const open = () => {
+    const socket = connect(port, "127.0.0.1");
+    socket.on("error", () => {});
+    let received = "";
+    socket.on("data", chunk => (received += chunk));
+    const closed = Promise.withResolvers<never>();
+    socket.on("close", () => closed.reject(new Error("the server closed the connection")));
+    closed.promise.catch(() => {});
+    return {
+      socket,
+      closed: closed.promise,
+      async request(path: string) {
+        socket.write(`GET ${path} HTTP/1.1\r\nHost: x\r\n\r\n`);
+        while (!received.endsWith(path)) await Promise.race([once(socket, "data"), closed.promise]);
+      },
+    };
+  };
+  const idle = open();
+  const busy = open();
+  try {
+    await idle.request("/idle");
+    await busy.request("/sweep");
+    await expect(idle.closed).rejects.toThrow("the server closed the connection");
+    await busy.request("/second");
+  } finally {
+    idle.socket.destroy();
+    busy.socket.destroy();
+    server.closeAllConnections();
+    server.close();
+  }
+});
+
+test("server.close(cb) in a 'request' listener, after res.end(), waits for the connection of that request", async () => {
+  const events: string[] = [];
+  const closed = Promise.withResolvers<void>();
+  const server = createServer((req, res) => {
+    res.end(req.url);
+    if (req.url !== "/sweep") return;
+    server.close(() => {
+      events.push("close callback");
+      closed.resolve();
+    });
+  });
+  server.keepAliveTimeout = 60000;
+  server.listen(0, "127.0.0.1");
+  await once(server, "listening");
+  const { port } = server.address() as AddressInfo;
+
+  const socket = connect(port, "127.0.0.1");
+  try {
+    socket.on("error", () => {});
+    let received = "";
+    const answered = Promise.withResolvers<void>();
+    socket.on("data", chunk => {
+      received += chunk;
+      if (received.endsWith("/second")) answered.resolve();
+    });
+    socket.on("close", () => answered.reject(new Error("the server closed the connection")));
+    socket.write(sweepRequest);
+    while (!received.endsWith("/sweep")) await once(socket, "data");
+    socket.write("GET /second HTTP/1.1\r\nHost: x\r\n\r\n");
+    await answered.promise;
+    events.push("second response");
+    socket.destroy();
+    await closed.promise;
+    expect(events).toEqual(["second response", "close callback"]);
+  } finally {
+    socket.destroy();
+    server.closeAllConnections();
+  }
+});
+
+// Like the list of connections in Node, the connections of a server outlive its listener.
+test("closeIdleConnections() closes the idle connection of an earlier listen()", async () => {
+  let release = () => {};
+  const held = Promise.withResolvers<void>();
+  const server = createServer((req, res) => {
+    release = () => res.end(req.url);
+    held.resolve();
+  });
+  server.keepAliveTimeout = 60000;
+  server.listen(0, "127.0.0.1");
+  await once(server, "listening");
+  const { port } = server.address() as AddressInfo;
+
+  const socket = connect(port, "127.0.0.1");
+  try {
+    socket.on("error", () => {});
+    let received = "";
+    socket.on("data", chunk => (received += chunk));
+    const socketClosed = once(socket, "close");
+    socket.write("GET /held HTTP/1.1\r\nHost: x\r\n\r\n");
+    await held.promise;
+    // The connection is busy, so it outlives this listener.
+    server.close();
+    server.listen(0, "127.0.0.1");
+    await once(server, "listening");
+    release();
+    while (!received.endsWith("/held")) await once(socket, "data");
+    // The response has left, and one turn later the connection is idle.
+    await new Promise<void>(resolve => setImmediate(resolve));
+
+    server.closeIdleConnections();
+    await socketClosed;
+  } finally {
+    socket.destroy();
+    server.closeAllConnections();
+    server.close();
   }
 });
 
