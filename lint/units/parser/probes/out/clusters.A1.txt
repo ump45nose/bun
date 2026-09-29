@@ -1,0 +1,511 @@
+class A1  dialect ts  config plain: 2537 inputs in 105 clusters
+
+[01-type-forms / core]  bun Expected "…" but found "…"   (35 inputs, 2 distinct)
+    "(a = 1) => void"  [var,ret,arrowParam,satisfies,cast,newArg,tagArg,inst,…]
+    "({ a = 1 }) => void"  [fnTypeParam]
+
+[01-type-forms / core]  bun Unexpected …   (55 inputs, 2 distinct)
+    "if"  [satisfies,cast,method,fnTypeRet,tupleNamed,indexSig,mapped,unionLeft,…]
+    "({ a = 1 }) => void"  [var,ret,arrowParam,satisfies,cast,newArg,tagArg,inst,…]
+
+[01-type-forms / fn]  bun Expected "…" but found "…"   (114 inputs, 23 distinct)
+    "(a = 1) => void"  [alias,param,arrowRet,callArg,as,field]
+    "(a: A = 1) => void"  [alias,param,arrowRet,callArg,as,field]
+    "(a = 1, b = 2) => void"  [alias,param,arrowRet,callArg,as,field]
+    "(a = b) => void"  [alias,param,arrowRet,callArg,as,field]
+    "(a = () => 1) => void"  [alias,param,arrowRet,callArg,as,field]
+    "(a = {}) => void"  [alias,param,arrowRet,callArg,as,field]
+    … 17 more
+
+[01-type-forms / fn]  bun Unexpected …   (24 inputs, 6 distinct)
+    "({ a = 1 }) => void"  [alias,param,callArg,as,field]
+    "({ a: b = 1 }) => void"  [alias,param,as,field]
+    "({ [k]: v }) => void"  [arrowRet]
+    "([a, , b]) => void"  [alias,param,arrowRet,as,field]
+    "({ 1n: a }) => void"  [alias,param,as,field]
+    "(readonly readonly) => void"  [alias,param,arrowRet,as,field]
+
+[01-type-forms / import]  bun Expected "…" but found "…"   (26 inputs, 5 distinct)
+    "import(\"x\")<T>"  [alias,var,param,ret,arrowParam,arrowRet,field,typeArg,…]
+    "import(\"x\", { with: { a: \"b\" } })<T>"  [alias,var,param,ret,arrowParam,arrowRet,field,typeArg,…]
+    "import(\"x\", { with: { a: \"b\" + \"c\" } })"  [arrowRet,fnTypeParam]
+    "import(\"x\").#a"  [arrowRet,fnTypeParam]
+    "import(\"x\").A.<T>"  [arrowRet,fnTypeParam]
+
+[01-type-forms / import]  bun Expected identifier but found "…"   (22 inputs, 2 distinct)
+    "import(\"x\").#a"  [alias,var,param,ret,arrowParam,as,callArg,field,…]
+    "import(\"x\").A.<T>"  [alias,var,param,ret,arrowParam,as,callArg,field,…]
+
+[01-type-forms / import]  bun Unexpected …   (12 inputs, 3 distinct)
+    "import(\"x\")<T>"  [member]
+    "import(\"x\", { with: { a: \"b\" } })<T>"  [member]
+    "import(\"x\", { with: { a: \"b\" + \"c\" } })"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]
+
+[01-type-forms / label]  bun Unexpected …   (32 inputs, 15 distinct)
+    "[...const: A[]]"  [alias,param,arrowRet,callArg]
+    "[...in: A[]]"  [alias,param]
+    "[...class: A[]]"  [alias,param]
+    "[...if: A[]]"  [alias,param]
+    "[...var: A[]]"  [alias,param]
+    "[...default: A[]]"  [alias,param]
+    … 9 more
+
+[01-type-forms / lit]  bun Invalid assignment target   (1 inputs, 1 distinct)
+    "--1"  [callArg]
+
+[01-type-forms / op]  bun Expected "…" but found "…"   (3 inputs, 1 distinct)
+    "keyof if"  [arrowRet,callArg,fnTypeParam]
+
+[01-type-forms / op]  bun Unexpected …   (10 inputs, 1 distinct)
+    "keyof if"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]
+
+[01-type-forms / paren]  bun Expected "…" but found "…"   (4 inputs, 2 distinct)
+    "(if)"  [arrowRet,fnTypeParam]
+    "(class)"  [arrowRet,fnTypeParam]
+
+[01-type-forms / paren]  bun Unexpected …   (16 inputs, 2 distinct)
+    "(if)"  [alias,var,param,ret,arrowParam,as,field,member]
+    "(class)"  [alias,var,param,ret,arrowParam,as,field,member]
+
+[01-type-forms / pred]  bun Expected "…" but found "…"   (3 inputs, 2 distinct)
+    "asserts a\nis B"  [arrowRet]
+    "asserts this\nis B"  [ret,arrowRet]
+
+[01-type-forms / query]  bun Expected "…" but found "…"   (12 inputs, 2 distinct)
+    "typeof #a"  [arrowRet,fnTypeParam]
+    "typeof import(\"x\")<C>"  [alias,var,param,ret,arrowParam,arrowRet,field,typeArg,…]
+
+[01-type-forms / query]  bun Expected identifier but found "…"   (10 inputs, 1 distinct)
+    "typeof #a"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]
+
+[01-type-forms / query]  bun Unexpected …   (2 inputs, 2 distinct)
+    "typeof #a"  [callArg]
+    "typeof import(\"x\")<C>"  [member]
+
+[01-type-forms / ref]  bun Expected "…" but found "…"   (60 inputs, 29 distinct)
+    "if"  [arrowRet,fnTypeParam]
+    "class"  [arrowRet,fnTypeParam]
+    "function"  [arrowRet,callArg,fnTypeParam,tupleEl]
+    "delete"  [arrowRet,fnTypeParam]
+    "in"  [arrowRet,fnTypeParam]
+    "var"  [arrowRet,fnTypeParam]
+    … 23 more
+
+[01-type-forms / ref]  bun Unexpected …   (233 inputs, 29 distinct)
+    "if"  [alias,var,param,ret,arrowParam,as,field,member]
+    "class"  [alias,var,param,ret,arrowParam,as,field,member]
+    "function"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]
+    "delete"  [alias,var,param,ret,arrowParam,as,field,member]
+    "in"  [alias,var,param,ret,arrowParam,as,field,member]
+    "var"  [alias,var,param,ret,arrowParam,as,field,member]
+    … 23 more
+
+[01-type-forms / tmpl]  bun Expected "…" but found "…"   (2 inputs, 1 distinct)
+    "`${if}`"  [arrowRet,fnTypeParam]
+
+[01-type-forms / tmpl]  bun Unexpected …   (11 inputs, 1 distinct)
+    "`${if}`"  [alias,var,param,ret,arrowParam,as,callArg,field,…]
+
+[01-type-forms / tuple]  bun Expected "…" but found "…"   (16 inputs, 2 distinct)
+    "[a: A?]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "[a: ...A]"  [arrowRet,callArg,fnTypeParam]
+
+[01-type-forms / tuple]  bun Unexpected …   (10 inputs, 1 distinct)
+    "[a: ...A]"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]
+
+[01-type-forms / union]  bun Expected "…" but found "…"   (7 inputs, 3 distinct)
+    "| if"  [arrowRet,fnTypeParam]
+    "A | if"  [arrowRet,fnTypeParam]
+    "A & class"  [arrowRet,callArg,fnTypeParam]
+
+[01-type-forms / union]  bun Unexpected …   (32 inputs, 3 distinct)
+    "| if"  [alias,var,param,ret,arrowParam,as,callArg,field,…]
+    "A | if"  [alias,var,param,ret,arrowParam,as,callArg,field,…]
+    "A & class"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]
+
+[02-object-types / aliasName]  bun Expected "…" but found "…"   (2 inputs, 2 distinct)
+    "as"  [aliasGeneric]
+    "satisfies"  [aliasGeneric]
+
+[02-object-types / aliasName]  bun Unexpected …   (4 inputs, 2 distinct)
+    "as"  [alias,declareAlias]
+    "satisfies"  [alias,declareAlias]
+
+[02-object-types / ifaceHead]  bun Expected "…" but found "…"   (4 inputs, 4 distinct)
+    "interface I extends a() {}"  [-]
+    "interface I extends a.b() {}"  [-]
+    "interface I extends a?.b {}"  [-]
+    "interface I extends new A {}"  [-]
+
+[02-object-types / ifaceHead]  bun Expected identifier but found "…"   (1 inputs, 1 distinct)
+    "interface I extends A.#b {}"  [-]
+
+[02-object-types / ifaceHead]  bun Unexpected …   (2 inputs, 2 distinct)
+    "interface I extends class {} {}"  [-]
+    "interface I extends function() {} {}"  [-]
+
+[02-object-types / ifaceName]  bun Expected "…" but found "…"   (2 inputs, 2 distinct)
+    "as"  [ifaceGeneric]
+    "satisfies"  [ifaceGeneric]
+
+[02-object-types / ifaceName]  bun Expected identifier but found end of file   (8 inputs, 2 distinct)
+    "as"  [iface,exportIface,declareIface,exportDefaultIface]
+    "satisfies"  [iface,exportIface,declareIface,exportDefaultIface]
+
+[02-object-types / mapped]  bun Expected "…" but found "…"   (4 inputs, 2 distinct)
+    "[K as B in A]: C"  [typeLit,iface,param]
+    "[K in A in B]: C"  [iface]
+
+[02-object-types / mapped]  bun Unexpected …   (5 inputs, 3 distinct)
+    "[#K in A]: B"  [typeLit,iface,param]
+    "[K in A]: B = 1"  [iface]
+    "[K in A] = 1"  [iface]
+
+[02-object-types / member]  bun Expected "…" but found "…"   (9 inputs, 3 distinct)
+    "a(b = 1): A"  [typeLit,iface,varLit]
+    "a(public b: B): A"  [typeLit,iface,varLit]
+    "(a = 1): A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  bun Unexpected …   (3 inputs, 1 distinct)
+    "get #a(): A"  [typeLit,iface,varLit]
+
+[03-signatures / arrowSig]  bun Cannot use "…" here   (5 inputs, 1 distinct)
+    "{ await }"  [arrow,arrowRet,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  bun Expected "…" but found "…"   (112 inputs, 22 distinct)
+    "public a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "private a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "protected a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "readonly a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "override a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "public readonly a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    … 16 more
+
+[03-signatures / arrowSig]  bun Invalid binding pattern   (28 inputs, 7 distinct)
+    "this"  [arrow,asyncArrow,genericArrow,arrowInCond]
+    "this: A"  [arrow,asyncArrow,genericArrow,arrowInCond]
+    "this: A, a: B"  [arrow,asyncArrow,genericArrow,arrowInCond]
+    "this, a"  [arrow,asyncArrow,genericArrow,arrowInCond]
+    "a, this: A"  [arrow,asyncArrow,genericArrow,arrowInCond]
+    "this: this"  [arrow,asyncArrow,genericArrow,arrowInCond]
+    … 1 more
+
+[03-signatures / arrowSig]  bun Unexpected …   (42 inputs, 13 distinct)
+    "[...a, b]"  [arrow,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "{ ...a, b }"  [arrow,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "[await]"  [arrow,arrowRet,genericArrow,arrowInCond,arrowInCondRet]
+    "{ a: await }"  [arrow,arrowRet,genericArrow,arrowInCond,arrowInCondRet]
+    "await"  [arrow,arrowRet,genericArrow,arrowInCond,arrowInCondRet]
+    "await: A"  [arrow,arrowRet,genericArrow,arrowInCond,arrowInCondRet]
+    … 7 more
+
+[03-signatures / declSig]  bun Expected "…" but found "…"   (218 inputs, 22 distinct)
+    "public a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    "private a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    "protected a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    "readonly a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    "override a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    "public readonly a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    … 16 more
+
+[03-signatures / declSig]  bun Setter p must have exactly 1 argument (there are 0)   (4 inputs, 4 distinct)
+    "this"  [setter]
+    "this: A"  [setter]
+    "this: this"  [setter]
+    "this: typeof this"  [setter]
+
+[03-signatures / declSig]  bun Unexpected …   (30 inputs, 2 distinct)
+    "[...a, b]"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    "{ ...a, b }"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+
+[03-signatures / memberSig]  bun Backtrack   (5 inputs, 1 distinct)
+    "[a, , b]"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  bun Expected "…" but found "…"   (205 inputs, 41 distinct)
+    "a = 1"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "a: A = 1"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "a = 1, b = 2"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "a = b"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "a = () => 1"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "a = {}"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    … 35 more
+
+[03-signatures / memberSig]  bun Unexpected …   (15 inputs, 3 distinct)
+    "{ [k]: v }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "{ [k]: v = 1 }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "{ 1n: a }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / typeSig]  bun Expected "…" but found "…"   (262 inputs, 45 distinct)
+    "a = 1"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "a: A = 1"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "a = 1, b = 2"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "a = b"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "a = () => 1"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "a = {}"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    … 39 more
+
+[03-signatures / typeSig]  bun Unexpected …   (53 inputs, 10 distinct)
+    "{ a = 1 }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg]
+    "{ a = 1 }: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg]
+    "{ a: b = 1 }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion]
+    "{ [k]: v = 1 }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion]
+    "[a, , b]"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion]
+    "{ 1n: a }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion]
+    … 4 more
+
+[04-type-params-args / targsExpr]  bun Expected "…" but found "…"   (47 inputs, 1 distinct)
+    "<(a = 1) => void>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]
+
+[04-type-params-args / targsExpr]  bun Unexpected …   (48 inputs, 2 distinct)
+    "<({ a = 1 }) => void>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]
+    "<A"  [instImport]
+
+[04-type-params-args / targsHeritage]  bun Expected "…" but found "…"   (4 inputs, 4 distinct)
+    "class C implements a() {}"  [-]
+    "class C implements a.b() {}"  [-]
+    "class C implements a?.b {}"  [-]
+    "class C implements new A {}"  [-]
+
+[04-type-params-args / targsHeritage]  bun Expected identifier but found "…"   (1 inputs, 1 distinct)
+    "class C implements A.#b {}"  [-]
+
+[04-type-params-args / targsHeritage]  bun Unexpected …   (1 inputs, 1 distinct)
+    "class C extends super.a {}"  [-]
+
+[04-type-params-args / tparams]  bun The modifier "…" is not valid here   (48 inputs, 3 distinct)
+    "<out>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+    "<out = A>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+    "<const out>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+
+[04-type-params-args / tparamsArrow]  bun The modifier "…" is not valid here   (19 inputs, 4 distinct)
+    "<out>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt,cast,castParen]
+    "<out = A>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt]
+    "<const out>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt]
+    "<in>"  [cast,castParen]
+
+[04-type-params-args / tparamsArrow]  bun Unexpected …   (6 inputs, 3 distinct)
+    "<if>"  [cast,castParen]
+    "<class>"  [cast,castParen]
+    "<enum>"  [cast,castParen]
+
+[05-assertions / arrow]  bun Expected "…" but found "…"   (41 inputs, 9 distinct)
+    "(): if => x"  [init,stmt,arg,condTrue,condFalse]
+    "(public a: A) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(private a) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(readonly a: A) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(protected a?: A) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(override a) => x"  [init,stmt,arg,condTrue,condFalse]
+    … 3 more
+
+[05-assertions / arrow]  bun Invalid assignment target   (5 inputs, 1 distinct)
+    "(a: A = 1 = 2) => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  bun Invalid binding pattern   (20 inputs, 4 distinct)
+    "(this: A) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(this: A, a: B) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(this) => x"  [init,stmt,arg,condTrue,condFalse]
+    "async (this: A) => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  bun Unexpected …   (15 inputs, 3 distinct)
+    "(this: A): this is B => true"  [init,stmt,arg,condTrue,condFalse]
+    "a ? (await) : b"  [init,stmt,arg,condTrue,condFalse]
+    "a ? (this: T): b => c : d"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / as]  bun Unexpected …   (15 inputs, 3 distinct)
+    "x as if"  [init,stmt,arg,element,return]
+    "x as var"  [init,stmt,arg,element,return]
+    "x as T <= y"  [init,stmt,arg,element,return]
+
+[05-assertions / cast]  bun The modifier "…" is not valid here   (25 inputs, 7 distinct)
+    "<out>x"  [init,stmt,arg,operand]
+    "<in>x"  [init,stmt,arg,operand]
+    "<out>(x)"  [init,stmt,arg,operand]
+    "<in>(x)"  [init,stmt,arg,operand]
+    "<out>(x) => x"  [init,stmt,arg]
+    "<out, T>(x) => x"  [init,stmt,arg]
+    … 1 more
+
+[05-assertions / cast]  bun Unexpected …   (8 inputs, 2 distinct)
+    "<T>super.x"  [init,stmt,arg,operand]
+    "<if>x"  [init,stmt,arg,operand]
+
+[05-assertions / catch]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    "try {} catch (e: any = 1) {}"  [-]
+
+[05-assertions / nonNull]  bun Expected identifier but found "…"   (3 inputs, 1 distinct)
+    "this.#x!"  [stmt,init,arg]
+
+[05-assertions / nonNull]  bun Unexpected …   (3 inputs, 1 distinct)
+    "super.x!"  [stmt,init,arg]
+
+[05-assertions / objLit]  bun Expected "…" but found "…"   (6 inputs, 2 distinct)
+    "{ a?: 1 } = b"  [init,arg,paren]
+    "{ m(public a: A) {} }"  [init,arg,paren]
+
+[06-class-members / classHead]  bun Cannot use "…" as an identifier here   (1 inputs, 1 distinct)
+    "class await {}"  [-]
+
+[06-class-members / classHead]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    "abstract declare class C {}"  [-]
+
+[06-class-members / heritage]  bun Unexpected …   (1 inputs, 1 distinct)
+    "class C extends super.b {}"  [-]
+
+[06-class-members / member]  bun Expected "…" but found "…"   (4 inputs, 1 distinct)
+    "[k: string]: T, "  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  bun Unexpected …   (4 inputs, 1 distinct)
+    "[await: string]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / paramProp]  bun Expected "…" but found "…"   (272 inputs, 47 distinct)
+    "public x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
+    "private x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
+    "protected x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
+    "readonly x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
+    "override x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
+    "public readonly x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
+    … 41 more
+
+[07-module-syntax / attributes]  bun Expected "…" but found "…"   (2 inputs, 2 distinct)
+    "import A from \"x\" with { a: \"b\" + \"c\" };"  [-]
+    "import A from \"x\"\nwith { type: \"json\" };"  [-]
+
+[07-module-syntax / attributes]  bun Expected string but found "…"   (3 inputs, 3 distinct)
+    "import A from \"x\" with { a: 1 };"  [-]
+    "import A from \"x\" with { a: `b` };"  [-]
+    "import A from \"x\" with { a: b };"  [-]
+
+[07-module-syntax / exportDecl]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    "export abstract declare class C {}"  [-]
+
+[07-module-syntax / exportSpec]  bun Expected identifier but found "…"   (27 inputs, 15 distinct)
+    "type default"  [exportLocal,exportType]
+    "type default as A"  [exportLocal,exportType]
+    "default as A"  [exportLocal,exportType]
+    "default"  [exportLocal]
+    "type \"a\""  [exportLocal,exportType]
+    "\"a\""  [exportLocal]
+    … 9 more
+
+[07-module-syntax / exportType]  bun Expected identifier but found "…"   (3 inputs, 3 distinct)
+    "export type { default };"  [-]
+    "export type { \"a\" };"  [-]
+    "export type { if };"  [-]
+
+[07-module-syntax / importEquals]  bun Expected identifier but found "…"   (2 inputs, 2 distinct)
+    "namespace N { import(\"x\"); }"  [-]
+    "namespace N { import.meta; }"  [-]
+
+[07-module-syntax / importSpec]  bun Cannot use "…" as an identifier here   (8 inputs, 2 distinct)
+    "arguments"  [import,importWithDefault,importType,importTwo]
+    "eval"  [import,importWithDefault,importType,importTwo]
+
+[07-module-syntax / importType]  bun Expected "…" but found "…"   (2 inputs, 2 distinct)
+    "import type A from \"x\"\nwith { a: \"b\" };"  [-]
+    "import.defer(\"x\");"  [-]
+
+[07-module-syntax / importType]  bun Expected "…" but found "…"x"…"   (1 inputs, 1 distinct)
+    "import defer \"x\";"  [-]
+
+[07-module-syntax / importType]  bun Expected string but found "…"   (1 inputs, 1 distinct)
+    "import type A from \"x\" with { a: 1 };"  [-]
+
+[08-declare-namespace-enum / declare]  bun Expected "…" but found "…"   (7 inputs, 7 distinct)
+    "declare function f(public a: A): void;"  [-]
+    "abstract declare class C {}"  [-]
+    "declare global;"  [-]
+    "declare\nglobal {}"  [-]
+    "global {}"  [-]
+    "global { var x: T; }"  [-]
+    … 1 more
+
+[08-declare-namespace-enum / declare]  bun Expected "…" but found end of file   (1 inputs, 1 distinct)
+    "declare global"  [-]
+
+[08-declare-namespace-enum / declare]  bun Unexpected …   (27 inputs, 27 distinct)
+    "declare async\nfunction f(): Promise<void>;"  [-]
+    "declare abstract\nclass C {}"  [-]
+    "declare namespace;"  [-]
+    "declare module;"  [-]
+    "declare module"  [-]
+    "declare x;"  [-]
+    … 21 more
+
+[08-declare-namespace-enum / declName]  bun Cannot use "…" as an identifier here   (4 inputs, 2 distinct)
+    "let"  [declareConst,declareLet]
+    "await"  [declareClass,abstractClass]
+
+[08-declare-namespace-enum / declName]  bun Cannot use "…" or "…" here.   (4 inputs, 1 distinct)
+    "await"  [declareVar,declareConst,declareLet,varNamed]
+
+[08-declare-namespace-enum / declName]  bun Invalid assignment target   (3 inputs, 3 distinct)
+    "null"  [keywordAssign]
+    "this"  [keywordAssign]
+    "true"  [keywordAssign]
+
+[08-declare-namespace-enum / declName]  bun Unexpected …   (11 inputs, 5 distinct)
+    "as"  [namespaceDotted,namespaceBody,declareNamespace]
+    "satisfies"  [namespaceDotted,namespaceBody,declareNamespace]
+    "in"  [declareNamespace,declareModule]
+    "await"  [keywordAsStmt,keywordAssign]
+    "super"  [keywordCall]
+
+[08-declare-namespace-enum / enum]  bun "…" has already been declared   (2 inputs, 2 distinct)
+    "enum E { \"a\", \"a\" }"  [-]
+    "enum E { A, A }"  [-]
+
+[08-declare-namespace-enum / enum]  bun Cannot use "…" here   (1 inputs, 1 distinct)
+    "enum E { A = this }"  [-]
+
+[08-declare-namespace-enum / enum]  bun Expected identifier but found "…"   (11 inputs, 11 distinct)
+    "enum E { A = 1, 2 }"  [-]
+    "enum E { 1 }"  [-]
+    "enum E { 1 = 1 }"  [-]
+    "enum E { 1.5 }"  [-]
+    "enum E { 0x10 }"  [-]
+    "enum E { 1n }"  [-]
+    … 5 more
+
+[08-declare-namespace-enum / enum]  bun Unexpected …   (1 inputs, 1 distinct)
+    "enum E { A = super.x }"  [-]
+
+[08-declare-namespace-enum / namespace]  bun Cannot use "…" here   (1 inputs, 1 distinct)
+    "namespace N { this.x }"  [-]
+
+[08-declare-namespace-enum / namespace]  bun Unexpected …   (1 inputs, 1 distinct)
+    "namespace N { super.x }"  [-]
+
+[08-declare-namespace-enum / overload]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    "function f(public a: A): void; function f(a: any) {}"  [-]
+
+[09-decorators / classPos]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    "export default @d abstract class C {}"  [-]
+
+[09-decorators / expr]  bun Expected "…" but found "…"   (5 inputs, 3 distinct)
+    "@d()!"  [classDecl,classDeclNewline,classExpr]
+    "@d<T>(1)<U>"  [classDeclNewline]
+    "@d()<T>"  [classDeclNewline]
+
+[09-decorators / expr]  bun Expected identifier but found "…"   (8 inputs, 3 distinct)
+    "@d()!"  [field,fieldNewline,method,computed,computedField,staticField]
+    "@d<T>(1)<U>"  [fieldNewline]
+    "@d()<T>"  [fieldNewline]
+
+[09-decorators / expr]  bun Private name "…" must be declared in an enclosing class   (18 inputs, 3 distinct)
+    "@d.#e"  [field,fieldNewline,method,computed,computedField,staticField]
+    "@d.#e()"  [field,fieldNewline,method,computed,computedField,staticField]
+    "@d.e.#f"  [field,fieldNewline,method,computed,computedField,staticField]
+
+[09-decorators / otherPos]  bun Cannot use a declaration in a single-statement context   (2 inputs, 2 distinct)
+    "if (a) @d class C {}"  [-]
+    "for (;;) @d class C {}"  [-]
+
+[10-declaration-files / directive]  bun The constant "…" must be initialized   (2 inputs, 2 distinct)
+    "// @ts-ignore\nexport const x: T;"  [-]
+    "// @ts-expect-error\nexport const x: T;"  [-]
+
+[10-declaration-files / module]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    "global { var x: T; }"  [-]
+
+[10-declaration-files / topLevel]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    "global {}"  [-]

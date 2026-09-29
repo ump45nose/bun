@@ -1,16 +1,15 @@
+import { trimSpace, trimSuffix } from "./go_strings";
+import { getConfigNameFromFileName } from "./harnessutil";
+import type { Result } from "./result";
 import { skipTrivia } from "./scanner";
-import { toLower, trimSpace, trimSuffix } from "./stringutil";
 import { getBaseFileName } from "./tspath";
 
 const lineDelimiter = /\r?\n/;
-// Go's \s is [\t\n\f\r ] and Go's \w is [0-9A-Za-z_]; a line holds no LF, so (?m)^ is the start of the line.
-const optionRegexLine = /^\/{2}[\t\n\f\r ]*@([0-9A-Za-z_]+)[\t\n\f\r ]*:[\t\n\f\r ]*([^\r\n]*)/;
-const linkRegexLine = /^\/{2}[\t\n\f\r ]*@link[\t\n\f\r ]*:[\t\n\f\r ]*([^\r\n]*)[\t\n\f\r ]*->[\t\n\f\r ]*([^\r\n]*)/;
-// On a whole text Go's (?m)^ matches at the start and after LF only.
-const optionRegexText = /(?<![^\n])\/{2}[\t\n\f\r ]*@([0-9A-Za-z_]+)[\t\n\f\r ]*:[\t\n\f\r ]*([^\r\n]*)/g;
 
+// This maps a compiler setting, in lower case, to its value as written in the test file.
 export type RawCompilerSettings = Map<string, string>;
 
+// All the necessary information to turn a multi file test into useful units for later compilation
 export interface TestUnit {
   content: string;
   name: string;
@@ -20,56 +19,64 @@ export interface TestCaseContent {
   testUnitData: TestUnit[];
   tsConfigFileUnitData: TestUnit | undefined;
   symlinks: Map<string, string>;
+  // The two fields below replace the reference's parsed tsConfig: they are the inputs of that parse.
   currentDirectory: string;
   globalOptions: Map<string, string>;
 }
 
-export type MakeUnitsResult = { ok: true; value: TestCaseContent } | { ok: false; reason: string };
+// Go's \s is [\t\n\f\r ] and Go's \w is [0-9A-Za-z_]; a line holds no LF, so (?m)^ is the start of the line.
+const optionRegexLine = /^\/{2}[\t\n\f\r ]*@([0-9A-Za-z_]+)[\t\n\f\r ]*:[\t\n\f\r ]*([^\r\n]*)/;
+const linkRegexLine = /^\/{2}[\t\n\f\r ]*@link[\t\n\f\r ]*:[\t\n\f\r ]*([^\r\n]*)[\t\n\f\r ]*->[\t\n\f\r ]*([^\r\n]*)/;
+// On a whole text Go's (?m)^ matches at the start and after LF only.
+const optionRegexText = /(?<![^\n])\/{2}[\t\n\f\r ]*@([0-9A-Za-z_]+)[\t\n\f\r ]*:[\t\n\f\r ]*([^\r\n]*)/g;
 
+// File-specific directives used by fourslash tests
 const fourslashDirectives = ["emitthisfile", "noopen"];
 
+// Posix-style path to sources under test
 export const srcFolder = "/.src";
 
-export function getConfigNameFromFileName(filename: string): string {
-  const basenameLower = toLower(getBaseFileName(filename));
-  if (basenameLower === "tsconfig.json" || basenameLower === "jsconfig.json") {
-    return basenameLower;
-  }
-  return "";
-}
-
-export function makeUnitsFromTest(code: string, fileName: string): MakeUnitsResult {
+// Given a test file containing // @FileName directives, return the named units of code.
+export function makeUnitsFromTest(code: string, fileName: string): Result<TestCaseContent> {
   const parsed = parseTestFilesAndSymlinks<TestUnit>(code, fileName, (filename, content) => ({
     value: { content, name: filename },
     error: undefined,
   }));
-  if (!parsed.ok) return parsed;
-  let { units: testUnits, currentDirectory } = parsed;
+  if (!parsed.ok) {
+    return parsed;
+  }
+  const testUnits = parsed.value.units;
+  let currentDirectory = parsed.value.currentDirectory;
   if (currentDirectory === "") {
     currentDirectory = srcFolder;
   }
+
+  // check if project has tsconfig.json in the list of files
   let tsConfigFileUnitData: TestUnit | undefined;
   for (let i = 0; i < testUnits.length; i++) {
     const data = testUnits[i];
     if (getConfigNameFromFileName(data.name) !== "") {
       tsConfigFileUnitData = data;
-      testUnits = testUnits.slice(0, i).concat(testUnits.slice(i + 1));
+      // delete tsconfig file entry from the list
+      testUnits.splice(i, 1);
       break;
     }
   }
+
   return {
     ok: true,
     value: {
       testUnitData: testUnits,
       tsConfigFileUnitData,
-      symlinks: parsed.symlinks,
+      symlinks: parsed.value.symlinks,
       currentDirectory,
-      globalOptions: parsed.globalOptions,
+      globalOptions: parsed.value.globalOptions,
     },
   };
 }
 
 export interface ParseTestFilesOptions {
+  // If true, content before the first @Filename directive goes into an implicit first file named fileName.
   allowImplicitFirstFile: boolean;
 }
 
@@ -79,31 +86,30 @@ export type ParseFile<T> = (
   fileOptions: Map<string, string>,
 ) => { value: T; error: string | undefined };
 
-export type ParseTestFilesResult<T> =
-  | {
-      ok: true;
-      units: T[];
-      symlinks: Map<string, string>;
-      currentDirectory: string;
-      globalOptions: Map<string, string>;
-      error: string | undefined;
-    }
-  | { ok: false; reason: string };
+export interface ParsedTestFiles<T> {
+  units: T[];
+  symlinks: Map<string, string>;
+  currentDirectory: string;
+  globalOptions: Map<string, string>;
+  error: string | undefined;
+}
 
-export const counters = { reachedSkipTrivia: 0 };
-
-export function parseTestFilesAndSymlinks<T>(code: string, fileName: string, parseFile: ParseFile<T>) {
+export function parseTestFilesAndSymlinks<T>(
+  code: string,
+  fileName: string,
+  parseFile: ParseFile<T>,
+): Result<ParsedTestFiles<T>> {
   return parseTestFilesAndSymlinksWithOptions(code, fileName, parseFile, { allowImplicitFirstFile: false });
 }
 
-const encoder = new TextEncoder();
+const utf8 = new TextEncoder();
 
 export function parseTestFilesAndSymlinksWithOptions<T>(
   code: string,
   fileName: string,
   parseFile: ParseFile<T>,
   options: ParseTestFilesOptions,
-): ParseTestFilesResult<T> {
+): Result<ParsedTestFiles<T>> {
   // List of all the subfiles we've parsed out
   const testUnits: T[] = [];
 
@@ -160,12 +166,12 @@ export function parseTestFilesAndSymlinksWithOptions<T>(
         const shouldSaveFile = !options.allowImplicitFirstFile || currentFileContent.length !== 0 || hasSeenFile;
         if (shouldSaveFile) {
           hasSeenFile = true;
-          const { value, error } = parseFile(currentFileName, currentFileContent, currentFileOptions);
-          if (error !== undefined) {
-            parseError = error;
+          const newTestFile = parseFile(currentFileName, currentFileContent, currentFileOptions);
+          if (newTestFile.error !== undefined) {
+            parseError = newTestFile.error;
             break;
           }
-          testUnits.push(value);
+          testUnits.push(newTestFile.value);
         }
 
         // Reset local data
@@ -177,8 +183,7 @@ export function parseTestFilesAndSymlinksWithOptions<T>(
         // First metadata marker in the file
         let hasContentBeforeFirstFilename = false;
         if (currentFileContent.length !== 0) {
-          counters.reachedSkipTrivia++;
-          const bytes = encoder.encode(currentFileContent);
+          const bytes = utf8.encode(currentFileContent);
           hasContentBeforeFirstFilename = skipTrivia(bytes, 0) !== bytes.length;
         }
         if (hasContentBeforeFirstFilename && !options.allowImplicitFirstFile) {
@@ -192,7 +197,7 @@ export function parseTestFilesAndSymlinksWithOptions<T>(
         currentFileOptions = new Map();
       }
     } else {
-      // Subfile content line
+      // Subfile content line: compiler tests drop leading blank lines, fourslash tests keep them.
       if (options.allowImplicitFirstFile) {
         if (seenContentLine) {
           currentFileContent += "\n";
@@ -215,12 +220,12 @@ export function parseTestFilesAndSymlinksWithOptions<T>(
   // if there are no parse errors so far, parse the rest of the file
   if (parseError === undefined) {
     // EOF, push whatever remains
-    const { value, error } = parseFile(currentFileName, currentFileContent, currentFileOptions);
-    parseError = error;
-    testUnits.push(value);
+    const newTestFile2 = parseFile(currentFileName, currentFileContent, currentFileOptions);
+    parseError = newTestFile2.error;
+    testUnits.push(newTestFile2.value);
   }
 
-  return { ok: true, units: testUnits, symlinks, currentDirectory, globalOptions, error: parseError };
+  return { ok: true, value: { units: testUnits, symlinks, currentDirectory, globalOptions, error: parseError } };
 }
 
 export function extractCompilerSettings(content: string): RawCompilerSettings {
@@ -239,4 +244,3 @@ export function parseSymlinkFromTest(line: string, symlinks: Map<string, string>
   symlinks.set(trimSpace(linkMetaData[2]), trimSpace(linkMetaData[1]));
   return true;
 }
-

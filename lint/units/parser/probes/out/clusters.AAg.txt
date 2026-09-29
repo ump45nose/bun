@@ -1,0 +1,2819 @@
+class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
+
+[01-type-forms / arr]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (13 inputs, 1 distinct)
+    "A[infer U]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / cond]  tsc TS1335 'unique symbol' types are not allowed here.   (26 inputs, 2 distinct)
+    "unique symbol extends B ? C : D"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "A extends unique symbol ? C : D"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / core]  tsc TS1196 Catch clause variable type annotation must be 'any' or 'unknown' if specified.   (19 inputs, 19 distinct)
+    "A[]"  [catch]
+    "keyof A"  [catch]
+    "readonly A[]"  [catch]
+    "unique symbol"  [catch]
+    "() => void"  [catch]
+    "(a: A) => B"  [catch]
+    … 13 more
+
+[01-type-forms / core]  tsc TS1225 Cannot find parameter 'a'.   (6 inputs, 3 distinct)
+    "a is B"  [fnTypeRet,objMethodRet]
+    "asserts a"  [fnTypeRet,objMethodRet]
+    "asserts a is B"  [fnTypeRet,objMethodRet]
+
+[01-type-forms / core]  tsc TS1228 A type predicate is only allowed in return type position for functions and methods.   (30 inputs, 4 distinct)
+    "a is B"  [getterRet]
+    "asserts a"  [getterRet]
+    "asserts a is B"  [getterRet]
+    "this is B"  [satisfies,cast,newArg,tagArg,inst,method,tupleNamed,indexSig,…]
+
+[01-type-forms / core]  tsc TS1334 'unique symbol' types are only allowed on variables in a variable statement.   (1 inputs, 1 distinct)
+    "unique symbol"  [forOf]
+
+[01-type-forms / core]  tsc TS1335 'unique symbol' types are not allowed here.   (23 inputs, 1 distinct)
+    "unique symbol"  [satisfies,cast,newArg,tagArg,inst,method,fnTypeRet,tupleNamed,…]
+
+[01-type-forms / core]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (25 inputs, 1 distinct)
+    "infer U"  [satisfies,cast,newArg,tagArg,inst,method,fnTypeRet,tupleNamed,…]
+
+[01-type-forms / core]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (28 inputs, 1 distinct)
+    "A!"  [satisfies,cast,newArg,tagArg,inst,method,fnTypeRet,tupleNamed,…]
+
+[01-type-forms / fn]  tsc TS1014 A rest parameter must be last in a parameter list.   (12 inputs, 2 distinct)
+    "(...a, b) => void"  [alias,param,arrowRet,callArg,as,field]
+    "(...a: A[], b: B) => void"  [alias,param,arrowRet,callArg,as,field]
+
+[01-type-forms / fn]  tsc TS1016 A required parameter cannot follow an optional parameter.   (6 inputs, 1 distinct)
+    "(a?: A, b: B) => C"  [alias,param,arrowRet,callArg,as,field]
+
+[01-type-forms / fn]  tsc TS1047 A rest parameter cannot be optional.   (6 inputs, 1 distinct)
+    "(...a?: A[]) => void"  [alias,param,arrowRet,callArg,as,field]
+
+[01-type-forms / fn]  tsc TS1100 Invalid use of 'arguments' in strict mode.   (5 inputs, 1 distinct)
+    "(arguments) => void"  [alias,param,arrowRet,callArg,as]
+
+[01-type-forms / fn]  tsc TS1100 Invalid use of 'eval' in strict mode.   (5 inputs, 1 distinct)
+    "(eval) => void"  [alias,param,arrowRet,callArg,as]
+
+[01-type-forms / fn]  tsc TS1210 Code contained in a class is evaluated in JavaScript's strict mode which does not allow this use of 'arguments'. For more information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode.   (1 inputs, 1 distinct)
+    "(arguments) => void"  [field]
+
+[01-type-forms / fn]  tsc TS1210 Code contained in a class is evaluated in JavaScript's strict mode which does not allow this use of 'eval'. For more information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode.   (1 inputs, 1 distinct)
+    "(eval) => void"  [field]
+
+[01-type-forms / fn]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (5 inputs, 1 distinct)
+    "(implements) => void"  [alias,param,arrowRet,callArg,as]
+
+[01-type-forms / fn]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (5 inputs, 1 distinct)
+    "(interface) => void"  [alias,param,arrowRet,callArg,as]
+
+[01-type-forms / fn]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (5 inputs, 1 distinct)
+    "(let) => void"  [alias,param,arrowRet,callArg,as]
+
+[01-type-forms / fn]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (5 inputs, 1 distinct)
+    "(package) => void"  [alias,param,arrowRet,callArg,as]
+
+[01-type-forms / fn]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (20 inputs, 4 distinct)
+    "(public) => void"  [alias,param,arrowRet,callArg,as]
+    "(public, private) => void"  [alias,param,arrowRet,callArg,as]
+    "(public: A) => void"  [alias,param,arrowRet,callArg,as]
+    "(public?: A) => void"  [alias,param,arrowRet,callArg,as]
+
+[01-type-forms / fn]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (5 inputs, 1 distinct)
+    "(static) => void"  [alias,param,arrowRet,callArg,as]
+
+[01-type-forms / fn]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (5 inputs, 1 distinct)
+    "(yield) => void"  [alias,param,arrowRet,callArg,as]
+
+[01-type-forms / fn]  tsc TS1213 Identifier expected. 'implements' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "(implements) => void"  [field]
+
+[01-type-forms / fn]  tsc TS1213 Identifier expected. 'interface' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "(interface) => void"  [field]
+
+[01-type-forms / fn]  tsc TS1213 Identifier expected. 'let' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "(let) => void"  [field]
+
+[01-type-forms / fn]  tsc TS1213 Identifier expected. 'package' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "(package) => void"  [field]
+
+[01-type-forms / fn]  tsc TS1213 Identifier expected. 'public' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (4 inputs, 4 distinct)
+    "(public) => void"  [field]
+    "(public, private) => void"  [field]
+    "(public: A) => void"  [field]
+    "(public?: A) => void"  [field]
+
+[01-type-forms / fn]  tsc TS1213 Identifier expected. 'static' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "(static) => void"  [field]
+
+[01-type-forms / fn]  tsc TS1213 Identifier expected. 'yield' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "(yield) => void"  [field]
+
+[01-type-forms / fn]  tsc TS1228 A type predicate is only allowed in return type position for functions and methods.   (42 inputs, 7 distinct)
+    "new (a) => a is B"  [alias,param,arrowRet,callArg,as,field]
+    "new () => a is B"  [alias,param,arrowRet,callArg,as,field]
+    "new () => asserts a"  [alias,param,arrowRet,callArg,as,field]
+    "(a) => asserts a[]"  [alias,param,arrowRet,callArg,as,field]
+    "(a) => asserts a | B"  [alias,param,arrowRet,callArg,as,field]
+    "(a) => asserts a & B"  [alias,param,arrowRet,callArg,as,field]
+    … 1 more
+
+[01-type-forms / fn]  tsc TS1335 'unique symbol' types are not allowed here.   (6 inputs, 1 distinct)
+    "() => unique symbol"  [alias,param,arrowRet,callArg,as,field]
+
+[01-type-forms / import]  tsc TS1005 '{' expected.   (1 inputs, 1 distinct)
+    "import(\"x\", { with(): void })"  [callArg]
+
+[01-type-forms / import]  tsc TS1042 'readonly' modifier cannot be used here.   (1 inputs, 1 distinct)
+    "import(\"x\", { readonly with: { a: \"b\" } })"  [callArg]
+
+[01-type-forms / import]  tsc TS1141 String literal expected.   (4 inputs, 4 distinct)
+    "import(`x`)"  [callArg]
+    "import(x)"  [callArg]
+    "import(1)"  [callArg]
+    "import(A | B)"  [callArg]
+
+[01-type-forms / import]  tsc TS1162 An object member cannot be declared optional.   (1 inputs, 1 distinct)
+    "import(\"x\", { with?: { a: \"b\" } })"  [callArg]
+
+[01-type-forms / import]  tsc TS1463 'resolution-mode' is the only valid key for type import attributes.   (13 inputs, 1 distinct)
+    "import(\"x\", { with: { \"a\": \"b\" } })"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / import]  tsc TS1464 Type import attributes should have exactly one key - 'resolution-mode' - with value 'import' or 'require'.   (26 inputs, 2 distinct)
+    "import(\"x\", { with: {} })"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "import(\"x\", { with: { a: \"b\", c: \"d\" } })"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / infer]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (104 inputs, 8 distinct)
+    "infer U"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "infer U extends B"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "(infer U)[]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "infer U | V"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "infer U extends B ? C : D"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "A extends B ? infer U : never"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    … 2 more
+
+[01-type-forms / jsdoc]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write '[A]'?   (13 inputs, 1 distinct)
+    "[A]!"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / jsdoc]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (79 inputs, 7 distinct)
+    "A!"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "A!!"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "A![]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "A! | B"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "A!?"  [tupleEl]
+    "(A)!"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    … 1 more
+
+[01-type-forms / jsdoc]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'B'?   (13 inputs, 1 distinct)
+    "A extends B! ? C : D"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / jsdoc]  tsc TS17020 '!' at the start of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (3 inputs, 3 distinct)
+    "!A"  [callArg]
+    "!A | B"  [callArg]
+    "!!A"  [callArg]
+
+[01-type-forms / kw]  tsc TS18050 The value 'null' cannot be used here.   (1 inputs, 1 distinct)
+    "null.b"  [callArg]
+
+[01-type-forms / label]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (16 inputs, 4 distinct)
+    "[let: A]"  [alias,param,arrowRet,callArg]
+    "[let?: A]"  [alias,param,arrowRet,callArg]
+    "[...let: A[]]"  [alias,param,arrowRet,callArg]
+    "[a: A, let: B]"  [alias,param,arrowRet,callArg]
+
+[01-type-forms / label]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (16 inputs, 4 distinct)
+    "[static: A]"  [alias,param,arrowRet,callArg]
+    "[static?: A]"  [alias,param,arrowRet,callArg]
+    "[...static: A[]]"  [alias,param,arrowRet,callArg]
+    "[a: A, static: B]"  [alias,param,arrowRet,callArg]
+
+[01-type-forms / label]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (16 inputs, 4 distinct)
+    "[yield: A]"  [alias,param,arrowRet,callArg]
+    "[yield?: A]"  [alias,param,arrowRet,callArg]
+    "[...yield: A[]]"  [alias,param,arrowRet,callArg]
+    "[a: A, yield: B]"  [alias,param,arrowRet,callArg]
+
+[01-type-forms / label]  tsc TS1335 'unique symbol' types are not allowed here.   (4 inputs, 1 distinct)
+    "[unique: unique symbol]"  [alias,param,arrowRet,callArg]
+
+[01-type-forms / lit]  tsc TS17020 '!' at the start of a type is not valid TypeScript syntax. Did you mean to write '1'?   (1 inputs, 1 distinct)
+    "!1"  [callArg]
+
+[01-type-forms / lit]  tsc TS18050 The value 'null' cannot be used here.   (1 inputs, 1 distinct)
+    "-null"  [callArg]
+
+[01-type-forms / op]  tsc TS1005 'symbol' expected.   (41 inputs, 5 distinct)
+    "unique symbol[]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "unique symbol.x"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "unique (symbol)"  [callArg]
+    "unique [A]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "unique { a: A }"  [ret]
+
+[01-type-forms / op]  tsc TS1330 A property of an interface or type literal whose type is a 'unique symbol' type must be 'readonly'.   (2 inputs, 2 distinct)
+    "unique symbol"  [member]
+    "unique\nsymbol"  [member]
+
+[01-type-forms / op]  tsc TS1331 A property of a class whose type is a 'unique symbol' type must be both 'static' and 'readonly'.   (2 inputs, 2 distinct)
+    "unique symbol"  [field]
+    "unique\nsymbol"  [field]
+
+[01-type-forms / op]  tsc TS1332 A variable whose type is a 'unique symbol' type must be 'const'.   (2 inputs, 2 distinct)
+    "unique symbol"  [var]
+    "unique\nsymbol"  [var]
+
+[01-type-forms / op]  tsc TS1335 'unique symbol' types are not allowed here.   (70 inputs, 6 distinct)
+    "keyof unique symbol"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "unique symbol"  [alias,param,ret,arrowParam,arrowRet,as,callArg,fnTypeParam]
+    "unique\nsymbol"  [alias,param,ret,arrowParam,arrowRet,as,callArg,typeArg,…]
+    "unique symbol | A"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "unique symbol & A"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "unique symbol extends A ? B : C"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / op]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (13 inputs, 1 distinct)
+    "keyof infer U"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / op]  tsc TS1354 'readonly' type modifier is only permitted on array and tuple literal types.   (116 inputs, 9 distinct)
+    "readonly A"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "readonly readonly A[]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "readonly keyof A"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "readonly (A[])"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "readonly Array<A>"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "readonly typeof a"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    … 3 more
+
+[01-type-forms / paren]  tsc TS1330 A property of an interface or type literal whose type is a 'unique symbol' type must be 'readonly'.   (1 inputs, 1 distinct)
+    "(unique symbol)"  [member]
+
+[01-type-forms / paren]  tsc TS1331 A property of a class whose type is a 'unique symbol' type must be both 'static' and 'readonly'.   (1 inputs, 1 distinct)
+    "(unique symbol)"  [field]
+
+[01-type-forms / paren]  tsc TS1332 A variable whose type is a 'unique symbol' type must be 'const'.   (1 inputs, 1 distinct)
+    "(unique symbol)"  [var]
+
+[01-type-forms / paren]  tsc TS1335 'unique symbol' types are not allowed here.   (10 inputs, 1 distinct)
+    "(unique symbol)"  [alias,param,ret,arrowParam,arrowRet,as,callArg,typeArg,…]
+
+[01-type-forms / paren]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (13 inputs, 1 distinct)
+    "(infer U)"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / paren]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'a'?   (13 inputs, 1 distinct)
+    "(a)!"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / pred]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "asserts let"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "asserts static"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "asserts yield"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'a'.   (11 inputs, 11 distinct)
+    "a is B"  [ret]
+    "asserts a"  [ret]
+    "asserts a is B"  [ret]
+    "a is B | C"  [ret]
+    "a is B extends C ? D : E"  [ret]
+    "a is B[]"  [ret]
+    … 5 more
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'abstract'.   (2 inputs, 1 distinct)
+    "asserts abstract"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'any'.   (4 inputs, 2 distinct)
+    "asserts any"  [ret,arrowRet]
+    "any is B"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'asserts'.   (4 inputs, 2 distinct)
+    "asserts asserts"  [ret,arrowRet]
+    "asserts asserts is B"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'async'.   (2 inputs, 1 distinct)
+    "asserts async"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'await'.   (2 inputs, 1 distinct)
+    "asserts await"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'is'.   (2 inputs, 1 distinct)
+    "is is B"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'of'.   (2 inputs, 1 distinct)
+    "asserts of"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'out'.   (2 inputs, 1 distinct)
+    "asserts out"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'readonly'.   (2 inputs, 1 distinct)
+    "asserts readonly"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'string'.   (2 inputs, 1 distinct)
+    "string is B"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'type'.   (2 inputs, 1 distinct)
+    "asserts type"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'undefined'.   (4 inputs, 2 distinct)
+    "asserts undefined"  [ret,arrowRet]
+    "undefined is B"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1225 Cannot find parameter 'unique'.   (2 inputs, 1 distinct)
+    "asserts unique"  [ret,arrowRet]
+
+[01-type-forms / pred]  tsc TS1228 A type predicate is only allowed in return type position for functions and methods.   (31 inputs, 7 distinct)
+    "this is B"  [alias,var,param,arrowParam,as,callArg,field,typeArg,…]
+    "asserts a | B"  [ret,arrowRet]
+    "asserts a[]"  [ret,arrowRet]
+    "asserts is"  [callArg,fnTypeParam]
+    "asserts a & B"  [ret,arrowRet]
+    "asserts this | B"  [ret,arrowRet]
+    … 1 more
+
+[01-type-forms / query]  tsc TS1009 Trailing comma not allowed.   (3 inputs, 1 distinct)
+    "typeof a<B,>"  [arrowRet,callArg,fnTypeParam]
+
+[01-type-forms / query]  tsc TS1099 Type argument list cannot be empty.   (3 inputs, 1 distinct)
+    "typeof a<>"  [arrowRet,callArg,fnTypeParam]
+
+[01-type-forms / query]  tsc TS1141 String literal expected.   (1 inputs, 1 distinct)
+    "typeof import(x)"  [callArg]
+
+[01-type-forms / query]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "typeof let"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / query]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "typeof yield"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / query]  tsc TS1213 Identifier expected. 'let' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "typeof let"  [field]
+
+[01-type-forms / query]  tsc TS1213 Identifier expected. 'yield' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "typeof yield"  [field]
+
+[01-type-forms / query]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'any'?   (13 inputs, 1 distinct)
+    "typeof a!"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / query]  tsc TS18004 No value exists in scope for the shorthand property 'a'. Either declare one or provide an initializer.   (1 inputs, 1 distinct)
+    "typeof {a}"  [callArg]
+
+[01-type-forms / ref]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "implements"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / ref]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "interface"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / ref]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "let"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / ref]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "package"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / ref]  tsc TS1212 Identifier expected. 'private' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "private"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / ref]  tsc TS1212 Identifier expected. 'protected' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "protected"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / ref]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "public"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / ref]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "static"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / ref]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "yield"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / ref]  tsc TS1213 Identifier expected. 'implements' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "implements"  [field]
+
+[01-type-forms / ref]  tsc TS1213 Identifier expected. 'interface' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "interface"  [field]
+
+[01-type-forms / ref]  tsc TS1213 Identifier expected. 'let' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "let"  [field]
+
+[01-type-forms / ref]  tsc TS1213 Identifier expected. 'package' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "package"  [field]
+
+[01-type-forms / ref]  tsc TS1213 Identifier expected. 'private' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "private"  [field]
+
+[01-type-forms / ref]  tsc TS1213 Identifier expected. 'protected' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "protected"  [field]
+
+[01-type-forms / ref]  tsc TS1213 Identifier expected. 'public' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "public"  [field]
+
+[01-type-forms / ref]  tsc TS1213 Identifier expected. 'static' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "static"  [field]
+
+[01-type-forms / ref]  tsc TS1213 Identifier expected. 'yield' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "yield"  [field]
+
+[01-type-forms / ref]  tsc TS1355 A 'const' assertion can only be applied to references to enum members, or string, number, boolean, array, or object literals.   (1 inputs, 1 distinct)
+    "const"  [as]
+
+[01-type-forms / targs]  tsc TS1009 Trailing comma not allowed.   (3 inputs, 1 distinct)
+    "A<B,>"  [arrowRet,callArg,fnTypeParam]
+
+[01-type-forms / targs]  tsc TS1099 Type argument list cannot be empty.   (3 inputs, 1 distinct)
+    "A<>"  [arrowRet,callArg,fnTypeParam]
+
+[01-type-forms / targs]  tsc TS1335 'unique symbol' types are not allowed here.   (13 inputs, 1 distinct)
+    "A<unique symbol>"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / targs]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (13 inputs, 1 distinct)
+    "A<infer B>"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / targs]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'B'?   (13 inputs, 1 distinct)
+    "A<B!>"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / tmpl]  tsc TS1335 'unique symbol' types are not allowed here.   (13 inputs, 1 distinct)
+    "`${unique symbol}`"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / tmpl]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (13 inputs, 1 distinct)
+    "`${infer U}`"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / tuple]  tsc TS1228 A type predicate is only allowed in return type position for functions and methods.   (13 inputs, 1 distinct)
+    "[this is B]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / tuple]  tsc TS1257 A required element cannot follow an optional element.   (26 inputs, 2 distinct)
+    "[A?, B]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+    "[a?: A, b: B]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / tuple]  tsc TS1335 'unique symbol' types are not allowed here.   (13 inputs, 1 distinct)
+    "[unique symbol]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / tuple]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (13 inputs, 1 distinct)
+    "[infer A]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / tuple]  tsc TS1354 'readonly' type modifier is only permitted on array and tuple literal types.   (13 inputs, 1 distinct)
+    "[readonly A]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / tuple]  tsc TS17019 '?' at the end of a type is not valid TypeScript syntax. Did you mean to write 'any'?   (13 inputs, 1 distinct)
+    "[...A?]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / union]  tsc TS1228 A type predicate is only allowed in return type position for functions and methods.   (2 inputs, 1 distinct)
+    "A | asserts a"  [ret,arrowRet]
+
+[01-type-forms / union]  tsc TS1335 'unique symbol' types are not allowed here.   (13 inputs, 1 distinct)
+    "A | unique symbol"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[01-type-forms / union]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (13 inputs, 1 distinct)
+    "A | infer B"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]
+
+[02-object-types / aliasHead]  tsc TS1029 'export' modifier must precede 'declare' modifier.   (1 inputs, 1 distinct)
+    "declare export type X = A"  [-]
+
+[02-object-types / aliasHead]  tsc TS1156 'type' declarations can only be declared inside a block.   (2 inputs, 2 distinct)
+    "if (a) type X = A"  [-]
+    "for (;;) type X = A"  [-]
+
+[02-object-types / aliasHead]  tsc TS1344 'A label is not allowed here.   (1 inputs, 1 distinct)
+    "label: type X = A"  [-]
+
+[02-object-types / aliasName]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "implements"  [alias,aliasGeneric,nsAlias]
+
+[02-object-types / aliasName]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "interface"  [alias,aliasGeneric,nsAlias]
+
+[02-object-types / aliasName]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "let"  [alias,aliasGeneric,nsAlias]
+
+[02-object-types / aliasName]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "package"  [alias,aliasGeneric,nsAlias]
+
+[02-object-types / aliasName]  tsc TS1212 Identifier expected. 'private' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "private"  [alias,aliasGeneric,nsAlias]
+
+[02-object-types / aliasName]  tsc TS1212 Identifier expected. 'protected' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "protected"  [alias,aliasGeneric,nsAlias]
+
+[02-object-types / aliasName]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "public"  [alias,aliasGeneric,nsAlias]
+
+[02-object-types / aliasName]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "static"  [alias,aliasGeneric,nsAlias]
+
+[02-object-types / aliasName]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "yield"  [alias,aliasGeneric,nsAlias]
+
+[02-object-types / aliasName]  tsc TS1214 Identifier expected. 'implements' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "implements"  [exportAlias]
+
+[02-object-types / aliasName]  tsc TS1214 Identifier expected. 'interface' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "interface"  [exportAlias]
+
+[02-object-types / aliasName]  tsc TS1214 Identifier expected. 'let' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "let"  [exportAlias]
+
+[02-object-types / aliasName]  tsc TS1214 Identifier expected. 'package' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "package"  [exportAlias]
+
+[02-object-types / aliasName]  tsc TS1214 Identifier expected. 'private' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "private"  [exportAlias]
+
+[02-object-types / aliasName]  tsc TS1214 Identifier expected. 'protected' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "protected"  [exportAlias]
+
+[02-object-types / aliasName]  tsc TS1214 Identifier expected. 'public' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "public"  [exportAlias]
+
+[02-object-types / aliasName]  tsc TS1214 Identifier expected. 'static' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "static"  [exportAlias]
+
+[02-object-types / aliasName]  tsc TS1214 Identifier expected. 'yield' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "yield"  [exportAlias]
+
+[02-object-types / aliasName]  tsc TS1262 Identifier expected. 'await' is a reserved word at the top-level of a module.   (1 inputs, 1 distinct)
+    "await"  [exportAlias]
+
+[02-object-types / ifaceHead]  tsc TS1029 'export' modifier must precede 'declare' modifier.   (1 inputs, 1 distinct)
+    "declare export interface I {}"  [-]
+
+[02-object-types / ifaceHead]  tsc TS1156 'interface' declarations can only be declared inside a block.   (2 inputs, 2 distinct)
+    "if (a) interface I {}"  [-]
+    "for (;;) interface I {}"  [-]
+
+[02-object-types / ifaceHead]  tsc TS1176 Interface declaration cannot have 'implements' clause.   (3 inputs, 3 distinct)
+    "interface I implements A {}"  [-]
+    "interface I extends A implements B {}"  [-]
+    "interface I implements A, B {}"  [-]
+
+[02-object-types / ifaceHead]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (1 inputs, 1 distinct)
+    "while (a) interface\nI\n{}"  [-]
+
+[02-object-types / ifaceHead]  tsc TS1344 'A label is not allowed here.   (1 inputs, 1 distinct)
+    "label: interface I {}"  [-]
+
+[02-object-types / ifaceName]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "implements"  [iface,ifaceGeneric]
+
+[02-object-types / ifaceName]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (3 inputs, 2 distinct)
+    "in"  [iface]
+    "interface"  [iface,ifaceGeneric]
+
+[02-object-types / ifaceName]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "let"  [iface,ifaceGeneric]
+
+[02-object-types / ifaceName]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "package"  [iface,ifaceGeneric]
+
+[02-object-types / ifaceName]  tsc TS1212 Identifier expected. 'private' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "private"  [iface,ifaceGeneric]
+
+[02-object-types / ifaceName]  tsc TS1212 Identifier expected. 'protected' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "protected"  [iface,ifaceGeneric]
+
+[02-object-types / ifaceName]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "public"  [iface,ifaceGeneric]
+
+[02-object-types / ifaceName]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "static"  [iface,ifaceGeneric]
+
+[02-object-types / ifaceName]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "yield"  [iface,ifaceGeneric]
+
+[02-object-types / ifaceName]  tsc TS1214 Identifier expected. 'implements' is a reserved word in strict mode. Modules are automatically in strict mode.   (2 inputs, 1 distinct)
+    "implements"  [exportIface,exportDefaultIface]
+
+[02-object-types / ifaceName]  tsc TS1214 Identifier expected. 'interface' is a reserved word in strict mode. Modules are automatically in strict mode.   (2 inputs, 1 distinct)
+    "interface"  [exportIface,exportDefaultIface]
+
+[02-object-types / ifaceName]  tsc TS1214 Identifier expected. 'let' is a reserved word in strict mode. Modules are automatically in strict mode.   (2 inputs, 1 distinct)
+    "let"  [exportIface,exportDefaultIface]
+
+[02-object-types / ifaceName]  tsc TS1214 Identifier expected. 'package' is a reserved word in strict mode. Modules are automatically in strict mode.   (2 inputs, 1 distinct)
+    "package"  [exportIface,exportDefaultIface]
+
+[02-object-types / ifaceName]  tsc TS1214 Identifier expected. 'private' is a reserved word in strict mode. Modules are automatically in strict mode.   (2 inputs, 1 distinct)
+    "private"  [exportIface,exportDefaultIface]
+
+[02-object-types / ifaceName]  tsc TS1214 Identifier expected. 'protected' is a reserved word in strict mode. Modules are automatically in strict mode.   (2 inputs, 1 distinct)
+    "protected"  [exportIface,exportDefaultIface]
+
+[02-object-types / ifaceName]  tsc TS1214 Identifier expected. 'public' is a reserved word in strict mode. Modules are automatically in strict mode.   (2 inputs, 1 distinct)
+    "public"  [exportIface,exportDefaultIface]
+
+[02-object-types / ifaceName]  tsc TS1214 Identifier expected. 'static' is a reserved word in strict mode. Modules are automatically in strict mode.   (2 inputs, 1 distinct)
+    "static"  [exportIface,exportDefaultIface]
+
+[02-object-types / ifaceName]  tsc TS1214 Identifier expected. 'yield' is a reserved word in strict mode. Modules are automatically in strict mode.   (2 inputs, 1 distinct)
+    "yield"  [exportIface,exportDefaultIface]
+
+[02-object-types / ifaceName]  tsc TS1262 Identifier expected. 'await' is a reserved word at the top-level of a module.   (2 inputs, 1 distinct)
+    "await"  [exportIface,exportDefaultIface]
+
+[02-object-types / mapped]  tsc TS1030 'readonly' modifier already seen.   (3 inputs, 1 distinct)
+    "readonly readonly [K in A]: B"  [typeLit,iface,param]
+
+[02-object-types / mapped]  tsc TS1070 'public' modifier cannot appear on a type member.   (6 inputs, 2 distinct)
+    "public [K in A]: B"  [typeLit,iface,param]
+    "readonly public [K in A]: B"  [typeLit,iface,param]
+
+[02-object-types / mapped]  tsc TS1070 'static' modifier cannot appear on a type member.   (3 inputs, 1 distinct)
+    "static [K in A]: B"  [typeLit,iface,param]
+
+[02-object-types / mapped]  tsc TS1169 A computed property name in an interface must refer to an expression whose type is a literal type or a 'unique symbol' type.   (13 inputs, 13 distinct)
+    "[K in A as B]: C"  [iface]
+    "[K in A as `x${K}`]: C"  [iface]
+    "[K in A | B]: C"  [iface]
+    "[K in A & B]: C"  [iface]
+    "[K in \"a\" | \"b\"]: C"  [iface]
+    "[K in A as () => void]: B"  [iface]
+    … 7 more
+
+[02-object-types / mapped]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "[let in A]: B"  [typeLit,iface,param]
+
+[02-object-types / mapped]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "[static in A]: B"  [typeLit,iface,param]
+
+[02-object-types / mapped]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (2 inputs, 1 distinct)
+    "[yield in A]: B"  [typeLit,param]
+
+[02-object-types / mapped]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (4 inputs, 2 distinct)
+    "[K in infer U]: B"  [typeLit,param]
+    "[K in A as infer U]: B"  [typeLit,param]
+
+[02-object-types / member]  tsc TS1018 An index signature parameter cannot have an accessibility modifier.   (3 inputs, 1 distinct)
+    "[readonly k: string]: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1021 An index signature must have a type annotation.   (3 inputs, 1 distinct)
+    "[k: string]"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1024 'readonly' modifier can only appear on a property declaration or index signature.   (6 inputs, 2 distinct)
+    "readonly a(): A"  [typeLit,iface,varLit]
+    "readonly new (): A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1030 'readonly' modifier already seen.   (3 inputs, 1 distinct)
+    "readonly readonly a: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1049 A 'set' accessor must have exactly one parameter.   (6 inputs, 2 distinct)
+    "set a(): A"  [typeLit,iface,varLit]
+    "set a(v: A, w: B)"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1051 A 'set' accessor cannot have an optional parameter.   (3 inputs, 1 distinct)
+    "set a(v?: A)"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1053 A 'set' accessor cannot have rest parameter.   (3 inputs, 1 distinct)
+    "set a(...v: A[])"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1054 A 'get' accessor cannot have parameters.   (3 inputs, 1 distinct)
+    "get a(b): A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'abstract' modifier cannot appear on a type member.   (6 inputs, 2 distinct)
+    "abstract a: A"  [typeLit,iface,varLit]
+    "abstract a(): A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'accessor' modifier cannot appear on a type member.   (3 inputs, 1 distinct)
+    "accessor a: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'async' modifier cannot appear on a type member.   (6 inputs, 2 distinct)
+    "async a: A"  [typeLit,iface,varLit]
+    "async a(): A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'declare' modifier cannot appear on a type member.   (6 inputs, 2 distinct)
+    "declare a: A"  [typeLit,iface,varLit]
+    "declare a(): A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'export' modifier cannot appear on a type member.   (3 inputs, 1 distinct)
+    "export a: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'in' modifier cannot appear on a type member.   (3 inputs, 1 distinct)
+    "in a: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'out' modifier cannot appear on a type member.   (3 inputs, 1 distinct)
+    "out a: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'override' modifier cannot appear on a type member.   (3 inputs, 1 distinct)
+    "override a: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'private' modifier cannot appear on a type member.   (3 inputs, 1 distinct)
+    "private a: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'protected' modifier cannot appear on a type member.   (3 inputs, 1 distinct)
+    "protected a: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1070 'public' modifier cannot appear on a type member.   (33 inputs, 8 distinct)
+    "public a: A"  [typeLit,iface,varLit]
+    "public readonly a: A"  [typeLit,iface,varLit]
+    "readonly public a: A"  [typeLit,iface,varLit]
+    "public private a: A"  [typeLit,iface,varLit]
+    "public static override readonly a: A"  [typeLit,iface,varLit]
+    "public a(): A"  [typeLit,iface,varLit]
+    … 2 more
+
+[02-object-types / member]  tsc TS1070 'static' modifier cannot appear on a type member.   (15 inputs, 5 distinct)
+    "static a: A"  [typeLit,iface,varLit]
+    "static readonly a: A"  [typeLit,iface,varLit]
+    "readonly static a: A"  [typeLit,iface,varLit]
+    "static\na: A"  [typeLit,iface,varLit]
+    "static a(): A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1071 'async' modifier cannot appear on an index signature.   (3 inputs, 1 distinct)
+    "async [k: string]: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1071 'declare' modifier cannot appear on an index signature.   (3 inputs, 1 distinct)
+    "declare [k: string]: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1071 'export' modifier cannot appear on an index signature.   (3 inputs, 1 distinct)
+    "export [k: string]: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1071 'public' modifier cannot appear on an index signature.   (3 inputs, 1 distinct)
+    "public [k: string]: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1071 'static' modifier cannot appear on an index signature.   (9 inputs, 3 distinct)
+    "static [k: string]: A"  [typeLit,iface,varLit]
+    "static readonly [k: string]: A"  [typeLit,iface,varLit]
+    "readonly static [k: string]: A"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1094 An accessor cannot have type parameters.   (6 inputs, 2 distinct)
+    "get a<T>(): A"  [typeLit,iface,varLit]
+    "set a<T>(v: A)"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1095 A 'set' accessor cannot have a return type annotation.   (3 inputs, 1 distinct)
+    "set a(v: A): void"  [typeLit,iface,varLit]
+
+[02-object-types / member]  tsc TS1247 A type literal property cannot have an initializer.   (1 inputs, 1 distinct)
+    "{ a: A = 1 }"  [callArg]
+
+[02-object-types / member]  tsc TS1268 An index signature parameter type must be 'string', 'number', 'symbol', or a template literal type.   (3 inputs, 1 distinct)
+    "[k: A | B]: C"  [typeLit,iface,varLit]
+
+[03-signatures / arrowSig]  tsc TS1015 Parameter cannot have question mark and initializer.   (6 inputs, 1 distinct)
+    "a?: A = 1"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1016 A required parameter cannot follow an optional parameter.   (6 inputs, 1 distinct)
+    "a?: A, b: B"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1047 A rest parameter cannot be optional.   (6 inputs, 1 distinct)
+    "...a?: A[]"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1100 Invalid use of 'arguments' in strict mode.   (12 inputs, 2 distinct)
+    "{ arguments }"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "arguments"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1100 Invalid use of 'eval' in strict mode.   (12 inputs, 2 distinct)
+    "{ eval }"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "eval"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (12 inputs, 2 distinct)
+    "{ implements }"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "implements"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (6 inputs, 1 distinct)
+    "interface"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (18 inputs, 3 distinct)
+    "{ let }"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "let"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "let: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (6 inputs, 1 distinct)
+    "package"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1212 Identifier expected. 'private' is a reserved word in strict mode.   (6 inputs, 1 distinct)
+    "private"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1212 Identifier expected. 'protected' is a reserved word in strict mode.   (6 inputs, 1 distinct)
+    "protected"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (36 inputs, 6 distinct)
+    "{ public }"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "public"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "public, private"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "public: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "public?: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "public = 1"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (18 inputs, 3 distinct)
+    "{ static }"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "static"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "static: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (18 inputs, 3 distinct)
+    "{ yield }"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "yield"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "yield: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1335 'unique symbol' types are not allowed here.   (6 inputs, 1 distinct)
+    "a: unique symbol"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (6 inputs, 1 distinct)
+    "a: infer U"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / arrowSig]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (6 inputs, 1 distinct)
+    "a: A!"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+
+[03-signatures / declSig]  tsc TS1015 Parameter cannot have question mark and initializer.   (30 inputs, 2 distinct)
+    "a?: A = 1"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    "a? = 1"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+
+[03-signatures / declSig]  tsc TS1016 A required parameter cannot follow an optional parameter.   (14 inputs, 1 distinct)
+    "a?: A, b: B"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+
+[03-signatures / declSig]  tsc TS1028 Accessibility modifier already seen.   (6 inputs, 2 distinct)
+    "public public a"  [ctor,ctorOverload,declareCtor]
+    "public private a"  [ctor,ctorOverload,declareCtor]
+
+[03-signatures / declSig]  tsc TS1029 'public' modifier must precede 'readonly' modifier.   (3 inputs, 1 distinct)
+    "readonly public a: A"  [ctor,ctorOverload,declareCtor]
+
+[03-signatures / declSig]  tsc TS1030 'readonly' modifier already seen.   (3 inputs, 1 distinct)
+    "readonly readonly a"  [ctor,ctorOverload,declareCtor]
+
+[03-signatures / declSig]  tsc TS1047 A rest parameter cannot be optional.   (15 inputs, 1 distinct)
+    "...a?: A[]"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+
+[03-signatures / declSig]  tsc TS1049 A 'set' accessor must have exactly one parameter.   (1 inputs, 1 distinct)
+    "a, this: A"  [setter]
+
+[03-signatures / declSig]  tsc TS1051 A 'set' accessor cannot have an optional parameter.   (6 inputs, 6 distinct)
+    "a?"  [setter]
+    "a?: A"  [setter]
+    "{ a }?"  [setter]
+    "[a]?"  [setter]
+    "{ a }?: A"  [setter]
+    "readonly?: A"  [setter]
+
+[03-signatures / declSig]  tsc TS1052 A 'set' accessor parameter cannot have an initializer.   (17 inputs, 17 distinct)
+    "a = 1"  [setter]
+    "a: A = 1"  [setter]
+    "a = b"  [setter]
+    "a = () => 1"  [setter]
+    "a = {}"  [setter]
+    "a = (1, 2)"  [setter]
+    … 11 more
+
+[03-signatures / declSig]  tsc TS1053 A 'set' accessor cannot have rest parameter.   (5 inputs, 5 distinct)
+    "...a"  [setter]
+    "...a: A[]"  [setter]
+    "...{ a }"  [setter]
+    "...[a]"  [setter]
+    "...[a, b]: A"  [setter]
+
+[03-signatures / declSig]  tsc TS1100 Invalid use of 'arguments' in strict mode.   (13 inputs, 2 distinct)
+    "{ arguments }"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
+    "arguments"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+
+[03-signatures / declSig]  tsc TS1100 Invalid use of 'eval' in strict mode.   (13 inputs, 2 distinct)
+    "{ eval }"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
+    "eval"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+
+[03-signatures / declSig]  tsc TS1206 Decorators are not valid here.   (117 inputs, 16 distinct)
+    "@d a"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor,setter]
+    "@d a: A"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor,setter]
+    "@d() a: A"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor,setter]
+    "@d @e a: A"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor,setter]
+    "@d ...a: A[]"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor,setter]
+    "@d { a }: A"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor,setter]
+    … 10 more
+
+[03-signatures / declSig]  tsc TS1210 Code contained in a class is evaluated in JavaScript's strict mode which does not allow this use of 'arguments'. For more information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode.   (8 inputs, 2 distinct)
+    "{ arguments }"  [methodOverload,abstractMethod,declareMethod,ctorOverload,declareCtor]
+    "arguments"  [methodOverload,abstractMethod,ctorOverload]
+
+[03-signatures / declSig]  tsc TS1210 Code contained in a class is evaluated in JavaScript's strict mode which does not allow this use of 'eval'. For more information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode.   (8 inputs, 2 distinct)
+    "{ eval }"  [methodOverload,abstractMethod,declareMethod,ctorOverload,declareCtor]
+    "eval"  [methodOverload,abstractMethod,ctorOverload]
+
+[03-signatures / declSig]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (12 inputs, 2 distinct)
+    "{ implements }"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "implements"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+
+[03-signatures / declSig]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (6 inputs, 1 distinct)
+    "interface"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+
+[03-signatures / declSig]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (18 inputs, 3 distinct)
+    "{ let }"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "let"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "let: A"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+
+[03-signatures / declSig]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (6 inputs, 1 distinct)
+    "package"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+
+[03-signatures / declSig]  tsc TS1212 Identifier expected. 'private' is a reserved word in strict mode.   (6 inputs, 1 distinct)
+    "private"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+
+[03-signatures / declSig]  tsc TS1212 Identifier expected. 'protected' is a reserved word in strict mode.   (6 inputs, 1 distinct)
+    "protected"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+
+[03-signatures / declSig]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (36 inputs, 6 distinct)
+    "{ public }"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "public"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "public, private"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "public: A"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "public?: A"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "public = 1"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+
+[03-signatures / declSig]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (18 inputs, 3 distinct)
+    "{ static }"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "static"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "static: A"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+
+[03-signatures / declSig]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (16 inputs, 3 distinct)
+    "{ yield }"  [fnDecl,fnExpr,overload,objMethod,generator,asyncFn]
+    "yield"  [fnDecl,fnExpr,overload,objMethod,asyncFn]
+    "yield: A"  [fnDecl,fnExpr,overload,objMethod,asyncFn]
+
+[03-signatures / declSig]  tsc TS1213 Identifier expected. 'implements' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (12 inputs, 2 distinct)
+    "{ implements }"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "implements"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+
+[03-signatures / declSig]  tsc TS1213 Identifier expected. 'interface' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (6 inputs, 1 distinct)
+    "interface"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+
+[03-signatures / declSig]  tsc TS1213 Identifier expected. 'let' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (18 inputs, 3 distinct)
+    "{ let }"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "let"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "let: A"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+
+[03-signatures / declSig]  tsc TS1213 Identifier expected. 'package' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (6 inputs, 1 distinct)
+    "package"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+
+[03-signatures / declSig]  tsc TS1213 Identifier expected. 'private' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (6 inputs, 1 distinct)
+    "private"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+
+[03-signatures / declSig]  tsc TS1213 Identifier expected. 'protected' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (6 inputs, 1 distinct)
+    "protected"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+
+[03-signatures / declSig]  tsc TS1213 Identifier expected. 'public' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (35 inputs, 7 distinct)
+    "{ public }"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "public"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "public, private"  [method,methodOverload,abstractMethod,ctor,ctorOverload]
+    "public: A"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "public?: A"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "public = 1"  [method,methodOverload,abstractMethod,ctor,ctorOverload]
+    … 1 more
+
+[03-signatures / declSig]  tsc TS1213 Identifier expected. 'static' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (19 inputs, 4 distinct)
+    "{ static }"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "static"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "static: A"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "public static"  [ctorOverload]
+
+[03-signatures / declSig]  tsc TS1213 Identifier expected. 'yield' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (18 inputs, 3 distinct)
+    "{ yield }"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "yield"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+    "yield: A"  [method,methodOverload,abstractMethod,ctor,ctorOverload,setter]
+
+[03-signatures / declSig]  tsc TS1335 'unique symbol' types are not allowed here.   (15 inputs, 1 distinct)
+    "a: unique symbol"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+
+[03-signatures / declSig]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (15 inputs, 1 distinct)
+    "a: infer U"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+
+[03-signatures / declSig]  tsc TS1359 Identifier expected. 'await' is a reserved word that cannot be used here.   (1 inputs, 1 distinct)
+    "{ await }"  [asyncFn]
+
+[03-signatures / declSig]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (15 inputs, 1 distinct)
+    "a: A!"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+
+[03-signatures / memberSig]  tsc TS1013 A rest parameter or binding pattern may not have a trailing comma.   (10 inputs, 2 distinct)
+    "...a,"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "...a: A[],"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1014 A rest parameter must be last in a parameter list.   (5 inputs, 1 distinct)
+    "...a: A[], b: B"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1016 A required parameter cannot follow an optional parameter.   (5 inputs, 1 distinct)
+    "a?: A, b: B"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1047 A rest parameter cannot be optional.   (5 inputs, 1 distinct)
+    "...a?: A[]"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1100 Invalid use of 'arguments' in strict mode.   (10 inputs, 2 distinct)
+    "{ arguments }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "arguments"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1100 Invalid use of 'eval' in strict mode.   (10 inputs, 2 distinct)
+    "{ eval }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "eval"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (10 inputs, 2 distinct)
+    "{ implements }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "implements"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (5 inputs, 1 distinct)
+    "interface"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (15 inputs, 3 distinct)
+    "{ let }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "let"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "let: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (5 inputs, 1 distinct)
+    "package"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1212 Identifier expected. 'private' is a reserved word in strict mode.   (5 inputs, 1 distinct)
+    "private"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1212 Identifier expected. 'protected' is a reserved word in strict mode.   (5 inputs, 1 distinct)
+    "protected"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (25 inputs, 5 distinct)
+    "{ public }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "public"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "public, private"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "public: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "public?: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (15 inputs, 3 distinct)
+    "{ static }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "static"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "static: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (15 inputs, 3 distinct)
+    "{ yield }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "yield"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "yield: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1335 'unique symbol' types are not allowed here.   (5 inputs, 1 distinct)
+    "a: unique symbol"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (5 inputs, 1 distinct)
+    "a: infer U"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / memberSig]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (5 inputs, 1 distinct)
+    "a: A!"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+
+[03-signatures / typeSig]  tsc TS1013 A rest parameter or binding pattern may not have a trailing comma.   (14 inputs, 2 distinct)
+    "...a,"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "...a: A[],"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1014 A rest parameter must be last in a parameter list.   (7 inputs, 1 distinct)
+    "...a: A[], b: B"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1016 A required parameter cannot follow an optional parameter.   (7 inputs, 1 distinct)
+    "a?: A, b: B"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1047 A rest parameter cannot be optional.   (7 inputs, 1 distinct)
+    "...a?: A[]"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1100 Invalid use of 'arguments' in strict mode.   (14 inputs, 2 distinct)
+    "{ arguments }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "arguments"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1100 Invalid use of 'eval' in strict mode.   (14 inputs, 2 distinct)
+    "{ eval }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "eval"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (14 inputs, 2 distinct)
+    "{ implements }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "implements"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "interface"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (21 inputs, 3 distinct)
+    "{ let }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "let"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "let: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "package"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1212 Identifier expected. 'private' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "private"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1212 Identifier expected. 'protected' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "protected"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (35 inputs, 5 distinct)
+    "{ public }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "public"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "public, private"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "public: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "public?: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (21 inputs, 3 distinct)
+    "{ static }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "static"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "static: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (21 inputs, 3 distinct)
+    "{ yield }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "yield"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "yield: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1335 'unique symbol' types are not allowed here.   (7 inputs, 1 distinct)
+    "a: unique symbol"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (7 inputs, 1 distinct)
+    "a: infer U"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[03-signatures / typeSig]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (7 inputs, 1 distinct)
+    "a: A!"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+
+[04-type-params-args / targsExpr]  tsc TS1009 Trailing comma not allowed.   (43 inputs, 1 distinct)
+    "<A,>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,newCall,newNoArgs,newMember,…]
+
+[04-type-params-args / targsExpr]  tsc TS1099 Type argument list cannot be empty.   (44 inputs, 1 distinct)
+    "<>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,newCall,newNoArgs,newMember,…]
+
+[04-type-params-args / targsExpr]  tsc TS1335 'unique symbol' types are not allowed here.   (47 inputs, 1 distinct)
+    "<unique symbol>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]
+
+[04-type-params-args / targsExpr]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (47 inputs, 1 distinct)
+    "<infer U>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]
+
+[04-type-params-args / targsExpr]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (47 inputs, 1 distinct)
+    "<A!>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]
+
+[04-type-params-args / targsExpr]  tsc TS18050 The value 'null' cannot be used here.   (6 inputs, 1 distinct)
+    "<null>"  [instIndex,instPlus,instMinus,instIdent,instNumber,instString]
+
+[04-type-params-args / targsHeritage]  tsc TS1097 'implements' list cannot be empty.   (1 inputs, 1 distinct)
+    "class C extends B implements implements {}"  [-]
+
+[04-type-params-args / targsHeritage]  tsc TS1211 A class declaration without the 'default' modifier must have a name.   (1 inputs, 1 distinct)
+    "class implements implements I {}"  [-]
+
+[04-type-params-args / targsHeritage]  tsc TS1213 Identifier expected. 'implements' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "class implements {}"  [-]
+
+[04-type-params-args / tparams]  tsc TS1092 Type parameters cannot appear on a constructor declaration.   (89 inputs, 89 distinct)
+    "<T>"  [ctor]
+    "<T, U>"  [ctor]
+    "<T, U, V>"  [ctor]
+    "<T extends A>"  [ctor]
+    "<T = A>"  [ctor]
+    "<T extends A = B>"  [ctor]
+    … 83 more
+
+[04-type-params-args / tparams]  tsc TS1094 An accessor cannot have type parameters.   (267 inputs, 89 distinct)
+    "<T>"  [getter,setter,objGetter]
+    "<T, U>"  [getter,setter,objGetter]
+    "<T, U, V>"  [getter,setter,objGetter]
+    "<T extends A>"  [getter,setter,objGetter]
+    "<T = A>"  [getter,setter,objGetter]
+    "<T extends A = B>"  [getter,setter,objGetter]
+    … 83 more
+
+[04-type-params-args / tparams]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (14 inputs, 1 distinct)
+    "<implements>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,iface,alias,objMethod,…]
+
+[04-type-params-args / tparams]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (14 inputs, 1 distinct)
+    "<interface>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,iface,alias,objMethod,…]
+
+[04-type-params-args / tparams]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (14 inputs, 1 distinct)
+    "<let>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,iface,alias,objMethod,…]
+
+[04-type-params-args / tparams]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (14 inputs, 1 distinct)
+    "<package>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,iface,alias,objMethod,…]
+
+[04-type-params-args / tparams]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (14 inputs, 1 distinct)
+    "<public>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,iface,alias,objMethod,…]
+
+[04-type-params-args / tparams]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (14 inputs, 1 distinct)
+    "<static>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,iface,alias,objMethod,…]
+
+[04-type-params-args / tparams]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (14 inputs, 1 distinct)
+    "<yield>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,iface,alias,objMethod,…]
+
+[04-type-params-args / tparams]  tsc TS1213 Identifier expected. 'implements' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (8 inputs, 1 distinct)
+    "<implements>"  [classDecl,classExpr,namedClassExpr,abstractClass,classExtends,method,staticMethod,optionalMethod]
+
+[04-type-params-args / tparams]  tsc TS1213 Identifier expected. 'interface' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (8 inputs, 1 distinct)
+    "<interface>"  [classDecl,classExpr,namedClassExpr,abstractClass,classExtends,method,staticMethod,optionalMethod]
+
+[04-type-params-args / tparams]  tsc TS1213 Identifier expected. 'let' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (8 inputs, 1 distinct)
+    "<let>"  [classDecl,classExpr,namedClassExpr,abstractClass,classExtends,method,staticMethod,optionalMethod]
+
+[04-type-params-args / tparams]  tsc TS1213 Identifier expected. 'package' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (8 inputs, 1 distinct)
+    "<package>"  [classDecl,classExpr,namedClassExpr,abstractClass,classExtends,method,staticMethod,optionalMethod]
+
+[04-type-params-args / tparams]  tsc TS1213 Identifier expected. 'public' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (8 inputs, 1 distinct)
+    "<public>"  [classDecl,classExpr,namedClassExpr,abstractClass,classExtends,method,staticMethod,optionalMethod]
+
+[04-type-params-args / tparams]  tsc TS1213 Identifier expected. 'static' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (8 inputs, 1 distinct)
+    "<static>"  [classDecl,classExpr,namedClassExpr,abstractClass,classExtends,method,staticMethod,optionalMethod]
+
+[04-type-params-args / tparams]  tsc TS1213 Identifier expected. 'yield' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (8 inputs, 1 distinct)
+    "<yield>"  [classDecl,classExpr,namedClassExpr,abstractClass,classExtends,method,staticMethod,optionalMethod]
+
+[04-type-params-args / tparams]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (24 inputs, 1 distinct)
+    "<T extends infer U>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,classDecl,classExpr,…]
+
+[04-type-params-args / tparamsArrow]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "<implements>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt,cast,castParen]
+
+[04-type-params-args / tparamsArrow]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "<interface>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt,cast,castParen]
+
+[04-type-params-args / tparamsArrow]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "<let>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt,cast,castParen]
+
+[04-type-params-args / tparamsArrow]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "<package>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt,cast,castParen]
+
+[04-type-params-args / tparamsArrow]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "<public>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt,cast,castParen]
+
+[04-type-params-args / tparamsArrow]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "<static>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt,cast,castParen]
+
+[04-type-params-args / tparamsArrow]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (7 inputs, 1 distinct)
+    "<yield>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt,cast,castParen]
+
+[04-type-params-args / tparamsArrow]  tsc TS1273 'readonly' modifier cannot appear on a type parameter   (4 inputs, 1 distinct)
+    "<readonly T>"  [arrow,arrowParam,arrowRet,arrowStmt]
+
+[04-type-params-args / tparamsArrow]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (5 inputs, 1 distinct)
+    "<T extends infer U>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt]
+
+[04-type-params-args / tparamsArrow]  tsc TS1354 'readonly' type modifier is only permitted on array and tuple literal types.   (2 inputs, 1 distinct)
+    "<readonly T>"  [cast,castParen]
+
+[04-type-params-args / tparamsArrow]  tsc TS1355 A 'const' assertion can only be applied to references to enum members, or string, number, boolean, array, or object literals.   (2 inputs, 1 distinct)
+    "<const>"  [cast,castParen]
+
+[04-type-params-args / tparamsArrow]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'T'?   (2 inputs, 1 distinct)
+    "<T!>"  [cast,castParen]
+
+[05-assertions / arrow]  tsc TS1015 Parameter cannot have question mark and initializer.   (5 inputs, 1 distinct)
+    "(a?: A = 1) => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS1016 A required parameter cannot follow an optional parameter.   (5 inputs, 1 distinct)
+    "(a?, b) => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS1047 A rest parameter cannot be optional.   (5 inputs, 1 distinct)
+    "(...a?: A[]) => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (20 inputs, 4 distinct)
+    "(public) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(public, private) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(public: A) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(public = 1) => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (10 inputs, 2 distinct)
+    "async (yield: A) => x"  [init,stmt,arg,condTrue,condFalse]
+    "a ? (yield) : b"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS1225 Cannot find parameter 'c'.   (5 inputs, 1 distinct)
+    "a ? (b): c is C => true : d"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS1335 'unique symbol' types are not allowed here.   (5 inputs, 1 distinct)
+    "(): unique symbol => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (5 inputs, 1 distinct)
+    "(): infer U => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (10 inputs, 2 distinct)
+    "(): A! => x"  [init,stmt,arg,condTrue,condFalse]
+    "(a: A!) => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'c'?   (5 inputs, 1 distinct)
+    "a ? (b): c! => d : e"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS18004 No value exists in scope for the shorthand property 'b'. Either declare one or provide an initializer.   (10 inputs, 2 distinct)
+    "a ? ({ b }) : c"  [init,stmt,arg,condTrue,condFalse]
+    "a ? ({ b } = c) : d"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS18004 No value exists in scope for the shorthand property 'c'. Either declare one or provide an initializer.   (5 inputs, 1 distinct)
+    "a ? (b) : { c }"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS18004 No value exists in scope for the shorthand property 'd'. Either declare one or provide an initializer.   (5 inputs, 1 distinct)
+    "a ? (b): c => ({ d }) : e"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS18004 No value exists in scope for the shorthand property 'x'. Either declare one or provide an initializer.   (5 inputs, 1 distinct)
+    "<T>({ x })"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  tsc TS18004 No value exists in scope for the shorthand property 'y'. Either declare one or provide an initializer.   (5 inputs, 1 distinct)
+    "<T>(x: T) => ({ y })"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / as]  tsc TS1102 'delete' cannot be called on an identifier in strict mode.   (5 inputs, 1 distinct)
+    "delete x as T"  [init,stmt,arg,element,return]
+
+[05-assertions / as]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (9 inputs, 2 distinct)
+    "x as let"  [init,stmt,arg,element,return]
+    "let as T"  [init,arg,element,return]
+
+[05-assertions / as]  tsc TS1335 'unique symbol' types are not allowed here.   (5 inputs, 1 distinct)
+    "x as unique symbol"  [init,stmt,arg,element,return]
+
+[05-assertions / as]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (5 inputs, 1 distinct)
+    "x as infer U"  [init,stmt,arg,element,return]
+
+[05-assertions / as]  tsc TS1354 'readonly' type modifier is only permitted on array and tuple literal types.   (5 inputs, 1 distinct)
+    "x as readonly const"  [init,stmt,arg,element,return]
+
+[05-assertions / as]  tsc TS1355 A 'const' assertion can only be applied to references to enum members, or string, number, boolean, array, or object literals.   (34 inputs, 7 distinct)
+    "x as const"  [init,stmt,arg,return]
+    "x as const as T"  [init,stmt,arg,element,return]
+    "x as const satisfies T"  [init,stmt,arg,element,return]
+    "(x as const)"  [init,stmt,arg,element,return]
+    "[x as const]"  [init,stmt,arg,element,return]
+    "{ a: x as const }"  [init,stmt,arg,element,return]
+    … 1 more
+
+[05-assertions / as]  tsc TS1375 'await' expressions are only allowed at the top level of a file when that file is a module, but this file has no imports or exports. Consider adding an empty 'export {}' to make this file a module.   (4 inputs, 1 distinct)
+    "await x as T"  [init,stmt,arg,element]
+
+[05-assertions / as]  tsc TS17013 Meta-property 'new.target' is only allowed in the body of a function declaration, function expression, or constructor.   (4 inputs, 1 distinct)
+    "new.target as T"  [init,stmt,arg,element]
+
+[05-assertions / as]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'T'?   (5 inputs, 1 distinct)
+    "x as T!"  [init,stmt,arg,element,return]
+
+[05-assertions / cast]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (4 inputs, 1 distinct)
+    "<implements>x"  [init,stmt,arg,operand]
+
+[05-assertions / cast]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (4 inputs, 1 distinct)
+    "<interface>x"  [init,stmt,arg,operand]
+
+[05-assertions / cast]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (4 inputs, 1 distinct)
+    "<let>x"  [init,stmt,arg,operand]
+
+[05-assertions / cast]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (4 inputs, 1 distinct)
+    "<package>x"  [init,stmt,arg,operand]
+
+[05-assertions / cast]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (11 inputs, 3 distinct)
+    "<public>x"  [init,stmt,arg,operand]
+    "<public>(x)"  [init,stmt,arg,operand]
+    "<public>(x) => x"  [init,stmt,arg]
+
+[05-assertions / cast]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (11 inputs, 3 distinct)
+    "<static>x"  [init,stmt,arg,operand]
+    "<static>(x)"  [init,stmt,arg,operand]
+    "<static>(x) => x"  [init,stmt,arg]
+
+[05-assertions / cast]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (8 inputs, 2 distinct)
+    "<T>yield"  [init,stmt,arg,operand]
+    "<yield>x"  [init,stmt,arg,operand]
+
+[05-assertions / cast]  tsc TS1335 'unique symbol' types are not allowed here.   (4 inputs, 1 distinct)
+    "<unique symbol>x"  [init,stmt,arg,operand]
+
+[05-assertions / cast]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (4 inputs, 1 distinct)
+    "<infer U>x"  [init,stmt,arg,operand]
+
+[05-assertions / cast]  tsc TS1355 A 'const' assertion can only be applied to references to enum members, or string, number, boolean, array, or object literals.   (8 inputs, 2 distinct)
+    "<const>x"  [init,stmt,arg,operand]
+    "<const>(x)"  [init,stmt,arg,operand]
+
+[05-assertions / cast]  tsc TS1375 'await' expressions are only allowed at the top level of a file when that file is a module, but this file has no imports or exports. Consider adding an empty 'export {}' to make this file a module.   (4 inputs, 1 distinct)
+    "<T>await x"  [init,stmt,arg,operand]
+
+[05-assertions / cast]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (4 inputs, 1 distinct)
+    "<A!>x"  [init,stmt,arg,operand]
+
+[05-assertions / catch]  tsc TS1196 Catch clause variable type annotation must be 'any' or 'unknown' if specified.   (4 inputs, 4 distinct)
+    "try {} catch (e: () => void) {}"  [-]
+    "try {} catch (e: { a: A }) {}"  [-]
+    "try {} catch ({ a }: { a: A }) {}"  [-]
+    "try {} catch (e: unique symbol) {}"  [-]
+
+[05-assertions / catch]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (1 inputs, 1 distinct)
+    "try {} catch (let: any) {}"  [-]
+
+[05-assertions / nonNull]  tsc TS1375 'await' expressions are only allowed at the top level of a file when that file is a module, but this file has no imports or exports. Consider adding an empty 'export {}' to make this file a module.   (3 inputs, 1 distinct)
+    "await x!"  [stmt,init,arg]
+
+[05-assertions / nonNull]  tsc TS17013 Meta-property 'new.target' is only allowed in the body of a function declaration, function expression, or constructor.   (3 inputs, 1 distinct)
+    "new.target!"  [stmt,init,arg]
+
+[05-assertions / objLit]  tsc TS1094 An accessor cannot have type parameters.   (3 inputs, 1 distinct)
+    "{ get a<T>() { return 1 } }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS1095 A 'set' accessor cannot have a return type annotation.   (3 inputs, 1 distinct)
+    "{ set a(v: A): void {} }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "{ public }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "{ static }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS1355 A 'const' assertion can only be applied to references to enum members, or string, number, boolean, array, or object literals.   (3 inputs, 1 distinct)
+    "{ a: b as const }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'abstract'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ abstract }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'accessor'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ accessor }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'as'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ as }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'asserts'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ asserts }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'declare'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ declare }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'get'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ get, set }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'infer'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ infer }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'is'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ is }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'keyof'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ keyof }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'out'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ out }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'override'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ override }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'readonly'. Either declare one or provide an initializer.   (6 inputs, 2 distinct)
+    "{ readonly }"  [init,arg,paren]
+    "{ readonly, a }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'satisfies'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ satisfies }"  [init,arg,paren]
+
+[05-assertions / objLit]  tsc TS18004 No value exists in scope for the shorthand property 'type'. Either declare one or provide an initializer.   (3 inputs, 1 distinct)
+    "{ type }"  [init,arg,paren]
+
+[05-assertions / target]  tsc TS1355 A 'const' assertion can only be applied to references to enum members, or string, number, boolean, array, or object literals.   (7 inputs, 7 distinct)
+    "const x = y as const"  [-]
+    "const x = (y) as const"  [-]
+    "const x = (y as const)"  [-]
+    "const x = y.z as const"  [-]
+    "const x = E.A as const"  [-]
+    "const x = null as const"  [-]
+    … 1 more
+
+[05-assertions / target]  tsc TS1431 'for await' loops are only allowed at the top level of a file when that file is a module, but this file has no imports or exports. Consider adding an empty 'export {}' to make this file a module.   (2 inputs, 2 distinct)
+    "for await (x as T of y) {}"  [-]
+    "for await ((x as T) of y) {}"  [-]
+
+[05-assertions / target]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'T'?   (1 inputs, 1 distinct)
+    "(x as T!) = y"  [-]
+
+[05-assertions / target]  tsc TS18004 No value exists in scope for the shorthand property 'a'. Either declare one or provide an initializer.   (1 inputs, 1 distinct)
+    "({ a = 1 as T } = y)"  [-]
+
+[05-assertions / varAnnot]  tsc TS1039 Initializers are not allowed in ambient contexts.   (2 inputs, 2 distinct)
+    "declare let x: T = 1"  [-]
+    "declare const x: T = 1"  [-]
+
+[05-assertions / varAnnot]  tsc TS1182 A destructuring declaration must have an initializer.   (2 inputs, 2 distinct)
+    "let { a }: T"  [-]
+    "let [a]: T"  [-]
+
+[05-assertions / varAnnot]  tsc TS1255 A definite assignment assertion '!' is not permitted in this context.   (1 inputs, 1 distinct)
+    "declare var x!: T"  [-]
+
+[05-assertions / varAnnot]  tsc TS1263 Declarations with initializers cannot also have definite assignment assertions.   (3 inputs, 3 distinct)
+    "let x!: T = 1"  [-]
+    "const x!: T = 1"  [-]
+    "using x!: T = y"  [-]
+
+[05-assertions / varAnnot]  tsc TS1332 A variable whose type is a 'unique symbol' type must be 'const'.   (2 inputs, 2 distinct)
+    "let x: unique symbol = y"  [-]
+    "declare let x: unique symbol"  [-]
+
+[05-assertions / varAnnot]  tsc TS1431 'for await' loops are only allowed at the top level of a file when that file is a module, but this file has no imports or exports. Consider adding an empty 'export {}' to make this file a module.   (1 inputs, 1 distinct)
+    "for await (const x: T of y) {}"  [-]
+
+[06-class-members / classHead]  tsc TS1029 'export' modifier must precede 'declare' modifier.   (1 inputs, 1 distinct)
+    "declare export class C {}"  [-]
+
+[06-class-members / classHead]  tsc TS1211 A class declaration without the 'default' modifier must have a name.   (1 inputs, 1 distinct)
+    "class implements implements I {}"  [-]
+
+[06-class-members / classHead]  tsc TS1213 Identifier expected. 'implements' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "class implements {}"  [-]
+
+[06-class-members / classHead]  tsc TS1213 Identifier expected. 'interface' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "class interface {}"  [-]
+
+[06-class-members / classHead]  tsc TS1213 Identifier expected. 'let' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "class let {}"  [-]
+
+[06-class-members / classHead]  tsc TS1213 Identifier expected. 'package' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "class package {}"  [-]
+
+[06-class-members / classHead]  tsc TS1213 Identifier expected. 'private' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "class private {}"  [-]
+
+[06-class-members / classHead]  tsc TS1213 Identifier expected. 'protected' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "class protected {}"  [-]
+
+[06-class-members / classHead]  tsc TS1213 Identifier expected. 'public' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "class public {}"  [-]
+
+[06-class-members / classHead]  tsc TS1213 Identifier expected. 'static' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "class static {}"  [-]
+
+[06-class-members / classHead]  tsc TS1213 Identifier expected. 'yield' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "class yield {}"  [-]
+
+[06-class-members / classHead]  tsc TS1222 An overload signature cannot be declared as a generator.   (1 inputs, 1 distinct)
+    "abstract class C { abstract *m(): any; }"  [-]
+
+[06-class-members / classHead]  tsc TS1242 'abstract' modifier can only appear on a class, method, or property declaration.   (1 inputs, 1 distinct)
+    "abstract class C { abstract constructor(); }"  [-]
+
+[06-class-members / classHead]  tsc TS1243 'async' modifier cannot be used with 'abstract' modifier.   (1 inputs, 1 distinct)
+    "abstract class C { abstract async m(): Promise<void>; }"  [-]
+
+[06-class-members / classHead]  tsc TS1243 'static' modifier cannot be used with 'abstract' modifier.   (1 inputs, 1 distinct)
+    "abstract class C { abstract static m(): void; }"  [-]
+
+[06-class-members / classHead]  tsc TS1267 Property 'x' cannot have an initializer because it is marked abstract.   (1 inputs, 1 distinct)
+    "abstract class C { abstract x: T = 1; }"  [-]
+
+[06-class-members / member]  tsc TS1005 '{' expected.   (21 inputs, 7 distinct)
+    "get x(): T; get x() { return 1 }"  [class,abstractClass,classExpr]
+    "set x(v: T); set x(v) {}"  [class,abstractClass,classExpr]
+    "get x(): T;"  [class,abstractClass,classExpr]
+    "set x(v: T);"  [class,abstractClass,classExpr]
+    "get x();"  [class,abstractClass,classExpr]
+    "set x(v);"  [class,abstractClass,classExpr]
+    … 1 more
+
+[06-class-members / member]  tsc TS1024 'readonly' modifier can only appear on a property declaration or index signature.   (2 inputs, 2 distinct)
+    "readonly constructor() {}"  [abstractClass]
+    "readonly get x() { return 1 }"  [abstractClass]
+
+[06-class-members / member]  tsc TS1028 Accessibility modifier already seen.   (9 inputs, 3 distinct)
+    "public private x: T;"  [class,abstractClass,declareClass,classExpr]
+    "private protected x: T;"  [class,abstractClass,declareClass,classExpr]
+    "public public x: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1029 'abstract' modifier must precede 'override' modifier.   (1 inputs, 1 distinct)
+    "override abstract x: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1029 'override' modifier must precede 'readonly' modifier.   (4 inputs, 1 distinct)
+    "readonly override x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1029 'public' modifier must precede 'abstract' modifier.   (1 inputs, 1 distinct)
+    "abstract public x: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1029 'public' modifier must precede 'async' modifier.   (3 inputs, 1 distinct)
+    "async public m() {}"  [class,abstractClass,classExpr]
+
+[06-class-members / member]  tsc TS1029 'public' modifier must precede 'override' modifier.   (4 inputs, 1 distinct)
+    "override public x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1029 'public' modifier must precede 'readonly' modifier.   (4 inputs, 1 distinct)
+    "readonly public x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1029 'public' modifier must precede 'static' modifier.   (5 inputs, 2 distinct)
+    "static readonly public x: T;"  [class,abstractClass,declareClass,classExpr]
+    "static public x: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1029 'static' modifier must precede 'override' modifier.   (1 inputs, 1 distinct)
+    "override static x: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1029 'static' modifier must precede 'readonly' modifier.   (5 inputs, 2 distinct)
+    "readonly static [k: string]: T;"  [class,abstractClass,declareClass,classExpr]
+    "readonly static x: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1030 'declare' modifier already seen.   (1 inputs, 1 distinct)
+    "declare declare x: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1030 'override' modifier already seen.   (1 inputs, 1 distinct)
+    "override override x: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1030 'readonly' modifier already seen.   (1 inputs, 1 distinct)
+    "readonly readonly x: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1031 'declare' modifier cannot appear on class elements of this kind.   (12 inputs, 3 distinct)
+    "declare constructor();"  [class,abstractClass,declareClass,classExpr]
+    "declare get x(): T;"  [class,abstractClass,declareClass,classExpr]
+    "declare set x(v: T);"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1036 Statements are not allowed in ambient contexts.   (3 inputs, 3 distinct)
+    "static { x = 1 }"  [declareClass]
+    "static { this.x = <T>1 }"  [declareClass]
+    "static { (a: A): void => {} }"  [declareClass]
+
+[06-class-members / member]  tsc TS1039 Initializers are not allowed in ambient contexts.   (23 inputs, 23 distinct)
+    "static accessor x = 1;"  [declareClass]
+    "accessor #x = 1;"  [declareClass]
+    "accessor [x] = 1;"  [declareClass]
+    "accessor \"x\" = 1;"  [declareClass]
+    "accessor 1 = 1;"  [declareClass]
+    "accessor\nx = 1;"  [declareClass]
+    … 17 more
+
+[06-class-members / member]  tsc TS1040 'async' modifier cannot be used in an ambient context.   (10 inputs, 10 distinct)
+    "async abstract m(): void;"  [declareClass]
+    "async public m() {}"  [declareClass]
+    "static async *m() {}"  [declareClass]
+    "public static async *m() {}"  [declareClass]
+    "async m(): Promise<void> {}"  [declareClass]
+    "async m(): Promise<void>;"  [declareClass]
+    … 4 more
+
+[06-class-members / member]  tsc TS1051 A 'set' accessor cannot have an optional parameter.   (4 inputs, 1 distinct)
+    "set x(a?) {}"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1052 A 'set' accessor parameter cannot have an initializer.   (4 inputs, 1 distinct)
+    "set x(a = 1) {}"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1053 A 'set' accessor cannot have rest parameter.   (4 inputs, 1 distinct)
+    "set x(...a) {}"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1071 'abstract' modifier cannot appear on an index signature.   (1 inputs, 1 distinct)
+    "abstract [k: string]: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1071 'accessor' modifier cannot appear on an index signature.   (1 inputs, 1 distinct)
+    "accessor [k: string]: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1071 'async' modifier cannot appear on an index signature.   (1 inputs, 1 distinct)
+    "async [k: string]: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1071 'declare' modifier cannot appear on an index signature.   (1 inputs, 1 distinct)
+    "declare [k: string]: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1071 'override' modifier cannot appear on an index signature.   (1 inputs, 1 distinct)
+    "override [k: string]: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1071 'private' modifier cannot appear on an index signature.   (1 inputs, 1 distinct)
+    "private [k: string]: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1071 'public' modifier cannot appear on an index signature.   (1 inputs, 1 distinct)
+    "public [k: string]: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1089 'override' modifier cannot appear on a constructor declaration.   (1 inputs, 1 distinct)
+    "override constructor() {}"  [abstractClass]
+
+[06-class-members / member]  tsc TS1089 'static' modifier cannot appear on a constructor declaration.   (1 inputs, 1 distinct)
+    "static constructor() {}"  [abstractClass]
+
+[06-class-members / member]  tsc TS1092 Type parameters cannot appear on a constructor declaration.   (4 inputs, 1 distinct)
+    "constructor<T>() {}"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1093 Type annotation cannot appear on a constructor declaration.   (8 inputs, 2 distinct)
+    "constructor(): T {}"  [class,abstractClass,declareClass,classExpr]
+    "constructor(): void;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1094 An accessor cannot have type parameters.   (8 inputs, 2 distinct)
+    "get x<T>() { return 1 }"  [class,abstractClass,declareClass,classExpr]
+    "set x<T>(v) {}"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1095 A 'set' accessor cannot have a return type annotation.   (4 inputs, 1 distinct)
+    "set x(v: T): void {}"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1166 A computed property name in a class property declaration must have a simple literal type or a 'unique symbol' type.   (16 inputs, 4 distinct)
+    "[k = 1]: T;"  [class,abstractClass,declareClass,classExpr]
+    "[k as string]: T;"  [class,abstractClass,declareClass,classExpr]
+    "[<string>k]: T;"  [class,abstractClass,declareClass,classExpr]
+    "[k!]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1183 An implementation cannot be declared in ambient contexts.   (87 inputs, 87 distinct)
+    "x\n(){}"  [declareClass]
+    "x\n<T>(){}"  [declareClass]
+    "x<T>\n() {}"  [declareClass]
+    "m() {}"  [declareClass]
+    "m(): void {}"  [declareClass]
+    "m?() {}"  [declareClass]
+    … 81 more
+
+[06-class-members / member]  tsc TS1184 Modifiers cannot appear here.   (28 inputs, 7 distinct)
+    "public static {}"  [class,abstractClass,declareClass,classExpr]
+    "static static {}"  [class,abstractClass,declareClass,classExpr]
+    "readonly static {}"  [class,abstractClass,declareClass,classExpr]
+    "declare static {}"  [class,abstractClass,declareClass,classExpr]
+    "abstract static {}"  [class,abstractClass,declareClass,classExpr]
+    "async static {}"  [class,abstractClass,declareClass,classExpr]
+    … 1 more
+
+[06-class-members / member]  tsc TS1213 Identifier expected. 'let' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (3 inputs, 1 distinct)
+    "[let: string]: T;"  [class,abstractClass,classExpr]
+
+[06-class-members / member]  tsc TS1213 Identifier expected. 'static' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (3 inputs, 1 distinct)
+    "[static: string]: T;"  [class,abstractClass,classExpr]
+
+[06-class-members / member]  tsc TS1213 Identifier expected. 'yield' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (3 inputs, 1 distinct)
+    "[yield: string]: T;"  [class,abstractClass,classExpr]
+
+[06-class-members / member]  tsc TS1221 Generators are not allowed in an ambient context.   (6 inputs, 6 distinct)
+    "*m() {}"  [declareClass]
+    "*m(): Generator {}"  [declareClass]
+    "*m(): any;"  [declareClass]
+    "*m?() {}"  [declareClass]
+    "*m<T>() {}"  [declareClass]
+    "*m(): any; *m() {}"  [declareClass]
+
+[06-class-members / member]  tsc TS1222 An overload signature cannot be declared as a generator.   (9 inputs, 3 distinct)
+    "*m(): any;"  [class,abstractClass,classExpr]
+    "async *m(): any;"  [class,abstractClass,classExpr]
+    "*m(): any; *m() {}"  [class,abstractClass,classExpr]
+
+[06-class-members / member]  tsc TS1242 'abstract' modifier can only appear on a class, method, or property declaration.   (4 inputs, 1 distinct)
+    "abstract constructor();"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1243 'accessor' modifier cannot be used with 'declare' modifier.   (4 inputs, 1 distinct)
+    "declare accessor x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1243 'accessor' modifier cannot be used with 'readonly' modifier.   (4 inputs, 1 distinct)
+    "readonly accessor x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1243 'async' modifier cannot be used with 'abstract' modifier.   (2 inputs, 2 distinct)
+    "abstract async m(): void;"  [abstractClass]
+    "async abstract m(): void;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1243 'override' modifier cannot be used with 'declare' modifier.   (4 inputs, 1 distinct)
+    "declare override x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1243 'static' modifier cannot be used with 'abstract' modifier.   (2 inputs, 2 distinct)
+    "static abstract x: T;"  [abstractClass]
+    "abstract static x: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1244 Abstract methods can only appear within an abstract class.   (11 inputs, 4 distinct)
+    "abstract async m(): void;"  [class,declareClass,classExpr]
+    "async abstract m(): void;"  [class,classExpr]
+    "abstract get x(): T;"  [class,declareClass,classExpr]
+    "abstract set x(v: T);"  [class,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1253 Abstract properties can only appear within an abstract class.   (24 inputs, 8 distinct)
+    "public abstract x: T;"  [class,declareClass,classExpr]
+    "abstract public x: T;"  [class,declareClass,classExpr]
+    "readonly abstract x: T;"  [class,declareClass,classExpr]
+    "abstract override x: T;"  [class,declareClass,classExpr]
+    "override abstract x: T;"  [class,declareClass,classExpr]
+    "declare abstract x: T;"  [class,declareClass,classExpr]
+    … 2 more
+
+[06-class-members / member]  tsc TS1255 A definite assignment assertion '!' is not permitted in this context.   (11 inputs, 8 distinct)
+    "static #x!: T;"  [class,abstractClass,declareClass,classExpr]
+    "static x!: T;"  [abstractClass]
+    "x!: T;"  [declareClass]
+    "x !: T;"  [declareClass]
+    "\"x\"!: T;"  [declareClass]
+    "1!: T;"  [declareClass]
+    … 2 more
+
+[06-class-members / member]  tsc TS1263 Declarations with initializers cannot also have definite assignment assertions.   (8 inputs, 2 distinct)
+    "x!: T = 1;"  [class,abstractClass,declareClass,classExpr]
+    "x! = 1;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1264 Declarations with definite assignment assertions must also have type annotations.   (4 inputs, 1 distinct)
+    "x!;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1268 An index signature parameter type must be 'string', 'number', 'symbol', or a template literal type.   (8 inputs, 2 distinct)
+    "[k: A | B]: T;"  [class,abstractClass,declareClass,classExpr]
+    "[k: () => void]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / member]  tsc TS1276 An 'accessor' property cannot be declared optional.   (1 inputs, 1 distinct)
+    "accessor x?: T;"  [abstractClass]
+
+[06-class-members / member]  tsc TS1318 An abstract accessor cannot have an implementation.   (1 inputs, 1 distinct)
+    "abstract get x() { return 1 }"  [abstractClass]
+
+[06-class-members / member]  tsc TS1331 A property of a class whose type is a 'unique symbol' type must be both 'static' and 'readonly'.   (8 inputs, 2 distinct)
+    "x: unique symbol;"  [class,abstractClass,declareClass,classExpr]
+    "readonly x: unique symbol;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1005 '{' expected.   (6 inputs, 2 distinct)
+    "get m(): void;"  [class,abstractClass,classExpr]
+    "set m(): void;"  [class,abstractClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1024 'readonly' modifier can only appear on a property declaration or index signature.   (32 inputs, 8 distinct)
+    "readonly m() {}"  [class,abstractClass,declareClass,classExpr]
+    "readonly m(): void;"  [class,abstractClass,declareClass,classExpr]
+    "readonly get x() { return 1 }"  [class,abstractClass,declareClass,classExpr]
+    "readonly set x(v) {}"  [class,abstractClass,declareClass,classExpr]
+    "readonly *m() {}"  [class,abstractClass,declareClass,classExpr]
+    "readonly constructor() {}"  [class,abstractClass,declareClass,classExpr]
+    … 2 more
+
+[06-class-members / modifier]  tsc TS1028 Accessibility modifier already seen.   (12 inputs, 3 distinct)
+    "public public x: T;"  [class,abstractClass,declareClass,classExpr]
+    "private private x: T;"  [class,abstractClass,declareClass,classExpr]
+    "protected protected x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1029 'private' modifier must precede 'static' modifier.   (4 inputs, 1 distinct)
+    "static private x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1029 'protected' modifier must precede 'static' modifier.   (4 inputs, 1 distinct)
+    "static protected x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1029 'public' modifier must precede 'static' modifier.   (4 inputs, 1 distinct)
+    "static public x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1029 'static' modifier must precede 'override' modifier.   (4 inputs, 1 distinct)
+    "override static x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1029 'static' modifier must precede 'readonly' modifier.   (4 inputs, 1 distinct)
+    "readonly static x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1030 'declare' modifier already seen.   (4 inputs, 1 distinct)
+    "declare declare x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1030 'override' modifier already seen.   (4 inputs, 1 distinct)
+    "override override x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1030 'readonly' modifier already seen.   (4 inputs, 1 distinct)
+    "readonly readonly x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1031 'declare' modifier cannot appear on class elements of this kind.   (32 inputs, 8 distinct)
+    "declare m() {}"  [class,abstractClass,declareClass,classExpr]
+    "declare m(): void;"  [class,abstractClass,declareClass,classExpr]
+    "declare get x() { return 1 }"  [class,abstractClass,declareClass,classExpr]
+    "declare set x(v) {}"  [class,abstractClass,declareClass,classExpr]
+    "declare *m() {}"  [class,abstractClass,declareClass,classExpr]
+    "declare constructor() {}"  [class,abstractClass,declareClass,classExpr]
+    … 2 more
+
+[06-class-members / modifier]  tsc TS1031 'export' modifier cannot appear on class elements of this kind.   (8 inputs, 2 distinct)
+    "export\nx: T;"  [class,abstractClass,declareClass,classExpr]
+    "export\nm() {}"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1039 Initializers are not allowed in ambient contexts.   (27 inputs, 24 distinct)
+    "declare x = 1;"  [class,abstractClass,declareClass,classExpr]
+    "public x = 1;"  [declareClass]
+    "public = 1;"  [declareClass]
+    "private x = 1;"  [declareClass]
+    "private = 1;"  [declareClass]
+    "protected x = 1;"  [declareClass]
+    … 18 more
+
+[06-class-members / modifier]  tsc TS1040 'async' modifier cannot be used in an ambient context.   (9 inputs, 9 distinct)
+    "public async m() {}"  [declareClass]
+    "private async m() {}"  [declareClass]
+    "protected async m() {}"  [declareClass]
+    "static async m() {}"  [declareClass]
+    "override async m() {}"  [declareClass]
+    "async m() {}"  [declareClass]
+    … 3 more
+
+[06-class-members / modifier]  tsc TS1049 A 'set' accessor must have exactly one parameter.   (1 inputs, 1 distinct)
+    "set m(): void;"  [declareClass]
+
+[06-class-members / modifier]  tsc TS1071 'abstract' modifier cannot appear on an index signature.   (4 inputs, 1 distinct)
+    "abstract [k: string]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1071 'accessor' modifier cannot appear on an index signature.   (4 inputs, 1 distinct)
+    "accessor [k: string]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1071 'async' modifier cannot appear on an index signature.   (4 inputs, 1 distinct)
+    "async [k: string]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1071 'declare' modifier cannot appear on an index signature.   (4 inputs, 1 distinct)
+    "declare [k: string]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1071 'override' modifier cannot appear on an index signature.   (4 inputs, 1 distinct)
+    "override [k: string]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1071 'private' modifier cannot appear on an index signature.   (4 inputs, 1 distinct)
+    "private [k: string]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1071 'protected' modifier cannot appear on an index signature.   (4 inputs, 1 distinct)
+    "protected [k: string]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1071 'public' modifier cannot appear on an index signature.   (4 inputs, 1 distinct)
+    "public [k: string]: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1089 'override' modifier cannot appear on a constructor declaration.   (4 inputs, 1 distinct)
+    "override constructor() {}"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1089 'static' modifier cannot appear on a constructor declaration.   (4 inputs, 1 distinct)
+    "static constructor() {}"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1183 An implementation cannot be declared in ambient contexts.   (107 inputs, 107 distinct)
+    "public m() {}"  [declareClass]
+    "public get x() { return 1 }"  [declareClass]
+    "public set x(v) {}"  [declareClass]
+    "public constructor() {}"  [declareClass]
+    "public() {}"  [declareClass]
+    "public<T>() {}"  [declareClass]
+    … 101 more
+
+[06-class-members / modifier]  tsc TS1184 Modifiers cannot appear here.   (36 inputs, 9 distinct)
+    "public static { }"  [class,abstractClass,declareClass,classExpr]
+    "private static { }"  [class,abstractClass,declareClass,classExpr]
+    "protected static { }"  [class,abstractClass,declareClass,classExpr]
+    "readonly static { }"  [class,abstractClass,declareClass,classExpr]
+    "static static { }"  [class,abstractClass,declareClass,classExpr]
+    "abstract static { }"  [class,abstractClass,declareClass,classExpr]
+    … 3 more
+
+[06-class-members / modifier]  tsc TS1221 Generators are not allowed in an ambient context.   (5 inputs, 5 distinct)
+    "public *m() {}"  [declareClass]
+    "private *m() {}"  [declareClass]
+    "protected *m() {}"  [declareClass]
+    "static *m() {}"  [declareClass]
+    "override *m() {}"  [declareClass]
+
+[06-class-members / modifier]  tsc TS1242 'abstract' modifier can only appear on a class, method, or property declaration.   (4 inputs, 1 distinct)
+    "abstract constructor() {}"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1243 'async' modifier cannot be used with 'abstract' modifier.   (1 inputs, 1 distinct)
+    "abstract async m() {}"  [abstractClass]
+
+[06-class-members / modifier]  tsc TS1243 'static' modifier cannot be used with 'abstract' modifier.   (2 inputs, 2 distinct)
+    "abstract static x: T;"  [abstractClass]
+    "static abstract x: T;"  [abstractClass]
+
+[06-class-members / modifier]  tsc TS1244 Abstract methods can only appear within an abstract class.   (21 inputs, 7 distinct)
+    "abstract m() {}"  [class,declareClass,classExpr]
+    "abstract m(): void;"  [class,declareClass,classExpr]
+    "abstract get x() { return 1 }"  [class,declareClass,classExpr]
+    "abstract set x(v) {}"  [class,declareClass,classExpr]
+    "abstract *m() {}"  [class,declareClass,classExpr]
+    "abstract async m() {}"  [class,declareClass,classExpr]
+    … 1 more
+
+[06-class-members / modifier]  tsc TS1245 Method 'abstract' cannot have an implementation because it is marked abstract.   (1 inputs, 1 distinct)
+    "abstract abstract() {}"  [abstractClass]
+
+[06-class-members / modifier]  tsc TS1245 Method 'm' cannot have an implementation because it is marked abstract.   (2 inputs, 2 distinct)
+    "abstract m() {}"  [abstractClass]
+    "abstract *m() {}"  [abstractClass]
+
+[06-class-members / modifier]  tsc TS1253 Abstract properties can only appear within an abstract class.   (39 inputs, 13 distinct)
+    "abstract x: T;"  [class,declareClass,classExpr]
+    "abstract x = 1;"  [class,declareClass,classExpr]
+    "abstract x;"  [class,declareClass,classExpr]
+    "abstract x?: T;"  [class,declareClass,classExpr]
+    "abstract x!: T;"  [class,declareClass,classExpr]
+    "abstract \"x\": T;"  [class,declareClass,classExpr]
+    … 7 more
+
+[06-class-members / modifier]  tsc TS1255 A definite assignment assertion '!' is not permitted in this context.   (32 inputs, 26 distinct)
+    "static x!: T;"  [class,abstractClass,declareClass,classExpr]
+    "declare x!: T;"  [class,abstractClass,declareClass,classExpr]
+    "abstract x!: T;"  [abstractClass]
+    "public x!: T;"  [declareClass]
+    "public!: T;"  [declareClass]
+    "private x!: T;"  [declareClass]
+    … 20 more
+
+[06-class-members / modifier]  tsc TS1267 Property 'x' cannot have an initializer because it is marked abstract.   (1 inputs, 1 distinct)
+    "abstract x = 1;"  [abstractClass]
+
+[06-class-members / modifier]  tsc TS1276 An 'accessor' property cannot be declared optional.   (4 inputs, 1 distinct)
+    "accessor x?: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS1318 An abstract accessor cannot have an implementation.   (2 inputs, 2 distinct)
+    "abstract get x() { return 1 }"  [abstractClass]
+    "abstract set x(v) {}"  [abstractClass]
+
+[06-class-members / modifier]  tsc TS18010 An accessibility modifier cannot be used with a private identifier.   (12 inputs, 3 distinct)
+    "public #x: T;"  [class,abstractClass,declareClass,classExpr]
+    "private #x: T;"  [class,abstractClass,declareClass,classExpr]
+    "protected #x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / modifier]  tsc TS18019 'abstract' modifier cannot be used with a private identifier.   (1 inputs, 1 distinct)
+    "abstract #x: T;"  [abstractClass]
+
+[06-class-members / modifier]  tsc TS18019 'declare' modifier cannot be used with a private identifier.   (4 inputs, 1 distinct)
+    "declare #x: T;"  [class,abstractClass,declareClass,classExpr]
+
+[06-class-members / paramProp]  tsc TS1015 Parameter cannot have question mark and initializer.   (7 inputs, 1 distinct)
+    "public x?: T = 1"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+
+[06-class-members / paramProp]  tsc TS1028 Accessibility modifier already seen.   (14 inputs, 2 distinct)
+    "public public x"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+    "public private x"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+
+[06-class-members / paramProp]  tsc TS1029 'override' modifier must precede 'readonly' modifier.   (7 inputs, 1 distinct)
+    "readonly override x: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+
+[06-class-members / paramProp]  tsc TS1029 'public' modifier must precede 'override' modifier.   (7 inputs, 1 distinct)
+    "override public x: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+
+[06-class-members / paramProp]  tsc TS1029 'public' modifier must precede 'readonly' modifier.   (7 inputs, 1 distinct)
+    "readonly public x: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+
+[06-class-members / paramProp]  tsc TS1030 'override' modifier already seen.   (7 inputs, 1 distinct)
+    "override override x"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+
+[06-class-members / paramProp]  tsc TS1030 'readonly' modifier already seen.   (7 inputs, 1 distinct)
+    "readonly readonly x"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+
+[06-class-members / paramProp]  tsc TS1051 A 'set' accessor cannot have an optional parameter.   (2 inputs, 2 distinct)
+    "readonly?: T"  [setter]
+    "readonly?"  [setter]
+
+[06-class-members / paramProp]  tsc TS1052 A 'set' accessor parameter cannot have an initializer.   (4 inputs, 4 distinct)
+    "public = 1"  [setter]
+    "readonly = 1"  [setter]
+    "override = 1"  [setter]
+    "public: T = 1"  [setter]
+
+[06-class-members / paramProp]  tsc TS1053 A 'set' accessor cannot have rest parameter.   (4 inputs, 4 distinct)
+    "...public"  [setter]
+    "...public: T[]"  [setter]
+    "...readonly"  [setter]
+    "...override"  [setter]
+
+[06-class-members / paramProp]  tsc TS1206 Decorators are not valid here.   (82 inputs, 10 distinct)
+    "@d public x: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+    "@d() private x: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+    "@d readonly x"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+    "@d public readonly x: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+    "@d @e public x: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+    "@d public"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor,method,…]
+    … 4 more
+
+[06-class-members / paramProp]  tsc TS1210 Code contained in a class is evaluated in JavaScript's strict mode which does not allow this use of 'arguments'. For more information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode.   (1 inputs, 1 distinct)
+    "public arguments"  [ctorOverload]
+
+[06-class-members / paramProp]  tsc TS1210 Code contained in a class is evaluated in JavaScript's strict mode which does not allow this use of 'eval'. For more information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode.   (1 inputs, 1 distinct)
+    "public eval"  [ctorOverload]
+
+[06-class-members / paramProp]  tsc TS1212 Identifier expected. 'private' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "private"  [fn,arrow,objMethod]
+
+[06-class-members / paramProp]  tsc TS1212 Identifier expected. 'protected' is a reserved word in strict mode.   (3 inputs, 1 distinct)
+    "protected"  [fn,arrow,objMethod]
+
+[06-class-members / paramProp]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (36 inputs, 12 distinct)
+    "...public"  [fn,arrow,objMethod]
+    "public"  [fn,arrow,objMethod]
+    "public, private"  [fn,arrow,objMethod]
+    "public, private, protected, readonly, override"  [fn,arrow,objMethod]
+    "public: T"  [fn,arrow,objMethod]
+    "public?: T"  [fn,arrow,objMethod]
+    … 6 more
+
+[06-class-members / paramProp]  tsc TS1213 Identifier expected. 'implements' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "public implements"  [ctorOverload]
+
+[06-class-members / paramProp]  tsc TS1213 Identifier expected. 'interface' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "public interface"  [ctorOverload]
+
+[06-class-members / paramProp]  tsc TS1213 Identifier expected. 'let' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "public let"  [ctorOverload]
+
+[06-class-members / paramProp]  tsc TS1213 Identifier expected. 'package' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "public package"  [ctorOverload]
+
+[06-class-members / paramProp]  tsc TS1213 Identifier expected. 'private' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (11 inputs, 3 distinct)
+    "private"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod,…]
+    "private private"  [ctorOverload]
+    "public private"  [ctorOverload]
+
+[06-class-members / paramProp]  tsc TS1213 Identifier expected. 'protected' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (9 inputs, 1 distinct)
+    "protected"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod,…]
+
+[06-class-members / paramProp]  tsc TS1213 Identifier expected. 'public' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (105 inputs, 16 distinct)
+    "...public"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod]
+    "public"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod,…]
+    "public, private"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod]
+    "public, private, protected, readonly, override"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod]
+    "public: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod,…]
+    "public?: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod,…]
+    … 10 more
+
+[06-class-members / paramProp]  tsc TS1213 Identifier expected. 'static' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "public static"  [ctorOverload]
+
+[06-class-members / paramProp]  tsc TS1213 Identifier expected. 'yield' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "public yield"  [ctorOverload]
+
+[06-class-members / paramProp]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'T'?   (7 inputs, 1 distinct)
+    "public x: T!"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+
+[07-module-syntax / attributes]  tsc TS1454 `resolution-mode` can only be set for type-only imports.   (2 inputs, 2 distinct)
+    "import A from \"x\" with { \"resolution-mode\": \"import\" };"  [-]
+    "import A from \"x\" with { \"resolution-mode\": \"require\" };"  [-]
+
+[07-module-syntax / exportAssign]  tsc TS1063 An export assignment cannot be used in a namespace.   (2 inputs, 2 distinct)
+    "namespace N { export = x; }"  [-]
+    "declare namespace N { export = x; }"  [-]
+
+[07-module-syntax / exportAssign]  tsc TS1184 Modifiers cannot appear here.   (1 inputs, 1 distinct)
+    "declare export as namespace X;"  [-]
+
+[07-module-syntax / exportAssign]  tsc TS1214 Identifier expected. 'yield' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "export = yield;"  [-]
+
+[07-module-syntax / exportAssign]  tsc TS1314 Global module exports may only appear in module files.   (14 inputs, 14 distinct)
+    "export as namespace X;"  [-]
+    "export as namespace X"  [-]
+    "export as namespace type;"  [-]
+    "export as namespace as;"  [-]
+    "export as namespace namespace;"  [-]
+    "export as namespace await;"  [-]
+    … 8 more
+
+[07-module-syntax / exportAssign]  tsc TS1315 Global module exports may only appear in declaration files.   (3 inputs, 3 distinct)
+    "export as namespace X; export = x;"  [-]
+    "export as namespace X; export {};"  [-]
+    "export as namespace X; export default 1;"  [-]
+
+[07-module-syntax / exportAssign]  tsc TS1316 Global module exports may only appear at top level.   (5 inputs, 5 distinct)
+    "declare module \"m\" { export = x; export as namespace X; }"  [-]
+    "namespace N { export as namespace X; }"  [-]
+    "declare namespace N { export as namespace X; }"  [-]
+    "declare module \"m\" { export as namespace X; }"  [-]
+    "declare global { export as namespace X; }"  [-]
+
+[07-module-syntax / exportAssign]  tsc TS17013 Meta-property 'new.target' is only allowed in the body of a function declaration, function expression, or constructor.   (1 inputs, 1 distinct)
+    "export = new.target;"  [-]
+
+[07-module-syntax / exportDecl]  tsc TS1030 'declare' modifier already seen.   (1 inputs, 1 distinct)
+    "export declare declare const x: T;"  [-]
+
+[07-module-syntax / exportDecl]  tsc TS1030 'export' modifier already seen.   (1 inputs, 1 distinct)
+    "export declare export const x: T;"  [-]
+
+[07-module-syntax / exportDecl]  tsc TS1039 Initializers are not allowed in ambient contexts.   (2 inputs, 2 distinct)
+    "export declare const x: T = 1;"  [-]
+    "export declare let x = 1;"  [-]
+
+[07-module-syntax / exportDecl]  tsc TS1040 'async' modifier cannot be used in an ambient context.   (1 inputs, 1 distinct)
+    "export declare async function f(): void;"  [-]
+
+[07-module-syntax / exportDecl]  tsc TS1183 An implementation cannot be declared in ambient contexts.   (2 inputs, 2 distinct)
+    "export declare function f() {}"  [-]
+    "export declare class C { m() {} }"  [-]
+
+[07-module-syntax / exportDecl]  tsc TS1221 Generators are not allowed in an ambient context.   (1 inputs, 1 distinct)
+    "export declare function* f(): void;"  [-]
+
+[07-module-syntax / exportDecl]  tsc TS1222 An overload signature cannot be declared as a generator.   (1 inputs, 1 distinct)
+    "export function* f(): any; export function* f() {}"  [-]
+
+[07-module-syntax / exportDecl]  tsc TS1540 A 'namespace' declaration should not be declared using the 'module' keyword. Please use the 'namespace' keyword instead.   (2 inputs, 2 distinct)
+    "export module N {}"  [-]
+    "export declare module N {}"  [-]
+
+[07-module-syntax / exportType]  tsc TS1193 An export declaration cannot have modifiers.   (1 inputs, 1 distinct)
+    "declare export type { A };"  [-]
+
+[07-module-syntax / exportType]  tsc TS1194 Export declarations are not permitted in a namespace.   (3 inputs, 3 distinct)
+    "namespace N { export type { A }; }"  [-]
+    "namespace N { export type { A } from \"x\"; }"  [-]
+    "namespace N { export type * from \"x\"; }"  [-]
+
+[07-module-syntax / importEquals]  tsc TS1029 'export' modifier must precede 'declare' modifier.   (1 inputs, 1 distinct)
+    "declare export import A = B.C;"  [-]
+
+[07-module-syntax / importEquals]  tsc TS1079 A 'declare' modifier cannot be used with an import declaration.   (1 inputs, 1 distinct)
+    "export declare import A = B.C;"  [-]
+
+[07-module-syntax / importEquals]  tsc TS1147 Import declarations in a namespace cannot reference a module.   (3 inputs, 3 distinct)
+    "namespace N { import A = require(\"x\"); }"  [-]
+    "namespace N { export import A = require(\"x\"); }"  [-]
+    "declare namespace N { import A = require(\"x\"); }"  [-]
+
+[07-module-syntax / importEquals]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (2 inputs, 2 distinct)
+    "import let = B;"  [-]
+    "import A = let;"  [-]
+
+[07-module-syntax / importEquals]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (2 inputs, 2 distinct)
+    "import static = B;"  [-]
+    "import A = static;"  [-]
+
+[07-module-syntax / importEquals]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (2 inputs, 2 distinct)
+    "import yield = B;"  [-]
+    "import A = yield;"  [-]
+
+[07-module-syntax / importSpec]  tsc TS1214 Identifier expected. 'implements' is a reserved word in strict mode. Modules are automatically in strict mode.   (4 inputs, 1 distinct)
+    "type implements"  [import,importWithDefault,importType,importTwo]
+
+[07-module-syntax / importSpec]  tsc TS1214 Identifier expected. 'let' is a reserved word in strict mode. Modules are automatically in strict mode.   (4 inputs, 1 distinct)
+    "type let"  [import,importWithDefault,importType,importTwo]
+
+[07-module-syntax / importSpec]  tsc TS1214 Identifier expected. 'public' is a reserved word in strict mode. Modules are automatically in strict mode.   (4 inputs, 1 distinct)
+    "type public"  [import,importWithDefault,importType,importTwo]
+
+[07-module-syntax / importSpec]  tsc TS1214 Identifier expected. 'static' is a reserved word in strict mode. Modules are automatically in strict mode.   (4 inputs, 1 distinct)
+    "type static"  [import,importWithDefault,importType,importTwo]
+
+[07-module-syntax / importSpec]  tsc TS1214 Identifier expected. 'yield' is a reserved word in strict mode. Modules are automatically in strict mode.   (8 inputs, 2 distinct)
+    "type yield"  [import,importWithDefault,importType,importTwo]
+    "yield"  [import,importWithDefault,importType,importTwo]
+
+[07-module-syntax / importSpec]  tsc TS1262 Identifier expected. 'await' is a reserved word at the top-level of a module.   (8 inputs, 2 distinct)
+    "type await"  [import,importWithDefault,importType,importTwo]
+    "await"  [import,importWithDefault,importType,importTwo]
+
+[07-module-syntax / importType]  tsc TS1079 A 'declare' modifier cannot be used with an import declaration.   (3 inputs, 3 distinct)
+    "declare import type A from \"x\";"  [-]
+    "declare import type A = B.C;"  [-]
+    "declare import A = B.C;"  [-]
+
+[07-module-syntax / importType]  tsc TS1141 String literal expected.   (1 inputs, 1 distinct)
+    "import type A from `x`;"  [-]
+
+[07-module-syntax / importType]  tsc TS1147 Import declarations in a namespace cannot reference a module.   (3 inputs, 3 distinct)
+    "namespace N { import type A from \"x\"; }"  [-]
+    "namespace N { import type A = require(\"x\"); }"  [-]
+    "declare namespace N { import type A from \"x\"; }"  [-]
+
+[07-module-syntax / importType]  tsc TS1191 An import declaration cannot have modifiers.   (2 inputs, 2 distinct)
+    "export import type A from \"x\";"  [-]
+    "export import type { A } from \"x\";"  [-]
+
+[07-module-syntax / importType]  tsc TS1214 Identifier expected. 'let' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "import type let from \"x\";"  [-]
+
+[07-module-syntax / importType]  tsc TS1214 Identifier expected. 'static' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "import type static from \"x\";"  [-]
+
+[07-module-syntax / importType]  tsc TS1214 Identifier expected. 'yield' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "import type yield from \"x\";"  [-]
+
+[07-module-syntax / importType]  tsc TS1262 Identifier expected. 'await' is a reserved word at the top-level of a module.   (1 inputs, 1 distinct)
+    "import type await from \"x\";"  [-]
+
+[07-module-syntax / importType]  tsc TS1375 'await' expressions are only allowed at the top level of a file when that file is a module, but this file has no imports or exports. Consider adding an empty 'export {}' to make this file a module.   (1 inputs, 1 distinct)
+    "await import(\"x\");"  [-]
+
+[07-module-syntax / importType]  tsc TS1392 An import alias cannot use 'import type'   (9 inputs, 9 distinct)
+    "import type from = A.B;"  [-]
+    "import type A = B.C;"  [-]
+    "import type A = B;"  [-]
+    "import type A = require;"  [-]
+    "import type A = B.C.D.E;"  [-]
+    "namespace N { import type A = B.C; }"  [-]
+    … 3 more
+
+[07-module-syntax / importType]  tsc TS1463 'resolution-mode' is the only valid key for type import attributes.   (1 inputs, 1 distinct)
+    "import type A from \"x\" with { \"a\": \"b\" };"  [-]
+
+[07-module-syntax / importType]  tsc TS1464 Type import attributes should have exactly one key - 'resolution-mode' - with value 'import' or 'require'.   (2 inputs, 2 distinct)
+    "import type * as A from \"x\" with {};"  [-]
+    "import type A from \"x\" with { a: \"b\", c: \"d\" };"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1015 Parameter cannot have question mark and initializer.   (1 inputs, 1 distinct)
+    "declare function f(a?: A = 1): void;"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1029 'export' modifier must precede 'declare' modifier.   (1 inputs, 1 distinct)
+    "declare export const x: T;"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1030 'declare' modifier already seen.   (1 inputs, 1 distinct)
+    "declare declare var x: T;"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1036 Statements are not allowed in ambient contexts.   (6 inputs, 6 distinct)
+    "declare namespace N { x = 1; }"  [-]
+    "declare namespace N { x; }"  [-]
+    "declare namespace N { f(); }"  [-]
+    "declare namespace N { if (a) {} }"  [-]
+    "declare module \"m\" { x; }"  [-]
+    "declare global { x; }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1038 A 'declare' modifier cannot be used in an already ambient context.   (6 inputs, 6 distinct)
+    "declare namespace N { declare var x: T; }"  [-]
+    "declare namespace N { declare function f(): void; }"  [-]
+    "declare namespace N { export declare var x: T; }"  [-]
+    "declare module \"m\" { declare const x: T; }"  [-]
+    "declare module \"m\" { export declare const x: T; }"  [-]
+    "declare global { declare global {} }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1039 Initializers are not allowed in ambient contexts.   (12 inputs, 12 distinct)
+    "declare const x: T = 1;"  [-]
+    "declare const x: 1 = 1;"  [-]
+    "declare let x = 1;"  [-]
+    "declare var x = 1;"  [-]
+    "declare let x: T = 1;"  [-]
+    "declare class C { x = 1; }"  [-]
+    … 6 more
+
+[08-declare-namespace-enum / declare]  tsc TS1040 'async' modifier cannot be used in an ambient context.   (5 inputs, 5 distinct)
+    "declare async function f(): Promise<void>;"  [-]
+    "declare async function* f(): any;"  [-]
+    "declare class C { async m(): Promise<void>; }"  [-]
+    "declare class C { async *m(): any; }"  [-]
+    "declare module \"m\" { export default async function f(): Promise<void>; }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1063 An export assignment cannot be used in a namespace.   (1 inputs, 1 distinct)
+    "declare namespace N { export = x; }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1066 In ambient enum declarations member initializer must be constant expression.   (1 inputs, 1 distinct)
+    "declare enum E { A = f() }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1079 A 'declare' modifier cannot be used with an import declaration.   (1 inputs, 1 distinct)
+    "declare import a = b.c;"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1183 An implementation cannot be declared in ambient contexts.   (10 inputs, 10 distinct)
+    "declare function f(): void {}"  [-]
+    "declare function f() {}"  [-]
+    "declare class C { m() {} }"  [-]
+    "declare class C { m(): void {} }"  [-]
+    "declare class C { constructor() {} }"  [-]
+    "declare class C { get x() { return 1 } }"  [-]
+    … 4 more
+
+[08-declare-namespace-enum / declare]  tsc TS1184 Modifiers cannot appear here.   (19 inputs, 19 distinct)
+    "function f() { declare var x: T; }"  [-]
+    "function f() { declare function g(): void; }"  [-]
+    "function f() { declare class C {} }"  [-]
+    "function f() { declare const x: T; return x; }"  [-]
+    "function f() { declare enum E {} }"  [-]
+    "function f() { declare type T = 1; }"  [-]
+    … 13 more
+
+[08-declare-namespace-enum / declare]  tsc TS1206 Decorators are not valid here.   (1 inputs, 1 distinct)
+    "declare class C { m(@d a: A): void; }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1221 Generators are not allowed in an ambient context.   (2 inputs, 2 distinct)
+    "declare function* f(): any;"  [-]
+    "declare class C { *m(): any; }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1234 An ambient module declaration is only allowed at the top level in a file.   (1 inputs, 1 distinct)
+    "function f() { declare global {} }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1244 Abstract methods can only appear within an abstract class.   (1 inputs, 1 distinct)
+    "declare class C { abstract m(): void; }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1245 Method 'm' cannot have an implementation because it is marked abstract.   (1 inputs, 1 distinct)
+    "declare abstract class C { abstract m() {} }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1249 A decorator can only decorate a method implementation, not an overload.   (1 inputs, 1 distinct)
+    "declare class C { @d m(): void; }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1254 A 'const' initializer in an ambient context must be a string or numeric literal or literal enum reference.   (11 inputs, 11 distinct)
+    "declare const x = null;"  [-]
+    "declare const x = E.A;"  [-]
+    "declare const x = E[\"A\"];"  [-]
+    "declare const x = E.A.B;"  [-]
+    "declare const x = \"a\" + \"b\";"  [-]
+    "declare const x = 1 + 1;"  [-]
+    … 5 more
+
+[08-declare-namespace-enum / declare]  tsc TS1255 A definite assignment assertion '!' is not permitted in this context.   (3 inputs, 3 distinct)
+    "declare var x!: T;"  [-]
+    "declare const x!: T;"  [-]
+    "declare class C { x!: T; }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1316 Global module exports may only appear at top level.   (2 inputs, 2 distinct)
+    "declare module \"m\" { export as namespace X; }"  [-]
+    "declare module \"m\" { export = x; export as namespace X; }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1319 A default export can only be used in an ECMAScript-style module.   (1 inputs, 1 distinct)
+    "declare namespace N { export default x; }"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1332 A variable whose type is a 'unique symbol' type must be 'const'.   (2 inputs, 2 distinct)
+    "declare let x: unique symbol;"  [-]
+    "declare var x: unique symbol;"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1344 'A label is not allowed here.   (1 inputs, 1 distinct)
+    "label: declare var x: T;"  [-]
+
+[08-declare-namespace-enum / declare]  tsc TS1540 A 'namespace' declaration should not be declared using the 'module' keyword. Please use the 'namespace' keyword instead.   (3 inputs, 3 distinct)
+    "declare module N {}"  [-]
+    "declare module N.M {}"  [-]
+    "declare module global {}"  [-]
+
+[08-declare-namespace-enum / declName]  tsc TS1100 Invalid use of 'arguments' in strict mode.   (5 inputs, 1 distinct)
+    "arguments"  [declareVar,declareConst,declareLet,overload,varNamed]
+
+[08-declare-namespace-enum / declName]  tsc TS1100 Invalid use of 'eval' in strict mode.   (5 inputs, 1 distinct)
+    "eval"  [declareVar,declareConst,declareLet,overload,varNamed]
+
+[08-declare-namespace-enum / declName]  tsc TS1102 'delete' cannot be called on an identifier in strict mode.   (1 inputs, 1 distinct)
+    "delete"  [keywordNewlineIdent]
+
+[08-declare-namespace-enum / declName]  tsc TS1182 A destructuring declaration must have an initializer.   (2 inputs, 2 distinct)
+    "let"  [keywordNewlineBlock]
+    "var"  [keywordNewlineBlock]
+
+[08-declare-namespace-enum / declName]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (13 inputs, 1 distinct)
+    "implements"  [namespace,namespaceDotted,namespaceBody,module,enum,constEnum,overload,keywordAsStmt,…]
+
+[08-declare-namespace-enum / declName]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (12 inputs, 1 distinct)
+    "interface"  [namespace,namespaceDotted,namespaceBody,module,enum,constEnum,overload,keywordAssign,…]
+
+[08-declare-namespace-enum / declName]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (11 inputs, 1 distinct)
+    "let"  [namespace,namespaceDotted,namespaceBody,module,enum,constEnum,overload,keywordAsStmt,…]
+
+[08-declare-namespace-enum / declName]  tsc TS1212 Identifier expected. 'package' is a reserved word in strict mode.   (13 inputs, 1 distinct)
+    "package"  [namespace,namespaceDotted,namespaceBody,module,enum,constEnum,overload,keywordAsStmt,…]
+
+[08-declare-namespace-enum / declName]  tsc TS1212 Identifier expected. 'private' is a reserved word in strict mode.   (13 inputs, 1 distinct)
+    "private"  [namespace,namespaceDotted,namespaceBody,module,enum,constEnum,overload,keywordAsStmt,…]
+
+[08-declare-namespace-enum / declName]  tsc TS1212 Identifier expected. 'protected' is a reserved word in strict mode.   (13 inputs, 1 distinct)
+    "protected"  [namespace,namespaceDotted,namespaceBody,module,enum,constEnum,overload,keywordAsStmt,…]
+
+[08-declare-namespace-enum / declName]  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (13 inputs, 1 distinct)
+    "public"  [namespace,namespaceDotted,namespaceBody,module,enum,constEnum,overload,keywordAsStmt,…]
+
+[08-declare-namespace-enum / declName]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (13 inputs, 1 distinct)
+    "static"  [namespace,namespaceDotted,namespaceBody,module,enum,constEnum,overload,keywordAsStmt,…]
+
+[08-declare-namespace-enum / declName]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (13 inputs, 1 distinct)
+    "yield"  [namespace,namespaceDotted,namespaceBody,module,enum,constEnum,overload,keywordAsStmt,…]
+
+[08-declare-namespace-enum / declName]  tsc TS1213 Identifier expected. 'implements' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "implements"  [abstractClass]
+
+[08-declare-namespace-enum / declName]  tsc TS1213 Identifier expected. 'interface' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "interface"  [abstractClass]
+
+[08-declare-namespace-enum / declName]  tsc TS1213 Identifier expected. 'let' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "let"  [abstractClass]
+
+[08-declare-namespace-enum / declName]  tsc TS1213 Identifier expected. 'package' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "package"  [abstractClass]
+
+[08-declare-namespace-enum / declName]  tsc TS1213 Identifier expected. 'private' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "private"  [abstractClass]
+
+[08-declare-namespace-enum / declName]  tsc TS1213 Identifier expected. 'protected' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "protected"  [abstractClass]
+
+[08-declare-namespace-enum / declName]  tsc TS1213 Identifier expected. 'public' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "public"  [abstractClass]
+
+[08-declare-namespace-enum / declName]  tsc TS1213 Identifier expected. 'static' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "static"  [abstractClass]
+
+[08-declare-namespace-enum / declName]  tsc TS1213 Identifier expected. 'yield' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
+    "yield"  [abstractClass]
+
+[08-declare-namespace-enum / declName]  tsc TS1214 Identifier expected. 'implements' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "implements"  [exportNamespace]
+
+[08-declare-namespace-enum / declName]  tsc TS1214 Identifier expected. 'interface' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "interface"  [exportNamespace]
+
+[08-declare-namespace-enum / declName]  tsc TS1214 Identifier expected. 'let' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "let"  [exportNamespace]
+
+[08-declare-namespace-enum / declName]  tsc TS1214 Identifier expected. 'package' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "package"  [exportNamespace]
+
+[08-declare-namespace-enum / declName]  tsc TS1214 Identifier expected. 'private' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "private"  [exportNamespace]
+
+[08-declare-namespace-enum / declName]  tsc TS1214 Identifier expected. 'protected' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "protected"  [exportNamespace]
+
+[08-declare-namespace-enum / declName]  tsc TS1214 Identifier expected. 'public' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "public"  [exportNamespace]
+
+[08-declare-namespace-enum / declName]  tsc TS1214 Identifier expected. 'static' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "static"  [exportNamespace]
+
+[08-declare-namespace-enum / declName]  tsc TS1214 Identifier expected. 'yield' is a reserved word in strict mode. Modules are automatically in strict mode.   (1 inputs, 1 distinct)
+    "yield"  [exportNamespace]
+
+[08-declare-namespace-enum / declName]  tsc TS1313 The body of an 'if' statement cannot be the empty statement.   (1 inputs, 1 distinct)
+    "if"  [keywordCall]
+
+[08-declare-namespace-enum / declName]  tsc TS1540 A 'namespace' declaration should not be declared using the 'module' keyword. Please use the 'namespace' keyword instead.   (90 inputs, 51 distinct)
+    "as"  [module]
+    "type"  [module,declareModule]
+    "of"  [module,declareModule]
+    "async"  [module,declareModule]
+    "await"  [module,declareModule]
+    "get"  [module,declareModule]
+    … 45 more
+
+[08-declare-namespace-enum / enum]  tsc TS1029 'export' modifier must precede 'declare' modifier.   (1 inputs, 1 distinct)
+    "declare export enum E {}"  [-]
+
+[08-declare-namespace-enum / enum]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (2 inputs, 2 distinct)
+    "enum E { A = yield }"  [-]
+    "enum E { yield, B = yield }"  [-]
+
+[08-declare-namespace-enum / enum]  tsc TS1344 'A label is not allowed here.   (1 inputs, 1 distinct)
+    "label: enum E {}"  [-]
+
+[08-declare-namespace-enum / enum]  tsc TS17013 Meta-property 'new.target' is only allowed in the body of a function declaration, function expression, or constructor.   (1 inputs, 1 distinct)
+    "enum E { A = new.target }"  [-]
+
+[08-declare-namespace-enum / enum]  tsc TS18033 Type '() => number' is not assignable to type 'number' as required for computed enum member values.   (1 inputs, 1 distinct)
+    "enum E { A = () => 1 }"  [-]
+
+[08-declare-namespace-enum / enum]  tsc TS18033 Type '() => void' is not assignable to type 'number' as required for computed enum member values.   (1 inputs, 1 distinct)
+    "enum E { A = function () {} }"  [-]
+
+[08-declare-namespace-enum / enum]  tsc TS18033 Type 'bigint' is not assignable to type 'number' as required for computed enum member values.   (1 inputs, 1 distinct)
+    "enum E { A = 1n }"  [-]
+
+[08-declare-namespace-enum / enum]  tsc TS18033 Type 'string' is not assignable to type 'number' as required for computed enum member values.   (1 inputs, 1 distinct)
+    "enum E { A = `a${B}` }"  [-]
+
+[08-declare-namespace-enum / enum]  tsc TS18033 Type 'typeof (Anonymous class)' is not assignable to type 'number' as required for computed enum member values.   (1 inputs, 1 distinct)
+    "enum E { A = class {} }"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1015 Parameter cannot have question mark and initializer.   (2 inputs, 2 distinct)
+    "function f(a?: T = 1) {}"  [-]
+    "function f(a? = 1) {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1016 A required parameter cannot follow an optional parameter.   (1 inputs, 1 distinct)
+    "function f(a?: T, b: U) {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1047 A rest parameter cannot be optional.   (1 inputs, 1 distinct)
+    "function f(...a?: T[]) {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1100 Invalid use of 'arguments' in strict mode.   (1 inputs, 1 distinct)
+    "function arguments() {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1100 Invalid use of 'eval' in strict mode.   (1 inputs, 1 distinct)
+    "function eval() {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (1 inputs, 1 distinct)
+    "function implements() {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1212 Identifier expected. 'interface' is a reserved word in strict mode.   (1 inputs, 1 distinct)
+    "function interface() {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (1 inputs, 1 distinct)
+    "function let() {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1212 Identifier expected. 'static' is a reserved word in strict mode.   (1 inputs, 1 distinct)
+    "function static() {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (1 inputs, 1 distinct)
+    "function yield() {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1225 Cannot find parameter 'a'.   (3 inputs, 3 distinct)
+    "function f(): a is B {}"  [-]
+    "function f(): asserts a {}"  [-]
+    "function f(): asserts a is B {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1335 'unique symbol' types are not allowed here.   (1 inputs, 1 distinct)
+    "function f(): unique symbol {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS1338 'infer' declarations are only permitted in the 'extends' clause of a conditional type.   (1 inputs, 1 distinct)
+    "function f(): infer U {}"  [-]
+
+[08-declare-namespace-enum / fnSyntax]  tsc TS17019 '!' at the end of a type is not valid TypeScript syntax. Did you mean to write 'A'?   (1 inputs, 1 distinct)
+    "function f(): A! {}"  [-]
+
+[08-declare-namespace-enum / namespace]  tsc TS1029 'export' modifier must precede 'declare' modifier.   (1 inputs, 1 distinct)
+    "declare export namespace N {}"  [-]
+
+[08-declare-namespace-enum / namespace]  tsc TS1063 An export assignment cannot be used in a namespace.   (1 inputs, 1 distinct)
+    "namespace N { export = x }"  [-]
+
+[08-declare-namespace-enum / namespace]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (1 inputs, 1 distinct)
+    "namespace N { yield }"  [-]
+
+[08-declare-namespace-enum / namespace]  tsc TS1540 A 'namespace' declaration should not be declared using the 'module' keyword. Please use the 'namespace' keyword instead.   (5 inputs, 5 distinct)
+    "module N {}"  [-]
+    "module N.M {}"  [-]
+    "module N { export const x = 1 }"  [-]
+    "module N\n{}"  [-]
+    "export module N {}"  [-]
+
+[08-declare-namespace-enum / namespace]  tsc TS17013 Meta-property 'new.target' is only allowed in the body of a function declaration, function expression, or constructor.   (1 inputs, 1 distinct)
+    "namespace N { new.target }"  [-]
+
+[08-declare-namespace-enum / overload]  tsc TS1222 An overload signature cannot be declared as a generator.   (4 inputs, 4 distinct)
+    "function* f(): any; function* f() {}"  [-]
+    "function* f(): any;"  [-]
+    "async function* f(): any; async function* f() {}"  [-]
+    "export function* f(): any; export function* f() {}"  [-]
+
+[08-declare-namespace-enum / overload]  tsc TS1344 'A label is not allowed here.   (1 inputs, 1 distinct)
+    "label: function f(): void;"  [-]
+
+[09-decorators / classPos]  tsc TS1206 Decorators are not valid here.   (9 inputs, 9 distinct)
+    "@d abstract class C { @e abstract x: T }"  [-]
+    "@d declare class C { m(@e a: A): void }"  [-]
+    "declare class C { m(@e a: A): void }"  [-]
+    "@d class C { constructor(@e public a: A) {} }"  [-]
+    "@d class C { constructor(@e a: A, @f() b: B) {} }"  [-]
+    "@d class C { constructor(a: A, @e b: B) {} }"  [-]
+    … 3 more
+
+[09-decorators / classPos]  tsc TS1249 A decorator can only decorate a method implementation, not an overload.   (3 inputs, 3 distinct)
+    "@d abstract class C { @e abstract m(): void }"  [-]
+    "@d declare class C { @e m(): void }"  [-]
+    "declare class C { @e m(): void }"  [-]
+
+[09-decorators / expr]  tsc TS1206 Decorators are not valid here.   (88 inputs, 88 distinct)
+    "@d"  [param]
+    "@d()"  [param]
+    "@d.e"  [param]
+    "@d.e.f"  [param]
+    "@d.e()"  [param]
+    "@d.e.f()"  [param]
+    … 82 more
+
+[09-decorators / expr]  tsc TS1213 Identifier expected. 'interface' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (3 inputs, 1 distinct)
+    "@interface"  [classDecl,classDeclNewline,classExpr]
+
+[09-decorators / expr]  tsc TS1213 Identifier expected. 'let' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (3 inputs, 1 distinct)
+    "@let"  [classDecl,classDeclNewline,classExpr]
+
+[09-decorators / expr]  tsc TS1213 Identifier expected. 'private' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (3 inputs, 1 distinct)
+    "@private"  [classDecl,classDeclNewline,classExpr]
+
+[09-decorators / expr]  tsc TS1213 Identifier expected. 'public' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (3 inputs, 1 distinct)
+    "@public"  [classDecl,classDeclNewline,classExpr]
+
+[09-decorators / expr]  tsc TS1213 Identifier expected. 'static' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (3 inputs, 1 distinct)
+    "@static"  [classDecl,classDeclNewline,classExpr]
+
+[09-decorators / expr]  tsc TS1213 Identifier expected. 'yield' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (6 inputs, 2 distinct)
+    "@(yield)"  [classDecl,classDeclNewline,classExpr]
+    "@yield"  [classDecl,classDeclNewline,classExpr]
+
+[09-decorators / expr]  tsc TS1238 Unable to resolve signature of class decorator when called as an expression.
+  The runtime will invoke the decorator with 2 arguments, but the decorator expects 0.   (6 inputs, 2 distinct)
+    "@(() => {})"  [classDecl,classDeclNewline,classExpr]
+    "@(function () {})"  [classDecl,classDeclNewline,classExpr]
+
+[09-decorators / expr]  tsc TS1238 Unable to resolve signature of class decorator when called as an expression.
+  This expression is not callable.
+    Type 'typeof (Anonymous class)' has no call signatures.   (3 inputs, 1 distinct)
+    "@(class {})"  [classDecl,classDeclNewline,classExpr]
+
+[09-decorators / expr]  tsc TS1238 Unable to resolve signature of class decorator when called as an expression.
+  This expression is not callable.
+    Type 'undefined' has no call signatures.   (3 inputs, 1 distinct)
+    "@undefined"  [classDecl,classDeclNewline,classExpr]
+
+[09-decorators / expr]  tsc TS1240 Unable to resolve signature of property decorator when called as an expression.
+  The runtime will invoke the decorator with 2 arguments, but the decorator expects 0.   (8 inputs, 2 distinct)
+    "@(() => {})"  [field,fieldNewline,computedField,staticField]
+    "@(function () {})"  [field,fieldNewline,computedField,staticField]
+
+[09-decorators / expr]  tsc TS1240 Unable to resolve signature of property decorator when called as an expression.
+  This expression is not callable.
+    Type 'typeof (Anonymous class)' has no call signatures.   (4 inputs, 1 distinct)
+    "@(class {})"  [field,fieldNewline,computedField,staticField]
+
+[09-decorators / expr]  tsc TS1240 Unable to resolve signature of property decorator when called as an expression.
+  This expression is not callable.
+    Type 'undefined' has no call signatures.   (4 inputs, 1 distinct)
+    "@undefined"  [field,fieldNewline,computedField,staticField]
+
+[09-decorators / expr]  tsc TS1241 Unable to resolve signature of method decorator when called as an expression.
+  The runtime will invoke the decorator with 2 arguments, but the decorator expects 0.   (4 inputs, 2 distinct)
+    "@(() => {})"  [method,computed]
+    "@(function () {})"  [method,computed]
+
+[09-decorators / expr]  tsc TS1241 Unable to resolve signature of method decorator when called as an expression.
+  This expression is not callable.
+    Type 'typeof (Anonymous class)' has no call signatures.   (2 inputs, 1 distinct)
+    "@(class {})"  [method,computed]
+
+[09-decorators / expr]  tsc TS1241 Unable to resolve signature of method decorator when called as an expression.
+  This expression is not callable.
+    Type 'undefined' has no call signatures.   (2 inputs, 1 distinct)
+    "@undefined"  [method,computed]
+
+[09-decorators / expr]  tsc TS1249 A decorator can only decorate a method implementation, not an overload.   (1 inputs, 1 distinct)
+    "@d[0]()"  [fieldNewline]
+
+[09-decorators / expr]  tsc TS1375 'await' expressions are only allowed at the top level of a file when that file is a module, but this file has no imports or exports. Consider adding an empty 'export {}' to make this file a module.   (9 inputs, 1 distinct)
+    "@(await d)"  [classDecl,classDeclNewline,classExpr,field,fieldNewline,method,computed,computedField,…]
+
+[09-decorators / memberPos]  tsc TS1039 Initializers are not allowed in ambient contexts.   (14 inputs, 14 distinct)
+    "@d x = 1;"  [declareClass]
+    "@d x: T = 1;"  [declareClass]
+    "@d static accessor x = 1;"  [declareClass]
+    "@d accessor x = 1;"  [declareClass]
+    "@d accessor #x = 1;"  [declareClass]
+    "@d static accessor #x = 1;"  [declareClass]
+    … 8 more
+
+[09-decorators / memberPos]  tsc TS1040 'async' modifier cannot be used in an ambient context.   (5 inputs, 5 distinct)
+    "@d async m() {}"  [declareClass]
+    "@d async *m() {}"  [declareClass]
+    "@d static async *m() {}"  [declareClass]
+    "@d public static async m() {}"  [declareClass]
+    "@d async [x]() {}"  [declareClass]
+
+[09-decorators / memberPos]  tsc TS1183 An implementation cannot be declared in ambient contexts.   (38 inputs, 38 distinct)
+    "@d accessor() {}"  [declareClass]
+    "@d [Symbol.iterator]() {}"  [declareClass]
+    "@d #m() {}"  [declareClass]
+    "@d static #m() {}"  [declareClass]
+    "@d get #x() { return 1 }"  [declareClass]
+    "@d set #x(v) {}"  [declareClass]
+    … 32 more
+
+[09-decorators / memberPos]  tsc TS1206 Decorators are not valid here.   (38 inputs, 8 distinct)
+    "@d declare x: T;"  [class,abstractClass,declareClass,decoratedClass]
+    "@d abstract x: T;"  [class,abstractClass,declareClass,decoratedClass]
+    "@d [k: string]: T;"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+    "@d static [k: string]: T;"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+    "@d readonly [k: string]: T;"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+    "@d constructor();"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+    … 2 more
+
+[09-decorators / memberPos]  tsc TS1221 Generators are not allowed in an ambient context.   (2 inputs, 2 distinct)
+    "@d *m() {}"  [declareClass]
+    "@d *[x]() {}"  [declareClass]
+
+[09-decorators / memberPos]  tsc TS1249 A decorator can only decorate a method implementation, not an overload.   (35 inputs, 7 distinct)
+    "@d abstract m(): void;"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+    "@d declare m(): void;"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+    "@d m(): void;"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+    "@d m(): void; m() {}"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+    "@d m(): void; @d m() {}"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+    "@d m();"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+    … 1 more
+
+[09-decorators / memberPos]  tsc TS1255 A definite assignment assertion '!' is not permitted in this context.   (1 inputs, 1 distinct)
+    "@d x!: T;"  [declareClass]
+
+[09-decorators / memberPos]  tsc TS1539 A 'bigint' literal cannot be used as a property name.   (5 inputs, 1 distinct)
+    "@d 1n: T;"  [class,abstractClass,declareClass,classExpr,decoratedClass]
+
+[09-decorators / otherPos]  tsc TS1166 A computed property name in a class property declaration must have a simple literal type or a 'unique symbol' type.   (1 inputs, 1 distinct)
+    "class C { [@d class {}] = 1 }"  [-]
+
+[09-decorators / paramPos]  tsc TS1052 A 'set' accessor parameter cannot have an initializer.   (3 inputs, 3 distinct)
+    "@d a = 1"  [setter]
+    "@d a: A = 1"  [setter]
+    "@d { a } = {}"  [setter]
+
+[09-decorators / paramPos]  tsc TS1206 Decorators are not valid here.   (416 inputs, 44 distinct)
+    "@d a: A"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,setter,overload,abstractMethod,…]
+    "@d() a: A"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,setter,overload,abstractMethod,…]
+    "@d @e a: A"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,setter,overload,abstractMethod,…]
+    "@d a?: A"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,setter,overload,abstractMethod,…]
+    "@d a = 1"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,overload,abstractMethod,declareMethod,…]
+    "@d a: A = 1"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,overload,abstractMethod,declareMethod,…]
+    … 38 more
+
+[10-declaration-files / bodyless]  tsc TS1005 '{' expected.   (6 inputs, 6 distinct)
+    "export class C { get x(): T; }"  [-]
+    "export class C { set x(v: T); }"  [-]
+    "export class C { get x(): T; set x(v: T); }"  [-]
+    "export class C { static get x(): T; }"  [-]
+    "export class C { get x(); }"  [-]
+    "export class C { set x(v); }"  [-]
+
+[10-declaration-files / bodyless]  tsc TS1222 An overload signature cannot be declared as a generator.   (1 inputs, 1 distinct)
+    "export class C { *m(): any; }"  [-]
+
+[10-declaration-files / bodyless]  tsc TS1244 Abstract methods can only appear within an abstract class.   (1 inputs, 1 distinct)
+    "export class C { abstract m(): void; }"  [-]
+
+[10-declaration-files / module]  tsc TS1063 An export assignment cannot be used in a namespace.   (1 inputs, 1 distinct)
+    "declare namespace N { export = x; }"  [-]
+
+[10-declaration-files / module]  tsc TS1147 Import declarations in a namespace cannot reference a module.   (1 inputs, 1 distinct)
+    "declare namespace N { import x from \"y\"; }"  [-]
+
+[10-declaration-files / module]  tsc TS1194 Export declarations are not permitted in a namespace.   (1 inputs, 1 distinct)
+    "declare namespace N { export * from \"y\"; }"  [-]
+
+[10-declaration-files / module]  tsc TS1319 A default export can only be used in an ECMAScript-style module.   (1 inputs, 1 distinct)
+    "declare namespace N { export default x; }"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1029 'export' modifier must precede 'declare' modifier.   (1 inputs, 1 distinct)
+    "declare export const x: T;"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1030 'declare' modifier already seen.   (2 inputs, 2 distinct)
+    "declare declare const x: T;"  [-]
+    "export declare declare const x: T;"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1036 Statements are not allowed in ambient contexts.   (1 inputs, 1 distinct)
+    "declare namespace N { x; }"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1038 A 'declare' modifier cannot be used in an already ambient context.   (4 inputs, 4 distinct)
+    "declare namespace N { declare const x: T; }"  [-]
+    "declare namespace N { export declare const x: T; }"  [-]
+    "declare module \"m\" { declare const x: T; }"  [-]
+    "declare global { declare const x: T; }"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1039 Initializers are not allowed in ambient contexts.   (5 inputs, 5 distinct)
+    "declare const x: number = 1;"  [-]
+    "declare let x = 1;"  [-]
+    "declare var x = 1;"  [-]
+    "declare class C { x = 1; }"  [-]
+    "declare namespace N { let x = 1; }"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1040 'async' modifier cannot be used in an ambient context.   (1 inputs, 1 distinct)
+    "declare async function f(): Promise<void>;"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1066 In ambient enum declarations member initializer must be constant expression.   (1 inputs, 1 distinct)
+    "declare enum E { A = f() }"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1101 'with' statements are not allowed in strict mode.   (1 inputs, 1 distinct)
+    "with (a) {}"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1108 A 'return' statement can only be used within a function body.   (1 inputs, 1 distinct)
+    "return;"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1183 An implementation cannot be declared in ambient contexts.   (3 inputs, 3 distinct)
+    "declare function f() {}"  [-]
+    "declare class C { m() {} }"  [-]
+    "declare namespace N { function f() {} }"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1206 Decorators are not valid here.   (1 inputs, 1 distinct)
+    "export class C { m(@d a: A): void; }"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1212 Identifier expected. 'yield' is a reserved word in strict mode.   (1 inputs, 1 distinct)
+    "yield;"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1221 Generators are not allowed in an ambient context.   (1 inputs, 1 distinct)
+    "declare function* f(): any;"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1222 An overload signature cannot be declared as a generator.   (2 inputs, 2 distinct)
+    "export function* f(): any;"  [-]
+    "function* f(): any;"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1249 A decorator can only decorate a method implementation, not an overload.   (1 inputs, 1 distinct)
+    "declare class C { @d m(): void; }"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1314 Global module exports may only appear in module files.   (1 inputs, 1 distinct)
+    "export as namespace X;"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1332 A variable whose type is a 'unique symbol' type must be 'const'.   (1 inputs, 1 distinct)
+    "export let x: unique symbol;"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1375 'await' expressions are only allowed at the top level of a file when that file is a module, but this file has no imports or exports. Consider adding an empty 'export {}' to make this file a module.   (1 inputs, 1 distinct)
+    "await x;"  [-]
+
+[10-declaration-files / topLevel]  tsc TS1540 A 'namespace' declaration should not be declared using the 'module' keyword. Please use the 'namespace' keyword instead.   (2 inputs, 2 distinct)
+    "export module N {}"  [-]
+    "module N {}"  [-]

@@ -1,0 +1,73 @@
+class A1  dialect tsx  config plain: 269 inputs in 17 clusters
+
+[04-type-params-args / targsExpr]  bun Expected "…" but found "…"   (47 inputs, 1 distinct)
+    "<(a = 1) => void>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]
+
+[04-type-params-args / targsExpr]  bun Unexpected …   (48 inputs, 2 distinct)
+    "<({ a = 1 }) => void>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]
+    "<A"  [instImport]
+
+[04-type-params-args / targsHeritage]  bun Expected "…" but found "…"   (4 inputs, 4 distinct)
+    "class C implements a() {}"  [-]
+    "class C implements a.b() {}"  [-]
+    "class C implements a?.b {}"  [-]
+    "class C implements new A {}"  [-]
+
+[04-type-params-args / targsHeritage]  bun Expected identifier but found "…"   (1 inputs, 1 distinct)
+    "class C implements A.#b {}"  [-]
+
+[04-type-params-args / targsHeritage]  bun Unexpected …   (1 inputs, 1 distinct)
+    "class C extends super.a {}"  [-]
+
+[04-type-params-args / tparams]  bun The modifier "…" is not valid here   (48 inputs, 3 distinct)
+    "<out>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+    "<out = A>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+    "<const out>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+
+[04-type-params-args / tparamsArrow]  bun The modifier "…" is not valid here   (5 inputs, 1 distinct)
+    "<out = A>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt]
+
+[05-assertions / arrow]  bun Expected "…" but found "…"   (41 inputs, 9 distinct)
+    "(): if => x"  [init,stmt,arg,condTrue,condFalse]
+    "(public a: A) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(private a) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(readonly a: A) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(protected a?: A) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(override a) => x"  [init,stmt,arg,condTrue,condFalse]
+    … 3 more
+
+[05-assertions / arrow]  bun Invalid assignment target   (5 inputs, 1 distinct)
+    "(a: A = 1 = 2) => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  bun Invalid binding pattern   (20 inputs, 4 distinct)
+    "(this: A) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(this: A, a: B) => x"  [init,stmt,arg,condTrue,condFalse]
+    "(this) => x"  [init,stmt,arg,condTrue,condFalse]
+    "async (this: A) => x"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / arrow]  bun Unexpected …   (15 inputs, 3 distinct)
+    "(this: A): this is B => true"  [init,stmt,arg,condTrue,condFalse]
+    "a ? (await) : b"  [init,stmt,arg,condTrue,condFalse]
+    "a ? (this: T): b => c : d"  [init,stmt,arg,condTrue,condFalse]
+
+[05-assertions / as]  bun Unexpected …   (15 inputs, 3 distinct)
+    "x as if"  [init,stmt,arg,element,return]
+    "x as var"  [init,stmt,arg,element,return]
+    "x as T <= y"  [init,stmt,arg,element,return]
+
+[05-assertions / cast]  bun The modifier "…" is not valid here   (6 inputs, 2 distinct)
+    "<out, T>(x) => x"  [init,stmt,arg]
+    "<out = A>(x) => x"  [init,stmt,arg]
+
+[05-assertions / catch]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    "try {} catch (e: any = 1) {}"  [-]
+
+[05-assertions / nonNull]  bun Expected identifier but found "…"   (3 inputs, 1 distinct)
+    "this.#x!"  [stmt,init,arg]
+
+[05-assertions / nonNull]  bun Unexpected …   (3 inputs, 1 distinct)
+    "super.x!"  [stmt,init,arg]
+
+[05-assertions / objLit]  bun Expected "…" but found "…"   (6 inputs, 2 distinct)
+    "{ a?: 1 } = b"  [init,arg,paren]
+    "{ m(public a: A) {} }"  [init,arg,paren]

@@ -22,6 +22,10 @@
 //   AA  both accept (AAg: the checker of tsc reports a grammar code)
 //   RR  both reject
 //
+// out/<group>.jsonl is not committed: out/raw/<group>.jsonl.gz is the copy that was written with the
+// installed release bun named in out/versions.json. `gunzip -k out/raw/*.gz && mv out/raw/*.jsonl out/`
+// restores it for report.mjs, clusters.mjs and metadata.mjs.
+//
 // A worker process does the work and appends one JSON line per input. When the worker dies on an
 // input (a crash of the binary under test), the parent records the input as "CRASH" and restarts
 // the worker behind it.

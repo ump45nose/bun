@@ -1,49 +1,44 @@
 import { readFileSync } from "node:fs";
+import type { Result } from "./result";
 
-export interface ReadFileResult {
-  contents: string;
-  ok: boolean;
-  // True when the bytes were not valid UTF-8 and U+FFFD was substituted.
-  lossy: boolean;
-}
-
-const utf8Fatal = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
+const utf8 = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
 
 // Port of Common.ReadFile in internal/vfs/internal/internal.go.
-export function readFile(path: string): ReadFileResult {
+export function readFile(path: string): Result<string> {
   let b: Uint8Array;
   try {
     b = readFileSync(path);
   } catch {
-    return { contents: "", ok: false, lossy: false };
+    return { ok: false, reason: "cannot read " + path };
   }
   if (b.length === 0) {
-    return { contents: "", ok: true, lossy: false };
+    return { ok: true, value: "" };
   }
   return decodeBytes(b);
 }
 
-// Port of decodeBytes: UTF-16 by BOM, then one UTF-8 BOM is dropped.
-export function decodeBytes(s: Uint8Array): ReadFileResult {
+// Port of decodeBytes: UTF-16 by byte order mark, else one UTF-8 byte order mark is dropped.
+export function decodeBytes(s: Uint8Array): Result<string> {
   if (s.length >= 2) {
     if (s[0] === 0xff && s[1] === 0xfe) {
-      return { contents: decodeUtf16(s.subarray(2), true), ok: true, lossy: false };
+      return { ok: true, value: decodeUtf16(s.subarray(2), true) };
     }
     if (s[0] === 0xfe && s[1] === 0xff) {
-      return { contents: decodeUtf16(s.subarray(2), false), ok: true, lossy: false };
+      return { ok: true, value: decodeUtf16(s.subarray(2), false) };
     }
   }
   if (s.length >= 3 && s[0] === 0xef && s[1] === 0xbb && s[2] === 0xbf) {
     s = s.subarray(3);
   }
   try {
-    return { contents: utf8Fatal.decode(s), ok: true, lossy: false };
+    return { ok: true, value: utf8.decode(s) };
   } catch {
-    return { contents: Buffer.from(s.buffer, s.byteOffset, s.byteLength).toString("utf8"), ok: true, lossy: true };
+    // The reference keeps the raw bytes of such a file, which a string cannot hold.
+    return { ok: false, reason: "not valid UTF-8" };
   }
 }
 
-// Port of decodeUtf16: an odd trailing byte is ignored, a lone surrogate becomes U+FFFD.
+// Port of decodeUtf16: an odd trailing byte is ignored and a lone surrogate becomes U+FFFD.
 export function decodeUtf16(s: Uint8Array, littleEndian: boolean): string {
   const count = s.length >> 1;
   const view = new DataView(s.buffer, s.byteOffset, count * 2);

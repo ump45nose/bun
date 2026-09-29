@@ -15,3 +15,5 @@ END   13-cargo-clippy-ast rc=0 wall=20s lockwait=20s run=0s 2026-09-29T16:34:24Z
 START 14-cargo-fmt-js_parser 2026-09-29T16:34:24Z load=285.62 303.02 325.01 cmd: cargo fmt -p bun_js_parser -- --check
 END   14-cargo-fmt-js_parser rc=0 wall=249s lockwait=245s run=4s 2026-09-29T16:38:33Z load=406.25 311.27 319.74
 START 15-cargo-fmt-ast 2026-09-29T16:38:34Z load=406.25 311.27 319.74 cmd: cargo fmt -p bun_ast -- --check
+END   15-cargo-fmt-ast rc=0 wall=1247s lockwait=1246s run=1s 2026-09-29T16:59:21Z load=249.62 291.04 335.83
+START 20-test-decorator-metadata 2026-09-29T16:59:36Z load=250.90 289.33 334.55 cmd: bun bd test test/bundler/transpiler/decorator-metadata.test.ts --timeout 180000
