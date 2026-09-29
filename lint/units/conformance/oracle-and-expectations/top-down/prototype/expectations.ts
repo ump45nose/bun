@@ -116,7 +116,7 @@ function refusal(i: InstanceFacts | undefined, list: Kind): { reason: FailureRea
   return undefined;
 }
 
-// The checks that need no run: every name is an instance that runs, is in its list, and list C respects the quota.
+// The checks that need no run: every name is an instance that runs, of the kind of its list, that every platform can hold.
 export function checkLists(x: Expectations, instances: ReadonlyMap<string, InstanceFacts>): Failure[] {
   const out: Failure[] = [];
   for (const list of ["E", "C"] as const) {
@@ -125,6 +125,12 @@ export function checkLists(x: Expectations, instances: ReadonlyMap<string, Insta
       if (r !== undefined) out.push({ name, list, ...r });
     }
   }
+  return out;
+}
+
+// The names of list C above the quota of their directory. The quota is a rule of entry: a report shows this, no test fails on it.
+export function overQuota(x: Expectations, instances: ReadonlyMap<string, InstanceFacts>): Failure[] {
+  const out: Failure[] = [];
   const e = countBy(x.E, instances);
   const seen = new Map<string, number>();
   for (const name of x.C) {
@@ -144,8 +150,8 @@ export function verify(x: Expectations, outcomes: ReadonlyMap<string, Outcome>):
     for (const name of x[list]) {
       const o = outcomes.get(name);
       if (o === undefined) continue;
-      if (list === "E" && o.level !== x.level) {
-        out.push({ name, list, reason: "level", detail: `compared at level ${o.level}, the list records level ${x.level}` });
+      if (list === "E" && (rank(o.level) < rank(x.level) || (o.level !== x.level && o.status !== "pass"))) {
+        out.push({ name, list, reason: "level", detail: `compared at level ${o.level}, the list records level ${x.level}: compare at that level` });
       } else if (o.status !== "pass") {
         out.push({ name, list, reason: o.status, detail: o.detail });
       }
@@ -184,7 +190,7 @@ export function plan(x: Expectations, instances: ReadonlyMap<string, InstanceFac
     if (r !== undefined) {
       refused.push({ name, list, ...r });
     } else if (list === "E") {
-      if (o.level !== x.level) refused.push({ name, list, reason: "level", detail: `passes at level ${o.level}, the list records level ${x.level}` });
+      if (rank(o.level) < rank(x.level)) refused.push({ name, list, reason: "level", detail: `passes at level ${o.level}, the list records level ${x.level}` });
       else added.E.push(name);
     } else {
       candidatesC.push(i!);
@@ -248,4 +254,13 @@ export function reportText(p: Plan, command: string): string {
     lines.push(`${p.refused.length} instances pass and may not enter a list: ` + [...by].map(([k, v]) => `${k} ${v}`).join(", "));
   }
   return lines.join("\n");
+}
+
+// The listed names that a run with a limit takes: all of them up to the limit, else names at even distances of E followed by C.
+export function sampleListed(x: Expectations, limit: number): { name: string; list: Kind }[] {
+  const all = [...x.E.map(name => ({ name, list: "E" as const })), ...x.C.map(name => ({ name, list: "C" as const }))];
+  if (all.length <= limit) return all;
+  const out: { name: string; list: Kind }[] = [];
+  for (let k = 0; k < limit; k++) out.push(all[Math.floor((k * all.length) / limit)]);
+  return out;
 }

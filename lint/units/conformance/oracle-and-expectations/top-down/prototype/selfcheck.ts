@@ -3,7 +3,7 @@ import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSy
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { type Corpus, type Suite, diffKey, diffRoot, errorBaselineName, errorKeys, ListedTwice, literalOracleOf, loadCorpus, oracleOf, readFileNameSet, readOracle, tagsOf } from "./baseline";
-import { type Expectations, type InstanceFacts, type Outcome, checkLists, compareNames, compareWithRevision, ExpectationsError, formatExpectations, parseExpectations, plan, reportText, verify } from "./expectations";
+import { type Expectations, type InstanceFacts, type Outcome, checkLists, compareNames, compareWithRevision, ExpectationsError, formatExpectations, overQuota, parseExpectations, plan, reportText, sampleListed, verify } from "./expectations";
 import { parseSweepArgs, select, updateCommand, UsageError } from "./sweep_args";
 const P = new URL("../../../enumerator/prototype/", import.meta.url).pathname;
 const { enumerateInstances } = await import(P + "compiler_runner.ts");
@@ -165,7 +165,7 @@ eq("stand-ins everywhere: nothing enters", [plan(empty, facts, standIn).added, p
 const all = outcomesOf(() => "pass");
 const p1 = plan(empty, facts, all);
 eq("everything passes: added E, added C, refused", [p1.added.E.length, p1.added.C.length, p1.refused.length], [7027, 5054, 716]);
-eq("everything passes: the lists hold the quota", checkLists(p1.next, facts), []);
+eq("everything passes: the lists hold the quota", [checkLists(p1.next, facts), overQuota(p1.next, facts)], [[], []]);
 eq("everything passes: the form parses", parseExpectations(formatExpectations(p1.next)).E.length, 7027);
 eq("bytes of the largest file", formatExpectations(p1.next).length > 300_000, true);
 console.log("      bytes of the file with every name that may enter:", formatExpectations(p1.next).length);
@@ -189,8 +189,14 @@ const p5 = plan(before, facts, outcomesOf(i => (i.kind === "E" ? "fail" : "pass"
 eq("a listed name that fails stays", [p5.next.E.length, p5.added.E.length], [50, 0]);
 eq("a listed name that fails is a failure", verify(before, outcomesOf(i => (i.kind === "E" ? "fail" : "pass"))).length, 50);
 eq("names outside the selection say nothing", verify(before, new Map()).length, 0);
-eq("a run at another level", verify(before, outcomesOf(() => "pass", "baseline")).map(f => f.reason).filter((r, k, a) => a.indexOf(r) === k), ["level"]);
-eq("a pass at another level does not enter", plan(empty, facts, outcomesOf(i => (i.kind === "E" ? "pass" : undefined), "baseline")).added.E.length, 0);
+eq("a pass at the stricter level holds for the list", verify(before, outcomesOf(() => "pass", "baseline")), []);
+eq("a failure at the stricter level says nothing", verify(before, outcomesOf(() => "fail", "baseline")).map(f => f.reason).filter((r, k, a) => a.indexOf(r) === k), ["level"]);
+const strict: Expectations = { ...before, level: "baseline" };
+eq("a pass at the weaker level does not hold", verify(strict, outcomesOf(() => "pass", "first-section")).map(f => f.reason).filter((r, k, a) => a.indexOf(r) === k), ["level"]);
+eq("a pass at the stricter level enters", plan(empty, facts, outcomesOf(i => (i.kind === "E" ? "pass" : undefined), "baseline")).added.E.length, 7027);
+eq("a pass at the weaker level does not enter", plan({ ...empty, level: "baseline" }, facts, outcomesOf(i => (i.kind === "E" ? "pass" : undefined), "first-section")).added.E.length, 0);
+eq("sample: all below the limit", sampleListed(two, 10).map(n => n.list + " " + n.name), ["E 2dArrays.ts", "E b(target=es2015).ts", "E bB.ts", "C a.ts"]);
+eq("sample: even distances", [sampleListed(p1.next, 200).length, sampleListed(p1.next, 200)[0].name, sampleListed(p1.next, 200).filter(n => n.list === "C").length, new Set(sampleListed(p1.next, 200).map(n => n.name)).size], [200, p1.next.E[0], 83, 200]);
 // static checks
 const skipped = [...facts.values()].find(i => i.status === "skipped")!;
 const someC = [...facts.values()].find(i => i.status === "run" && i.kind === "C")!;
@@ -201,7 +207,7 @@ const limited = new Map(facts);
 limited.set(someE.name, { ...someE, platformLimited: "win32: a file name ends in a dot" });
 eq("platform-limited: listed", checkLists({ ...empty, E: [someE.name] }, limited).map(f => f.reason), ["platform-limited"]);
 eq("platform-limited: a pass does not enter", plan(empty, limited, new Map([[someE.name, { name: someE.name, status: "pass", level: "first-section", detail: "" } as Outcome]])).refused.map(r => r.reason), ["platform-limited"]);
-eq("quota: list C above list E", checkLists({ ...empty, C: [someC.name] }, facts).map(f => f.reason), ["quota"]);
+eq("quota: list C above list E", [checkLists({ ...empty, C: [someC.name] }, facts), overQuota({ ...empty, C: [someC.name] }, facts).map(f => f.reason)], [[], ["quota"]]);
 // another revision
 const old: Expectations = { level: "first-section", E: [someE.name, "noSuchCase.ts"].sort(compareNames), C: [someC.name] };
 eq("against a revision", compareWithRevision({ ...empty, E: [someC.name] }, old, facts), {
