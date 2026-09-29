@@ -259,7 +259,13 @@ function readMessageBlock(ops: RuleOps, block: string[], i: number, d: ParsedDia
 
 export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): ParsedBaseline {
   const rules = options.rules ?? "tsgo";
-  const ops = rules === "tsc" ? tscOps : tsgoOps;
+  const ops: RuleOps = rules === "tsc" ? { ...tscOps } : tsgoOps;
+  if (rules === "tsc" && tsc.probe.goPrefixes) ops.stripPrefixes = tsgoOps.stripPrefixes;
+  if (rules === "tsc" && tsc.probe.goUnits) {
+    ops.squigglePrefix = tsgoOps.squigglePrefix;
+    ops.bytesOfTildes = tsgoOps.bytesOfTildes;
+    ops.rules = "tsgo";
+  }
   const pretty = text.startsWith("\u001b[");
   const ambiguities: string[] = [];
 
@@ -279,7 +285,7 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
   const heads: Head[] = [];
   const prettyTops: PrettyTop[] = [];
   if (pretty) {
-    for (const p of rules === "tsc" ? readPrettyTopTsc(top) : readPrettyTopTsgo(top)) {
+    for (const p of rules === "tsc" && !tsc.probe.goPretty ? readPrettyTopTsc(top) : readPrettyTopTsgo(top)) {
       heads.push(p.head);
       prettyTops.push(p);
     }

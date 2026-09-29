@@ -23,3 +23,5 @@ END   21-test-bundler_decorator_metadata rc=0 wall=440s lockwait=421s run=19s 20
 START 22-test-transpiler 2026-09-29T17:14:00Z load=302.19 399.96 384.54 cmd: bun bd test test/bundler/transpiler/transpiler.test.js --timeout 180000
 END   22-test-transpiler rc=0 wall=798s lockwait=719s run=79s 2026-09-29T17:27:18Z load=224.33 263.70 312.59
 START 23-test-ts 2026-09-29T17:27:18Z load=224.33 263.70 312.59 cmd: bun bd test test/bundler/esbuild/ts.test.ts --timeout 180000
+END   23-test-ts rc=0 wall=927s lockwait=794s run=133s 2026-09-29T17:42:45Z load=534.32 377.37 325.52
+START 24-test-decorators 2026-09-29T17:42:47Z load=534.32 377.37 325.52 cmd: bun bd test test/bundler/transpiler/decorators.test.ts --timeout 180000

@@ -100,7 +100,7 @@ export function getErrorBaseline(
   const outputLines = iterateErrorBaseline(inputFiles, diagnostics, compareDiagnostics, pretty, rules, failedChecks);
 
   if (pretty) {
-    if (rules === "tsc") {
+    if (rules === "tsc" && !tsc.probe.goSummary) {
       outputLines.push(tsc.removeTestPathPrefixes(tsc.getErrorSummaryText(diagnostics, harnessNewLine)));
     } else {
       const summaryBuilder = new Writer();
@@ -121,7 +121,7 @@ function iterateErrorBaseline(
   failedChecks: string[],
 ): string[] {
   const isTsc = rules === "tsc";
-  const stripPrefixes = isTsc ? tsc.removeTestPathPrefixes : (text: string) => removeTestPathPrefixes(text, false);
+  const stripPrefixes = isTsc && !tsc.probe.goPrefixes ? tsc.removeTestPathPrefixes : (text: string) => removeTestPathPrefixes(text, false);
   const diagnostics = stableSort(inputDiagnostics, compareDiagnostics);
 
   let outputLines = "";
@@ -158,7 +158,7 @@ function iterateErrorBaseline(
       }
       location = stripPrefixes(location);
       if (location.length > 0 && isDefaultLibraryFile(info.file!.fileName)) {
-        location = isTsc
+        location = isTsc && !tsc.probe.goMasks
           ? location.replace(tsc.diagnosticsLocationPattern, "$1:--:--")
           : location.replace(diagnosticsLocationPattern, "$1:--:--");
       }
@@ -178,9 +178,9 @@ function iterateErrorBaseline(
     }
   };
 
-  let topDiagnostics = isTsc ? tsc.minimalDiagnosticsToString(diagnostics, pretty, harnessNewLine) : minimalDiagnosticsToString(diagnostics, pretty);
+  let topDiagnostics = isTsc && !(pretty && tsc.probe.goPretty) ? tsc.minimalDiagnosticsToString(diagnostics, pretty, harnessNewLine) : minimalDiagnosticsToString(diagnostics, pretty);
   topDiagnostics = stripPrefixes(topDiagnostics);
-  topDiagnostics = topDiagnostics.replace(isTsc ? tsc.diagnosticsLocationPrefix : diagnosticsLocationPrefix, "$1(--,--)");
+  topDiagnostics = topDiagnostics.replace(isTsc && !tsc.probe.goMasks ? tsc.diagnosticsLocationPrefix : diagnosticsLocationPrefix, "$1(--,--)");
 
   result.push(topDiagnostics + harnessNewLine + harnessNewLine);
 
@@ -216,7 +216,7 @@ function iterateErrorBaseline(
     // For each line, emit the line followed by any error squiggles matching this line
 
     const lineStarts = isTsc ? tsc.computeLineStarts(inputFile.content) : computeECMALineStarts(inputFile.content);
-    const lines = isTsc ? tsc.splitLines(inputFile.content) : inputFile.content.split(lineDelimiter);
+    const lines = isTsc && !tsc.probe.goSplit ? tsc.splitLines(inputFile.content) : inputFile.content.split(lineDelimiter);
 
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
       let line = lines[lineIndex];
@@ -249,7 +249,7 @@ function iterateErrorBaseline(
           const squiggleStart = Math.max(0, relativeOffset);
           outputLines += newLine();
           outputLines += "    ";
-          if (isTsc) {
+          if (isTsc && !tsc.probe.goUnits) {
             outputLines += tsc.squiggle(line, squiggleStart, length);
           } else {
             if (squiggleStart > line.length) {

@@ -6,6 +6,18 @@ import { Category, categoryName, flattenDiagnosticMessage, getECMALineStarts } f
 import { type ByteString, byteStringToUtf8, decodeRune, padLeft, utf16Len, utf8ToByteString } from "./go_compat";
 import { convertToRelativePath } from "./tspath";
 
+// Switches of the probe that finds the rules which the corpus needs: each one puts a Go rule back.
+const off = new Set((process.env.TSC_OFF ?? "").split(",").filter(x => x !== ""));
+export const probe = {
+  goPrefixes: off.has("prefixes"),
+  goMasks: off.has("masks"),
+  goSplit: off.has("split"),
+  goWhiteSpace: off.has("whitespace"),
+  goUnits: off.has("units"),
+  goPretty: off.has("pretty"),
+  goSummary: off.has("summary"),
+};
+
 // util.ts: /(?:(file:\/{3})|\/)\.(?:ts|lib|src)\//g, replaced by the scheme or by nothing.
 const testPathPrefixRegExp = /(?:(file:\/{3})|\/)\.(?:ts|lib|src)\//g;
 export function removeTestPathPrefixes(text: string): string {
@@ -37,6 +49,7 @@ export function splitLines(content: ByteString): ByteString[] {
 
 // JavaScript's \s: the white space and line terminator code points of ECMAScript.
 function isJsWhiteSpace(r: number): boolean {
+  if (probe.goWhiteSpace) return r === 0x09 || r === 0x0a || r === 0x0c || r === 0x0d || r === 0x20;
   switch (r) {
     case 0x09:
     case 0x0a:
