@@ -899,14 +899,20 @@ fn cwd_changed() -> Maybe<()> {
     }
 }
 
-/// [`bun_core::cwd::get_z`], or `ENOENT` from `getcwd` if the process was
-/// started from a directory the OS cannot name and has not moved since —
-/// for operations that would otherwise act on the stand-in directory.
+/// [`bun_core::cwd::get_z`], or the error `getcwd` gave at startup if the
+/// process was started from a directory the OS cannot name and has not moved
+/// since — for operations that would otherwise act on the stand-in directory.
 pub fn require_cwd() -> Maybe<&'static ZStr> {
-    match bun_core::cwd::require() {
-        Ok(_) => Ok(bun_core::cwd::get_z()),
-        Err(_) => Err(Error::from_code(E::ENOENT, Tag::getcwd)),
-    }
+    let Some(os_error) = bun_core::cwd::unread_os_error() else {
+        return Ok(bun_core::cwd::get_z());
+    };
+    #[cfg(not(windows))]
+    return Err(Error::from_code_int(os_error as _, Tag::getcwd));
+    #[cfg(windows)]
+    return Err(Error::from_win32(
+        windows::Win32Error::from_u32(os_error),
+        Tag::getcwd,
+    ));
 }
 
 /// Change the process working directory; [`bun_core::cwd`] follows. On `Err`

@@ -83,7 +83,14 @@ struct State {
     visited: Option<hashbrown::HashSet<EntryPtr, BuildHasherDefault<bun_wyhash::Wyhash>>>,
     /// Why [`startup`] could not read the working directory, until a `chdir`
     /// records one.
-    unread: Option<crate::Error>,
+    unread: Option<Unread>,
+}
+
+#[derive(Clone, Copy)]
+struct Unread {
+    err: crate::Error,
+    /// What `getcwd` left in `errno` (`GetLastError` on Windows).
+    os_error: u32,
 }
 static STATE: Mutex<State> = Mutex::new(State {
     visited: None,
@@ -134,13 +141,17 @@ pub fn startup() {
             set(cwd.as_bytes());
         }
         Err(err) => {
+            #[cfg(unix)]
+            let os_error = crate::ffi::errno() as u32;
+            #[cfg(windows)]
+            let os_error = bun_windows_sys::kernel32::GetLastError();
             let exe_dir: &[u8] = crate::self_exe_path()
                 .ok()
                 .and_then(|p| crate::dirname(p.as_bytes()))
                 .filter(|d| crate::path_sep::is_absolute_native(d))
                 .unwrap_or(if cfg!(windows) { b"C:\\" } else { b"/" });
             set(exe_dir);
-            STATE.lock().unread = Some(err);
+            STATE.lock().unread = Some(Unread { err, os_error });
         }
     }
 }
@@ -150,9 +161,15 @@ pub fn startup() {
 /// where continuing from a stand-in directory would act on the wrong project.
 pub fn require() -> crate::CrateResult<&'static [u8]> {
     match STATE.lock().unread {
-        Some(err) => Err(err),
+        Some(unread) => Err(unread.err),
         None => Ok(get()),
     }
+}
+
+/// The OS error code behind a failing [`require`]: `errno`, or
+/// `GetLastError` on Windows.
+pub fn unread_os_error() -> Option<u32> {
+    STATE.lock().unread.map(|unread| unread.os_error)
 }
 
 /// Records `path` as the working directory. For [`startup`] and
