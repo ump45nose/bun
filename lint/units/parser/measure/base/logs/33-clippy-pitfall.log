@@ -1,0 +1,2 @@
+# HEAD e3566be889 dirty: []
+== 1: clippy -p bun_js_parser --no-deps (fresh target dir)

@@ -35,3 +35,7 @@ END   27-test-transpiler-cache rc=0 wall=116s lockwait=69s run=47s 2026-09-29T18
 START 31-linkprobe 2026-09-29T18:04:43Z load=265.77 208.33 226.12 cmd: cargo test --manifest-path /workspace/notes/lint/units/parser/measure/linkprobe/Cargo.toml --offline --target-dir /tmp/parser-base/tgt-linkprobe -- --test-threads=1
 END   31-linkprobe rc=101 wall=182s lockwait=126s run=56s 2026-09-29T18:07:45Z load=328.09 264.30 244.84
 START 32-psize 2026-09-29T18:07:45Z load=328.09 264.30 244.84 cmd: /tmp/parser-base/psize.sh
+START 31b-linkprobe-all 2026-09-29T18:08:43Z load=291.55 264.33 245.94 cmd: cargo test --manifest-path /workspace/notes/lint/units/parser/measure/linkprobe/Cargo.toml --offline --target-dir /tmp/parser-base/tgt-linkprobe -- --test-threads=1
+END   32-psize rc=0 wall=95s lockwait=55s run=40s 2026-09-29T18:09:20Z load=299.18 269.69 248.52
+START 33-clippy-pitfall 2026-09-29T18:09:20Z load=299.18 269.69 248.52 cmd: /tmp/parser-base/clippy-pitfall.sh
+END   31b-linkprobe-all rc=101 wall=44s lockwait=37s run=7s 2026-09-29T18:09:27Z load=295.80 269.48 248.56
