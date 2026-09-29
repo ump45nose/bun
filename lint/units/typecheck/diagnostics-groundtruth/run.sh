@@ -21,6 +21,9 @@ if [ "$MODE" = go ]; then
   (cd "$W/mod" && GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off PATH="$GO/bin:$PATH" GOROOT="$GO" GOFLAGS=-mod=mod go build -o "$W/gt" ./cmd/gt)
   (cd "$W" && bun "$HERE/diff/genvec.mjs" "$W/vectors.txt")
   "$W/gt" < "$W/vectors.txt" > "$W/go.out"
+  (cd "$W" && bun "$HERE/diff/genext.mjs" "$W/vectors-external.txt" "$W/vectors-keys.txt")
+  "$W/gt" < "$W/vectors-external.txt" > "$W/go-external.out"
+  "$W/gt" < "$W/vectors-keys.txt" > "$W/go-keys.out"
 else
   gzip -dc "$HERE/golden/vectors.txt.gz" > "$W/vectors.txt"
   gzip -dc "$HERE/golden/go.out.gz" > "$W/go.out"

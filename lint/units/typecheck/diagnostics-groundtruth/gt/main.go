@@ -197,6 +197,18 @@ func main() {
 			}
 			d := ast.NewDiagnostic(file, core.NewTextRange(atoi(f[3]), atoi(f[4])), diagnostics.NewAdHocMessage(unhex(f[1])))
 			all = append(all, d)
+		case "X":
+			var file *ast.SourceFile
+			if fi := atoi(f[1]); fi >= 0 {
+				file = files[fi]
+			}
+			all = append(all, ast.NewExternalDiagnostic(file, core.NewTextRange(atoi(f[2]), atoi(f[3])), unhex(f[4]), diagnostics.Category(atoi(f[5])), int32(atoi(f[6])), unhex(f[7])))
+		case "KEY":
+			var key string
+			if m := byCode[int32(atoi(f[1]))]; m != nil {
+				key = string(m.Key())
+			}
+			fmt.Fprintf(w, "KEY %s %s\n", f[1], key)
 		case "N":
 			var chain *ast.Diagnostic
 			if ci := atoi(f[1]); ci >= 0 {

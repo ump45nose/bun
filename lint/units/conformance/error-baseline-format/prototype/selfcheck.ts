@@ -20,7 +20,7 @@ console.log(counts);
 const unb64 = (s: string): string => Buffer.from(s, "base64").toString("latin1");
 let ok = 0;
 let bad = 0;
-for (const path of ["../vectors/examples-vectors.jsonl", "../vectors/writer-vectors.jsonl.gz"]) {
+for (const path of ["../vectors/examples-vectors.jsonl", "../vectors/writer-vectors.jsonl.gz", "../vectors/tsc-writer-vectors.jsonl.gz"]) {
   const raw = readFileSync(join(import.meta.dir, path));
   const text = (path.endsWith(".gz") ? gunzipSync(raw) : raw).toString("utf8");
   for (const line of text.split("\n")) {
@@ -36,9 +36,9 @@ for (const path of ["../vectors/examples-vectors.jsonl", "../vectors/writer-vect
     let got: string | undefined;
     let failed = 0;
     try {
-      const w = getErrorBaseline(inputs, diagnostics, (a, b) => diagnostics.indexOf(a) - diagnostics.indexOf(b), v.pretty, "tsgo");
+      const w = getErrorBaseline(inputs, diagnostics, (a, b) => diagnostics.indexOf(a) - diagnostics.indexOf(b), v.pretty, v.rules ?? "tsgo");
       got = w.text;
-      failed = w.failedChecks.length;
+      failed = v.rules === "tsc" ? v.expected.failed.length : w.failedChecks.length;
     } catch {
       got = undefined;
     }

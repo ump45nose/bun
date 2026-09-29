@@ -114,6 +114,11 @@ writeFileSync(input, cases.map(toJson).join("\n") + "\n");
 const r = spawnSync("node", [join(import.meta.dir, "../groundtruth/ts_harness.cjs"), "/workspace/ref/typescript-go/_submodules/TypeScript", "/workspace/bun/node_modules/typescript/lib/typescript.js", input], { maxBuffer: 1 << 30, encoding: "utf8" });
 if (r.status !== 0) throw new Error("ground truth failed: " + r.stderr.slice(0, 2000));
 const results = r.stdout.split("\n").filter(l => l !== "").map(l => JSON.parse(l) as { text: string; failed: string[]; panic: string; skipped: string });
+const vectorsAt = process.argv.indexOf("--vectors");
+if (vectorsAt >= 0) {
+  const lines = cases.map((c, i) => JSON.stringify({ ...JSON.parse(toJson(c)), rules: "tsc", expected: { text: results[i].text, failed: results[i].failed, panic: results[i].panic } }));
+  writeFileSync(process.argv[vectorsAt + 1], lines.join("\n") + "\n");
+}
 let same = 0;
 let bothStop = 0;
 const stops = new Map<string, number>();
