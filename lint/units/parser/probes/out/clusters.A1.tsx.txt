@@ -1,33 +1,41 @@
 class A1  dialect tsx  config plain: 269 inputs in 17 clusters
 
 [04-type-params-args / targsExpr]  bun Expected "…" but found "…"   (47 inputs, 1 distinct)
+    tsc also: TS2371 x47, TS2304 x46, TS2347 x5, TS2318 x2, TS2558 x2, TS2364 x1, TS2635 x1
     "<(a = 1) => void>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]
 
 [04-type-params-args / targsExpr]  bun Unexpected …   (48 inputs, 2 distinct)
+    tsc also: TS2304 x47, TS2371 x47, TS2347 x5, TS2318 x2, TS2558 x2, TS2364 x1, TS2635 x1
     "<({ a = 1 }) => void>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]
     "<A"  [instImport]
 
 [04-type-params-args / targsHeritage]  bun Expected "…" but found "…"   (4 inputs, 4 distinct)
+    tsc also: TS2500 x4, TS2503 x1
     "class C implements a() {}"  [-]
     "class C implements a.b() {}"  [-]
     "class C implements a?.b {}"  [-]
     "class C implements new A {}"  [-]
 
 [04-type-params-args / targsHeritage]  bun Expected identifier but found "…"   (1 inputs, 1 distinct)
+    tsc also: TS2500 x1
     "class C implements A.#b {}"  [-]
 
 [04-type-params-args / targsHeritage]  bun Unexpected …   (1 inputs, 1 distinct)
+    tsc also: TS2660 x1
     "class C extends super.a {}"  [-]
 
 [04-type-params-args / tparams]  bun The modifier "…" is not valid here   (48 inputs, 3 distinct)
+    tsc also: TS2304 x22, TS2318 x3
     "<out>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
     "<out = A>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
     "<const out>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
 
 [04-type-params-args / tparamsArrow]  bun The modifier "…" is not valid here   (5 inputs, 1 distinct)
+    tsc also: TS2304 x5, TS7006 x1, TS2318 x1
     "<out = A>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt]
 
 [05-assertions / arrow]  bun Expected "…" but found "…"   (41 inputs, 9 distinct)
+    tsc also: TS2304 x41, TS2369 x30, TS7006 x21, TS2730 x5
     "(): if => x"  [init,stmt,arg,condTrue,condFalse]
     "(public a: A) => x"  [init,stmt,arg,condTrue,condFalse]
     "(private a) => x"  [init,stmt,arg,condTrue,condFalse]
@@ -37,25 +45,30 @@ class A1  dialect tsx  config plain: 269 inputs in 17 clusters
     … 3 more
 
 [05-assertions / arrow]  bun Invalid assignment target   (5 inputs, 1 distinct)
+    tsc also: TS2304 x5, TS2364 x5
     "(a: A = 1 = 2) => x"  [init,stmt,arg,condTrue,condFalse]
 
 [05-assertions / arrow]  bun Invalid binding pattern   (20 inputs, 4 distinct)
+    tsc also: TS2730 x20, TS2304 x20, TS7006 x5, TS2318 x5
     "(this: A) => x"  [init,stmt,arg,condTrue,condFalse]
     "(this: A, a: B) => x"  [init,stmt,arg,condTrue,condFalse]
     "(this) => x"  [init,stmt,arg,condTrue,condFalse]
     "async (this: A) => x"  [init,stmt,arg,condTrue,condFalse]
 
 [05-assertions / arrow]  bun Unexpected …   (15 inputs, 3 distinct)
+    tsc also: TS2304 x15, TS2730 x10
     "(this: A): this is B => true"  [init,stmt,arg,condTrue,condFalse]
     "a ? (await) : b"  [init,stmt,arg,condTrue,condFalse]
     "a ? (this: T): b => c : d"  [init,stmt,arg,condTrue,condFalse]
 
 [05-assertions / as]  bun Unexpected …   (15 inputs, 3 distinct)
+    tsc also: TS2304 x15
     "x as if"  [init,stmt,arg,element,return]
     "x as var"  [init,stmt,arg,element,return]
     "x as T <= y"  [init,stmt,arg,element,return]
 
 [05-assertions / cast]  bun The modifier "…" is not valid here   (6 inputs, 2 distinct)
+    tsc also: TS7006 x6, TS2304 x4
     "<out, T>(x) => x"  [init,stmt,arg]
     "<out = A>(x) => x"  [init,stmt,arg]
 
@@ -63,11 +76,14 @@ class A1  dialect tsx  config plain: 269 inputs in 17 clusters
     "try {} catch (e: any = 1) {}"  [-]
 
 [05-assertions / nonNull]  bun Expected identifier but found "…"   (3 inputs, 1 distinct)
+    tsc also: TS7017 x3, TS2304 x1
     "this.#x!"  [stmt,init,arg]
 
 [05-assertions / nonNull]  bun Unexpected …   (3 inputs, 1 distinct)
+    tsc also: TS2660 x3, TS2304 x1
     "super.x!"  [stmt,init,arg]
 
 [05-assertions / objLit]  bun Expected "…" but found "…"   (6 inputs, 2 distinct)
+    tsc also: TS2304 x6, TS2364 x3, TS2369 x3
     "{ a?: 1 } = b"  [init,arg,paren]
     "{ m(public a: A) {} }"  [init,arg,paren]

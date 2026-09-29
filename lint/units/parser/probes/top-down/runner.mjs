@@ -331,12 +331,13 @@ function matchClose(text, openIndex) {
 }
 
 export function normalizeMetadataValue(expr) {
+  const NAME = String.raw`[^\s()&|?:=!",\[\]]+`;
   let s = expr.replace(/\s+/g, " ").trim();
   s = s.replace(
-    /typeof \((_\w+) = typeof (\w+) !== "undefined" && ((?:\(_\w+ = [\w.$]+\) !== void 0 && )*)([\w.$]+)\) === "function" \? \1 : Object/g,
+    new RegExp(String.raw`typeof \((_\w+) = typeof (${NAME}) !== "undefined" && ((?:\(_\w+ = ${NAME}\) !== void 0 && )*)(${NAME})\) === "function" \? \1 : Object`, "g"),
     (_m, _t, _root, chain, last) => {
       const names = [];
-      const re = /\(_\w+ = ([\w.$]+)\) !== void 0 && /g;
+      const re = new RegExp(String.raw`\(_\w+ = (${NAME})\) !== void 0 && `, "g");
       let mm;
       while ((mm = re.exec(chain))) names.push(mm[1]);
       names.push(last);
@@ -346,7 +347,7 @@ export function normalizeMetadataValue(expr) {
     },
   );
   s = s.replace(
-    /typeof (\w+) === "undefined" (?:\|\| typeof [\w.$]+ === "undefined" )*\? Object : ([\w.$]+)/g,
+    new RegExp(String.raw`typeof (${NAME}) === "undefined" (?:\|\| typeof ${NAME} === "undefined" )*\? Object : (${NAME})`, "g"),
     (_m, _root, full) => `ref(${full})`,
   );
   s = s.replace(/\bvoid 0\b/g, "undefined");

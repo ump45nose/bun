@@ -1,5 +1,5 @@
 group 04-type-params-args  dialect ts  config plain  inputs 11073
-counts A1=174 A2=1224 AA=4420 AAg=835 B=765 RR=3655
+counts A1=174 A1c=74 A1s=100 A2=1224 AA=4420 AAg=835 B=765 RR=3655
 
 calls of Bun that differ from transformSync without tsconfig: 119 inputs
   "f<A = B>(x);"  base="Invalid assignment target"  ts.plain.scanImports=ok ts.deco.scanImports=ok tsx.plain.scanImports=ok tsx.deco.scanImports=ok

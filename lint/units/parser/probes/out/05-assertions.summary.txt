@@ -1,5 +1,5 @@
 group 05-assertions  dialect ts  config plain  inputs 4713
-counts A1=142 A2=266 AA=2993 AAg=344 B=159 RR=809
+counts A1=142 A1c=59 A1s=83 A2=266 AA=2993 AAg=344 B=159 RR=809
 
 calls of Bun that differ from transformSync without tsconfig: 6 inputs
   "const v = y || <T>x = y;"  base="Invalid assignment target"  ts.plain.scanImports=ok ts.deco.scanImports=ok

@@ -17,3 +17,5 @@ END   14-cargo-fmt-js_parser rc=0 wall=249s lockwait=245s run=4s 2026-09-29T16:3
 START 15-cargo-fmt-ast 2026-09-29T16:38:34Z load=406.25 311.27 319.74 cmd: cargo fmt -p bun_ast -- --check
 END   15-cargo-fmt-ast rc=0 wall=1247s lockwait=1246s run=1s 2026-09-29T16:59:21Z load=249.62 291.04 335.83
 START 20-test-decorator-metadata 2026-09-29T16:59:36Z load=250.90 289.33 334.55 cmd: bun bd test test/bundler/transpiler/decorator-metadata.test.ts --timeout 180000
+END   20-test-decorator-metadata rc=0 wall=422s lockwait=410s run=12s 2026-09-29T17:06:39Z load=380.87 347.07 349.41
+START 21-test-bundler_decorator_metadata 2026-09-29T17:06:40Z load=380.87 347.07 349.41 cmd: bun bd test test/bundler/bundler_decorator_metadata.test.ts --timeout 180000

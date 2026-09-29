@@ -1,5 +1,5 @@
 group 02-object-types  dialect ts  config plain  inputs 2851
-counts A1=44 A2=115 AA=1702 AAg=276 B=176 RR=538
+counts A1=44 A1c=19 A1s=25 A2=115 AA=1702 AAg=276 B=176 RR=538
 
 calls of Bun that differ from transformSync without tsconfig: 7 inputs
   "type X = { a(1): A };"  base="Backtrack"  ts.plain.scanImports="Backtrack Failed to scan imports" ts.deco.scanImports="Backtrack Failed to scan imports" tsx.plain.scanImports="Backtrack Failed to scan imports" tsx.deco.scanImports="Backtrack Failed to scan imports"

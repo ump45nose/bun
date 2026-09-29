@@ -10,8 +10,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "A extends B ? C : D : E"  [tupleEl]   tsc @28+1 in "let x: [A extends B ? C : D : E];"
     "extends B ? C : D"  [arrowRet,fnTypeParam]   tsc @13+1 in "const f = (a): extends B ? C : D => 0;"
     "A extends B ? a is C : D"  [arrowRet]   tsc @13+1 in "const f = (a): A extends B ? a is C : D => 0;"
-    "A extends B ? C : a is D"  [var,param,arrowParam,arrowRet,as,fnTypeParam,tupleEl]   tsc @27+2 in "let x: A extends B ? C : a is D;"
-    "A extends a is B ? C : D"  [arrowRet]   tsc @13+1 in "const f = (a): A extends a is B ? C : D => 0;"
+    … 2 more
 
 [01-type-forms / cond]  tsc TS1005 ';' expected.   (5 inputs, 3 distinct)
     "A extends B ? a is C : D"  [callArg]   tsc @4+7 in "f<A extends B ? a is C : D>(x);"
@@ -48,10 +47,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "A | B"  [ifaceExtends,classImplements]   tsc @22+1 in "interface I extends A | B {}"
     "A & B"  [ifaceExtends,classImplements]   tsc @22+1 in "interface I extends A & B {}"
     "keyof A"  [ifaceExtends,classImplements]   tsc @26+1 in "interface I extends keyof A {}"
-    "readonly A[]"  [ifaceExtends,classImplements]   tsc @29+1 in "interface I extends readonly A[] {}"
-    "unique symbol"  [ifaceExtends,classImplements]   tsc @27+6 in "interface I extends unique symbol {}"
-    "<T>(a: T) => T"  [classExtendsArg]   tsc @17+2 in "class C extends B<<T>(a: T) => T> {}"
-    … 9 more
+    … 12 more
 
 [01-type-forms / core]  tsc TS1005 ';' expected.   (8 inputs, 2 distinct)
     "a is B"  [newArg,tagArg,indexSig,condCheck,condFalse]   tsc @8+2 in "new F<a is B>(x);"
@@ -85,17 +81,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "typeof a"  [ifaceExtends,classImplements]   tsc @20+6 in "interface I extends typeof a {}"
     "() => void"  [ifaceExtends,classImplements]   tsc @21+1 in "interface I extends () => void {}"
     "new () => A"  [ifaceExtends,classImplements]   tsc @25+1 in "interface I extends new () => A {}"
-    "<T>(a: T) => T"  [ifaceExtends,classImplements]   tsc @20+1 in "interface I extends <T>(a: T) => T {}"
-    "void"  [ifaceExtends,classImplements]   tsc @20+4 in "interface I extends void {}"
-    "-1"  [ifaceExtends,classImplements]   tsc @20+1 in "interface I extends -1 {}"
-    … 2 more
+    … 5 more
 
 [01-type-forms / core]  tsc TS1110 Type expected.   (67 inputs, 5 distinct)
     "<T>(a: T) => T"  [keyofArg]   tsc @13+1 in "let x: keyof <T>(a: T) => T;"
     "| A"  [unionRight]   tsc @11+1 in "let x: A | | A;"
     "(a: ) => void"  [var,ret,arrowParam,satisfies,cast,newArg,tagArg,inst,…]   tsc @11+1 in "let x: (a: ) => void;"
-    "A |"  [newArg,tagArg,inst]   tsc @9+1 in "new F<A |>(x);"
-    "keyof () => void"  [satisfies,method,fnTypeRet,tupleNamed,indexSig,mapped,unionRight,unionLeft,…]   tsc @29+1 in "const v = x satisfies keyof () => void;"
+    … 2 more
 
 [01-type-forms / core]  tsc TS1131 Property or signature expected.   (1 inputs, 1 distinct)
     "A |"  [getterRet]   tsc @25+5 in "class C { get p(): A | { throw 0 } }"
@@ -113,19 +105,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "(this?: A) => B"  [alias,param,arrowRet,callArg,as,field]   tsc @14+1 in "type X = (this?: A) => B;"
     "new () =>"  [arrowRet]   tsc @13+1 in "const f = (a): new () => => 0;"
     "() =>"  [arrowRet]   tsc @13+1 in "const f = (a): () => => 0;"
-    "([this]) => void"  [param]   tsc @23+2 in "function f(a: ([this]) => void) {}"
-    "({ a: this }) => void"  [param]   tsc @28+2 in "function f(a: ({ a: this }) => void) {}"
-    "(a) => asserts a.b"  [param,arrowRet,as]   tsc @30+1 in "function f(a: (a) => asserts a.b) {}"
-    … 5 more
+    … 8 more
 
 [01-type-forms / fn]  tsc TS1005 ';' expected.   (17 inputs, 8 distinct)
     "([this]) => void"  [alias,callArg,as]   tsc @18+2 in "type X = ([this]) => void;"
     "({ a: this }) => void"  [alias,callArg,as]   tsc @23+2 in "type X = ({ a: this }) => void;"
     "(a) => asserts a.b"  [alias,callArg]   tsc @25+1 in "type X = (a) => asserts a.b;"
-    "(a) => asserts is is B"  [alias,callArg]   tsc @30+1 in "type X = (a) => asserts is is B;"
-    "(a) => a is b is C"  [alias,callArg]   tsc @23+2 in "type X = (a) => a is b is C;"
-    "(a) => (a is B)"  [callArg]   tsc @6+2 in "f<(a) => (a is B)>(x);"
-    … 2 more
+    … 5 more
 
 [01-type-forms / fn]  tsc TS1005 '(' expected.   (2 inputs, 2 distinct)
     "<T>"  [callArg]   tsc @5+1 in "f<<T>>(x);"
@@ -147,10 +133,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "new () =>"  [callArg]   tsc @11+1 in "f<new () =>>(x);"
     "() =>"  [callArg]   tsc @7+1 in "f<() =>>(x);"
     "(a: ) => void"  [alias,param,arrowRet,callArg,as,field]   tsc @13+1 in "type X = (a: ) => void;"
-    "(a:) => void"  [alias,param,arrowRet,callArg,as,field]   tsc @12+1 in "type X = (a:) => void;"
-    "(a?:) => void"  [alias,param,arrowRet,callArg,as,field]   tsc @13+1 in "type X = (a?:) => void;"
-    "({ a }: ) => void"  [alias,param,arrowRet,callArg,as,field]   tsc @17+1 in "type X = ({ a }: ) => void;"
-    … 2 more
+    … 5 more
 
 [01-type-forms / fn]  tsc TS1131 Property or signature expected.   (5 inputs, 1 distinct)
     "({ : a }) => void"  [alias,param,arrowRet,as,field]   tsc @12+1 in "type X = ({ : a }) => void;"
@@ -165,19 +148,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "([this]) => void"  [field]   tsc @22+2 in "class C { p: ([this]) => void; }"
     "({ a: this }) => void"  [field]   tsc @27+2 in "class C { p: ({ a: this }) => void; }"
     "(a) => asserts a.b"  [field]   tsc @29+1 in "class C { p: (a) => asserts a.b; }"
-    "(a) => asserts is is B"  [field]   tsc @34+1 in "class C { p: (a) => asserts is is B; }"
-    "(a) => a is b is C"  [field]   tsc @27+2 in "class C { p: (a) => a is b is C; }"
-    "(a) => asserts this.x"  [field]   tsc @32+1 in "class C { p: (a) => asserts this.x; }"
-    … 1 more
+    … 4 more
 
 [01-type-forms / import]  tsc TS1005 ',' expected.   (30 inputs, 12 distinct)
     "import(\"x\").A<T>.B"  [var,param,arrowParam,arrowRet,as,fnTypeParam,tupleEl]   tsc @23+1 in "let x: import(\"x\").A<T>.B;"
     "import(\"x\", { with: { a: \"b\" } }, )"  [arrowRet]   tsc @13+1 in "const f = (a): import(\"x\", { with: { a: \"b\" } }, ) => 0;"
     "import(\"x\", { with: { [a]: \"b\" } })"  [arrowRet]   tsc @13+1 in "const f = (a): import(\"x\", { with: { [a]: \"b\" } }) => 0;"
-    "import(\"x\", { with: { 1: \"b\" } })"  [arrowRet]   tsc @13+1 in "const f = (a): import(\"x\", { with: { 1: \"b\" } }) => 0;"
-    "import(\"x\", { with: { a: \"b\" }, assert: { c: \"d\" } })"  [arrowRet]   tsc @13+1 in "const f = (a): import(\"x\", { with: { a: \"b\" }, assert: { c: \"d\" } }) => 0;"
-    "import(\"x\", { with: y })"  [arrowRet]   tsc @13+1 in "const f = (a): import(\"x\", { with: y }) => 0;"
-    … 6 more
+    … 9 more
 
 [01-type-forms / import]  tsc TS1005 ';' expected.   (2 inputs, 1 distinct)
     "import(\"x\").A<T>.B"  [alias,member]   tsc @25+1 in "type X = import(\"x\").A<T>.B;"
@@ -186,7 +163,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "import(\"x\", { with })"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @28+1 in "type X = import(\"x\", { with });"
     "import(\"x\", { with: { a } })"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @33+1 in "type X = import(\"x\", { with: { a } });"
     "import(\"x\", { with?: { a: \"b\" } })"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]   tsc @27+1 in "type X = import(\"x\", { with?: { a: \"b\" } });"
-    "import(\"x\", { with(): void })"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]   tsc @27+1 in "type X = import(\"x\", { with(): void });"
+    … 1 more
 
 [01-type-forms / import]  tsc TS1005 '(' expected.   (1 inputs, 1 distinct)
     "import.meta"  [callArg]   tsc @8+1 in "f<import.meta>(x);"
@@ -208,7 +185,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "import(\"x\", {})"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @22+1 in "type X = import(\"x\", {});"
     "import(\"x\", { a: \"b\" })"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]   tsc @23+1 in "type X = import(\"x\", { a: \"b\" });"
     "import(\"x\", { readonly with: { a: \"b\" } })"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]   tsc @23+8 in "type X = import(\"x\", { readonly with: { a: \"b\" } });"
-    "import(\"x\", { \"with\": { a: \"b\" } })"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]   tsc @23+6 in "type X = import(\"x\", { \"with\": { a: \"b\" } });"
+    … 1 more
 
 [01-type-forms / import]  tsc TS1109 Expression expected.   (1 inputs, 1 distinct)
     "import(\"x\")\n<T>"  [as]   tsc @30+1 in "const v = x as import(\"x\")\n<T>;"
@@ -230,19 +207,19 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "A extends infer U[] ? U : never"  [arrowRet]   tsc @13+1 in "const f = (a): A extends infer U[] ? U : never => 0;"
     "A extends readonly infer U[] ? U : never"  [arrowRet]   tsc @13+1 in "const f = (a): A extends readonly infer U[] ? U : never => 0;"
     "infer U[]"  [var,param,arrowParam,arrowRet,as,fnTypeParam,tupleEl]   tsc @14+1 in "let x: infer U[];"
-    "A extends infer U.V ? 1 : 2"  [arrowRet]   tsc @13+1 in "const f = (a): A extends infer U.V ? 1 : 2 => 0;"
+    … 1 more
 
 [01-type-forms / infer]  tsc TS1005 ';' expected.   (6 inputs, 4 distinct)
     "A extends infer U[] ? U : never"  [callArg]   tsc @4+7 in "f<A extends infer U[] ? U : never>(x);"
     "A extends readonly infer U[] ? U : never"  [callArg]   tsc @4+7 in "f<A extends readonly infer U[] ? U : never>(x);"
     "infer U[]"  [alias,callArg,member]   tsc @16+1 in "type X = infer U[];"
-    "A extends infer U.V ? 1 : 2"  [callArg]   tsc @4+7 in "f<A extends infer U.V ? 1 : 2>(x);"
+    … 1 more
 
 [01-type-forms / infer]  tsc TS1005 '?' expected.   (46 inputs, 4 distinct)
     "A extends infer U[] ? U : never"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]   tsc @26+1 in "type X = A extends infer U[] ? U : never;"
     "A extends readonly infer U[] ? U : never"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]   tsc @35+1 in "type X = A extends readonly infer U[] ? U : never;"
     "A extends infer U extends ? 1 : 2"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @39+1 in "type X = A extends infer U extends ? 1 : 2;"
-    "A extends infer U.V ? 1 : 2"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]   tsc @26+1 in "type X = A extends infer U.V ? 1 : 2;"
+    … 1 more
 
 [01-type-forms / infer]  tsc TS1005 '>' expected.   (1 inputs, 1 distinct)
     "infer U[]"  [typeArg]   tsc @16+1 in "let x: A<infer U[]>;"
@@ -291,9 +268,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "void.b"  [callArg]   tsc @6+1 in "f<void.b>(x);"
     "string<T>"  [as]   tsc @24+1 in "const v = x as string<T>;"
     "any<T>"  [as]   tsc @21+1 in "const v = x as any<T>;"
-    "void<T>"  [as]   tsc @22+1 in "const v = x as void<T>;"
-    "this<T>"  [as]   tsc @22+1 in "const v = x as this<T>;"
-    "object<T>"  [as]   tsc @24+1 in "const v = x as object<T>;"
+    … 3 more
 
 [01-type-forms / kw]  tsc TS1144 '{' or ';' expected.   (3 inputs, 3 distinct)
     "void.b"  [ret]   tsc @18+1 in "function f(): void.b { throw 0 }"
@@ -309,10 +284,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "[const?: A]"  [arrowRet]   tsc @13+1 in "const f = (a): [const?: A] => 0;"
     "[in: A]"  [arrowRet]   tsc @13+1 in "const f = (a): [in: A] => 0;"
     "[in?: A]"  [arrowRet]   tsc @13+1 in "const f = (a): [in?: A] => 0;"
-    "[a: A, in: B]"  [arrowRet,callArg]   tsc @13+1 in "const f = (a): [a: A, in: B] => 0;"
-    "[class: A]"  [arrowRet]   tsc @13+1 in "const f = (a): [class: A] => 0;"
-    "[class?: A]"  [arrowRet]   tsc @13+1 in "const f = (a): [class?: A] => 0;"
-    … 31 more
+    … 34 more
 
 [01-type-forms / label]  tsc TS1005 '{' expected.   (2 inputs, 2 distinct)
     "[class: A]"  [callArg]   tsc @8+1 in "f<[class: A]>(x);"
@@ -326,45 +298,31 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "[in: A]"  [callArg]   tsc @3+2 in "f<[in: A]>(x);"
     "[in?: A]"  [callArg]   tsc @3+2 in "f<[in?: A]>(x);"
     "[delete: A]"  [callArg]   tsc @9+1 in "f<[delete: A]>(x);"
-    "[delete?: A]"  [callArg]   tsc @9+1 in "f<[delete?: A]>(x);"
-    "[instanceof: A]"  [callArg]   tsc @3+10 in "f<[instanceof: A]>(x);"
-    "[instanceof?: A]"  [callArg]   tsc @3+10 in "f<[instanceof?: A]>(x);"
+    … 3 more
 
 [01-type-forms / label]  tsc TS1110 Type expected.   (11 inputs, 10 distinct)
     "[const?: A]"  [alias,param]   tsc @10+5 in "type X = [const?: A];"
     "[default: A]"  [arrowRet]   tsc @16+7 in "const f = (a): [default: A] => 0;"
     "[default?: A]"  [arrowRet]   tsc @16+7 in "const f = (a): [default?: A] => 0;"
-    "[a: A, default: B]"  [arrowRet]   tsc @22+7 in "const f = (a): [a: A, default: B] => 0;"
-    "[export: A]"  [arrowRet]   tsc @16+6 in "const f = (a): [export: A] => 0;"
-    "[export?: A]"  [arrowRet]   tsc @16+6 in "const f = (a): [export?: A] => 0;"
-    … 4 more
+    … 7 more
 
 [01-type-forms / label]  tsc TS1137 Expression or comma expected.   (19 inputs, 19 distinct)
     "[const?: A]"  [callArg]   tsc @3+5 in "f<[const?: A]>(x);"
     "[if: A]"  [callArg]   tsc @3+2 in "f<[if: A]>(x);"
     "[if?: A]"  [callArg]   tsc @3+2 in "f<[if?: A]>(x);"
-    "[var: A]"  [callArg]   tsc @3+3 in "f<[var: A]>(x);"
-    "[var?: A]"  [callArg]   tsc @3+3 in "f<[var?: A]>(x);"
-    "[default: A]"  [callArg]   tsc @3+7 in "f<[default: A]>(x);"
-    … 13 more
+    … 16 more
 
 [01-type-forms / op]  tsc TS1005 ',' expected.   (32 inputs, 7 distinct)
     "keyof new () => A"  [var,param,arrowParam,arrowRet,as,fnTypeParam,tupleEl]   tsc @17+1 in "let x: keyof new () => A;"
     "keyof <T>() => void"  [arrowRet]   tsc @13+1 in "const f = (a): keyof <T>() => void => 0;"
     "keyof abstract new () => A"  [var,param,arrowParam,arrowRet,as,fnTypeParam,tupleEl]   tsc @22+3 in "let x: keyof abstract new () => A;"
-    "keyof (a: A) => B"  [arrowRet,callArg]   tsc @13+1 in "const f = (a): keyof (a: A) => B => 0;"
-    "keyof a is B"  [var,param,arrowParam,arrowRet,as,fnTypeParam,tupleEl]   tsc @15+2 in "let x: keyof a is B;"
-    "readonly new () => A"  [var,param,arrowParam,arrowRet,as,fnTypeParam,tupleEl]   tsc @20+1 in "let x: readonly new () => A;"
-    … 1 more
+    … 4 more
 
 [01-type-forms / op]  tsc TS1005 ';' expected.   (16 inputs, 8 distinct)
     "keyof () => void"  [callArg]   tsc @11+2 in "f<keyof () => void>(x);"
     "keyof new () => A"  [alias,callArg,member]   tsc @19+1 in "type X = keyof new () => A;"
     "keyof <T>() => void"  [callArg]   tsc @14+2 in "f<keyof <T>() => void>(x);"
-    "keyof abstract new () => A"  [alias,callArg,member]   tsc @24+3 in "type X = keyof abstract new () => A;"
-    "keyof a is B"  [alias,callArg,member]   tsc @17+2 in "type X = keyof a is B;"
-    "readonly () => void"  [callArg]   tsc @14+2 in "f<readonly () => void>(x);"
-    … 2 more
+    … 5 more
 
 [01-type-forms / op]  tsc TS1005 ')' expected.   (11 inputs, 1 distinct)
     "keyof (a: A) => B"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]   tsc @17+1 in "type X = keyof (a: A) => B;"
@@ -373,7 +331,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "keyof new () => A"  [typeArg]   tsc @19+1 in "let x: A<keyof new () => A>;"
     "keyof abstract new () => A"  [typeArg]   tsc @24+3 in "let x: A<keyof abstract new () => A>;"
     "keyof a is B"  [typeArg]   tsc @17+2 in "let x: A<keyof a is B>;"
-    "readonly new () => A"  [typeArg]   tsc @22+1 in "let x: A<readonly new () => A>;"
+    … 1 more
 
 [01-type-forms / op]  tsc TS1109 Expression expected.   (1 inputs, 1 distinct)
     "unique symbol<T>"  [as]   tsc @31+1 in "const v = x as unique symbol<T>;"
@@ -382,16 +340,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "keyof |"  [ret,arrowRet,callArg,fnTypeParam]   tsc @20+1 in "function f(): keyof | { throw 0 }"
     "keyof | A"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @15+1 in "type X = keyof | A;"
     "keyof & A"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @15+1 in "type X = keyof & A;"
-    "keyof () => void"  [alias,var,param,ret,arrowParam,arrowRet,as,field,…]   tsc @16+1 in "type X = keyof () => void;"
-    "keyof <T>() => void"  [alias,var,param,ret,arrowParam,as,field,typeArg,…]   tsc @15+1 in "type X = keyof <T>() => void;"
-    "readonly () => void"  [alias,var,param,ret,arrowParam,arrowRet,as,field,…]   tsc @19+1 in "type X = readonly () => void;"
-    … 1 more
+    … 4 more
 
 [01-type-forms / op]  tsc TS1144 '{' or ';' expected.   (4 inputs, 4 distinct)
     "keyof new () => A"  [ret]   tsc @24+1 in "function f(): keyof new () => A { throw 0 }"
     "keyof abstract new () => A"  [ret]   tsc @29+3 in "function f(): keyof abstract new () => A { throw 0 }"
     "keyof a is B"  [ret]   tsc @22+2 in "function f(): keyof a is B { throw 0 }"
-    "readonly new () => A"  [ret]   tsc @27+1 in "function f(): readonly new () => A { throw 0 }"
+    … 1 more
 
 [01-type-forms / op]  tsc TS1441 Cannot start a function call in a type annotation.   (2 inputs, 2 distinct)
     "keyof new () => A"  [field]   tsc @23+1 in "class C { p: keyof new () => A; }"
@@ -416,7 +371,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "()"  [callArg,fnTypeParam]   tsc @4+1 in "f<()>(x);"
     "(A, B)"  [callArg]   tsc @8+1 in "f<(A, B)>(x);"
     "(a, b)"  [callArg]   tsc @8+1 in "f<(a, b)>(x);"
-    "(a = 1)"  [callArg]   tsc @9+1 in "f<(a = 1)>(x);"
+    … 1 more
 
 [01-type-forms / paren]  tsc TS1005 '>' expected.   (1 inputs, 1 distinct)
     "(a).b"  [typeArg]   tsc @12+1 in "let x: A<(a).b>;"
@@ -440,65 +395,49 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "a is B"  [var,param,arrowParam,as,fnTypeParam]   tsc @9+2 in "let x: a is B;"
     "a is"  [fnTypeParam]   tsc @13+2 in "let x: (a: a is) => void;"
     "a is B | C"  [var,param,arrowParam,as,fnTypeParam,tupleEl]   tsc @9+2 in "let x: a is B | C;"
-    "a is B extends C ? D : E"  [var,param,arrowParam,as,fnTypeParam,tupleEl]   tsc @9+2 in "let x: a is B extends C ? D : E;"
-    "a is b is C"  [var,param,arrowParam,arrowRet,as,fnTypeParam,tupleEl]   tsc @9+2 in "let x: a is b is C;"
-    "asserts a is b is C"  [arrowRet]   tsc @13+1 in "const f = (a): asserts a is b is C => 0;"
-    … 12 more
+    … 15 more
 
 [01-type-forms / pred]  tsc TS1005 ';' expected.   (37 inputs, 13 distinct)
     "a is B"  [alias,callArg,member]   tsc @11+2 in "type X = a is B;"
     "a is"  [callArg]   tsc @4+2 in "f<a is>(x);"
     "a is B | C"  [alias,callArg,member]   tsc @11+2 in "type X = a is B | C;"
-    "a is B extends C ? D : E"  [alias,callArg,member]   tsc @11+2 in "type X = a is B extends C ? D : E;"
-    "a is b is C"  [alias,callArg,member]   tsc @11+2 in "type X = a is b is C;"
-    "a is B[]"  [alias,callArg,member]   tsc @11+2 in "type X = a is B[];"
-    … 7 more
+    … 10 more
 
 [01-type-forms / pred]  tsc TS1005 '>' expected.   (11 inputs, 11 distinct)
     "a is B | C"  [typeArg]   tsc @11+2 in "let x: A<a is B | C>;"
     "a is B extends C ? D : E"  [typeArg]   tsc @11+2 in "let x: A<a is B extends C ? D : E>;"
     "a is b is C"  [typeArg]   tsc @11+2 in "let x: A<a is b is C>;"
-    "a is B[]"  [typeArg]   tsc @11+2 in "let x: A<a is B[]>;"
-    "a is (B)"  [typeArg]   tsc @11+2 in "let x: A<a is (B)>;"
-    "is is B"  [typeArg]   tsc @12+2 in "let x: A<is is B>;"
-    … 5 more
+    … 8 more
 
 [01-type-forms / pred]  tsc TS1110 Type expected.   (6 inputs, 4 distinct)
     "a is"  [arrowRet]   tsc @20+2 in "const f = (a): a is => 0;"
     "asserts a is"  [arrowRet]   tsc @28+2 in "const f = (a): asserts a is => 0;"
     "asserts is"  [arrowRet]   tsc @26+2 in "const f = (a): asserts is => 0;"
-    "this is"  [arrowRet,callArg,fnTypeParam]   tsc @23+2 in "const f = (a): this is => 0;"
+    … 1 more
 
 [01-type-forms / pred]  tsc TS1131 Property or signature expected.   (6 inputs, 6 distinct)
     "a is"  [ret]   tsc @21+5 in "function f(): a is { throw 0 }"
     "a\nis B"  [member]   tsc @14+2 in "let x: { a: a\nis B };"
     "this\nis B"  [member]   tsc @17+2 in "let x: { a: this\nis B };"
-    "asserts a is"  [ret]   tsc @29+5 in "function f(): asserts a is { throw 0 }"
-    "asserts is"  [ret]   tsc @27+5 in "function f(): asserts is { throw 0 }"
-    "this is"  [ret]   tsc @24+5 in "function f(): this is { throw 0 }"
+    … 3 more
 
 [01-type-forms / pred]  tsc TS1144 '{' or ';' expected.   (6 inputs, 6 distinct)
     "a is b is C"  [ret]   tsc @21+2 in "function f(): a is b is C { throw 0 }"
     "asserts a is b is C"  [ret]   tsc @29+2 in "function f(): asserts a is b is C { throw 0 }"
     "asserts a.b"  [ret]   tsc @23+1 in "function f(): asserts a.b { throw 0 }"
-    "asserts this.x"  [ret]   tsc @26+1 in "function f(): asserts this.x { throw 0 }"
-    "asserts is is B"  [ret]   tsc @28+1 in "function f(): asserts is is B { throw 0 }"
-    "asserts a is b is c"  [ret]   tsc @29+2 in "function f(): asserts a is b is c { throw 0 }"
+    … 3 more
 
 [01-type-forms / pred]  tsc TS1442 Expected '=' for property initializer.   (12 inputs, 12 distinct)
     "a is B"  [field]   tsc @15+2 in "class C { p: a is B; }"
     "a is B | C"  [field]   tsc @15+2 in "class C { p: a is B | C; }"
     "a is B extends C ? D : E"  [field]   tsc @15+2 in "class C { p: a is B extends C ? D : E; }"
-    "a is b is C"  [field]   tsc @15+2 in "class C { p: a is b is C; }"
-    "a is B[]"  [field]   tsc @15+2 in "class C { p: a is B[]; }"
-    "a is (B)"  [field]   tsc @15+2 in "class C { p: a is (B); }"
-    … 6 more
+    … 9 more
 
 [01-type-forms / query]  tsc TS1003 Identifier expected.   (40 inputs, 4 distinct)
     "typeof a.#b"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @20+0 in "type X = typeof a.#b;"
     "typeof a.b.#c"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @22+0 in "type X = typeof a.b.#c;"
     "typeof a.#b.c"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @20+0 in "type X = typeof a.#b.c;"
-    "typeof [a]"  [callArg]   tsc @9+1 in "f<typeof [a]>(x);"
+    … 1 more
 
 [01-type-forms / query]  tsc TS1005 ',' expected.   (14 inputs, 2 distinct)
     "typeof a<B>.c"  [var,param,arrowParam,arrowRet,as,fnTypeParam,tupleEl]   tsc @18+1 in "let x: typeof a<B>.c;"
@@ -550,10 +489,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "const"  [tupleEl]   tsc @8+5 in "let x: [const];"
     "keyof"  [arrowRet,callArg,fnTypeParam]   tsc @21+2 in "const f = (a): keyof => 0;"
     "readonly"  [arrowRet,callArg,fnTypeParam]   tsc @24+2 in "const f = (a): readonly => 0;"
-    "unique"  [alias,var,param,arrowParam,arrowRet,as,callArg,field,…]   tsc @15+1 in "type X = unique;"
-    "unique.x"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @15+1 in "type X = unique.x;"
-    "keyof.x"  [arrowRet,callArg,fnTypeParam]   tsc @20+1 in "const f = (a): keyof.x => 0;"
-    … 2 more
+    … 5 more
 
 [01-type-forms / ref]  tsc TS1131 Property or signature expected.   (3 inputs, 3 distinct)
     "keyof"  [ret]   tsc @22+5 in "function f(): keyof { throw 0 }"
@@ -625,10 +561,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "[a!: A]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @12+1 in "type X = [a!: A];"
     "[\"a\": A]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @13+1 in "type X = [\"a\": A];"
     "[1: A]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @11+1 in "type X = [1: A];"
-    "[a.b: A]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @13+1 in "type X = [a.b: A];"
-    "[a<T>: A]"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @14+1 in "type X = [a<T>: A];"
-    "[a[]: A]"  [alias,var,param,ret,arrowParam,arrowRet,as,field,…]   tsc @13+1 in "type X = [a[]: A];"
-    … 1 more
+    … 4 more
 
 [01-type-forms / tuple]  tsc TS1011 An element access expression should take an argument.   (1 inputs, 1 distinct)
     "[a[]: A]"  [callArg]   tsc @5+0 in "f<[a[]: A]>(x);"
@@ -637,10 +570,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "[,]"  [arrowRet,callArg,fnTypeParam]   tsc @16+1 in "const f = (a): [,] => 0;"
     "[,A]"  [arrowRet,callArg,fnTypeParam]   tsc @16+1 in "const f = (a): [,A] => 0;"
     "[A,,B]"  [arrowRet,callArg,fnTypeParam]   tsc @18+1 in "const f = (a): [A,,B] => 0;"
-    "[...]"  [arrowRet,callArg,fnTypeParam]   tsc @19+1 in "const f = (a): [...] => 0;"
-    "[a:]"  [arrowRet,callArg,fnTypeParam]   tsc @18+1 in "const f = (a): [a:] => 0;"
-    "[a?:]"  [arrowRet,callArg,fnTypeParam]   tsc @19+1 in "const f = (a): [a?:] => 0;"
-    … 1 more
+    … 4 more
 
 [01-type-forms / tuple]  tsc TS1137 Expression or comma expected.   (1 inputs, 1 distinct)
     "[: A]"  [callArg]   tsc @3+1 in "f<[: A]>(x);"
@@ -658,16 +588,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "& | A"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @11+1 in "type X = & | A;"
     "| | A"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @11+1 in "type X = | | A;"
     "& & A"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @11+1 in "type X = & & A;"
-    "| & | A"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @13+1 in "type X = | & | A;"
-    "A | | B"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @13+1 in "type X = A | | B;"
-    "A & & B"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @13+1 in "type X = A & & B;"
-    … 5 more
+    … 8 more
 
 [01-type-forms / union]  tsc TS1131 Property or signature expected.   (4 inputs, 4 distinct)
     "A |"  [ret]   tsc @20+5 in "function f(): A | { throw 0 }"
     "A &"  [ret]   tsc @20+5 in "function f(): A & { throw 0 }"
     "|"  [ret]   tsc @18+5 in "function f(): | { throw 0 }"
-    "&"  [ret]   tsc @18+5 in "function f(): & { throw 0 }"
+    … 1 more
 
 [01-type-forms / union]  tsc TS1144 '{' or ';' expected.   (1 inputs, 1 distinct)
     "A | a is B"  [ret]   tsc @20+2 in "function f(): A | a is B { throw 0 }"
@@ -676,8 +603,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "A | () => void"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @12+11 in "type X = A | () => void;"
     "| () => void"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @10+11 in "type X = | () => void;"
     "A | <T>() => void"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @12+14 in "type X = A | <T>() => void;"
-    "A | (a: B) => C"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @12+12 in "type X = A | (a: B) => C;"
-    "A | (a) => C"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @12+9 in "type X = A | (a) => C;"
+    … 2 more
 
 [01-type-forms / union]  tsc TS1386 Constructor type notation must be parenthesized when used in a union type.   (39 inputs, 3 distinct)
     "A | new () => B"  [alias,var,param,ret,arrowParam,arrowRet,as,callArg,…]   tsc @12+12 in "type X = A | new () => B;"
@@ -710,10 +636,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "interface I extends A | B {}"  [-]   tsc @22+1 in "interface I extends A | B {}"
     "interface I extends A & B {}"  [-]   tsc @22+1 in "interface I extends A & B {}"
     "interface I extends keyof A {}"  [-]   tsc @26+1 in "interface I extends keyof A {}"
-    "interface I extends A extends B ? C : D {}"  [-]   tsc @32+1 in "interface I extends A extends B ? C : D {}"
-    "interface I extends A<B>[] {}"  [-]   tsc @24+1 in "interface I extends A<B>[] {}"
-    "interface I extends unique symbol {}"  [-]   tsc @27+6 in "interface I extends unique symbol {}"
-    … 4 more
+    … 7 more
 
 [02-object-types / ifaceHead]  tsc TS1011 An element access expression should take an argument.   (1 inputs, 1 distinct)
     "interface I extends A[] {}"  [-]   tsc @22+0 in "interface I extends A[] {}"
@@ -722,7 +645,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "interface I extends () => void {}"  [-]   tsc @21+1 in "interface I extends () => void {}"
     "interface I extends typeof a {}"  [-]   tsc @20+6 in "interface I extends typeof a {}"
     "interface I extends void {}"  [-]   tsc @20+4 in "interface I extends void {}"
-    "interface I extends -1 {}"  [-]   tsc @20+1 in "interface I extends -1 {}"
+    … 1 more
 
 [02-object-types / ifaceHead]  tsc TS1477 An instantiation expression cannot be followed by a property access.   (1 inputs, 1 distinct)
     "interface I extends A<B>.C {}"  [-]   tsc @21+3 in "interface I extends A<B>.C {}"
@@ -731,10 +654,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "[K in A]: B,"  [typeLit,param]   tsc @22+1 in "type X = { [K in A]: B, };"
     "[K in A]!: B"  [typeLit,iface,param]   tsc @19+1 in "type X = { [K in A]!: B };"
     "[K in A](): B"  [typeLit,param]   tsc @19+1 in "type X = { [K in A](): B };"
-    "[K in A]<T>(): B"  [typeLit,param]   tsc @19+1 in "type X = { [K in A]<T>(): B };"
-    "[K in A]?(): B"  [typeLit,param]   tsc @20+1 in "type X = { [K in A]?(): B };"
-    "[K in A]+?: B"  [iface]   tsc @22+1 in "interface I { [K in A]+?: B }"
-    … 5 more
+    … 8 more
 
 [02-object-types / mapped]  tsc TS1005 '?' expected.   (4 inputs, 2 distinct)
     "[K in A]+: B"  [typeLit,param]   tsc @20+1 in "type X = { [K in A]+: B };"
@@ -747,7 +667,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "[K in keyof A]: A[K]"  [iface]   tsc @26+1 in "interface I { [K in keyof A]: A[K] }"
     "[K in keyof A as K extends B ? C : never]: A[K]"  [iface]   tsc @26+1 in "interface I { [K in keyof A as K extends B ? C : never]: A[K] }"
     "[K in A extends B ? C : D]: E"  [iface]   tsc @22+7 in "interface I { [K in A extends B ? C : D]: E }"
-    "[K in infer U]: B"  [iface]   tsc @26+1 in "interface I { [K in infer U]: B }"
+    … 1 more
 
 [02-object-types / mapped]  tsc TS1011 An element access expression should take an argument.   (1 inputs, 1 distinct)
     "[K in A[]]: B"  [iface]   tsc @22+0 in "interface I { [K in A[]]: B }"
@@ -756,35 +676,25 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "[void in A]: B"  [typeLit,iface,param]   tsc @17+2 in "type X = { [void in A]: B };"
     "[const in A]: B"  [typeLit,iface,param]   tsc @12+5 in "type X = { [const in A]: B };"
     "[K in () => void]: B"  [iface]   tsc @21+1 in "interface I { [K in () => void]: B }"
-    "[yield in A]: B"  [iface]   tsc @21+2 in "interface I { [yield in A]: B }"
-    "[await in A]: B"  [iface]   tsc @21+2 in "interface I { [await in A]: B }"
+    … 2 more
 
 [02-object-types / mapped]  tsc TS1131 Property or signature expected.   (12 inputs, 8 distinct)
     "+[K in A]: B"  [typeLit,iface,param]   tsc @11+1 in "type X = { +[K in A]: B };"
     "-[K in A]: B"  [typeLit,iface,param]   tsc @11+1 in "type X = { -[K in A]: B };"
     "+readonly [K in A]: B"  [iface]   tsc @14+1 in "interface I { +readonly [K in A]: B }"
-    "-readonly [K in A]: B"  [iface]   tsc @14+1 in "interface I { -readonly [K in A]: B }"
-    "-readonly [K in A]-?: B"  [iface]   tsc @14+1 in "interface I { -readonly [K in A]-?: B }"
-    "+readonly [K in A]+?: B"  [iface]   tsc @14+1 in "interface I { +readonly [K in A]+?: B }"
-    … 2 more
+    … 5 more
 
 [02-object-types / member]  tsc TS1005 ';' expected.   (24 inputs, 8 distinct)
     "default a: A"  [typeLit,iface,varLit]   tsc @19+1 in "type X = { default a: A };"
     "const a: A"  [typeLit,iface,varLit]   tsc @17+1 in "type X = { const a: A };"
     "[k: string]?: A"  [typeLit,iface,varLit]   tsc @22+1 in "type X = { [k: string]?: A };"
-    "[k: string](): A"  [typeLit,iface,varLit]   tsc @22+1 in "type X = { [k: string](): A };"
-    "[k: string]<T>(): A"  [typeLit,iface,varLit]   tsc @22+1 in "type X = { [k: string]<T>(): A };"
-    "[k: string]!: A"  [typeLit,iface,varLit]   tsc @22+1 in "type X = { [k: string]!: A };"
-    … 2 more
+    … 5 more
 
 [02-object-types / member]  tsc TS1005 '(' expected.   (27 inputs, 9 distinct)
     "a<T>: A"  [typeLit,iface,varLit]   tsc @15+1 in "type X = { a<T>: A };"
     "get a?(): A"  [typeLit,iface,varLit]   tsc @16+1 in "type X = { get a?(): A };"
     "set a?(v: A)"  [typeLit,iface,varLit]   tsc @16+1 in "type X = { set a?(v: A) };"
-    "get a: A"  [typeLit,iface,varLit]   tsc @16+1 in "type X = { get a: A };"
-    "get a"  [typeLit,iface,varLit]   tsc @17+1 in "type X = { get a };"
-    "get a?"  [typeLit,iface,varLit]   tsc @16+1 in "type X = { get a? };"
-    … 3 more
+    … 6 more
 
 [02-object-types / member]  tsc TS1005 ']' expected.   (9 inputs, 3 distinct)
     "[{ k }: string]: A"  [typeLit,iface,varLit]   tsc @17+1 in "type X = { [{ k }: string]: A };"
@@ -802,10 +712,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "-1: A"  [typeLit,iface,varLit]   tsc @11+1 in "type X = { -1: A };"
     "a!: A"  [typeLit,iface,varLit]   tsc @11+1 in "type X = { a!: A };"
     "a!"  [typeLit,iface,varLit]   tsc @11+1 in "type X = { a! };"
-    "a A"  [typeLit,iface,varLit]   tsc @11+1 in "type X = { a A };"
-    "readonly get a(): A"  [typeLit,iface,varLit]   tsc @11+8 in "type X = { readonly get a(): A };"
-    "static get a(): A"  [typeLit,iface,varLit]   tsc @11+6 in "type X = { static get a(): A };"
-    … 7 more
+    … 10 more
 
 [02-object-types / memberSep]  tsc TS1005 '(' expected.   (2 inputs, 1 distinct)
     "get\nset"  [typeLit,iface]   tsc @19+1 in "type X = { get\nset };"
@@ -817,26 +724,19 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "a: a is B"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]   tsc @16+2 in "const f = (a: a is B) => 0;"
     "a!"  [arrowRet]   tsc @14+1 in "const f = (a!): void => {};"
     "(a)"  [arrowRet]   tsc @15+1 in "const f = ((a)): void => {};"
-    "a as A"  [arrowRet,genericArrow]   tsc @18+1 in "const f = (a as A): void => {};"
-    "a satisfies A"  [arrowRet,genericArrow]   tsc @25+1 in "const f = (a satisfies A): void => {};"
-    "<A>a"  [arrowRet]   tsc @16+1 in "const f = (<A>a): void => {};"
-    … 3 more
+    … 6 more
 
 [03-signatures / arrowSig]  tsc TS1005 ';' expected.   (12 inputs, 6 distinct)
     "a!"  [arrow,asyncArrow]   tsc @15+2 in "const f = (a!) => 0;"
     "(a)"  [arrow,asyncArrow]   tsc @16+2 in "const f = ((a)) => 0;"
     "a as A"  [arrow,asyncArrow]   tsc @19+2 in "const f = (a as A) => 0;"
-    "a satisfies A"  [arrow,asyncArrow]   tsc @26+2 in "const f = (a satisfies A) => 0;"
-    "<A>a"  [arrow,asyncArrow]   tsc @17+2 in "const f = (<A>a) => 0;"
-    "a<A>"  [arrow,asyncArrow]   tsc @17+2 in "const f = (a<A>) => 0;"
+    … 3 more
 
 [03-signatures / arrowSig]  tsc TS1005 ':' expected.   (6 inputs, 6 distinct)
     "a!"  [arrowInCond]   tsc @19+2 in "const f = a ? (a!) => 0 : 1;"
     "(a)"  [arrowInCond]   tsc @20+2 in "const f = a ? ((a)) => 0 : 1;"
     "a as A"  [arrowInCond]   tsc @23+2 in "const f = a ? (a as A) => 0 : 1;"
-    "a satisfies A"  [arrowInCond]   tsc @30+2 in "const f = a ? (a satisfies A) => 0 : 1;"
-    "<A>a"  [arrowInCond]   tsc @21+2 in "const f = a ? (<A>a) => 0 : 1;"
-    "a<A>"  [arrowInCond]   tsc @21+2 in "const f = a ? (a<A>) => 0 : 1;"
+    … 3 more
 
 [03-signatures / arrowSig]  tsc TS1005 ')' expected.   (8 inputs, 2 distinct)
     "a!: A"  [arrow,arrowRet,arrowInCond,arrowInCondRet]   tsc @13+1 in "const f = (a!: A) => 0;"
@@ -846,17 +746,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "a!"  [genericArrow]   tsc @12+1 in "const f = <T,>(a!) => 0;"
     "a!: A"  [genericArrow]   tsc @12+1 in "const f = <T,>(a!: A) => 0;"
     "(a)"  [genericArrow]   tsc @12+1 in "const f = <T,>((a)) => 0;"
-    "(a): A"  [genericArrow]   tsc @12+1 in "const f = <T,>((a): A) => 0;"
-    "<A>a"  [genericArrow]   tsc @12+1 in "const f = <T,>(<A>a) => 0;"
-    "a<A>"  [genericArrow]   tsc @12+1 in "const f = <T,>(a<A>) => 0;"
+    … 3 more
 
 [03-signatures / arrowSig]  tsc TS1109 Expression expected.   (6 inputs, 6 distinct)
     "a!"  [arrowInCondRet]   tsc @25+2 in "const f = a ? (a!): void => {} : 1;"
     "(a)"  [arrowInCondRet]   tsc @26+2 in "const f = a ? ((a)): void => {} : 1;"
     "a as A"  [arrowInCondRet]   tsc @29+2 in "const f = a ? (a as A): void => {} : 1;"
-    "a satisfies A"  [arrowInCondRet]   tsc @36+2 in "const f = a ? (a satisfies A): void => {} : 1;"
-    "<A>a"  [arrowInCondRet]   tsc @27+2 in "const f = a ? (<A>a): void => {} : 1;"
-    "a<A>"  [arrowInCondRet]   tsc @27+2 in "const f = a ? (a<A>): void => {} : 1;"
+    … 3 more
 
 [03-signatures / declSig]  tsc TS1005 ',' expected.   (21 inputs, 3 distinct)
     "a: a is B"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]   tsc @16+2 in "function f(a: a is B) {}"
@@ -895,8 +791,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "{ a }: "  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]   tsc @15+1 in "let x: ({ a }: ) => void;"
     "a:"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]   tsc @10+1 in "let x: (a:) => void;"
     "a?:"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]   tsc @11+1 in "let x: (a?:) => void;"
-    "a: "  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]   tsc @11+1 in "let x: (a: ) => void;"
-    "a: |"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]   tsc @12+1 in "let x: (a: |) => void;"
+    … 2 more
 
 [03-signatures / typeSig]  tsc TS1131 Property or signature expected.   (3 inputs, 1 distinct)
     "{ : a }"  [fnType,fnTypeInUnion,fnTypeArrowRet]   tsc @10+1 in "let x: ({ : a }) => void;"
@@ -939,19 +834,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "<,>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,newCall,newNoArgs,newMember,…]   tsc @2+1 in "f<,>(x);"
     "<A,,B>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,newCall,newNoArgs,newMember,…]   tsc @4+1 in "f<A,,B>(x);"
     "<,A>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,newCall,newNoArgs,newMember,…]   tsc @2+1 in "f<,A>(x);"
-    "<A | >"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,newCall,newNoArgs,newMember,…]   tsc @6+1 in "f<A | >(x);"
-    "<A & >"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,newCall,newNoArgs,newMember,…]   tsc @6+1 in "f<A & >(x);"
-    "<(a: ) => void>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]   tsc @6+1 in "f<(a: ) => void>(x);"
-    … 1 more
+    … 4 more
 
 [04-type-params-args / targsExpr]  tsc TS1146 Declaration expected.   (43 inputs, 40 distinct)
     "<a is B>"  [instDecorator,instDecoratorNoCall]   tsc @2+0 in "@f<a is B>(x) class C {}"
     "<const>"  [instDecorator,instDecoratorNoCall]   tsc @2+0 in "@f<const>(x) class C {}"
     "<keyof () => void>"  [instDecorator,instDecoratorNoCall]   tsc @2+0 in "@f<keyof () => void>(x) class C {}"
-    "<A>"  [instDecoratorNoCall]   tsc @2+0 in "@f<A> class C {}"
-    "<A, B>"  [instDecoratorNoCall]   tsc @2+0 in "@f<A, B> class C {}"
-    "<A, B, C>"  [instDecoratorNoCall]   tsc @2+0 in "@f<A, B, C> class C {}"
-    … 34 more
+    … 37 more
 
 [04-type-params-args / targsExpr]  tsc TS1385 Function type notation must be parenthesized when used in a union type.   (49 inputs, 1 distinct)
     "<A | () => void>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]   tsc @5+11 in "f<A | () => void>(x);"
@@ -960,19 +849,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "<A>"  [instMember,instOptional]   tsc @11+3 in "const v = f<A>.x;"
     "<A, B>"  [instMember,instOptional]   tsc @11+6 in "const v = f<A, B>.x;"
     "<A, B, C>"  [instMember,instOptional]   tsc @11+9 in "const v = f<A, B, C>.x;"
-    "<A,>"  [instMember,instOptional]   tsc @11+4 in "const v = f<A,>.x;"
-    "<>"  [instMember,instOptional]   tsc @11+2 in "const v = f<>.x;"
-    "<A | B>"  [instMember,instOptional]   tsc @11+7 in "const v = f<A | B>.x;"
-    … 31 more
+    … 34 more
 
 [04-type-params-args / targsHeritage]  tsc TS1005 ',' expected.   (9 inputs, 9 distinct)
     "class C implements A | B {}"  [-]   tsc @21+1 in "class C implements A | B {}"
     "class C implements A & B {}"  [-]   tsc @21+1 in "class C implements A & B {}"
     "class C implements keyof A {}"  [-]   tsc @25+1 in "class C implements keyof A {}"
-    "class C implements A extends B ? D : E {}"  [-]   tsc @31+1 in "class C implements A extends B ? D : E {}"
-    "class C implements unique symbol {}"  [-]   tsc @26+6 in "class C implements unique symbol {}"
-    "class C implements readonly A[] {}"  [-]   tsc @28+1 in "class C implements readonly A[] {}"
-    … 3 more
+    … 6 more
 
 [04-type-params-args / targsHeritage]  tsc TS1011 An element access expression should take an argument.   (1 inputs, 1 distinct)
     "class C implements string[] {}"  [-]   tsc @26+0 in "class C implements string[] {}"
@@ -981,9 +864,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "class C implements () => void {}"  [-]   tsc @20+1 in "class C implements () => void {}"
     "class C implements typeof x {}"  [-]   tsc @19+6 in "class C implements typeof x {}"
     "class C implements void {}"  [-]   tsc @19+4 in "class C implements void {}"
-    "class C extends <any>B {}"  [-]   tsc @16+1 in "class C extends <any>B {}"
-    "class C extends typeof b {}"  [-]   tsc @16+6 in "class C extends typeof b {}"
-    "class C extends void 0 {}"  [-]   tsc @16+4 in "class C extends void 0 {}"
+    … 3 more
 
 [04-type-params-args / targsHeritage]  tsc TS1477 An instantiation expression cannot be followed by a property access.   (2 inputs, 2 distinct)
     "class C extends B<A>.D {}"  [-]   tsc @17+3 in "class C extends B<A>.D {}"
@@ -1010,19 +891,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "<T extends A ? B : C>"  [arrow,arrowParam,arrowRet,arrowStmt]   tsc @23+1 in "const f = <T extends A ? B : C>() => 0;"
     "<T extends a is B>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt]   tsc @23+2 in "const f = <T extends a is B>() => 0;"
     "<T.U>"  [arrow,arrowParam,arrowRet,arrowStmt]   tsc @12+1 in "const f = <T.U>() => 0;"
-    "<T!>"  [arrowRet]   tsc @17+1 in "const f = <T!>(a): T => a;"
-    "<T[]>"  [arrowRet]   tsc @18+1 in "const f = <T[]>(a): T => a;"
-    "<T<U>>"  [arrowRet]   tsc @19+1 in "const f = <T<U>>(a): T => a;"
-    … 5 more
+    … 8 more
 
 [04-type-params-args / tparamsArrow]  tsc TS1005 ')' expected.   (8 inputs, 8 distinct)
     "<T!>"  [arrowParam]   tsc @16+1 in "const f = <T!>(a: T) => a;"
     "<T[]>"  [arrowParam]   tsc @17+1 in "const f = <T[]>(a: T) => a;"
     "<T<U>>"  [arrowParam]   tsc @18+1 in "const f = <T<U>>(a: T) => a;"
-    "<\"T\">"  [arrowParam]   tsc @17+1 in "const f = <\"T\">(a: T) => a;"
-    "<1>"  [arrowParam]   tsc @15+1 in "const f = <1>(a: T) => a;"
-    "<void>"  [arrowParam]   tsc @18+1 in "const f = <void>(a: T) => a;"
-    … 2 more
+    … 5 more
 
 [04-type-params-args / tparamsArrow]  tsc TS1005 '>' expected.   (3 inputs, 3 distinct)
     "<T, U>"  [castParen]   tsc @12+1 in "const v = <T, U>(x);"
@@ -1033,16 +908,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "<T extends>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt]   tsc @20+1 in "const f = <T extends>() => 0;"
     "<T!>"  [arrow,arrowStmt]   tsc @15+1 in "const f = <T!>() => 0;"
     "<T[]>"  [arrow,arrowStmt]   tsc @16+1 in "const f = <T[]>() => 0;"
-    "<T<U>>"  [arrow,arrowStmt]   tsc @17+1 in "const f = <T<U>>() => 0;"
-    "<\"T\">"  [arrow,arrowStmt]   tsc @16+1 in "const f = <\"T\">() => 0;"
-    "<1>"  [arrow,arrowStmt]   tsc @14+1 in "const f = <1>() => 0;"
-    … 3 more
+    … 6 more
 
 [04-type-params-args / tparamsArrow]  tsc TS1110 Type expected.   (9 inputs, 4 distinct)
     "<T extends = A>"  [arrow,arrowParam,arrowRet,asyncArrow,arrowStmt]   tsc @21+1 in "const f = <T extends = A>() => 0;"
     "<unique>"  [cast,castParen]   tsc @17+1 in "const v = <unique>x;"
     "<keyof>"  [castParen]   tsc @16+1 in "const v = <keyof>(x);"
-    "<readonly>"  [castParen]   tsc @19+1 in "const v = <readonly>(x);"
+    … 1 more
 
 [04-type-params-args / tparamsArrow]  tsc TS1359 Identifier expected. 'const' is a reserved word that cannot be used here.   (9 inputs, 2 distinct)
     "<const>"  [arrow,arrowParam,arrowRet,arrowStmt]   tsc @11+5 in "const f = <const>() => 0;"
@@ -1052,26 +924,19 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "(a): => a"  [init,arg,condFalse]   tsc @13+1 in "const v = (a): => a;"
     "((a)): T => x"  [init,arg,condTrue,condFalse]   tsc @15+1 in "const v = ((a)): T => x;"
     "async (a): => x"  [init,arg,condFalse]   tsc @19+1 in "const v = async (a): => x;"
-    "a ? (b as T): c => d : e"  [init,arg,condTrue,condFalse]   tsc @31+1 in "const v = a ? (b as T): c => d : e;"
-    "<T>(x): => y"  [init,arg,condFalse]   tsc @16+1 in "const v = <T>(x): => y;"
-    "<T>async (x: T) => y"  [init,stmt,arg,condTrue,condFalse]   tsc @21+1 in "const v = <T>async (x: T) => y;"
-    … 4 more
+    … 7 more
 
 [05-assertions / arrow]  tsc TS1005 ';' expected.   (16 inputs, 10 distinct)
     "(a!) => x"  [init,stmt,condFalse]   tsc @15+2 in "const v = (a!) => x;"
     "(a as A) => x"  [init,stmt,condFalse]   tsc @19+2 in "const v = (a as A) => x;"
     "(<A>a) => x"  [init,stmt,condFalse]   tsc @17+2 in "const v = (<A>a) => x;"
-    "(a): => a"  [stmt]   tsc @3+1 in "(a): => a;"
-    "((a)): T => x"  [stmt]   tsc @5+1 in "((a)): T => x;"
-    "async (a): => x"  [stmt]   tsc @9+1 in "async (a): => x;"
-    … 4 more
+    … 7 more
 
 [05-assertions / arrow]  tsc TS1005 ':' expected.   (5 inputs, 5 distinct)
     "(a!) => x"  [condTrue]   tsc @19+2 in "const v = y ? (a!) => x : z;"
     "(a as A) => x"  [condTrue]   tsc @23+2 in "const v = y ? (a as A) => x : z;"
     "(<A>a) => x"  [condTrue]   tsc @21+2 in "const v = y ? (<A>a) => x : z;"
-    "<T>x => y"  [condTrue]   tsc @19+2 in "const v = y ? <T>x => y : z;"
-    "<T>(x) = y"  [condTrue]   tsc @21+1 in "const v = y ? <T>(x) = y : z;"
+    … 2 more
 
 [05-assertions / arrow]  tsc TS1005 '(' expected.   (1 inputs, 1 distinct)
     "<T>(x): => y"  [condTrue]   tsc @22+2 in "const v = y ? <T>(x): => y : z;"
@@ -1103,13 +968,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "<T>x = y"  [init,arg]   tsc @15+1 in "const v = <T>x = y;"
     "<T>async x => y"  [init,arg]   tsc @19+1 in "const v = <T>async x => y;"
     "<T>async () => x"  [arg]   tsc @14+2 in "f(<T>async () => x);"
-    "<T>x => y"  [arg]   tsc @7+2 in "f(<T>x => y);"
+    … 1 more
 
 [05-assertions / cast]  tsc TS1005 ';' expected.   (6 inputs, 4 distinct)
     "<T>async () => x"  [init,stmt]   tsc @22+2 in "const v = <T>async () => x;"
     "<T>x => y"  [init,stmt]   tsc @15+2 in "const v = <T>x => y;"
     "<T>x = y"  [stmt]   tsc @5+1 in "<T>x = y;"
-    "<T>async x => y"  [stmt]   tsc @9+1 in "<T>async x => y;"
+    … 1 more
 
 [05-assertions / cast]  tsc TS1005 '>' expected.   (8 inputs, 2 distinct)
     "<T, U>(x)"  [init,stmt,arg,operand]   tsc @12+1 in "const v = <T, U>(x);"
@@ -1119,7 +984,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "<unique>x"  [init,stmt,arg,operand]   tsc @17+1 in "const v = <unique>x;"
     "<readonly>(x)"  [init,stmt,arg,operand]   tsc @19+1 in "const v = <readonly>(x);"
     "<keyof>(x)"  [init,stmt,arg,operand]   tsc @16+1 in "const v = <keyof>(x);"
-    "<unique>(x)"  [init,stmt,arg,operand]   tsc @17+1 in "const v = <unique>(x);"
+    … 1 more
 
 [05-assertions / cast]  tsc TS1359 Identifier expected. 'const' is a reserved word that cannot be used here.   (3 inputs, 1 distinct)
     "<const>(x) => x"  [init,stmt,arg]   tsc @11+5 in "const v = <const>(x) => x;"
@@ -1135,7 +1000,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "(x!) => y"  [stmt,init]   tsc @5+2 in "(x!) => y;"
     "(x!, y) => z"  [stmt,init]   tsc @8+2 in "(x!, y) => z;"
     "label!: x"  [stmt]   tsc @6+1 in "label!: x;"
-    "x!: y"  [stmt]   tsc @2+1 in "x!: y;"
+    … 1 more
 
 [05-assertions / objLit]  tsc TS1005 '(' expected.   (3 inputs, 1 distinct)
     "{ a<T>: 1 }"  [init,arg,paren]   tsc @16+1 in "const v = { a<T>: 1 };"
@@ -1149,17 +1014,13 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "<T>x = y"  [-]   tsc @5+1 in "<T>x = y"
     "(x as T) => y"  [-]   tsc @9+2 in "(x as T) => y"
     "(x!) => y"  [-]   tsc @5+2 in "(x!) => y"
-    "(<T>x) => y"  [-]   tsc @7+2 in "(<T>x) => y"
-    "(x satisfies T) => y"  [-]   tsc @16+2 in "(x satisfies T) => y"
-    "(x as T, z) => y"  [-]   tsc @12+2 in "(x as T, z) => y"
-    … 3 more
+    … 6 more
 
 [05-assertions / varAnnot]  tsc TS1005 ',' expected.   (5 inputs, 5 distinct)
     "let { a }!: T = b"  [-]   tsc @9+1 in "let { a }!: T = b"
     "let [a]!: T = b"  [-]   tsc @7+1 in "let [a]!: T = b"
     "for (let x!: T of y) {}"  [-]   tsc @10+1 in "for (let x!: T of y) {}"
-    "for (let x!: T = 0;;) {}"  [-]   tsc @10+1 in "for (let x!: T = 0;;) {}"
-    "let x: a is B = y"  [-]   tsc @9+2 in "let x: a is B = y"
+    … 2 more
 
 [06-class-members / classHead]  tsc TS1128 Declaration or statement expected.   (1 inputs, 1 distinct)
     "export abstract\nclass C {}"  [-]   tsc @0+6 in "export abstract\nclass C {}"
@@ -1171,7 +1032,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "class C extends <any>B {}"  [-]   tsc @16+1 in "class C extends <any>B {}"
     "class C extends void 0 {}"  [-]   tsc @16+4 in "class C extends void 0 {}"
     "class C extends typeof B {}"  [-]   tsc @16+6 in "class C extends typeof B {}"
-    "class C extends -B {}"  [-]   tsc @16+1 in "class C extends -B {}"
+    … 1 more
 
 [06-class-members / heritage]  tsc TS1477 An instantiation expression cannot be followed by a property access.   (1 inputs, 1 distinct)
     "class C extends B<T>.D {}"  [-]   tsc @17+3 in "class C extends B<T>.D {}"
@@ -1180,7 +1041,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "constructor?() {}"  [class,abstractClass,declareClass,classExpr]   tsc @21+1 in "class C { constructor?() {} }"
     "constructor!() {}"  [class,abstractClass,declareClass,classExpr]   tsc @21+1 in "class C { constructor!() {} }"
     "get x?() { return 1 }"  [class,abstractClass,declareClass,classExpr]   tsc @15+1 in "class C { get x?() { return 1 } }"
-    "set x?(v) {}"  [class,abstractClass,declareClass,classExpr]   tsc @15+1 in "class C { set x?(v) {} }"
+    … 1 more
 
 [06-class-members / member]  tsc TS1441 Cannot start a function call in a type annotation.   (8 inputs, 2 distinct)
     "m!() {}"  [class,abstractClass,declareClass,classExpr]   tsc @12+1 in "class C { m!() {} }"
@@ -1197,9 +1058,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "...public x"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]   tsc @32+1 in "class C { constructor(...public x) {} }"
     "...readonly x"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]   tsc @34+1 in "class C { constructor(...readonly x) {} }"
     "public\nx: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]   tsc @29+1 in "class C { constructor(public\nx: T) {} }"
-    "readonly\nx: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]   tsc @31+1 in "class C { constructor(readonly\nx: T) {} }"
-    "public\nreadonly\nx: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]   tsc @29+8 in "class C { constructor(public\nreadonly\nx: T) {} }"
-    "public // c\nx: T"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]   tsc @34+1 in "class C { constructor(public // c\nx: T) {} }"
+    … 3 more
 
 [07-module-syntax / exportAssign]  tsc TS1005 ';' expected.   (1 inputs, 1 distinct)
     "export = x, y;"  [-]   tsc @10+1 in "export = x, y;"
@@ -1212,9 +1071,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "export declare;"  [-]   tsc @0+6 in "export declare;"
     "export declare = 1;"  [-]   tsc @0+6 in "export declare = 1;"
     "export abstract;"  [-]   tsc @0+6 in "export abstract;"
-    "export abstract = 1;"  [-]   tsc @0+6 in "export abstract = 1;"
-    "export namespace;"  [-]   tsc @0+6 in "export namespace;"
-    "export module;"  [-]   tsc @0+6 in "export module;"
+    … 3 more
 
 [08-declare-namespace-enum / declare]  tsc TS1003 Identifier expected.   (1 inputs, 1 distinct)
     "declare namespace \"N\" {}"  [-]   tsc @18+3 in "declare namespace \"N\" {}"
@@ -1234,8 +1091,7 @@ class B  dialect ts  config plain: 3196 inputs in 267 clusters
     "enum E { a; b }"  [-]   tsc @10+1 in "enum E { a; b }"
     "enum E { a = 1; b = 2 }"  [-]   tsc @14+1 in "enum E { a = 1; b = 2 }"
     "enum E { a, b; c }"  [-]   tsc @13+1 in "enum E { a, b; c }"
-    "enum E { a; }"  [-]   tsc @10+1 in "enum E { a; }"
-    "enum E { a = 1; }"  [-]   tsc @14+1 in "enum E { a = 1; }"
+    … 2 more
 
 [08-declare-namespace-enum / namespace]  tsc TS1003 Identifier expected.   (1 inputs, 1 distinct)
     "namespace N.\"M\" {}"  [-]   tsc @12+3 in "namespace N.\"M\" {}"

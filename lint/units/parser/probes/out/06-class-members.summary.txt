@@ -1,5 +1,5 @@
 group 06-class-members  dialect ts  config plain  inputs 6338
-counts A1=283 A2=1269 AA=2525 AAg=1226 B=85 RR=950
+counts A1=283 A1c=10 A1s=273 A2=1269 AA=2525 AAg=1226 B=85 RR=950
 
 calls of Bun that differ from transformSync without tsconfig: 240 inputs
   "class C { accessor x: T; }"  base=ok  ts.plain.scanImports="Expected \";\" but found \"x\"" ts.deco.transformSync="Expected \";\" but found \"x\"" ts.deco.scan="Expected \";\" but found \"x\"" ts.deco.scanImports="Expected \";\" but found \"x\"" tsx.plain.scanImports="Expected \";\" but found \"x\"" tsx.deco.transformSync="Expected \";\" but found \"x\"" tsx.deco.scan="Expected \";\" but found \"x\"" tsx.deco.scanImports="Expected \";\" but found \"x\""

@@ -1,5 +1,5 @@
 group 07-module-syntax  dialect ts  config plain  inputs 1630
-counts A1=50 A2=82 AA=893 AAg=113 B=9 RR=483
+counts A1=50 A1c=35 A1s=15 A2=82 AA=893 AAg=113 B=9 RR=483
 
 calls of Bun that differ from transformSync without tsconfig: 3 inputs
   "export default let;"  base="\"let\" is a reserved word and cannot be used in strict mode"  ts.plain.scanImports=ok ts.deco.scanImports=ok tsx.plain.scanImports=ok tsx.deco.scanImports=ok

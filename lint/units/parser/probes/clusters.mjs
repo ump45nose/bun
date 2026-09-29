@@ -1,9 +1,12 @@
 // Clusters the inputs of a class by what each side says, so that a cluster reads as one thing to fix.
 //
-// usage: bun clusters.mjs <class: A1|A2|A|B|AAg> [group prefix...] [--dialect ts|tsx|dts] [--config plain|deco] [--examples N]
+// usage: bun clusters.mjs <class: A1|A1c|A1s|A2|A|B|AAg> [group prefix...] [--dialect ts|tsx|dts] [--config plain|deco] [--examples N]
+// A1c: A1 where tsc reports nothing about the syntax. A1s: A1 where tsc reports a structural code (report.mjs STRUCTURAL).
 //
 // A and A1 and A2 cluster by the first error of Bun, with the token text replaced by a placeholder.
 // B clusters by the first parse diagnostic of tsc (code and message).
+// "tsc also" lists the codes outside the grammar ranges that the checker of tsc reported for the
+// inputs of the cluster (2304 cannot find name, 2371 initializer in a signature, ...).
 // Output: out/clusters.<class>[.dialect][.config].txt
 
 import { readdirSync, writeFileSync } from "node:fs";
@@ -38,16 +41,18 @@ for (const file of files) {
   const mod = await import(join(HERE, "inputs", file));
   const families = mod.families ?? {};
   for (const e of effective(readRecords(base), dialect, config)) {
-    if (e.cls !== cls) continue;
+    if (e.cls !== cls && e.sub !== cls) continue;
     total++;
     let what;
     if (cls === "B") what = `tsc TS${e.parse[0][0]} ${norm(e.parse[0][3])}`;
     else if (cls === "AAg") what = `tsc TS${e.grammar[0][0]} ${norm(e.grammar[0][3])}`;
-    else what = `bun ${norm(e.bun[0][0])}` + (e.grammar.length ? `  /  tsc TS${e.grammar[0][0]} ${norm(e.grammar[0][3])}` : "");
+    else what = `bun ${norm(e.bun[0][0])}` + (e.grammar.length ? `  /  tsc TS${e.grammar[0][0]} ${norm(e.grammar[0][3])}` : "") + (cls === "A1s" ? `  /  tsc TS${e.structural.join(" TS")}` : "");
     const key = `${base}\t${e.r.fam}\t${what}`;
-    if (!clusters.has(key)) clusters.set(key, { n: 0, forms: new Map(), site: families[e.r.fam] });
+    if (!clusters.has(key)) clusters.set(key, { n: 0, forms: new Map(), site: families[e.r.fam], other: new Map() });
     const c = clusters.get(key);
     c.n++;
+    const t = e.r.tsc[dialect];
+    for (const code of new Set(t.other ?? [])) c.other.set(code, (c.other.get(code) ?? 0) + 1);
     const form = e.r.form ?? e.r.src;
     if (!c.forms.has(form)) c.forms.set(form, { src: e.r.src, ctx: [], e });
     c.forms.get(form).ctx.push(e.r.ctx ?? "-");
@@ -59,6 +64,15 @@ for (const [key, c] of sorted) {
   const [base, fam, what] = key.split("\t");
   lines.push("");
   lines.push(`[${base} / ${fam}]  ${what}   (${c.n} inputs, ${c.forms.size} distinct)`);
+  if (c.other.size) {
+    lines.push(
+      "    tsc also: " +
+        [...c.other]
+          .sort((a, b) => b[1] - a[1])
+          .map(([code, n]) => `TS${code} x${n}`)
+          .join(", "),
+    );
+  }
   let i = 0;
   for (const [form, f] of c.forms) {
     if (i++ >= examples) {

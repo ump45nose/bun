@@ -28,6 +28,14 @@ for (let i = 0; i < args.length; i++) {
   else filters.push(args[i]);
 }
 
+// Codes of the checker of tsc outside the grammar ranges that still name a fault of the syntax.
+// The classes of run.mjs follow the grammar ranges alone; A1s and AAs mark the inputs that tsc
+// parses, that get no code of the grammar ranges, and that get one of these.
+export const STRUCTURAL = new Set([
+  2207, 2206, 2300, 2331, 2332, 2337, 2357, 2364, 2369, 2371, 2391, 2452, 2462, 2480, 2483, 2499, 2500, 2660, 2669, 2670, 2680,
+  2730, 2784, 2842, 2857, 2858, 5084, 5085, 5086, 5087, 5088, 7061,
+]);
+
 export function readRecords(base) {
   const path = join(OUT, base + ".jsonl");
   if (!existsSync(path)) return [];
@@ -48,7 +56,7 @@ export function effective(recs, dialect, config = "plain") {
   const out = [];
   for (const r of recs) {
     if (r.crash) {
-      out.push({ r, cls: "CRASH", grammar: [], parse: [], bun: null });
+      out.push({ r, cls: "CRASH", sub: "CRASH", structural: [], grammar: [], parse: [], bun: null });
       continue;
     }
     const t = r.tsc[dialect];
@@ -62,7 +70,10 @@ export function effective(recs, dialect, config = "plain") {
     let cls;
     if (bun === 1) cls = parse.length ? "B" : grammar.length ? "AAg" : "AA";
     else cls = parse.length ? "RR" : checked ? (grammar.length ? "A2" : "A1") : "A";
-    out.push({ r, cls, grammar, parse, bun });
+    const structural = [...new Set(t.other ?? [])].filter(c => STRUCTURAL.has(c));
+    // sub: A1c = A1 and tsc says nothing about the syntax, A1s = A1 and tsc reports a structural code.
+    const sub = cls === "A1" ? (structural.length ? "A1s" : "A1c") : cls === "AA" ? (structural.length ? "AAs" : "AA") : cls;
+    out.push({ r, cls, sub, structural, grammar, parse, bun });
   }
   return out;
 }
@@ -81,6 +92,7 @@ function summarize(base, families) {
   const lines = [];
   const counts = {};
   for (const e of eff) counts[e.cls] = (counts[e.cls] ?? 0) + 1;
+  for (const e of eff) if (e.sub === "A1c" || e.sub === "A1s") counts[e.sub] = (counts[e.sub] ?? 0) + 1;
   lines.push(`group ${base}  dialect ${dialect}  config ${config}  inputs ${recs.length}`);
   lines.push(
     "counts " +

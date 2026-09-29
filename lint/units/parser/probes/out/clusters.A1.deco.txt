@@ -1,9 +1,11 @@
 class A1  dialect ts  config deco: 1438 inputs in 34 clusters
 
 [03-signatures / arrowSig]  bun Cannot use "…" here   (5 inputs, 1 distinct)
+    tsc also: TS7031 x5, TS2304 x2
     "{ await }"  [arrow,arrowRet,genericArrow,arrowInCond,arrowInCondRet]
 
 [03-signatures / arrowSig]  bun Expected "…" but found "…"   (112 inputs, 22 distinct)
+    tsc also: TS2369 x108, TS2304 x76, TS7006 x38, TS2318 x18, TS2462 x2, TS7031 x2, TS2730 x2
     "public a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
     "private a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
     "protected a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
@@ -13,6 +15,7 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     … 16 more
 
 [03-signatures / arrowSig]  bun Invalid binding pattern   (28 inputs, 7 distinct)
+    tsc also: TS2730 x28, TS2304 x16, TS7006 x12, TS2318 x7, TS2680 x4, TS2526 x4, TS7041 x4
     "this"  [arrow,asyncArrow,genericArrow,arrowInCond]
     "this: A"  [arrow,asyncArrow,genericArrow,arrowInCond]
     "this: A, a: B"  [arrow,asyncArrow,genericArrow,arrowInCond]
@@ -22,6 +25,7 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     … 1 more
 
 [03-signatures / arrowSig]  bun Unexpected …   (42 inputs, 13 distinct)
+    tsc also: TS2304 x25, TS7031 x20, TS2730 x12, TS2462 x10, TS7006 x9, TS2680 x2, TS2526 x2, TS7041 x2, TS2318 x2
     "[...a, b]"  [arrow,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
     "{ ...a, b }"  [arrow,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
     "[await]"  [arrow,arrowRet,genericArrow,arrowInCond,arrowInCondRet]
@@ -31,6 +35,7 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     … 7 more
 
 [03-signatures / declSig]  bun Expected "…" but found "…"   (222 inputs, 24 distinct)
+    tsc also: TS2369 x218, TS2304 x124, TS7006 x74, TS2318 x18, TS2371 x15, TS7032 x4, TS7019 x2
     "public a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
     "private a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
     "protected a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
@@ -40,19 +45,23 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     … 18 more
 
 [03-signatures / declSig]  bun Setter p must have exactly 1 argument (there are 0)   (4 inputs, 4 distinct)
+    tsc also: TS2784 x4, TS7032 x1, TS7006 x1, TS2304 x1, TS2502 x1
     "this"  [setter]
     "this: A"  [setter]
     "this: this"  [setter]
     "this: typeof this"  [setter]
 
 [03-signatures / declSig]  bun Unexpected …   (30 inputs, 2 distinct)
+    tsc also: TS2462 x30, TS7031 x30, TS7032 x2, TS2318 x2
     "[...a, b]"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
     "{ ...a, b }"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
 
 [03-signatures / memberSig]  bun Backtrack   (5 inputs, 1 distinct)
+    tsc also: TS7031 x5, TS2304 x1
     "[a, , b]"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
 
 [03-signatures / memberSig]  bun Expected "…" but found "…"   (205 inputs, 41 distinct)
+    tsc also: TS2371 x120, TS2304 x109, TS2369 x90, TS7006 x30, TS2842 x10, TS2339 x5, TS7031 x5
     "a = 1"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "a: A = 1"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "a = 1, b = 2"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
@@ -62,11 +71,13 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     … 35 more
 
 [03-signatures / memberSig]  bun Unexpected …   (15 inputs, 3 distinct)
+    tsc also: TS2842 x15, TS2304 x3
     "{ [k]: v }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "{ [k]: v = 1 }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "{ 1n: a }"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
 
 [03-signatures / typeSig]  bun Expected "…" but found "…"   (262 inputs, 45 distinct)
+    tsc also: TS2304 x201, TS2371 x145, TS2369 x121, TS2322 x45, TS7006 x37, TS2842 x15, TS7031 x10, TS2339 x7, TS2695 x1
     "a = 1"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
     "a: A = 1"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
     "a = 1, b = 2"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
@@ -76,6 +87,7 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     … 39 more
 
 [03-signatures / typeSig]  bun Unexpected …   (53 inputs, 10 distinct)
+    tsc also: TS2304 x37, TS2371 x23, TS2842 x20, TS7031 x5, TS2369 x5, TS7006 x5
     "{ a = 1 }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg]
     "{ a = 1 }: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg]
     "{ a: b = 1 }"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion]
@@ -91,9 +103,11 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     "abstract declare class C {}"  [-]
 
 [06-class-members / heritage]  bun Unexpected …   (1 inputs, 1 distinct)
+    tsc also: TS2660 x1
     "class C extends super.b {}"  [-]
 
 [06-class-members / member]  bun Expected "…" but found "…"   (34 inputs, 12 distinct)
+    tsc also: TS2304 x23, TS4112 x4, TS7008 x4
     "public accessor x: T;"  [class,abstractClass,declareClass,classExpr]
     "override accessor x: T;"  [class,abstractClass,declareClass,classExpr]
     "static accessor x = 1;"  [class,abstractClass,classExpr]
@@ -103,12 +117,15 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     … 6 more
 
 [06-class-members / member]  bun Expected "…" but found "…"x"…"   (3 inputs, 1 distinct)
+    tsc also: TS2304 x1
     "accessor \"x\" = 1;"  [class,abstractClass,classExpr]
 
 [06-class-members / member]  bun Unexpected …   (4 inputs, 1 distinct)
+    tsc also: TS2304 x4
     "[await: string]: T;"  [class,abstractClass,declareClass,classExpr]
 
 [06-class-members / modifier]  bun Expected "…" but found "…"   (34 inputs, 9 distinct)
+    tsc also: TS2304 x23, TS7008 x8
     "accessor x: T;"  [class,abstractClass,declareClass,classExpr]
     "accessor x = 1;"  [class,abstractClass,classExpr]
     "accessor x;"  [class,abstractClass,declareClass,classExpr]
@@ -118,9 +135,11 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     … 3 more
 
 [06-class-members / modifier]  bun Expected "…" but found "…"x"…"   (4 inputs, 1 distinct)
+    tsc also: TS2304 x4
     "accessor \"x\": T;"  [class,abstractClass,declareClass,classExpr]
 
 [06-class-members / paramProp]  bun Expected "…" but found "…"   (289 inputs, 53 distinct)
+    tsc also: TS2369 x289, TS7006 x144, TS2304 x130, TS7032 x23, TS2784 x1, TS2730 x1
     "public x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
     "private x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
     "protected x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
@@ -130,36 +149,45 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     … 47 more
 
 [09-decorators / classPos]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    tsc also: TS2304 x1
     "export default @d abstract class C {}"  [-]
 
 [09-decorators / expr]  bun "…" is a reserved word and cannot be used in strict mode   (1 inputs, 1 distinct)
+    tsc also: TS2304 x1
     "@await"  [staticField]
 
 [09-decorators / expr]  bun Expected "…" but found end of file   (2 inputs, 1 distinct)
+    tsc also: TS2304 x2
     "@await"  [classDecl,classDeclNewline]
 
 [09-decorators / expr]  bun Expected identifier but found "…"   (5 inputs, 1 distinct)
+    tsc also: TS2304 x5, TS7008 x2
     "@await"  [field,fieldNewline,method,computed,computedField]
 
 [09-decorators / expr]  bun Private name "…" must be declared in an enclosing class   (21 inputs, 3 distinct)
+    tsc also: TS2304 x18, TS2339 x18, TS7008 x6, TS7006 x3
     "@d.#e"  [field,fieldNewline,method,computed,computedField,staticField,param]
     "@d.#e()"  [field,fieldNewline,method,computed,computedField,staticField,param]
     "@d.e.#f"  [field,fieldNewline,method,computed,computedField,staticField,param]
 
 [09-decorators / memberPos]  bun Expected "…" but found "…"   (13 inputs, 4 distinct)
+    tsc also: TS2304 x13
     "@d accessor x: T;"  [class,abstractClass,declareClass,decoratedClass]
     "@d static accessor x = 1;"  [class,abstractClass,decoratedClass]
     "@d accessor x = 1;"  [class,abstractClass,decoratedClass]
     "@d accessor [x] = 1;"  [class,abstractClass,decoratedClass]
 
 [09-decorators / memberPos]  bun Expected "…" but found "…"x"…"   (3 inputs, 1 distinct)
+    tsc also: TS2304 x3
     "@d accessor \"x\" = 1;"  [class,abstractClass,decoratedClass]
 
 [09-decorators / otherPos]  bun Cannot use a declaration in a single-statement context   (2 inputs, 2 distinct)
+    tsc also: TS2304 x2
     "if (a) @d class C {}"  [-]
     "for (;;) @d class C {}"  [-]
 
 [09-decorators / paramPos]  bun Expected "…" but found "…"   (29 inputs, 6 distinct)
+    tsc also: TS2369 x29, TS2304 x25, TS7006 x5, TS7032 x1
     "@d public a: A"  [method,decoratedMethod,staticMethod,setter,privateMethod]
     "@d readonly a: A"  [method,decoratedMethod,staticMethod,setter,privateMethod]
     "@d public readonly a: A"  [method,decoratedMethod,staticMethod,setter,privateMethod]
@@ -168,6 +196,7 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     "@d override a: A"  [method,decoratedMethod,staticMethod,setter,privateMethod]
 
 [10-declaration-files / bodyless]  bun Expected "…" but found "…"   (3 inputs, 3 distinct)
+    tsc also: TS2304 x3
     "export class C { accessor x: T; }"  [-]
     "export class C { static accessor x: T; }"  [-]
     "export class C { accessor #x: T; }"  [-]
@@ -177,7 +206,9 @@ class A1  dialect ts  config deco: 1438 inputs in 34 clusters
     "// @ts-expect-error\nexport const x: T;"  [-]
 
 [10-declaration-files / module]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    tsc also: TS2669 x1, TS2670 x1, TS2304 x1
     "global { var x: T; }"  [-]
 
 [10-declaration-files / topLevel]  bun Expected "…" but found "…"   (1 inputs, 1 distinct)
+    tsc also: TS2669 x1, TS2670 x1
     "global {}"  [-]
