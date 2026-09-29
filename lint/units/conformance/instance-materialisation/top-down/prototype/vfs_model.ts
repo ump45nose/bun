@@ -1,5 +1,5 @@
 // Prototype: the part of vfstest.MapFS (case sensitive) that the config file matcher reads: entries of a directory and real paths.
-import { getRootLength, normalizePath, removeTrailingDirectorySeparator } from "../../enumerator/prototype/tspath";
+import { getRootLength, normalizePath, removeTrailingDirectorySeparator } from "../../../enumerator/prototype/tspath";
 import { compareBytes } from "./tspath_more";
 
 type Node = { kind: "file"; realpath: string } | { kind: "dir"; realpath: string } | { kind: "symlink"; realpath: string; target: string };

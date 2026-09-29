@@ -260,7 +260,7 @@ function tokenFlags(n, goKind, ctx) {
 
 // Step 3: rules that need the finished tree.
 export function postprocess(root, d) {
-  const emi = externalModuleIndicator(root, { isDeclarationFile: d?.isDeclarationFile, force: d?.force });
+  const emi = externalModuleIndicator(root, { isDeclarationFile: d?.isDeclarationFile, force: d?.force, jsx: d?.jsx });
   root.externalModuleIndicator = emi;
   if (emi && !d?.isDeclarationFile) {
     for (const s of root.children.get("Statements").nodes) {
@@ -345,6 +345,7 @@ export function externalModuleIndicator(root, opts = {}) {
     if (found) return found;
   }
   if (opts.isDeclarationFile) return null;
+  if (opts.jsx) { const j = findFirst(root, g => g.kind === "JsxSelfClosingElement" || g.kind === "JsxOpeningElement" || g.kind === "JsxFragment"); if (j) return j; }
   if (opts.force) return root;
   return null;
 }

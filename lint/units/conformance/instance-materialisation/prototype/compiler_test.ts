@@ -1,182 +1,162 @@
-// Prototype port of newCompilerTest (compiler_runner.go:266-338) and of the head of CompileFilesEx (harnessutil.go:125-218).
-import { getConfigNameFromFileName, parseTestFilesAndSymlinks, srcFolder, type TestUnit } from "../../enumerator/prototype/test_case_parser";
-import { combinePaths, getNormalizedAbsolutePath, isRootedDiskPath, normalizePath, removeTrailingDirectorySeparator } from "../../enumerator/prototype/tspath";
+// Research prototype: port of newCompilerTest (compiler_runner.go:266) and of the part of CompileFilesEx that builds the file system.
 import { Undecided, getConfigFileNames } from "./config_files";
+import { MemFs, MemFsPanic, type MemInput } from "./memfs";
+import { type TestUnit, getConfigNameFromFileName, parseTestFilesAndSymlinks, srcFolder } from "./test_case_parser";
+import { combinePaths, getNormalizedAbsolutePath, isRootedDiskPath } from "./tspath";
 import { ExtensionDts, ExtensionJson, ExtensionTsBuildInfo, fileExtensionIs } from "./tspath_more";
-import { MapFS } from "./vfs_model";
+
+// harnessutil.go:41
+export const testLibFolder = "/.lib";
+// compiler_runner.go:29; Go's \s is [\t\n\f\r ]
+const requireStr = "require(";
+const referencesRegex = /reference[\t\n\f\r ]path/;
 
 export interface TestFile {
   unitName: string;
   content: string;
 }
 
+export type RootRule = "config" | "noImplicitReferences" | "require" | "reference path" | "all";
+
 export interface CompilerTest {
   currentDirectory: string;
-  hasNonDtsFiles: boolean;
   tsConfigFiles: TestFile[];
   toBeCompiled: TestFile[];
   otherFiles: TestFile[];
-  // harnessutil.go:125-156: the names given to the program
-  programFileNames: string[];
-  includeLibDir: boolean;
-  // link to target, both absolute
+  hasNonDtsFiles: boolean;
+  rule: RootRule;
+  // link path to target, as the directives give them
   symlinks: Map<string, string>;
-  useCaseSensitiveFileNames: boolean;
+  // the file names of the config, when there is a config unit
   configFileNames: string[] | undefined;
-  configOptions?: unknown;
 }
 
-export type Result = { ok: true; value: CompilerTest } | { ok: false; status: "invalid" | "undecided-roots"; reason: string };
+export type Result<T> = { ok: true; value: T } | { ok: false; status: "invalid" | "undecided"; reason: string };
 
-const requireStr = "require(";
-// Go's \s is [\t\n\f\r ]
-const referencesRegex = /reference[\t\n\f\r ]path/;
-const testLibFolder = "/.lib";
-
-// vfstest.go:84-137 and :154-162; returns the text of the panic
-export function checkVfsPaths(paths: string[], targets: string[], useCaseSensitiveFileNames: boolean): string | undefined {
-  let posix = false;
-  let windows = false;
-  for (const p of [...paths, ...targets]) {
-    if (!isRootedDiskPath(p)) return `non-rooted path ${JSON.stringify(p)}`;
-    if (removeTrailingDirectorySeparator(normalizePath(p)) !== p) return `non-normalized path ${JSON.stringify(p)}`;
-    if (p.startsWith("/")) posix = true;
-    else windows = true;
-  }
-  if (posix && windows) return "mixed posix and windows paths";
-  if (!useCaseSensitiveFileNames) {
-    const seen = new Map<string, string>();
-    for (const p of paths) {
-      // ToFileNameLowerCase: ASCII here; other letters need the table of the reference
-      const canonical = p.toLowerCase();
-      const other = seen.get(canonical);
-      const cut = (x: string) => (x.startsWith("/") ? x.slice(1) : x);
-      if (other !== undefined && other !== p) return `duplicate path: ${JSON.stringify(cut(other < p ? other : p))} and ${JSON.stringify(cut(other < p ? p : other))} have the same canonical path`;
-      seen.set(canonical, p);
-    }
-  }
-  return undefined;
-}
+const encoder = new TextEncoder();
 
 function createHarnessTestFile(unit: TestUnit, currentDirectory: string): TestFile {
   return { unitName: getNormalizedAbsolutePath(unit.name, currentDirectory), content: unit.content };
 }
 
-export function newCompilerTest(content: string, fileName: string, configuration: Map<string, string> | undefined, extendsResolutions?: ReadonlyMap<string, string>): Result {
-  // makeUnitsFromTest (test_case_parser.go:51)
-  const parsed = parseTestFilesAndSymlinks<TestUnit>(content, fileName, (name, text) => ({ value: { name, content: text }, error: undefined }));
+// makeUnitsFromTest (test_case_parser.go:51) followed by newCompilerTest (compiler_runner.go:266)
+export function newCompilerTest(code: string, fileName: string, harnessConfig: Map<string, string> | undefined): Result<CompilerTest> {
+  const parsed = parseTestFilesAndSymlinks<TestUnit>(code, fileName, (name, content) => ({ value: { name, content }, error: undefined }));
   if (!parsed.ok) return { ok: false, status: "invalid", reason: parsed.reason };
-  const unitsCurrentDirectory = parsed.currentDirectory === "" ? srcFolder : parsed.currentDirectory;
   let units = parsed.units;
-  {
-    const paths = parsed.units.map(u => getNormalizedAbsolutePath(u.name, unitsCurrentDirectory));
-    const targets: string[] = [];
-    for (const [link, target] of parsed.symlinks) {
-      paths.push(getNormalizedAbsolutePath(link, unitsCurrentDirectory));
-      targets.push(getNormalizedAbsolutePath(target, unitsCurrentDirectory));
-    }
-    const panic = checkVfsPaths(paths, targets, true);
-    if (panic !== undefined) return { ok: false, status: "invalid", reason: panic };
+  const symlinks = parsed.symlinks;
+  const unitsCurrentDirectory = parsed.currentDirectory === "" ? srcFolder : parsed.currentDirectory;
+
+  // unit tests always list files explicitly
+  const entries = new Map<string, MemInput>();
+  for (const data of units) {
+    entries.set(getNormalizedAbsolutePath(data.name, unitsCurrentDirectory), { kind: "file", data: encoder.encode(data.content) });
   }
-  let configFileNames: string[] | undefined;
-  let configOptions: unknown;
-  let tsConfigFileUnitData: TestUnit | undefined;
-  const index = units.findIndex(u => getConfigNameFromFileName(u.name) !== "");
-  if (index >= 0) {
-    const data = units[index];
-    const allFiles = new Map<string, string>();
-    for (const u of units) allFiles.set(getNormalizedAbsolutePath(u.name, unitsCurrentDirectory), u.content);
-    const links = new Map<string, string>();
-    for (const [link, target] of parsed.symlinks) {
-      links.set(getNormalizedAbsolutePath(link, unitsCurrentDirectory), getNormalizedAbsolutePath(target, unitsCurrentDirectory));
-    }
-    // a link replaces a file of the same name (vfsparseconfighost.go:50-55)
-    const files = [...allFiles.keys()].filter(f => !links.has(f));
-    const fs = new MapFS(files, links);
-    try {
-      const r = getConfigFileNames(
-        { fs, currentDirectory: unitsCurrentDirectory, read: p => (fs.fileExists(p) ? allFiles.get(fs.realpath(p)) : undefined), extendsResolutions },
-        data.name,
-        data.content,
-      );
-      configFileNames = r.fileNames;
-      configOptions = r.options;
-    } catch (e) {
-      if (e instanceof Undecided) return { ok: false, status: "undecided-roots", reason: e.message };
-      throw e;
-    }
-    if (fs.ambiguous) return { ok: false, status: "undecided-roots", reason: "two links are prefixes of one path" };
-    tsConfigFileUnitData = data;
-    units = units.slice(0, index).concat(units.slice(index + 1));
+  for (const [link, target] of symlinks) {
+    entries.set(getNormalizedAbsolutePath(link, unitsCurrentDirectory), { kind: "symlink", target: getNormalizedAbsolutePath(target, unitsCurrentDirectory) });
+  }
+  let parseConfigHost: MemFs;
+  try {
+    parseConfigHost = new MemFs(entries, true);
+  } catch (e) {
+    if (e instanceof MemFsPanic) return { ok: false, status: "invalid", reason: e.message };
+    throw e;
   }
 
-  // newCompilerTest
-  const harnessConfig = configuration;
+  // check if project has tsconfig.json in the list of files
+  let configFileNames: string[] | undefined;
+  let tsConfigFileUnitData: TestUnit | undefined;
+  for (let i = 0; i < units.length; i++) {
+    const data = units[i];
+    if (getConfigNameFromFileName(data.name) !== "") {
+      try {
+        configFileNames = getConfigFileNames(parseConfigHost, data.name, data.content, unitsCurrentDirectory).fileNames;
+      } catch (e) {
+        if (e instanceof Undecided) return { ok: false, status: "undecided", reason: e.message };
+        throw e;
+      }
+      tsConfigFileUnitData = data;
+      units = units.slice(0, i).concat(units.slice(i + 1));
+      break;
+    }
+  }
+
   const currentDirectory = getNormalizedAbsolutePath(harnessConfig?.get("currentdirectory") ?? "", srcFolder);
   let toBeCompiled: TestFile[] = [];
   const otherFiles: TestFile[] = [];
   const hasNonDtsFiles = units.some(unit => !fileExtensionIs(unit.name, ExtensionDts));
-  let tsConfigFiles: TestFile[] = [];
+  const tsConfigFiles: TestFile[] = [];
+  let rule: RootRule;
   if (configFileNames !== undefined && tsConfigFileUnitData !== undefined) {
-    tsConfigFiles = [createHarnessTestFile(tsConfigFileUnitData, currentDirectory)];
+    rule = "config";
+    tsConfigFiles.push(createHarnessTestFile(tsConfigFileUnitData, currentDirectory));
     for (const unit of units) {
-      if (configFileNames.includes(getNormalizedAbsolutePath(unit.name, currentDirectory))) toBeCompiled.push(createHarnessTestFile(unit, currentDirectory));
-      else otherFiles.push(createHarnessTestFile(unit, currentDirectory));
+      if (configFileNames.includes(getNormalizedAbsolutePath(unit.name, currentDirectory))) {
+        toBeCompiled.push(createHarnessTestFile(unit, currentDirectory));
+      } else {
+        otherFiles.push(createHarnessTestFile(unit, currentDirectory));
+      }
     }
   } else {
-    if (units.length === 0) return { ok: false, status: "invalid", reason: "no unit" };
+    const baseUrl = harnessConfig?.get("baseurl");
+    if (harnessConfig !== undefined && baseUrl !== undefined && !isRootedDiskPath(baseUrl)) {
+      harnessConfig.set("baseurl", getNormalizedAbsolutePath(baseUrl, currentDirectory));
+    }
+    // the reference indexes units[len(units)-1]; a case whose only unit is the config would panic there
+    if (units.length === 0) return { ok: false, status: "invalid", reason: "no unit besides the config" };
     const lastUnit = units[units.length - 1];
-    if ((harnessConfig?.get("noimplicitreferences") ?? "") !== "" || lastUnit.content.includes(requireStr) || referencesRegex.test(lastUnit.content)) {
+    const nir = (harnessConfig?.get("noimplicitreferences") ?? "") !== "";
+    if (nir || lastUnit.content.includes(requireStr) || referencesRegex.test(lastUnit.content)) {
+      rule = nir ? "noImplicitReferences" : lastUnit.content.includes(requireStr) ? "require" : "reference path";
       toBeCompiled.push(createHarnessTestFile(lastUnit, currentDirectory));
       for (const unit of units.slice(0, units.length - 1)) otherFiles.push(createHarnessTestFile(unit, currentDirectory));
     } else {
+      rule = "all";
       toBeCompiled = units.map(unit => createHarnessTestFile(unit, currentDirectory));
     }
   }
+  return { ok: true, value: { currentDirectory, tsConfigFiles, toBeCompiled, otherFiles, hasNonDtsFiles, rule, symlinks, configFileNames } };
+}
 
-  // CompileFiles and CompileFilesEx
-  let useCaseSensitiveFileNames = true;
-  const v = harnessConfig?.get("usecasesensitivefilenames");
-  if (v !== undefined) {
-    const lower = v.toLowerCase();
-    if (lower === "true") useCaseSensitiveFileNames = true;
-    else if (lower === "false") useCaseSensitiveFileNames = false;
-    else return { ok: false, status: "invalid", reason: `Value for option 'useCaseSensitiveFileNames' must be a boolean, got: ${v}` };
-  }
-  // commandlineparser.go:347 for a list of strings: no trimming of the elements, empty elements dropped
-  let libFiles: string[] = [];
-  const rawLibFiles = harnessConfig?.get("libfiles");
-  if (rawLibFiles !== undefined) {
-    const value = rawLibFiles.trim();
-    if (!value.startsWith("-") && value !== "") libFiles = value.split(",").filter(v => v !== "");
-  }
-  let noLib = false;
-  const rawNoLib = harnessConfig?.get("nolib");
-  if (rawNoLib !== undefined) noLib = rawNoLib.toLowerCase() === "true";
+export interface HarnessFs {
+  // the file names that make the program, in order (harnessutil.go:125 and :146)
+  programFileNames: string[];
+  // true when the directory of test libraries is mounted (harnessutil.go:144 and :154)
+  includeLibDir: boolean;
+  // absolute name to entry, in the order of the reference: roots, other files, links; a later entry replaces an earlier one
+  entries: Map<string, MemInput>;
+  useCaseSensitiveFileNames: boolean;
+}
+
+export interface HarnessFsOptions {
+  libFiles: string[];
+  noLib: boolean;
+  useCaseSensitiveFileNames: boolean;
+}
+
+// CompileFilesEx (harnessutil.go:115) up to vfstest.FromMap, without the files of the test library directory
+export function buildHarnessFs(test: CompilerTest, opts: HarnessFsOptions): HarnessFs {
+  const currentDirectory = test.currentDirectory;
   const programFileNames: string[] = [];
-  for (const file of toBeCompiled) {
-    const name = getNormalizedAbsolutePath(file.unitName, currentDirectory);
-    if (!fileExtensionIs(name, ExtensionJson) && !fileExtensionIs(name, ExtensionTsBuildInfo)) programFileNames.push(name);
+  for (const file of test.toBeCompiled) {
+    const fileName = getNormalizedAbsolutePath(file.unitName, currentDirectory);
+    if (!fileExtensionIs(fileName, ExtensionJson) && !fileExtensionIs(fileName, ExtensionTsBuildInfo)) programFileNames.push(fileName);
   }
-  let includeLibDir = toBeCompiled.some(file => file.content.includes(testLibFolder + "/"));
-  for (const libFile of libFiles) {
-    if (libFile === "lib.d.ts" && !noLib) continue;
+  let includeLibDir = test.toBeCompiled.some(file => file.content.includes(testLibFolder + "/"));
+  for (const libFile of opts.libFiles) {
+    if (libFile === "lib.d.ts" && !opts.noLib) continue;
     programFileNames.push(combinePaths(testLibFolder, libFile));
     includeLibDir = true;
   }
-  const symlinks = new Map<string, string>();
-  for (const [src, target] of parsed.symlinks) {
-    symlinks.set(getNormalizedAbsolutePath(src, currentDirectory), getNormalizedAbsolutePath(target, currentDirectory));
-  }
-  void combinePaths;
-  {
-    const paths = [...toBeCompiled, ...otherFiles].map(f => f.unitName);
-    for (const l of symlinks.keys()) paths.push(l);
-    const panic = checkVfsPaths([...new Set(paths)], [...symlinks.values()], useCaseSensitiveFileNames);
-    if (panic !== undefined) return { ok: false, status: "invalid", reason: panic };
-  }
-  return {
-    ok: true,
-    value: { currentDirectory, hasNonDtsFiles, tsConfigFiles, toBeCompiled, otherFiles, programFileNames, includeLibDir, symlinks, useCaseSensitiveFileNames, configFileNames, configOptions },
+  const entries = new Map<string, MemInput>();
+  const put = (name: string, e: MemInput) => {
+    entries.delete(name);
+    entries.set(name, e);
   };
+  for (const file of test.toBeCompiled) put(getNormalizedAbsolutePath(file.unitName, currentDirectory), { kind: "file", data: encoder.encode(file.content) });
+  for (const file of test.otherFiles) put(getNormalizedAbsolutePath(file.unitName, currentDirectory), { kind: "file", data: encoder.encode(file.content) });
+  for (const [src, target] of test.symlinks) {
+    put(getNormalizedAbsolutePath(src, currentDirectory), { kind: "symlink", target: getNormalizedAbsolutePath(target, currentDirectory) });
+  }
+  return { programFileNames, includeLibDir, entries, useCaseSensitiveFileNames: opts.useCaseSensitiveFileNames };
 }

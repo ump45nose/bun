@@ -9,7 +9,8 @@ const names = fs.readdirSync(CORPUS).sort();
 const filter = process.argv[2] ? new RegExp(process.argv[2]) : null;
 const noJsdoc = !!process.env.NOJSDOC;
 const MASK = !process.env.NOMASK;
-const HEADER = /^(file |externalModuleIndicator|commonJSModuleIndicator|usesUriStyleNodeCoreModules|counts |import |moduleAugmentation|ambientModuleName|pragma |referencedFile|typeReference|libReference|checkJs|commentDirective|diagnostic |jsDiagnostic |jsdocDiagnostic )/;
+const KEEP_EMI = !!process.env.EMI;
+const HEADER = KEEP_EMI ? /^(diagnostic\.related|file |commonJSModuleIndicator|usesUriStyleNodeCoreModules|counts |import |moduleAugmentation|ambientModuleName|pragma |referencedFile|typeReference|libReference|checkJs|commentDirective|diagnostic |jsDiagnostic |jsdocDiagnostic )/ : /^(diagnostic\.related|file |externalModuleIndicator|commonJSModuleIndicator|usesUriStyleNodeCoreModules|counts |import |moduleAugmentation|ambientModuleName|pragma |referencedFile|typeReference|libReference|checkJs|commentDirective|diagnostic |jsDiagnostic |jsdocDiagnostic )/;
 const NODE = /^(\s*)(\S+) (Kind\w+) \[(-?\d+),(-?\d+)\) f=(0x[0-9a-f]+)(.*)$/;
 const MASKTAGS = !!process.env.MASKTAGS;
 function maskTagComments(lines: string[]) {
@@ -68,11 +69,13 @@ for (const vname of names) {
   const raw = fs.readFileSync(path.join(CORPUS, vname), "utf8");
   let lines: string[], tsErr = 0;
   try {
-    const bundle = dumpFiles([{ name: "/" + vname, text: raw }]);
+    const bundle = dumpFiles([{ name: "/" + vname, text: raw }], { force: !!process.env.FORCE, jsx: !!process.env.JSX });
     const json = JSON.stringify(bundle);
     jsonBytes += Buffer.byteLength(json); srcBytes += Buffer.byteLength(raw);
     tsErr = bundle.files[0].diagnostics.length;
-    lines = print(importDump(JSON.parse(json)));
+    const root = importDump(JSON.parse(json));
+    lines = print(root);
+    if (KEEP_EMI) { const e = root.externalModuleIndicator; lines.unshift("externalModuleIndicator " + (e ? `Kind${e.kind}[${e.pos},${e.end})` : "<nil>")); }
   } catch (e: any) {
     failed++;
     const key = "EXC " + String(e.stack).split("\n").slice(0, 2).join(" | ").slice(0, 200);

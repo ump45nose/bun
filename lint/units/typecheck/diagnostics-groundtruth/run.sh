@@ -25,16 +25,21 @@ if [ "$MODE" = go ]; then
   "$W/gt" < "$W/vectors-external.txt" > "$W/go-external.out"
   "$W/gt" < "$W/vectors-keys.txt" > "$W/go-keys.out"
 else
-  gzip -dc "$HERE/golden/vectors.txt.gz" > "$W/vectors.txt"
-  gzip -dc "$HERE/golden/go.out.gz" > "$W/go.out"
+  for n in vectors.txt go.out vectors-external.txt go-external.out go-keys.out; do gzip -dc "$HERE/golden/$n.gz" > "$W/$n"; done
+  grep -o '^KEY [0-9]*' "$W/go-keys.out" > "$W/vectors-keys.txt"
 fi
 rm -rf "$W/crate"
 cp -r "$HERE/../diagnostics-scratch/crate" "$W/crate"
 if [ "${PDQSORT:-1}" = 1 ]; then cp "$HERE/diff/slices.rs" "$W/crate/slices.rs"; fi
+grep -q 'fn new_external_diagnostic' "$W/crate/ast/diagnostic.rs" || cat "$HERE/diff/external.rs" >> "$W/crate/ast/diagnostic.rs"
 (cd "$W/crate" && rustc --edition 2024 --crate-type rlib --crate-name diagproto -C opt-level=1 -o "$W/libdiagproto.rlib" lib.rs)
 rustc --edition 2024 -C opt-level=1 --extern diagproto="$W/libdiagproto.rlib" -o "$W/driver" "$HERE/diff/driver.rs"
 "$W/driver" < "$W/vectors.txt" > "$W/rust.out"
 grep -v -E '^(PRETTY|REL) ' "$W/go.out" > "$W/go.cmp"
 sed -e 's/ INVALID kept=.*$//' "$W/rust.out" > "$W/rust.cmp"
 (cd "$W" && bun "$HERE/diff/cmp.mjs")
-cmp "$W/go.cmp" "$W/rust.cmp" && echo "ground truth ok"
+cmp "$W/go.cmp" "$W/rust.cmp"
+"$W/driver" < "$W/vectors-external.txt" > "$W/rust-external.out"
+grep -v -E '^(PRETTY|REL) ' "$W/go-external.out" | cmp - "$W/rust-external.out"
+"$W/driver" < "$W/vectors-keys.txt" | cmp - "$W/go-keys.out"
+echo "ground truth ok"

@@ -79,6 +79,15 @@ fn main() {
                 let d = store.new_ad_hoc_diagnostic(file_id(int(f[2])), TextRange::new(int(f[3]) as i32, int(f[4]) as i32), &unhex(f[1]));
                 all.push(d);
             }
+            "X" => {
+                let c = int(f[5]);
+                let d = store.new_external_diagnostic(file_id(int(f[1])), TextRange::new(int(f[2]) as i32, int(f[3]) as i32), &unhex(f[4]), match c { 0 => Category::Warning, 1 => Category::Error, 2 => Category::Suggestion, _ => Category::Message }, int(f[6]) as i32, &unhex(f[7]));
+                all.push(d);
+            }
+            "KEY" => {
+                let key = MessageId(int(f[1]) as u32).key();
+                writeln!(w, "KEY {} {}", f[1], String::from_utf8_lossy(&key)).unwrap();
+            }
             "N" => {
                 let n = int(f[3]) as usize;
                 let owned: Vec<(bool, Vec<u8>, i64)> = (0..n).map(|i| { let a = f[4 + i]; if let Some(h) = a.strip_prefix("s:") { (true, unhex(h), 0) } else { (false, Vec::new(), int(&a[2..])) } }).collect();

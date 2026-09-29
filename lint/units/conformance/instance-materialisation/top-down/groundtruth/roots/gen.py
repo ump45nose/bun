@@ -1,4 +1,5 @@
 # Assembles cmd/roots/main.go from line ranges of the reference, with the named textual edits only.
+# usage: gen.py <tail.go.txt> <out main.go>
 import re, sys
 REF = "/workspace/ref/typescript-go/internal/"
 def lines(path, a, b):
@@ -124,8 +125,8 @@ tl = tl.replace("fs.WalkDir", "iofs.WalkDir").replace("fs.DirEntry", "iofs.DirEn
 emit("harnessutil/harnessutil.go:267-290 (edit: directory given by a variable, no sync.OnceValue, io/fs imported as iofs)", tl)
 emit("harnessutil/harnessutil.go:292-486 (edit: T)", lines("testutil/harnessutil/harnessutil.go", 292, 486).replace("*testing.T", "*T"))
 emit("harnessutil/harnessutil.go:1026-1265 (edit: T)", lines("testutil/harnessutil/harnessutil.go", 1026, 1265).replace("*testing.T", "*T"))
-out.append(open("tail.go.txt").read())
+out.append(open(sys.argv[1]).read())
 src = "\n".join(out)
 src = src.replace('\t"maps"\n', '\t"maps"\n\tiofs "io/fs"\n', 1)
-open("mod/cmd/roots/main.go", "w").write(src)
+open(sys.argv[2], "w").write(src)
 print("written", len(src))

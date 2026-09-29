@@ -2,9 +2,9 @@
 import { lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { enumerateFiles, getCompilerFileBasedTest, getConfiguredName, skippedTests } from "../../enumerator/prototype/compiler_runner";
-import { getBaseFileName } from "../../enumerator/prototype/tspath";
-import { readFile } from "../../enumerator/prototype/vfs";
+import { enumerateFiles, getCompilerFileBasedTest, getConfiguredName, skippedTests } from "../../../enumerator/prototype/compiler_runner";
+import { getBaseFileName } from "../../../enumerator/prototype/tspath";
+import { readFile } from "../../../enumerator/prototype/vfs";
 import { newCompilerTest } from "./compiler_test";
 import { materialize } from "./materialize";
 

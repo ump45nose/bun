@@ -1,210 +1,209 @@
-// Prototype: the virtual disk of an instance written below a directory that the caller gives, and the way back from real names.
-import { cpSync, lstatSync, mkdirSync, readdirSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
-import { getNormalizedAbsolutePath, getRootLength, normalizeSlashes } from "../../enumerator/prototype/tspath";
-import type { CompilerTest } from "./compiler_test";
+// Research prototype: the file system of an instance written below a directory that the caller gives, and the way back.
+import { lstatSync, mkdirSync, readdirSync, readFileSync, readlinkSync, realpathSync, symlinkSync, writeFileSync, existsSync } from "node:fs";
+import { dirname, relative, sep } from "node:path";
+import type { HarnessFs } from "./compiler_test";
+import { MemFs, MemFsPanic, type MemInput } from "./memfs";
+import { getRootLength } from "./tspath";
 
-export type Reason =
-  | "dos-root"
-  | "other-root"
-  | "case-collision"
-  | "case-insensitive-requested"
+export type Unfaithful =
+  | "drive-root"
+  | "case-insensitive-instance"
+  | "case-clash"
   | "windows-name"
+  | "links-unavailable"
   | "path-too-long"
-  | "link-not-permitted"
-  | "absolute-path-in-text"
-  | "lib-directory-missing"
-  | "ancestor-has-project-files";
-
-export interface Obstacle {
-  reason: Reason;
-  detail: string;
-}
+  | "unicode-normalisation"
+  | "ancestor-pollution"
+  | "invalid-file-system";
 
 export interface Platform {
-  // process.platform of the machine that holds the directory
-  os: NodeJS.Platform;
-  // whether the file system below the directory tells a.ts from A.ts
+  // the disk below the directory tells names apart by case
   caseSensitive: boolean;
+  // the disk keeps the bytes of a name as given
+  preservesNames: boolean;
+  // a link can be made below the directory
+  links: boolean;
+  windows: boolean;
+  // longest real path that the platform takes, 0 when there is no limit worth a check
+  maxPath: number;
 }
 
-const windowsBadCharacter = /[<>:"|?*\x00-\x1f]/;
-const windowsReserved = /^(con|prn|aux|nul|com[0-9\u00b9\u00b2\u00b3]|lpt[0-9\u00b9\u00b2\u00b3])(\..*)?$/i;
-const referenceDirective = /<reference\s+(?:path|types|lib)\s*=\s*["']([^"']+)["']/g;
-const rootedSpecifier = /(?:\bfrom\s*|\bimport\s*\(\s*|\brequire\s*\(\s*|\bimport\s+|\bmodule\s+)(["'])((?:\/|[a-zA-Z]:[\\/]|\\)[^"']*)\1/g;
-const rootedJsonString = /"((?:\/|[a-zA-Z]:[\\/])[^"\n]*)"/g;
-
-// The obstacles that the names and the texts of an instance show before anything is written.
-export function findObstacles(test: CompilerTest, platform: Platform, rootLength: number, readsAbsolutePaths: boolean): Obstacle[] {
-  const out: Obstacle[] = [];
-  const files = [...test.toBeCompiled, ...test.otherFiles];
-  const paths = [...new Set([...files.map(f => f.unitName), ...test.symlinks.keys()])];
-  const lower = new Map<string, string>();
-  for (const p of paths) {
-    const root = p.slice(0, getRootLength(p));
-    if (root !== "/") {
-      out.push({ reason: /^[a-zA-Z]:/.test(root) ? "dos-root" : "other-root", detail: p });
-      continue;
-    }
-    const segments = p.slice(1).split("/");
-    if (platform.os === "win32") {
-      for (const s of segments) {
-        if (windowsBadCharacter.test(s) || windowsReserved.test(s) || /[. ]$/.test(s)) out.push({ reason: "windows-name", detail: p });
-      }
-      if (rootLength + p.length > 259) out.push({ reason: "path-too-long", detail: p });
-    }
-    if (!platform.caseSensitive) {
-      for (let i = 1; i <= segments.length; i++) {
-        const prefix = "/" + segments.slice(0, i).join("/");
-        const other = lower.get(prefix.toLowerCase());
-        if (other !== undefined && other !== prefix) out.push({ reason: "case-collision", detail: other + " and " + prefix });
-        else lower.set(prefix.toLowerCase(), prefix);
-      }
-    }
-  }
-  if (!test.useCaseSensitiveFileNames && platform.caseSensitive) out.push({ reason: "case-insensitive-requested", detail: "" });
-  if (readsAbsolutePaths) {
-    for (const f of files) {
-      if (/\.json$/i.test(f.unitName)) {
-        for (const m of f.content.matchAll(rootedJsonString)) out.push({ reason: "absolute-path-in-text", detail: f.unitName + ": " + m[1] });
-        continue;
-      }
-      for (const m of f.content.matchAll(referenceDirective)) {
-        if (getRootLength(normalizeSlashes(m[1])) > 0) out.push({ reason: "absolute-path-in-text", detail: f.unitName + ": " + m[1] });
-      }
-      for (const m of f.content.matchAll(rootedSpecifier)) out.push({ reason: "absolute-path-in-text", detail: f.unitName + ": " + m[2] });
-    }
-  }
-  return out;
-}
-
-export interface Materialized {
+export interface Materialised {
   root: string;
-  cwd: string;
-  // the program files as the process gets them, relative to cwd
-  operands: string[];
+  // real path of the current directory of the instance, it exists
+  currentDirectory: string;
+  // real paths of the program file names, in order
+  roots: string[];
   toReal(virtualName: string): string;
-  toVirtual(printedName: string): string;
+  toVirtual(realPath: string): string | undefined;
+  // every occurrence of the real root in a text becomes the virtual name
   mapText(text: string): string;
 }
 
-export type MaterializeResult = { ok: true; value: Materialized } | { ok: false; status: "not-materialisable"; obstacles: Obstacle[] };
+export type MaterialiseResult = { ok: true; value: Materialised } | { ok: false; status: Unfaithful; reason: string };
 
-export interface MaterializeOptions {
-  // an existing empty directory; it stands for "/" of the virtual disk
-  root: string;
-  platform: Platform;
-  // the copy of tests/lib, needed when the instance mounts /.lib
-  libDirectory?: string;
-  // true for a checker that opens absolute names of the texts on the real disk
-  readsAbsolutePaths: boolean;
+const reserved = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i;
+
+// A virtual name is "/a/b" or "c:/a/b"; below the root it is "<root>/a/b" or "<root>/c:/a/b".
+export function toRealName(root: string, virtualName: string): string {
+  if (virtualName.startsWith("/")) return virtualName === "/" ? root : root + virtualName;
+  return root + "/" + virtualName;
 }
 
-const sep = (os: NodeJS.Platform) => (os === "win32" ? "\\" : "/");
-
-export function materialize(test: CompilerTest, options: MaterializeOptions): MaterializeResult {
-  const { root, platform } = options;
-  const obstacles = findObstacles(test, platform, root.length, options.readsAbsolutePaths);
-  if (test.includeLibDir && options.libDirectory === undefined) obstacles.push({ reason: "lib-directory-missing", detail: "" });
-  if (obstacles.length > 0) return { ok: false, status: "not-materialisable", obstacles };
-  const s = sep(platform.os);
-  const toReal = (virtualName: string) => root + (s === "/" ? virtualName : virtualName.replaceAll("/", s));
-  const made = new Set<string>();
-  const mkdirFor = (virtualName: string) => {
-    const dir = virtualName.slice(0, virtualName.lastIndexOf("/"));
-    if (dir === "" || made.has(dir)) return;
-    mkdirSync(toReal(dir), { recursive: true });
-    made.add(dir);
-  };
-  // harnessutil.go:195-216: the roots, the other files, the links, then the lib directory; a later entry replaces an earlier one
-  const disk = new Map<string, Buffer>();
-  for (const f of [...test.toBeCompiled, ...test.otherFiles]) disk.set(f.unitName, Buffer.from(f.content, "utf8"));
-  for (const link of test.symlinks.keys()) disk.delete(link);
-  for (const [name, bytes] of disk) {
-    mkdirFor(name);
-    writeFileSync(toReal(name), bytes);
-  }
-  for (const [link, target] of test.symlinks) {
-    mkdirFor(link);
-    const targetIsFile = disk.has(target);
-    try {
-      // a relative target would move with the link; the reference stores the absolute name
-      symlinkSync(toReal(target), toReal(link), targetIsFile ? "file" : platform.os === "win32" ? "junction" : "dir");
-    } catch (e) {
-      return { ok: false, status: "not-materialisable", obstacles: [{ reason: "link-not-permitted", detail: link + ": " + (e as Error).message }] };
-    }
-  }
-  if (test.includeLibDir && options.libDirectory !== undefined) {
-    mkdirSync(toReal("/.lib"), { recursive: true });
-    cpSync(options.libDirectory, toReal("/.lib"), { recursive: true, force: true });
-  }
-  const cwdVirtual = test.currentDirectory;
-  const cwd = cwdVirtual === "/" ? root : toReal(cwdVirtual);
-  mkdirSync(cwd, { recursive: true });
-  const roots = [root];
-  try {
-    const real = realpathSync.native(root);
-    if (real !== root) roots.push(real);
-  } catch {}
-  const folded = platform.os === "win32" || !platform.caseSensitive;
-  // real names in any text become virtual names; the caller then applies removeTestPathPrefixes
-  const mapText = (text: string): string => {
-    for (const r of roots) {
-      for (const variant of new Set([r, r.replaceAll("\\", "/")])) {
-        let from = 0;
-        for (;;) {
-          const hay = folded ? text.toLowerCase() : text;
-          const needle = folded ? variant.toLowerCase() : variant;
-          const at = hay.indexOf(needle, from);
-          if (at < 0) break;
-          let end = at + variant.length;
-          // the rest of the name, up to a character that ends a name in a message
-          let rest = "";
-          while (end < text.length && !/['"()\r\n]/.test(text[end]) && !(text[end] === ":" && /[0-9 ]/.test(text[end + 1] ?? " "))) {
-            rest += text[end] === "\\" ? "/" : text[end];
-            end++;
-          }
-          const replacement = rest === "" ? "/" : rest.startsWith("/") ? rest : undefined;
-          if (replacement === undefined) {
-            from = at + 1;
-            continue;
-          }
-          text = text.slice(0, at) + replacement + text.slice(end);
-          from = at + replacement.length;
-        }
+export function classify(fsx: HarnessFs, currentDirectory: string, libFiles: Map<string, Uint8Array> | undefined, root: string, platform: Platform): { status: Unfaithful; reason: string } | undefined {
+  const names = [...fsx.entries.keys(), currentDirectory];
+  const drive = names.find(n => /^[a-zA-Z]:/.test(n));
+  if (drive !== undefined) return { status: "drive-root", reason: `${drive} has a drive root, which a directory cannot stand for` };
+  if (!fsx.useCaseSensitiveFileNames && platform.caseSensitive) return { status: "case-insensitive-instance", reason: "the instance asks for a file system that ignores case and the disk does not" };
+  if (!platform.caseSensitive) {
+    const seen = new Map<string, string>();
+    for (const n of names) {
+      let prefix = "";
+      for (const p of n.split("/").slice(1)) {
+        prefix += "/" + p;
+        const k = prefix.toLowerCase();
+        const other = seen.get(k);
+        if (other !== undefined && other !== prefix) return { status: "case-clash", reason: `${other} and ${prefix} differ only in case` };
+        seen.set(k, prefix);
       }
     }
-    return text;
-  };
-  const toVirtual = (printedName: string): string => {
-    const n = normalizeSlashes(printedName);
-    if (getRootLength(n) > 0) {
-      const mapped = mapText(printedName);
-      return mapped;
+  }
+  if (!platform.preservesNames) {
+    const n = names.find(x => x.normalize("NFC") !== x || x.normalize("NFD") !== x);
+    if (n !== undefined) return { status: "unicode-normalisation", reason: `${n} has more than one normal form` };
+  }
+  if (platform.windows) {
+    for (const n of names) {
+      for (const p of n.split("/")) {
+        if (p === "") continue;
+        if (/[<>:"|?*\u0000-\u001f\\]/.test(p) || /[. ]$/.test(p) || reserved.test(p)) return { status: "windows-name", reason: `${n}: Windows rejects the name ${JSON.stringify(p)}` };
+      }
     }
-    return getNormalizedAbsolutePath(n, cwdVirtual);
-  };
-  const operands = test.programFileNames.map(p => relativeTo(cwdVirtual, p, s));
-  return { ok: true, value: { root, cwd, operands, toReal, toVirtual, mapText } };
+  }
+  if (!platform.links && [...fsx.entries.values()].some(e => e.kind === "symlink")) return { status: "links-unavailable", reason: "the instance has links and the platform gives no right to make one" };
+  if (platform.maxPath > 0) {
+    const all = [...names, ...(libFiles?.keys() ?? [])];
+    const long = all.find(n => root.length + n.length > platform.maxPath);
+    if (long !== undefined) return { status: "path-too-long", reason: `${long} below ${root} is longer than ${platform.maxPath}` };
+  }
+  return undefined;
 }
 
-// both names are virtual, absolute and normalized
-function relativeTo(fromDir: string, to: string, s: string): string {
-  const a = fromDir === "/" ? [] : fromDir.slice(1).split("/");
-  const b = to.slice(1).split("/");
-  let i = 0;
-  while (i < a.length && i < b.length - 1 && a[i] === b[i]) i++;
-  const parts = [...a.slice(i).map(() => ".."), ...b.slice(i)];
-  return parts.join(s);
-}
-
-export function emptyDirectory(dir: string) {
-  for (const e of readdirSync(dir)) rmSync(dir + "/" + e, { recursive: true, force: true });
-}
-
-export function isLink(path: string): boolean {
+export function materialise(fsx: HarnessFs, currentDirectory: string, libFiles: Map<string, Uint8Array> | undefined, root: string, platform: Platform): MaterialiseResult {
+  const c = classify(fsx, currentDirectory, libFiles, root, platform);
+  if (c !== undefined) return { ok: false, ...c };
+  // The model decides where each entry really lies, as the reference does when a directory on the way is a link.
+  const input = new Map<string, MemInput>(fsx.entries);
+  if (fsx.includeLibDir && libFiles !== undefined) for (const [name, data] of libFiles) input.set(name, { kind: "file", data });
+  let model: MemFs;
   try {
-    return lstatSync(path).isSymbolicLink();
+    model = new MemFs(input, fsx.useCaseSensitiveFileNames);
+  } catch (e) {
+    if (e instanceof MemFsPanic) return { ok: false, status: "invalid-file-system", reason: e.message };
+    throw e;
+  }
+  mkdirSync(root, { recursive: true });
+  const entries = [...model.m.values()];
+  for (const e of entries) if (e.kind === "dir") mkdirSync(root + "/" + e.realpath, { recursive: true });
+  for (const e of entries) {
+    if (e.kind !== "file") continue;
+    mkdirSync(dirname(root + "/" + e.realpath), { recursive: true });
+    writeFileSync(root + "/" + e.realpath, e.data);
+  }
+  for (const e of entries) {
+    if (e.kind !== "symlink") continue;
+    const at = root + "/" + e.realpath;
+    mkdirSync(dirname(at), { recursive: true });
+    const target = root + "/" + e.target;
+    const st = model.getFollowingSymlinks(model.canonical(e.target)).entry;
+    symlinkSync(relative(dirname(at), target), at, st !== undefined && st.kind === "dir" ? "dir" : "file");
+  }
+  const cwd = toRealName(root, currentDirectory);
+  mkdirSync(cwd, { recursive: true });
+  return { ok: true, value: mapping(root, cwd, fsx.programFileNames.map(n => toRealName(root, n))) };
+}
+
+export function mapping(root: string, currentDirectory: string, roots: string[]): Materialised {
+  // the two spellings of the root that a process can print
+  let real = root;
+  try {
+    real = realpathSync.native(root);
+  } catch {}
+  const spellings = [...new Set([root, real])].sort((a, b) => b.length - a.length);
+  const norm = (p: string) => (sep === "\\" ? p.replaceAll("\\", "/") : p);
+  const toVirtual = (realPath: string): string | undefined => {
+    const p = norm(realPath);
+    for (const s of spellings.map(norm)) {
+      if (p === s) return "/";
+      if (p.startsWith(s + "/")) {
+        const rest = p.slice(s.length);
+        return /^\/[a-zA-Z]:(\/|$)/.test(rest) ? rest.slice(1) : rest;
+      }
+    }
+    return undefined;
+  };
+  const mapText = (text: string): string => {
+    let out = text;
+    for (const s of spellings) {
+      const variants = sep === "\\" ? [s, norm(s)] : [s];
+      for (const v of variants) {
+        out = out.split(v + "/").join("/").split(v + "\\").join("/");
+        out = out.split(v).join("/");
+      }
+    }
+    return out.replace(/(^|[^A-Za-z0-9_./-])\/([a-zA-Z]:\/)/g, "$1$2");
+  };
+  return { root, currentDirectory, roots, toReal: n => toRealName(root, n), toVirtual, mapText };
+}
+
+// What the disk below a directory does; each probe leaves nothing behind that a later instance can see.
+export function probePlatform(dir: string): Platform {
+  mkdirSync(dir, { recursive: true });
+  const probe = dir + "/.probe-Case";
+  writeFileSync(probe, "");
+  const caseSensitive = !existsSync(dir + "/.probe-case");
+  const composed = dir + "/.probe-\u00e9";
+  writeFileSync(composed, "");
+  const preservesNames = readdirSync(dir).includes(".probe-\u00e9") && !existsSync(dir + "/.probe-e\u0301");
+  let links = true;
+  try {
+    symlinkSync(".probe-Case", dir + "/.probe-link", "file");
   } catch {
-    return false;
+    links = false;
+  }
+  const windows = process.platform === "win32";
+  return { caseSensitive, preservesNames, links, windows, maxPath: windows ? 259 : 4095 };
+}
+
+// No directory above the root may hold what a resolver looks for on its way up.
+export function ancestorPollution(root: string): string | undefined {
+  let dir = dirname(root);
+  for (;;) {
+    for (const name of ["node_modules", "package.json", "tsconfig.json", "jsconfig.json"]) {
+      if (existsSync(dir + "/" + name)) return dir + "/" + name;
+    }
+    const up = dirname(dir);
+    if (up === dir) return undefined;
+    dir = up;
   }
 }
+
+// Reads the tree back: relative name to bytes, link or directory mark.
+export function readBack(root: string): Map<string, string> {
+  const out = new Map<string, string>();
+  const walk = (dir: string, rel: string) => {
+    for (const name of readdirSync(dir).sort()) {
+      const p = dir + "/" + name;
+      const r = rel + "/" + name;
+      const st = lstatSync(p);
+      if (st.isSymbolicLink()) out.set(r, "link:" + readlinkSync(p));
+      else if (st.isDirectory()) {
+        out.set(r, "dir");
+        walk(p, r);
+      } else out.set(r, "file:" + Bun.hash(readFileSync(p)).toString(16) + ":" + st.size);
+    }
+  };
+  walk(root, "");
+  return out;
+}
+export { getRootLength };

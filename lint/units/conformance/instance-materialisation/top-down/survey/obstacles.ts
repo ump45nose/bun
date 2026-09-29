@@ -1,7 +1,7 @@
 // Survey: which instances cannot be written to a real disk faithfully, by cause.
-import { enumerateFiles, getCompilerFileBasedTest, getConfiguredName, getStatus, skippedTests } from "../../enumerator/prototype/compiler_runner";
-import { getBaseFileName, getRootLength } from "../../enumerator/prototype/tspath";
-import { readFile } from "../../enumerator/prototype/vfs";
+import { enumerateFiles, getCompilerFileBasedTest, getConfiguredName, getStatus, skippedTests } from "../../../enumerator/prototype/compiler_runner";
+import { getBaseFileName, getRootLength } from "../../../enumerator/prototype/tspath";
+import { readFile } from "../../../enumerator/prototype/vfs";
 import { newCompilerTest } from "../prototype/compiler_test";
 import { writeFileSync } from "node:fs";
 

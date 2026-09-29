@@ -1,8 +1,8 @@
 // Compares the prototype port with the ground truth dump of the reference, instance by instance.
 import { readFileSync } from "node:fs";
-import { enumerateFiles, getCompilerFileBasedTest, getConfiguredName, skippedTests } from "../../enumerator/prototype/compiler_runner";
-import { getBaseFileName } from "../../enumerator/prototype/tspath";
-import { readFile } from "../../enumerator/prototype/vfs";
+import { enumerateFiles, getCompilerFileBasedTest, getConfiguredName, skippedTests } from "../../../enumerator/prototype/compiler_runner";
+import { getBaseFileName } from "../../../enumerator/prototype/tspath";
+import { readFile } from "../../../enumerator/prototype/vfs";
 import { newCompilerTest } from "./compiler_test";
 
 const casesRoot = process.argv[2] ?? "/workspace/ref/typescript-go/_submodules/TypeScript/tests/cases";

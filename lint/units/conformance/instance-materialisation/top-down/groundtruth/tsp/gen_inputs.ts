@@ -1,8 +1,8 @@
 // Inputs for the path vectors: every unit name, link and current directory of the corpus, and a fixed set of hard shapes.
 import { readFileSync, writeFileSync } from "node:fs";
-import { enumerateFiles } from "../../../enumerator/prototype/compiler_runner";
-import { parseTestFilesAndSymlinks } from "../../../enumerator/prototype/test_case_parser";
-import { readFile } from "../../../enumerator/prototype/vfs";
+import { enumerateFiles } from "../../../../enumerator/prototype/compiler_runner";
+import { parseTestFilesAndSymlinks } from "../../../../enumerator/prototype/test_case_parser";
+import { readFile } from "../../../../enumerator/prototype/vfs";
 const casesRoot = "/workspace/ref/typescript-go/_submodules/TypeScript/tests/cases";
 const pairs = new Set<string>();
 const add = (name: string, dir: string) => pairs.add(JSON.stringify([name, dir]));

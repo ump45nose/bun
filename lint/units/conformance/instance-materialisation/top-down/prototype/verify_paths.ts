@@ -1,7 +1,7 @@
 // Checks the prototype path functions against the vectors of the reference.
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
-import * as t from "../../enumerator/prototype/tspath";
+import * as t from "../../../enumerator/prototype/tspath";
 import * as m from "./tspath_more";
 const file = process.argv[2] ?? "vectors.jsonl.gz";
 const raw = readFileSync(file);
