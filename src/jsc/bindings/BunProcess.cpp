@@ -4750,11 +4750,6 @@ JSValue getCachedCwd(JSC::JSGlobalObject* globalObject)
     RELEASE_AND_RETURN(scope, cwdStr);
 }
 
-extern "C" EncodedJSValue Process__getCachedCwd(JSC::JSGlobalObject* globalObject)
-{
-    return JSValue::encode(getCachedCwd(globalObject));
-}
-
 JSC_DEFINE_HOST_FUNCTION(Process_functionCwd, (JSC::JSGlobalObject * globalObject, JSC::CallFrame* callFrame))
 {
     return JSValue::encode(getCachedCwd(globalObject));

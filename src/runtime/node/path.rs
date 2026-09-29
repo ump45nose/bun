@@ -273,15 +273,15 @@ fn posix_cwd_t<T: PathCharCwd>(buf: &mut [T]) -> MaybeBuf<'_, T> {
     Ok(cwd)
 }
 
-pub(crate) fn get_cwd_u8(buf: &mut [u8]) -> MaybeBuf<'_, u8> {
-    let cwd = bun_core::cwd::get();
+fn get_cwd_u8(buf: &mut [u8]) -> MaybeBuf<'_, u8> {
+    let cwd = bun_sys::require_cwd()?.as_bytes();
     buf[0..cwd.len()].copy_from_slice(cwd);
     Ok(&mut buf[0..cwd.len()])
 }
 
 fn get_cwd_u16(buf: &mut [u16]) -> MaybeBuf<'_, u16> {
-    let result = strings::convert_utf8_to_utf16_in_buffer(buf, bun_core::cwd::get());
-    Ok(result)
+    let cwd = bun_sys::require_cwd()?.as_bytes();
+    Ok(strings::convert_utf8_to_utf16_in_buffer(buf, cwd))
 }
 
 #[inline]
@@ -2688,7 +2688,7 @@ fn relative_posix_js_t<T: PathCharCwd>(
 ) -> JsResult<JSValue> {
     match relative_posix_t(from, to, buf, from_buf, tmp_buf) {
         Ok(r) => create_js_string_t::<T>(global_object, r),
-        Err(e) => Ok(e.to_js(global_object)),
+        Err(e) => Err(global_object.throw_value(e.to_js(global_object))),
     }
 }
 
@@ -2702,7 +2702,7 @@ fn relative_windows_js_t<T: PathCharCwd>(
 ) -> JsResult<JSValue> {
     match relative_windows_t(from, to, buf, from_buf, tmp_buf) {
         Ok(r) => create_js_string_t::<T>(global_object, r),
-        Err(e) => Ok(e.to_js(global_object)),
+        Err(e) => Err(global_object.throw_value(e.to_js(global_object))),
     }
 }
 
@@ -3292,11 +3292,6 @@ fn resolve_windows_t<'a, T: PathCharCwd>(
     Ok(l::<T>(CHAR_STR_DOT))
 }
 
-#[cfg(unix)]
-unsafe extern "C" {
-    safe fn Process__getCachedCwd(global: &JSGlobalObject) -> JSValue;
-}
-
 fn resolve_posix_js_t<T: PathCharCwd>(
     global_object: &JSGlobalObject,
     paths: &[&[T]],
@@ -3305,7 +3300,7 @@ fn resolve_posix_js_t<T: PathCharCwd>(
 ) -> JsResult<JSValue> {
     match resolve_posix_t(paths, buf, buf2) {
         Ok(r) => create_js_string_t::<T>(global_object, r),
-        Err(e) => Ok(e.to_js(global_object)),
+        Err(e) => Err(global_object.throw_value(e.to_js(global_object))),
     }
 }
 
@@ -3317,7 +3312,7 @@ fn resolve_windows_js_t<T: PathCharCwd>(
 ) -> JsResult<JSValue> {
     match resolve_windows_t(paths, buf, buf2) {
         Ok(r) => create_js_string_t::<T>(global_object, r),
-        Err(e) => Ok(e.to_js(global_object)),
+        Err(e) => Err(global_object.throw_value(e.to_js(global_object))),
     }
 }
 
@@ -3390,20 +3385,6 @@ fn resolve(
 
     let owned: SmallVec<[Utf8Bytes<'_>; 8]> = views.iter().map(JSStringView::to_utf8).collect();
     let paths: SmallVec<[&[u8]; 8]> = owned.iter().rev().map(Utf8Bytes::slice).collect();
-
-    #[cfg(unix)]
-    {
-        if !is_windows {
-            // Micro-optimization #1: avoid creating a new string when passing no arguments or only empty strings.
-            // Micro-optimization #2: path.resolve(".") and path.resolve("./") === process.cwd()
-            if paths.is_empty() || (paths.len() == 1 && (paths[0] == b"." || paths[0] == b"./")) {
-                // Throws when `getcwd` fails (for example, a deleted cwd).
-                return crate::jsc::call_zero_is_throw(global_object, || {
-                    Process__getCachedCwd(global_object)
-                });
-            }
-        }
-    }
 
     let pool = &mut global_object.bun_vm().as_mut().rare_data().path_buf;
     resolve_js_t::<u8>(global_object, pool, is_windows, &paths)
@@ -3490,7 +3471,7 @@ fn to_namespaced_path_windows_js_t<T: PathCharCwd>(
 ) -> JsResult<JSValue> {
     match to_namespaced_path_windows_t(path, buf, buf2) {
         Ok(r) => create_js_string_t::<T>(global_object, r),
-        Err(e) => Ok(e.to_js(global_object)),
+        Err(e) => Err(global_object.throw_value(e.to_js(global_object))),
     }
 }
 

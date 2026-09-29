@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { bunEnv, bunExe, isWindows } from "harness";
+import { bunEnv, bunExe, isWindows, tempDir } from "harness";
 import assert from "node:assert";
 // import child from "node:child_process";
 import path from "node:path";
@@ -199,5 +199,55 @@ describe("path.resolve", () => {
     // On Windows, paths use backslash; on POSIX, forward slash
     const expectedEnding = isWindows ? "\\c" : "/c";
     assert.ok(result.endsWith(expectedEnding));
+  });
+
+  // POSIX-only: Windows refuses to remove a directory that is any process's cwd.
+  test.skipIf(isWindows)("whatever needs the working directory throws when it was removed before startup", async () => {
+    using dir = tempDir("path-resolve-removed-cwd", {});
+    const gone = String(dir);
+    const script = `
+      const path = require("node:path");
+      const out = {};
+      const forms = {
+        none: () => path.resolve(),
+        dot: () => path.resolve("."),
+        relative: () => path.resolve("x"),
+        win32: () => path.win32.resolve("x"),
+        absolute: () => path.resolve("/a", "b"),
+        relativeTo: () => path.relative("a", "b"),
+        win32RelativeTo: () => path.win32.relative("a", "b"),
+        namespaced: () => path.win32.toNamespacedPath("x"),
+      };
+      for (const [name, form] of Object.entries(forms)) {
+        try {
+          out[name] = form();
+        } catch (e) {
+          out[name] = { code: e.code };
+        }
+      }
+      console.log(JSON.stringify(out));
+    `;
+    // The cwd has to go away before the process starts, so a shell wrapper removes it and then execs bun.
+    await using proc = Bun.spawn({
+      cmd: ["/bin/sh", "-c", `cd "${gone}" && rmdir "${gone}" && exec "${bunExe()}" -e "$SCRIPT"`],
+      env: { ...bunEnv, SCRIPT: script },
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+    expect({ out: JSON.parse(stdout.trim() || "null"), stderr: exitCode === 0 ? "" : stderr, exitCode }).toEqual({
+      out: {
+        none: { code: "ENOENT" },
+        dot: { code: "ENOENT" },
+        relative: { code: "ENOENT" },
+        win32: { code: "ENOENT" },
+        absolute: "/a/b",
+        relativeTo: { code: "ENOENT" },
+        win32RelativeTo: { code: "ENOENT" },
+        namespaced: { code: "ENOENT" },
+      },
+      stderr: "",
+      exitCode: 0,
+    });
   });
 });
