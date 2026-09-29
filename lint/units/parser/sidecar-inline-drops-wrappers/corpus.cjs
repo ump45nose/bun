@@ -9,11 +9,11 @@ function walk(d) {
   for (const e of ents) {
     const f = path.join(d, e.name);
     if (e.isDirectory()) { if (e.name !== "node_modules" && e.name !== ".git") walk(f); continue; }
-    if (!/\.(ts|tsx|mts|cts)$/.test(e.name)) continue;
+    if (!(process.env.JS ? /\.(js|jsx|mjs|cjs)$/ : /\.(ts|tsx|mts|cts)$/).test(e.name)) continue;
     let src; try { src = fs.readFileSync(f, "utf8"); } catch { continue; }
     if (src.length > 400000) continue;
     let r;
-    try { r = run(src, e.name.endsWith(".tsx") ? "t.tsx" : "t.ts"); } catch (err) { r = { ok: false, error: String(err.message) }; }
+    try { r = run(src, "t" + path.extname(e.name)); } catch (err) { r = { ok: false, error: String(err.message) }; }
     if (r.skip) { skipped++; continue; }
     if (r.ok) { pass++; for (const x of r.rebuilt) { if (x.startsWith("Paren")) parens++; else wrappers++; } }
     else { fail++; if (fails.length < 25) fails.push([f, r]); }

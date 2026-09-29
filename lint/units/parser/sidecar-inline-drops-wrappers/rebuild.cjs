@@ -56,7 +56,7 @@ const rightOperand = n => {
 };
 
 function run(src, file) {
-  const kind = file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+  const kind = file.endsWith(".tsx") ? ts.ScriptKind.TSX : file.endsWith(".jsx") ? ts.ScriptKind.JSX : /\.[cm]?js$/.test(file) ? ts.ScriptKind.JS : ts.ScriptKind.TS;
   const sf = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true, kind);
   if (sf.parseDiagnostics.length) return { skip: "tsc rejects: TS" + sf.parseDiagnostics[0].code };
   const gaps = makeGaps(src, commentRanges(src, sf));
