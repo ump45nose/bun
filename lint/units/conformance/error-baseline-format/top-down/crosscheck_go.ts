@@ -85,8 +85,15 @@ function genContent(): string {
   const style = rnd(4);
   for (let l = 0; l <= lines; l++) {
     const n = rnd(8);
-    for (let k = 0; k < n; k++) out += rnd(3) === 0 ? pick(atoms) : pick(["a", "b", "c", " ", "let", "x"]);
-    if (l < lines || rnd(2) === 0) out += style === 0 ? "\n" : style === 1 ? "\r\n" : pick(breaks);
+    for (let k = 0; k < n; k++) {
+      let atom = rnd(3) === 0 ? pick(atoms) : pick(["a", "b", "c", " ", "let", "x"]);
+      if (generator.breaks === "lf" && /\r|\xe2\x80[\xa8\xa9]/.test(atom)) atom = "y";
+      if (generator.valid && Buffer.from(Buffer.from(atom, "latin1").toString("utf8"), "utf8").toString("latin1") !== atom) atom = "z";
+      out += atom;
+    }
+    if (l < lines || rnd(2) === 0) {
+      out += generator.breaks === "lf" || style === 0 ? "\n" : style === 1 ? "\r\n" : pick(breaks);
+    }
   }
   return out;
 }
@@ -131,7 +138,21 @@ function genChain(depth: number, file: FileLike | undefined): Diagnostic[] {
   return out;
 }
 
+// The start of the character that holds the byte at pos.
+function snap(text: string, pos: number): number {
+  while (pos > 0 && pos < text.length && (text.charCodeAt(pos) & 0xc0) === 0x80) pos--;
+  return pos;
+}
+
 function genPos(text: string, wild: boolean): [number, number] {
+  if (generator.valid) {
+    const [p, e] = genPosRaw(text, false);
+    return [snap(text, p), Math.max(snap(text, p), snap(text, e))];
+  }
+  return genPosRaw(text, wild);
+}
+
+function genPosRaw(text: string, wild: boolean): [number, number] {
   const len = text.length;
   let pos = rnd(len + 1);
   let end: number;
@@ -146,27 +167,43 @@ function genPos(text: string, wild: boolean): [number, number] {
   return [pos, end];
 }
 
-export const generator = { sane: false };
+export const generator = { sane: false, names: "all", breaks: "all", valid: false };
 
 export function genCase(index: number, wild: boolean): Case {
-  const names = ["/.src/a.ts", "/.src/b.ts", "/.src/A.ts", "/.src/dir/c.tsx", "/.src/tsconfig.json", "/.src/lib.d.ts", "/abs/d.ts", "/.src/a.ts", "/.src/./e.ts", "/.lib/react.d.ts", "/.src/lib.es5.d.ts"];
+  const names =
+    generator.names === "plain"
+      ? ["/.src/a.ts", "/.src/b.ts", "/.src/dir/c.tsx", "/.src/tsconfig.json", "/abs/d.ts", "/.src/e.ts", "/.src/f.d.ts", "/g.ts"]
+      : generator.names === "library"
+        ? ["/.src/a.ts", "/.src/lib.d.ts", "/.src/lib.es5.d.ts", "/.src/b.ts"]
+        : generator.names === "repeated"
+          ? ["/.src/a.ts", "/.src/A.ts", "/.src/a.ts", "/.src/b.ts"]
+          : ["/.src/a.ts", "/.src/b.ts", "/.src/A.ts", "/.src/dir/c.tsx", "/.src/tsconfig.json", "/.src/lib.d.ts", "/abs/d.ts", "/.src/a.ts", "/.src/./e.ts", "/.lib/react.d.ts", "/.src/lib.es5.d.ts"];
   const inputs: TestFile[] = [];
   const files: FileLike[] = [];
   const nInputs = rnd(4);
   for (let k = 0; k < nInputs; k++) {
-    const name = pick(names);
+    let name = pick(names);
+    if (generator.names === "plain" || generator.names === "library") {
+      while (inputs.some(f => f.unitName === name)) name = pick(names);
+    }
     const content = genContent();
     inputs.push({ unitName: name, content });
     // The file of a diagnostic has the text of the input file, or another text when the names are equal twice.
     files.push({ fileName: name, text: content });
   }
-  const outside: FileLike[] = [
-    { fileName: "bundled:///libs/lib.es5.d.ts", text: genContent() },
-    { fileName: "/.src/other.ts", text: genContent() },
-    { fileName: "/.ts/lib.dom.d.ts", text: genContent() },
-    { fileName: "LIB.x.D.TS", text: genContent() },
-    { fileName: "file:///./src/u.ts", text: genContent() },
-  ];
+  const outside: FileLike[] =
+    generator.names !== "all"
+      ? [
+          { fileName: "bundled:///libs/lib.es5.d.ts", text: genContent() },
+          { fileName: "bundled:///libs/lib.dom.d.ts", text: genContent() },
+        ]
+      : [
+          { fileName: "bundled:///libs/lib.es5.d.ts", text: genContent() },
+          { fileName: "/.src/other.ts", text: genContent() },
+          { fileName: "/.ts/lib.dom.d.ts", text: genContent() },
+          { fileName: "LIB.x.D.TS", text: genContent() },
+          { fileName: "file:///./src/u.ts", text: genContent() },
+        ];
   const anyFile = (): FileLike | undefined => {
     const r = rnd(10);
     if (r === 0) return undefined;

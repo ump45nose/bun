@@ -80,6 +80,8 @@ const globalHead = /^(error|warning|suggestion|message) TS(-?\d+): (.*)$/s;
 const sectionHead = /^==== (.*) \((\d+) errors\) ====$/s;
 const relatedLine = /^!!! related TS(-?\d+)(?: (.+?):(\d+|--):(\d+|--))?: (.*)$/s;
 
+const summaryHead = /^Found (?:1 error|\d+ errors)(?:\.| in )/;
+
 const esc = "\x1b";
 const locationPattern = `${esc}\\[96m(.*?)${esc}\\[0m:${esc}\\[93m(\\d+)${esc}\\[0m:${esc}\\[93m(\\d+)${esc}\\[0m`;
 const prettyHead = new RegExp(
@@ -96,24 +98,30 @@ const caseInsensitive = { useCaseSensitiveFileNames: false, currentDirectory: ""
 export function readErrorBaseline(rules: Rules, text: string, options: ReadOptions = {}): ParsedErrorBaseline {
   const decisions: string[] = [];
   const pretty = text.startsWith(esc + "[");
-  const boundary = text.indexOf("\r\n\r\n\r\n");
-  if (boundary < 0) throw new ReadError("no end of the first section");
-  const top = text.slice(0, boundary + 2);
-  const body = text.slice(boundary + 6);
+  // The first section ends with line breaks; what follows starts with a message line, a header or the summary.
+  const allLines = text.split("\r\n");
+  let bodyStart = allLines.findIndex(l => l.startsWith("!!! ") || isSectionHead(l) || (pretty && summaryHead.test(l)));
+  if (bodyStart < 0) bodyStart = allLines.length;
+  let topEnd = bodyStart;
+  while (topEnd > 0 && allLines[topEnd - 1] === "") topEnd--;
+  if (topEnd === 0 || bodyStart - topEnd < (pretty ? 1 : 2)) throw new ReadError("no end of the first section");
+  const topLines = allLines.slice(0, topEnd);
 
-  const entries = pretty ? readPrettyTop(rules, top, decisions) : readPlainTop(top);
+  const entries = pretty ? readPrettyTop(rules, topLines, decisions) : readPlainTop(topLines);
 
-  let bodyLines = body === "" ? [] : body.split("\r\n");
-  if (pretty) {
-    // The summary starts with a line break: its first line is the first body line that no section owns.
-    for (let i = 0; i < bodyLines.length; i++) {
-      const l = bodyLines[i];
-      if (!l.startsWith("    ") && !l.startsWith("!!! ") && !isSectionHead(l)) {
-        // Nothing is read from the summary: the writer derives it from the diagnostics.
-        bodyLines = bodyLines.slice(0, i);
+  let bodyLines = allLines.slice(bodyStart);
+  if (pretty && entries.some(e => e.category === Category.Error)) {
+    // The summary ends the text: "Found ..." and an empty line, then the table of files and an empty line.
+    // Nothing is read from it: the writer derives it from the diagnostics.
+    let at = -1;
+    for (let i = bodyLines.length - 2; i >= 0; i--) {
+      if (bodyLines[i + 1] === "" && summaryHead.test(bodyLines[i])) {
+        at = i;
         break;
       }
     }
+    if (at < 0) throw new ReadError("pretty form without summary");
+    bodyLines = bodyLines.slice(0, at);
   }
 
   let i = 0;
@@ -209,9 +217,7 @@ function newEntry(
   };
 }
 
-function readPlainTop(top: string): Entry[] {
-  const lines = top.split("\r\n");
-  lines.pop();
+function readPlainTop(lines: string[]): Entry[] {
   const entries: Entry[] = [];
   for (const line of lines) {
     // A line that starts with a category has no file; else the first "(line,column): category TScode: " ends the name.
@@ -231,9 +237,7 @@ function readPlainTop(top: string): Entry[] {
   return entries;
 }
 
-function readPrettyTop(rules: Rules, top: string, decisions: string[]): Entry[] {
-  const lines = top.split("\r\n");
-  lines.pop();
+function readPrettyTop(rules: Rules, lines: string[], decisions: string[]): Entry[] {
   const entries: Entry[] = [];
   let i = 0;
   // Pairs of a gutter line and a squiggle line, with an ellipsis line where lines are left out.
@@ -270,7 +274,12 @@ function readPrettyTop(rules: Rules, top: string, decisions: string[]): Entry[] 
     i++;
     const entry = newEntry(m[1], m[2], m[3], m[4], m[5], m[6]);
     entries.push(entry);
-    while (i < lines.length && lines[i] !== "" && prettyHead.exec(lines[i]) === null) {
+    while (
+      i < lines.length &&
+      lines[i] !== "" &&
+      prettyHead.exec(lines[i]) === null &&
+      !(rules.name === "tsgo" && prettyRelatedHeadGo.test(lines[i]))
+    ) {
       entry.messageLines.push(lines[i]);
       i++;
     }
@@ -311,10 +320,14 @@ function readPrettyTop(rules: Rules, top: string, decisions: string[]): Entry[] 
         }
       }
     } else {
-      // Per entry with a file: an empty line, "  location - message", chain lines, the snippet.
-      while (i + 1 < lines.length && lines[i] === "" && prettyRelatedHeadGo.test(lines[i + 1])) {
-        const r = prettyRelatedHeadGo.exec(lines[i + 1])!;
-        i += 2;
+      // Per entry with a file: a line break, "  location - message", chain lines, the snippet. The line break
+      // ends the snippet before it, or is an empty line when a snippet or an entry without a file is before it.
+      for (;;) {
+        let at = i;
+        while (at < lines.length && lines[at] === "") at++;
+        if (at >= lines.length || !prettyRelatedHeadGo.test(lines[at])) break;
+        const r = prettyRelatedHeadGo.exec(lines[at])!;
+        i = at + 1;
         entry.relatedFromTop = true;
         const related: RelatedEntry = {
           fileName: r[1],
@@ -330,8 +343,8 @@ function readPrettyTop(rules: Rules, top: string, decisions: string[]): Entry[] 
         related.snippet = readSnippet("    ");
         entry.related.push(related);
       }
-      // The line break between two diagnostics.
-      if (i < lines.length && lines[i] === "") i++;
+      // The line breaks of entries without a file, and the one between two diagnostics.
+      while (i < lines.length && lines[i] === "") i++;
     }
   }
   void decisions;
@@ -346,7 +359,8 @@ function readGlobalSection(lines: string[], entries: Entry[], decisions: string[
   let i = 0;
   for (const e of entries) {
     if (e.fileName !== undefined) continue;
-    const r = readMessageLines(lines, i, e, () => 0);
+    // No source line is here: every line without a mark is a line of a chain.
+    const r = readMessageLines(lines, i, e, alternatives => alternatives.indexOf(Math.max(...alternatives)));
     i = r.next;
     commitRelated(e, r.related, decisions);
   }
@@ -541,6 +555,14 @@ function checkSection(rules: Rules, section: Section, r: SectionResult): void {
     const pos = model.advanceUTF16(content, starts[e.line - 1], e.character - 1, content.length);
     if (pos === undefined) {
       throw new ReadError(`column ${e.character} is no position of line ${e.line} of ${section.name}`);
+    }
+    for (const related of r.related[k] ?? []) {
+      if (related.fileName !== section.name || related.line === undefined || related.character === undefined) continue;
+      if (related.line - 1 >= starts.length) throw new ReadError(`line ${related.line} is outside ${section.name}`);
+      const at = model.advanceUTF16(content, starts[related.line - 1], related.character - 1, content.length);
+      if (at === undefined || (related.line < starts.length && at >= starts[related.line])) {
+        throw new ReadError(`column ${related.character} is no position of line ${related.line} of ${section.name}`);
+      }
     }
     const first = r.squiggles[k][0];
     const line = r.contentLines[first.lineIndex];
@@ -894,8 +916,10 @@ function spanFromSnippet(rules: Rules, snippet: Snippet, d: Diagnostic, starts: 
   if (lineStart === undefined) throw new ReadError("snippet line outside the file");
   const oneLine = snippet.firstLine === snippet.lastLine;
   const units = oneLine ? snippet.firstLinePrefix + snippet.firstLineTildes : snippet.lastLineTildes;
-  const end = rules.model.advanceUTF16(file.text, lineStart, units, file.text.length);
-  if (rules.name === "tsgo" && oneLine && snippet.firstLineTildes === 1) {
+  // The tildes of the reference are counted, not cut to the line: past the end of the line they are no span.
+  const lineEnd = snippet.lastLine < starts.length ? starts[snippet.lastLine] - 1 : file.text.length;
+  const end = rules.model.advanceUTF16(file.text, lineStart, units, lineEnd);
+  if (rules.name === "tsgo" && oneLine && snippet.firstLineTildes === 1 && end !== undefined) {
     decisions.push("snippet with one tilde: length 1 is taken, length 0 prints the same");
   }
   if (end === undefined) {

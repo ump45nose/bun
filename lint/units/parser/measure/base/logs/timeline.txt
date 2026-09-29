@@ -43,3 +43,7 @@ END   33-clippy-pitfall rc=0 wall=47s lockwait=12s run=35s 2026-09-29T18:10:07Z 
 START 34-gd-targeted-debug 2026-09-29T18:10:07Z load=269.19 266.41 248.44 cmd: sh -c cd /workspace/notes/lint/units/parser/grammar-diff && BUN_DEBUG_QUIET_LOGS=1 /workspace/wt/parser/build/debug/bun-debug harness.mjs corpus.targeted.json /tmp/parser-base/gd-a/debug.targeted.jsonl.gz --jobs=8
 END   34-gd-targeted-debug rc=0 wall=35s lockwait=6s run=29s 2026-09-29T18:10:42Z load=257.46 263.50 248.11
 START 35-release-rebuild 2026-09-29T18:10:44Z load=257.46 263.50 248.11 cmd: /tmp/parser-base/rebuild.sh
+END   35-release-rebuild rc=0 wall=590s lockwait=14s run=576s 2026-09-29T18:20:36Z load=609.26 510.67 374.68
+START 36-gd-small-installed 2026-09-29T18:20:42Z load=600.75 510.54 375.37 cmd: sh -c cd /workspace/notes/lint/units/parser/grammar-diff && /workspace/bun/build/release/bun harness.mjs corpus.small.json /tmp/parser-base/gd-a/installed.small.jsonl.gz --jobs=8
+END   36-gd-small-installed rc=0 wall=41s lockwait=18s run=23s 2026-09-29T18:21:23Z load=474.34 490.78 374.50
+START 37-miri-ast 2026-09-29T18:21:23Z load=474.34 490.78 374.50 cmd: env MIRIFLAGS=-Zmiri-tree-borrows cargo miri test -p bun_ast --lib --offline

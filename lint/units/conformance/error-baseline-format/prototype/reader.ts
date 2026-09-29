@@ -1,9 +1,9 @@
 // The reader of .errors.txt baselines: bytes to diagnostics and files, the inverse of getErrorBaseline.
 import { Category, type Diagnostic, type FileLike, categoryName, computeECMALineStarts, flattenDiagnosticMessage } from "./diagnosticwriter";
-import { type Rules, type TestFile, getErrorBaseline, removeTestPathPrefixes } from "./error_baseline";
+import { type Rules, type TestFile, getErrorBaseline, isDefaultLibraryFile, removeTestPathPrefixes } from "./error_baseline";
 import { type ByteString, decodeRune, replaceNonWhitespace, utf16Len } from "./go_compat";
 import * as tsc from "./tsc_rules";
-import { comparePaths } from "./tspath";
+import { comparePaths, getEncodedRootLength } from "./tspath";
 
 export interface ParsedFile extends FileLike {
   // False when the baseline has no section for the file: the text is a stand-in that gives back the printed
@@ -376,6 +376,14 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
     if (i !== globalLines.length) fail(`${globalLines.length - i} lines of the global block are left`);
   }
 
+  // The Go harness names every file with an absolute path and prints it without the prefix of the test roots.
+  // A printed name that is relative had such a prefix: the source root for a file with a section, else a library root.
+  const fullName = (printed: string, hasSection: boolean): string => {
+    if (rules !== "tsgo" || getEncodedRootLength(printed) !== 0) return printed;
+    if (hasSection) return "/.src/" + printed;
+    return (isDefaultLibraryFile(printed) ? "bundled:///libs/" : "/.lib/") + printed;
+  };
+
   // The sections.
   const usedUnits = new Set<TestFile>();
   const testFiles: TestFile[] = [];
@@ -419,7 +427,7 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
       }
       commit(d, span.block!);
     });
-    testFiles.push({ unitName: section.unitName, content });
+    testFiles.push({ unitName: unit !== undefined ? unit.unitName : fullName(section.unitName, true), content });
   }
 
   // Files: one object per name, with the text of the first section of that name, else a stand-in.
@@ -430,9 +438,11 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
     if (file === undefined) {
       const section = testFiles.find(f => sameFile(f.unitName, name));
       if (section !== undefined) {
-        file = { fileName: name, text: section.content, hasText: true };
+        // A name that differs from the name of the section in case only keeps its own spelling.
+        const sameSpelling = ops.stripPrefixes(section.unitName) === ops.stripPrefixes(name);
+        file = { fileName: sameSpelling ? section.unitName : fullName(name, true), text: section.content, hasText: true };
       } else {
-        const standIn = new StandInFile(name);
+        const standIn = new StandInFile(fullName(name, false));
         standIns.push(standIn);
         file = standIn;
       }
@@ -597,7 +607,8 @@ interface PrettyRelated {
 
 interface PrettyTop {
   head: Head;
-  related: PrettyRelated[];
+  // In the order of the list; undefined stands for an entry without a file, of which the Go writer prints a line break.
+  related: (PrettyRelated | undefined)[];
   rows: SnippetRow[];
 }
 
@@ -645,40 +656,97 @@ function readPrettyHead(line: string): Head | undefined {
   return { fileName, line: l, character: c, category: categories[m[1]], code: Number(m[2]), messageLines: [m[3]] };
 }
 
-// FormatDiagnosticsWithColorAndContext of the Go writer.
+// FormatDiagnosticsWithColorAndContext of the Go writer, read with a cursor on the text.
+// A related entry without a file prints one line break and nothing else: the count of line breaks tells them.
 function readPrettyTopTsgo(top: string): PrettyTop[] {
-  const lines = top.split("\r\n");
   const result: PrettyTop[] = [];
-  let i = 0;
-  while (i < lines.length) {
-    const head = readPrettyHead(lines[i]);
-    if (head === undefined) fail(`pretty line ${JSON.stringify(lines[i])} is not a diagnostic`);
-    i++;
-    while (i < lines.length && lines[i] !== "" && readPrettyHead(lines[i]) === undefined) head.messageLines.push(lines[i++]);
+  let pos = 0;
+  const at = (text: string): boolean => top.startsWith(text, pos);
+  const expect = (text: string, what: string): void => {
+    if (!at(text)) fail(`pretty first section: no ${what} at byte ${pos}`);
+    pos += text.length;
+  };
+  const lineEnd = (from: number): number => {
+    const end = top.indexOf("\r\n", from);
+    return end < 0 ? top.length : end;
+  };
+  const startsHead = (from: number): boolean => readPrettyHead(top.slice(from, lineEnd(from))) !== undefined;
+  const startsGutter = (from: number, indent: string): boolean => top.startsWith(indent + ESC + "[7m", from);
+  // The lines of a message: it goes on over each line break that a chain line or a line of its own text follows.
+  const readMessage = (first: string, indentOfSnippet: string): string[] => {
+    const lines = [first];
+    while (pos < top.length && at("\r\n")) {
+      const next = pos + 2;
+      if (next >= top.length || top.startsWith("\r\n", next) || top.startsWith(ESC, next) || top.startsWith("  " + ESC + "[96m", next)) break;
+      if (startsGutter(next, indentOfSnippet)) break;
+      const end = lineEnd(next);
+      lines.push(top.slice(next, end));
+      pos = end;
+    }
+    return lines;
+  };
+  const readRows = (indent: string): SnippetRow[] => {
+    const rows: SnippetRow[] = [];
+    while (at("\r\n") && startsGutter(pos + 2, indent)) {
+      pos += 2;
+      let end = lineEnd(pos);
+      let g = gutterPattern.exec(top.slice(pos, end));
+      if (g !== null && g[2] === "...") {
+        if (g[3] !== "") fail(`ellipsis line at byte ${pos}`);
+        pos = end;
+        expect("\r\n", "line after the ellipsis");
+        end = lineEnd(pos);
+        g = gutterPattern.exec(top.slice(pos, end));
+      }
+      if (g === null || g[1] !== indent || g[2] === "" || g[2] === "...") fail(`snippet line at byte ${pos}`);
+      pos = end;
+      expect("\r\n", "squiggle line of the snippet");
+      end = lineEnd(pos);
+      const q = gutterPattern.exec(top.slice(pos, end));
+      const tildes = q === null || q[1] !== indent || q[2] !== "" ? null : squigglePattern.exec(q[3]);
+      if (tildes === null) fail(`snippet squiggle at byte ${pos}`);
+      rows.push({ line: Number(g[2]), text: g[3], spaces: tildes[1].length, tildes: tildes[2].length });
+      pos = end;
+    }
+    return rows;
+  };
+  while (pos < top.length) {
+    if (result.length > 0) expect("\r\n", "line break between two diagnostics");
+    const end = lineEnd(pos);
+    const head = readPrettyHead(top.slice(pos, end));
+    if (head === undefined) fail(`pretty first section: no diagnostic at byte ${pos}`);
+    pos = end;
+    head.messageLines = readMessage(head.messageLines[0], "");
     const entry: PrettyTop = { head, related: [], rows: [] };
     if (head.fileName !== undefined && head.code !== 1490) {
-      if (lines[i] !== "") fail("no empty line before the code snippet");
-      i++;
-      const snippet = readSnippet(lines, i, "");
-      if (snippet.rows.length === 0) fail("no code snippet");
-      entry.rows = snippet.rows;
-      i = snippet.next;
-      if (lines[i] !== "") fail("no line break after the code snippet");
-      i++;
+      expect("\r\n", "line break before the snippet");
+      entry.rows = readRows("");
+      if (entry.rows.length === 0) fail(`pretty first section: no snippet at byte ${pos}`);
+      expect("\r\n", "line break after the snippet");
     }
-    // Each related entry: a line break, two spaces, the location, " - ", the message, its snippet, a line break.
-    while (i < lines.length && lines[i].startsWith(`  ${ESC}[96m`)) {
-      const loc = locationPattern.exec(lines[i].slice(2));
-      if (loc === null || !lines[i].startsWith(" - ", 2 + loc[0].length)) fail(`related line ${JSON.stringify(lines[i])}`);
-      const messageLines = [lines[i].slice(2 + loc[0].length + 3)];
-      i++;
-      while (i < lines.length && gutterPattern.exec(lines[i])?.[1] !== "    ") messageLines.push(lines[i++]);
-      const snippet = readSnippet(lines, i, "    ");
-      if (snippet.rows.length === 0) fail("no code snippet of related information");
-      i = snippet.next;
-      entry.related.push({ fileName: loc[1], line: Number(loc[2]), character: Number(loc[3]), messageLines, rows: snippet.rows });
-      if (lines[i] !== "") fail("no line break after related information");
-      i++;
+    for (;;) {
+      let breaks = 0;
+      while (top.startsWith("\r\n", pos + 2 * breaks)) breaks++;
+      const after = pos + 2 * breaks;
+      const relatedWithFile = top.startsWith("  " + ESC + "[96m", after);
+      // The last line break in front of a diagnostic is the separator; the others are entries without a file.
+      const withoutFile = after >= top.length ? breaks : breaks - 1;
+      if (breaks === 0 || (!relatedWithFile && after < top.length && !startsHead(after))) break;
+      for (let n = 0; n < withoutFile; n++) entry.related.push(undefined);
+      pos += 2 * withoutFile;
+      if (!relatedWithFile) break;
+      expect("\r\n  ", "related entry");
+      const loc = locationPattern.exec(top.slice(pos, lineEnd(pos)));
+      if (loc === null) fail(`pretty first section: no location at byte ${pos}`);
+      pos += loc[0].length;
+      expect(" - ", "message of the related entry");
+      const first = top.slice(pos, lineEnd(pos));
+      pos = lineEnd(pos);
+      const messageLines = readMessage(first, "    ");
+      const rows = readRows("    ");
+      if (rows.length === 0) fail(`pretty first section: no snippet of the related entry at byte ${pos}`);
+      expect("\r\n", "line break after the related entry");
+      entry.related.push({ fileName: loc[1], line: Number(loc[2]), character: Number(loc[3]), messageLines, rows });
     }
     result.push(entry);
   }
@@ -736,13 +804,18 @@ function snippetEnd(rows: SnippetRow[]): { lastLine: number; lastCharacter: numb
 function applyPrettyTops(diagnostics: ParsedDiagnostic[], tops: PrettyTop[], rules: Rules): void {
   diagnostics.forEach((d, index) => {
     const top = tops[index];
+    if (d.file !== undefined && !d.file.hasText) fail("a pretty baseline with a diagnostic in a file without a section");
+    const topWithFile = top.related.filter(r => r !== undefined) as PrettyRelated[];
     const withFile = d.relatedInformation.filter(r => r.file !== undefined);
-    if (d.file !== undefined && d.file.hasText && withFile.length !== top.related.length) {
-      fail(`the first section has ${top.related.length} related entries and the section has ${withFile.length}`);
+    if (withFile.length !== topWithFile.length) {
+      fail(`the first section has ${topWithFile.length} related entries with a file and the section has ${withFile.length}`);
+    }
+    if (rules === "tsgo" && top.related.length !== d.relatedInformation.length) {
+      fail(`the first section has ${top.related.length} related entries and the section has ${d.relatedInformation.length}`);
     }
     for (let k = 0; k < withFile.length; k++) {
       const r = withFile[k];
-      const p = top.related[k];
+      const p = topWithFile[k];
       const file = r.file!;
       if (!file.hasText) fail("related information of a pretty baseline in a file without a section");
       if (r.line !== p.line || r.character !== p.character) fail("the two prints of related information name different positions");
@@ -750,11 +823,20 @@ function applyPrettyTops(diagnostics: ParsedDiagnostic[], tops: PrettyTop[], rul
       const firstLineChar = utf16Len(file.text.slice(starts[p.line - 1], r.pos));
       let { lastLine, lastCharacter } = snippetEnd(p.rows);
       if (rules === "tsgo" && lastLine === p.line && lastCharacter === firstLineChar + 1) {
-        // One tilde is what a span of no length and a span of one code unit both draw: see the text.
+        // One tilde is what a span of no length and a span of one code unit both draw.
         const [next, size] = r.pos < file.text.length ? decodeRune(file.text, r.pos) : [0, 0];
         if (size === 0 || next === 0x0a || next === 0x0d) lastCharacter = firstLineChar;
       }
-      r.end = byteOffsetOfUtf16Column(file.text, starts[lastLine - 1], lastCharacter, rules);
+      // The Go writer draws tildes past the end of a line that ends in white space: the span ends with the line.
+      const lineText = file.text.slice(starts[lastLine - 1], lastLine < starts.length ? starts[lastLine] : file.text.length).replace(/[\r\n]+$/, "");
+      lastCharacter = Math.min(lastCharacter, utf16Len(lineText));
+      try {
+        r.end = byteOffsetOfUtf16Column(file.text, starts[lastLine - 1], lastCharacter, rules);
+      } catch (e) {
+        if (process.env.DEBUG_PRETTY) console.log(JSON.stringify({ name: file.fileName, text: file.text, starts, line: p.line, character: p.character, pos: r.pos, rows: p.rows, lastLine, lastCharacter, firstLineChar, lineText }));
+        throw e;
+      }
+      if (r.end < r.pos) r.end = r.pos;
       r.hasLength = true;
     }
   });
