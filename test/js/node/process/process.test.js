@@ -388,6 +388,56 @@ it("process.chdir() to a missing directory reports the current directory and lea
   }
 });
 
+// POSIX-only: Windows limits the working directory's length in SetCurrentDirectory itself.
+it.skipIf(isWindows)("process.chdir() into a directory the OS cannot name throws and stays put", async () => {
+  using dir = tempDir("process-chdir-unnameable", {});
+  await using proc = Bun.spawn({
+    cmd: [
+      bunExe(),
+      "-e",
+      `
+        const fs = require("node:fs");
+        const path = require("node:path");
+        const segment = "d".repeat(200);
+        // One level at a time, so every argument is short and only the directory's full name outgrows PATH_MAX.
+        let levels = 0, last = process.cwd(), error;
+        while (levels < 64 && !error) {
+          fs.mkdirSync(segment);
+          try {
+            process.chdir(segment);
+            last = process.cwd();
+            levels++;
+          } catch (e) {
+            error = e;
+          }
+        }
+        console.log(JSON.stringify({
+          threw: error !== undefined,
+          syscall: error?.syscall,
+          cwd: process.cwd() === last,
+          resolve: path.resolve("x") === path.join(last, "x"),
+          relative: fs.existsSync(segment),
+        }));
+        // Back out with short relative paths; the tree is too deep to remove by its full name.
+        for (let i = levels; i >= 0; i--) {
+          fs.rmdirSync(segment);
+          if (i > 0) process.chdir("..");
+        }
+      `,
+    ],
+    env: bunEnv,
+    cwd: String(dir),
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+  expect({ out: JSON.parse(stdout.trim() || "null"), stderr: exitCode === 0 ? "" : stderr, exitCode }).toEqual({
+    out: { threw: true, syscall: "getcwd", cwd: true, resolve: true, relative: true },
+    stderr: "",
+    exitCode: 0,
+  });
+});
+
 it("process.cwd() in a Worker follows a process.chdir() on the main thread", async () => {
   using dir = tempDir("process-cwd-worker", { "sub/.keep": "" });
   await using proc = Bun.spawn({
