@@ -1,7 +1,7 @@
 // Research probe: the run of the reference against the enumeration and the oracle of the prototype.
 import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
-const N = "/workspace/notes/lint/units/conformance/oracle-and-expectations/";
+const N = "/workspace/notes/lint/units/conformance/oracle-and-expectations/top-down/";
 const { loadCorpus, oracleOf } = await import(N + "prototype/baseline.ts");
 const { enumerateInstances } = await import("/workspace/notes/lint/units/conformance/enumerator/prototype/compiler_runner.ts");
 const GO = "/workspace/ref/typescript-go";

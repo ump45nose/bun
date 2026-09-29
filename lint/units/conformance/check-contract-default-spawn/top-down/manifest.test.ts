@@ -70,16 +70,16 @@ test("one process, many instances, each failure at its instance", async () => {
   const check = createManifestCheck({ command, env, directory: base + "/manifests" });
   const results = await runInstances(inputs, check, { oracle: i => (i.name === "a.ts" ? oracle : { kind: "C" }) });
   expect(results.map(r => [r.name, r.status, r.level ?? "", r.reason])).toEqual([
-    ["a.ts", "pass", "whole", ""],
-    ["clean.ts", "pass", "whole", ""],
-    ["killed.ts", "failure", "", "crash: the command ended by the signal SIGKILL"],
-    ["after.ts", "pass", "whole", ""],
-    ["refused.ts", "failure", "", "refusal: the command refused: configFile is not supported"],
-    ["raw.ts", "failure", "", "protocol: the line of the report: no JSON"],
-    ["standin.ts", "provisional", "whole", "reached 1 stand-ins"],
-    ["unknown.ts", "failure", "", "protocol: the line of the report: the unknown field extra"],
-    ["exit.ts", "failure", "", "protocol: the command ended after 0 of 1 lines"],
-    ["last.ts", "fail", "whole", "2 diagnostics where the oracle has none, the first is TS1005: Expected identifier but found \"=\""],
+    ["a.ts", "pass", "baseline", ""],
+    ["clean.ts", "pass", "baseline", ""],
+    ["killed.ts", "error", "", "crash: the command ended by the signal SIGKILL"],
+    ["after.ts", "pass", "baseline", ""],
+    ["refused.ts", "error", "", "refusal: the command refused: configFile is not supported"],
+    ["raw.ts", "error", "", "protocol: the line of the report: no JSON"],
+    ["standin.ts", "provisional", "baseline", "reached 1 stand-ins"],
+    ["unknown.ts", "error", "", "protocol: the line of the report: the unknown field extra"],
+    ["exit.ts", "error", "", "protocol: the command ended after 0 of 1 lines"],
+    ["last.ts", "fail", "baseline", "2 diagnostics where the oracle has none, the first is TS1005: Expected identifier but found \"=\""],
   ]);
 });
 
@@ -89,7 +89,7 @@ test("a thousand instances in four processes", async () => {
   const t0 = performance.now();
   const results = await runInstances(inputs, check, { oracle: () => ({ kind: "C" }), concurrency: 4 });
   console.log("1000 instances:", Math.round(performance.now() - t0), "ms");
-  expect(results.filter(r => r.status === "pass" && r.level === "whole").length).toBe(1000);
+  expect(results.filter(r => r.status === "pass" && r.level === "baseline").length).toBe(1000);
 });
 
 test("a command that keeps its lines back: the blame is proved on the instance alone", async () => {
@@ -104,7 +104,7 @@ test("a command that keeps its lines back: the blame is proved on the instance a
   expect(results.map(r => [r.name, r.status, r.reason])).toEqual([
     ["k0.ts", "pass", ""],
     ["k1.ts", "pass", ""],
-    ["k2.ts", "failure", "crash: the command ended by the signal SIGKILL"],
+    ["k2.ts", "error", "crash: the command ended by the signal SIGKILL"],
     ["k3.ts", "pass", ""],
   ]);
 });

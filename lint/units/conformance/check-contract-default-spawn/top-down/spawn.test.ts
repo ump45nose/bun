@@ -109,47 +109,60 @@ test("the probe refuses a command that is no file", async () => {
 test("a command that runs its operand gets no instance", async () => {
   const input = inputOf("marks.ts", { "marks.ts": `require("node:fs").writeFileSync(${JSON.stringify(base + "/instance-ran")}, "");\n` });
   const [r] = await runInstances([input], createSpawnCheck({ command: fake("runs.ts"), env }), { oracle: () => ({ kind: "C" }) });
-  expect(r).toMatchObject({ status: "failure", kind: "C", reason: "refusal: the command is no linter: the command ran the file that it was to check" });
+  expect(r).toMatchObject({ status: "error", kind: "C", reason: "refusal: the command is no linter: the command ran the file that it was to check" });
   expect(await Bun.file(base + "/instance-ran").exists()).toBe(false);
 });
 
-test("diagnostics of a command pass at the level loose and at no other", async () => {
+const unsupported = "the run did not have the options of the instance";
+
+test("a run by operands has no options: it never passes, and its first section is reported on request", async () => {
   const input = inputOf("a.ts", { "a.ts": source + printed });
   const oracle = oracleFor(input, expected);
-  const [r] = await runInstances([input], createSpawnCheck({ command: fake("lints.ts"), env }), { oracle: () => oracle });
-  expect(r).toEqual({ name: "a.ts", suite: "compiler", kind: "E", status: "pass", level: "loose", reason: "" });
+  const check = createSpawnCheck({ command: fake("lints.ts"), env });
+  const [strict] = await runInstances([input], check, { oracle: () => oracle });
+  expect(strict).toEqual({ name: "a.ts", suite: "compiler", kind: "E", status: "unsupported", reason: unsupported });
+  const [r] = await runInstances([input], check, { oracle: () => oracle, loose: true });
+  expect(r).toEqual({ name: "a.ts", suite: "compiler", kind: "E", status: "unsupported", reason: unsupported, loose: { equal: true, reason: "" } });
 });
 
-test("an instance without an error passes C", async () => {
+test("an instance without an error: the same", async () => {
   const input = inputOf("c.ts", { "c.ts": "const x: number = 1;\n" });
-  const [r] = await runInstances([input], createSpawnCheck({ command: fake("lints.ts"), env }), { oracle: () => ({ kind: "C" }) });
-  expect(r).toEqual({ name: "c.ts", suite: "compiler", kind: "C", status: "pass", level: "loose", reason: "" });
+  const [r] = await runInstances([input], createSpawnCheck({ command: fake("lints.ts"), env }), { oracle: () => ({ kind: "C" }), loose: true });
+  expect(r).toEqual({ name: "c.ts", suite: "compiler", kind: "C", status: "unsupported", reason: unsupported, loose: { equal: true, reason: "" } });
 });
 
 test.each([
-  ["a signal", "//~ kill SIGKILL\n", "failure", "crash: the command ended by the signal SIGKILL"],
-  ["an exit code that is none of 0, 1 and 2", "//~ exit 7\n", "failure", "crash: the command ended with the exit code 7"],
-  ["the exit code of a refusal", "//~ print error: no\n//~ exit 1\n", "failure", "refusal: the command refused: error: no"],
-  ["a line of no form", "//~ print Bun has crashed\n//~ exit 0\n", "failure", "protocol: stderr line 1 is neither a diagnostic nor a line of a message chain: Bun has crashed"],
-  ["an error and the exit code 0", "//~ print {file}(1,1): error TS1: x\n//~ exit 0\n", "failure", "protocol: the exit code is 0 and stderr has 1 errors"],
-  ["no error and the exit code 2", "//~ exit 2\n", "failure", "protocol: the exit code is 2 and stderr has no error"],
-  ["text on stdout", "//~ stdout hello\n", "failure", "protocol: the command wrote to stdout: hello"],
-  ["a file that is not of the instance", "//~ print /etc/passwd(1,1): error TS1: x\n", "failure", "protocol: stderr line 1 names a file that is not of the instance: /etc/passwd"],
-  ["a stand-in", "//~ print error internal-stand-in: checker.getTypeOfExpression\n", "provisional", "reached 1 stand-ins"],
-  ["an error of the command", "//~ print error internal-error: an assertion of the checker\n", "failure", "internal: the command reports an error of its own: an assertion of the checker"],
-  ["the code -1", "//~ print error TS-1: Pre-emit (1) and post-emit (2) diagnostic counts do not match!\n", "fail", "a diagnostic has the code -1"],
-  ["a diagnostic of a rule", "//~ print {file}(1,1): error no-debugger: Unexpected 'debugger' statement.\n", "fail", "equal but for diagnostics of rules: no-debugger"],
+  ["a signal", "//~ kill SIGKILL\n", "error", "crash: the command ended by the signal SIGKILL"],
+  ["an exit code that is none of 0, 1 and 2", "//~ exit 7\n", "error", "crash: the command ended with the exit code 7"],
+  ["the exit code of a refusal", "//~ print error: no\n//~ exit 1\n", "error", "refusal: the command refused: error: no"],
+  ["a line of no form", "//~ print Bun has crashed\n//~ exit 0\n", "error", "protocol: stderr line 1 is neither a diagnostic nor a line of a message chain: Bun has crashed"],
+  ["an error and the exit code 0", "//~ print {file}(1,1): error TS1: x\n//~ exit 0\n", "error", "protocol: the exit code is 0 and stderr has 1 errors"],
+  ["no error and the exit code 2", "//~ exit 2\n", "error", "protocol: the exit code is 2 and stderr has no error"],
+  ["text on stdout", "//~ stdout hello\n", "error", "protocol: the command wrote to stdout: hello"],
+  ["a file that is not of the instance", "//~ print /etc/passwd(1,1): error TS1: x\n", "error", "protocol: stderr line 1 names a file that is not of the instance: /etc/passwd"],
+  ["an error of the command", "//~ print error internal-error: an assertion of the checker\n", "error", "internal: the command reports an error of its own: an assertion of the checker"],
 ])("never an empty list: %s", async (_name, orders, status, reason) => {
   const input = inputOf("f.ts", { "f.ts": orders });
-  const [r] = await runInstances([input], createSpawnCheck({ command: fake("lints.ts"), env }), { oracle: () => ({ kind: "C" }) });
-  expect({ status: r.status, reason: r.reason }).toEqual({ status, reason });
+  const [r] = await runInstances([input], createSpawnCheck({ command: fake("lints.ts"), env }), { oracle: () => ({ kind: "C" }), loose: true });
+  expect({ status: r.status, reason: r.reason, loose: r.loose }).toEqual({ status, reason, loose: undefined });
+});
+
+test.each([
+  ["a stand-in", "//~ print error internal-stand-in: checker.getTypeOfExpression\n", "provisional: reached 1 stand-ins"],
+  ["the code -1", "//~ print error TS-1: Pre-emit (1) and post-emit (2) diagnostic counts do not match!\n", "fail: a diagnostic has the code -1"],
+  ["a diagnostic of a rule", "//~ print {file}(1,1): error no-debugger: Unexpected 'debugger' statement.\n", "fail: equal but for diagnostics of rules: no-debugger"],
+])("never equal: %s", async (_name, orders, reason) => {
+  const input = inputOf("g.ts", { "g.ts": orders });
+  const [r] = await runInstances([input], createSpawnCheck({ command: fake("lints.ts"), env }), { oracle: () => ({ kind: "C" }), loose: true });
+  expect(r.status).toBe("unsupported");
+  expect(r.loose).toEqual({ equal: false, reason });
 });
 
 test("a command that does not end is a failure", async () => {
   const input = inputOf("h.ts", { "h.ts": "//~ hang\n" });
   const check = createSpawnCheck({ command: fake("lints.ts"), env });
   const [r] = await runInstances([input], check, { oracle: () => ({ kind: "C" }), timeoutMs: 1 });
-  expect({ status: r.status, reason: r.reason }).toEqual({ status: "failure", reason: "timeout: the command did not end in time" });
+  expect({ status: r.status, reason: r.reason }).toEqual({ status: "error", reason: "timeout: the command did not end in time" });
 });
 
 test("the roots are the operands, and a name in another directory is mapped", async () => {
@@ -161,13 +174,27 @@ test("the roots are the operands, and a name in another directory is mapped", as
   const oracle = oracleFor(input, [
     { category: "error", code: 2304, messageText: "Cannot find name 'y'.", location: { file: "/.src/lib/other.ts", start: 3, length: 1 }, relatedInformation: [] },
   ]);
-  const [r] = await runInstances([input], createSpawnCheck({ command: fake("lints.ts"), env }), { oracle: () => oracle });
-  expect(r).toEqual({ name: "m.ts", suite: "compiler", kind: "E", status: "pass", level: "loose", reason: "" });
+  const [r] = await runInstances([input], createSpawnCheck({ command: fake("lints.ts"), env }), { oracle: () => oracle, loose: true });
+  expect(r).toEqual({ name: "m.ts", suite: "compiler", kind: "E", status: "unsupported", reason: unsupported, loose: { equal: true, reason: "" } });
 });
 
 test("a rule that the caller names is counted and left out", async () => {
   const input = inputOf("r.ts", { "r.ts": "//~ print {file}(1,1): error no-debugger: Unexpected 'debugger' statement.\n" });
   const check = createSpawnCheck({ command: fake("lints.ts"), env, ignoreRules: ["no-debugger"] });
-  const [r] = await runInstances([input], check, { oracle: () => ({ kind: "C" }) });
-  expect(r).toEqual({ name: "r.ts", suite: "compiler", kind: "C", status: "pass", level: "loose", reason: "", ignoredRuleDiagnostics: 1 });
+  const [r] = await runInstances([input], check, { oracle: () => ({ kind: "C" }), loose: true });
+  expect(r).toEqual({ name: "r.ts", suite: "compiler", kind: "C", status: "unsupported", reason: unsupported, loose: { equal: true, reason: "" } });
+});
+
+test("the level follows from the result, not from the bytes", async () => {
+  // The span of the diagnostic is empty: with it and without it the bytes of the baseline are the same.
+  const { checkOf } = await import("./check");
+  const input = inputOf("z.ts", { "z.ts": "let\n" });
+  const at = { file: "/.src/z.ts", line: 1, character: 4 };
+  const known: Diagnostic = { category: "error", code: 1123, messageText: "Variable declaration list cannot be empty.", location: { ...at, start: 3, length: 0 }, relatedInformation: [] };
+  const oracle = oracleFor(input, [known]);
+  const run = async (d: Diagnostic) =>
+    (await runInstances([input], checkOf("fixed", () => ({ kind: "diagnostics", diagnostics: [d], standIns: [], configured: true })), { oracle: () => oracle }))[0];
+  expect(await run(known)).toMatchObject({ status: "pass", level: "baseline" });
+  expect(await run({ ...known, location: at })).toMatchObject({ status: "pass", level: "first-section" });
+  expect(await run({ ...known, relatedInformation: undefined })).toMatchObject({ status: "pass", level: "first-section" });
 });

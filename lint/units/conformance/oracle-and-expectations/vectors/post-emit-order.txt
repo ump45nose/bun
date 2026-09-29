@@ -1,3 +1,0 @@
-compiler/incorrectRecursiveMappedTypeConstraint.ts
-compiler/typeParameterWithInvalidConstraintType.ts
-conformance/recursiveMappedTypes.ts

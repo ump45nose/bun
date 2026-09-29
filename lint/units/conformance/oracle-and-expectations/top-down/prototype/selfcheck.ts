@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { type Corpus, type Suite, diffKey, diffRoot, errorBaselineName, errorKeys, ListedTwice, literalOracleOf, loadCorpus, oracleOf, readFileNameSet, readOracle, tagsOf } from "./baseline";
 import { type Expectations, type InstanceFacts, type Outcome, checkLists, compareNames, compareWithRevision, ExpectationsError, formatExpectations, parseExpectations, plan, reportText, verify } from "./expectations";
 import { parseSweepArgs, select, updateCommand, UsageError } from "./sweep_args";
-const P = new URL("../../enumerator/prototype/", import.meta.url).pathname;
+const P = new URL("../../../enumerator/prototype/", import.meta.url).pathname;
 const { enumerateInstances } = await import(P + "compiler_runner.ts");
 
 const GO = process.env.TSGO ?? "/workspace/ref/typescript-go";
@@ -51,7 +51,7 @@ eq("instances, run", [e.instances.length, run.length], [14915, 12797]);
 
 const tmp = mkdtempSync(join(tmpdir(), "oe-selfcheck-"));
 let copied = 0;
-const tsNames = loadCorpus({ ...reference.paths, tsgoBaselines: tmp + "/none", tsBaselines: TS + "/tests/baselines/reference", expectsNoErrors: HERE + "../corpus-layout-and-sync/top-down/vectors/tsgo.expects-no-errors.txt" }).ts!;
+const tsNames = loadCorpus({ ...reference.paths, tsgoBaselines: tmp + "/none", tsBaselines: TS + "/tests/baselines/reference", expectsNoErrors: HERE + "../../corpus-layout-and-sync/top-down/vectors/tsgo.expects-no-errors.txt" }).ts!;
 for (const suite of ["compiler", "conformance"] as Suite[]) {
   mkdirSync(`${tmp}/overlay/${suite}`, { recursive: true });
   for (const f of reference.tsgo.get(suite)!) {
@@ -66,7 +66,7 @@ const overlay = loadCorpus({
   ...reference.paths,
   tsgoBaselines: tmp + "/overlay",
   tsBaselines: TS + "/tests/baselines/reference",
-  expectsNoErrors: HERE + "../corpus-layout-and-sync/top-down/vectors/tsgo.expects-no-errors.txt",
+  expectsNoErrors: HERE + "../../corpus-layout-and-sync/top-down/vectors/tsgo.expects-no-errors.txt",
 });
 eq("names that expect no error", overlay.expectsNoErrors.size, 23);
 
@@ -106,7 +106,7 @@ eq("tags by kind", tagKinds, { "accepted E": 434, "accepted C": 8, "triaged C": 
 eq("entries and error keys of the lists", [overlay.accepted.size, errorKeys(overlay.accepted).length, overlay.triaged.size, errorKeys(overlay.triaged).length], [1163, 442, 2, 2]);
 const keysOfRun = new Set(run.map((i: any) => diffKey(i.suite, errorBaselineName(i.name))));
 eq("error keys that name no run instance", [...errorKeys(overlay.accepted), ...errorKeys(overlay.triaged)].filter(k => !keysOfRun.has(k)), []);
-const namesOfRun = new Set(run.map((i: any) => `${i.suite}/${i.name}`));
+const namesOfRun = new Set(run.map((i: any) => `${i.suite}/${errorBaselineName(i.name)}`));
 eq("post-emit-order names that are no run instance", [...overlay.postEmitOrder].filter(k => !namesOfRun.has(k)), []);
 eq("names that expect no error and are no run instance", [...overlay.expectsNoErrors].filter(k => !run.some((i: any) => `${i.suite}/${errorBaselineName(i.name)}` === k)), []);
 rmSync(tmp, { recursive: true, force: true });

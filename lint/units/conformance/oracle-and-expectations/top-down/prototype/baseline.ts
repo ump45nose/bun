@@ -1,6 +1,6 @@
 // Prototype of runner/baseline.ts: the list reader and the root selection of internal/testutil/baseline/baseline.go, and the oracle of an instance.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { trimSpace } from "../../enumerator/prototype/stringutil";
+import { trimSpace } from "../../../enumerator/prototype/stringutil";
 
 export type Suite = "compiler" | "conformance";
 export type Kind = "E" | "C";
@@ -55,7 +55,7 @@ export interface CorpusPaths {
   expectsNoErrors: string | undefined;
   accepted: string;
   triaged: string;
-  // list of "<suite>/<configured name>" whose baseline depends on the emit that precedes the diagnostics
+  // list of "<suite>/<name>.errors.txt" whose baseline depends on the emit that precedes the diagnostics
   postEmitOrder: string | undefined;
 }
 
@@ -130,7 +130,7 @@ export function tagsOf(corpus: Corpus, suite: Suite, configuredName: string): Ta
   const root = diffRoot(corpus.accepted, corpus.triaged, diffKey(suite, errorBaselineName(configuredName)));
   if (root === "submoduleAccepted") tags.push("accepted");
   if (root === "submoduleTriaged") tags.push("triaged");
-  if (corpus.postEmitOrder.has(`${suite}/${configuredName}`)) tags.push("post-emit-order");
+  if (corpus.postEmitOrder.has(`${suite}/${errorBaselineName(configuredName)}`)) tags.push("post-emit-order");
   return tags;
 }
 
