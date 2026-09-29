@@ -1,4 +1,4 @@
-// node comments-oracle.cjs comments-inputs.json  ->  one line per input: name, then start..end kind text
+// node comments-oracle.cjs comments-inputs.json  ->  per input: name, then start..end (UTF-8 byte offsets) kind text
 const ts = require("/workspace/wt/parser/node_modules/typescript");
 const fs = require("fs");
 const inputs = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
@@ -31,5 +31,6 @@ for (const [name, loader, code] of inputs) {
   const list = [...found].filter(([p]) => !texts.some(([a, b]) => p >= a && p < b)).sort((a, b) => a[0] - b[0]);
   const diags = sf.parseDiagnostics.length;
   console.log(`--- ${name} [${loader}]${diags ? " PARSE-ERRORS=" + diags : ""}`);
-  for (const [pos, end] of list) console.log(`${pos}..${end} ${kindOf(code.slice(pos, end))} ${JSON.stringify(code.slice(pos, end))}`);
+  const b = i => Buffer.byteLength(code.slice(0, i), "utf8");
+  for (const [pos, end] of list) console.log(`${b(pos)}..${b(end)} ${kindOf(code.slice(pos, end))} ${JSON.stringify(code.slice(pos, end))}`);
 }

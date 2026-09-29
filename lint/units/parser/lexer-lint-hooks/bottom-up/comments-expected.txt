@@ -23,7 +23,7 @@
 --- crlf-and-ls [ts]
 0..4 line "// a"
 13..17 line "// b"
-25..29 line "// c"
+27..31 line "// c"
 --- pragmas-inside [ts]
 0..13 line "// @ts-ignore"
 35..50 block "/* @__PURE__ */"

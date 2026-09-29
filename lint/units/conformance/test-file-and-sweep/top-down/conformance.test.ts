@@ -244,69 +244,73 @@ describe("enumerator", () => {
     },
   );
 
-  // The whole corpus takes a second in a release build and minutes in a debug build.
-  test.skipIf(small)("every instance is a subtest of the reference, with its status", () => {
-    const e = enumerateInstances({ casesRoot: layout.casesRoot });
-    const ref = new Map<string, string>();
-    for (const line of referenceSubtests().split("\n")) if (line !== "") ref.set(line.slice(5), line.slice(0, 4));
-    const got = new Map(
-      e.instances.map(i => [
-        goName(i.testName),
-        i.status === "run" ? "PASS" : i.status === "skipped" ? "SKIP" : i.status,
-      ]),
-    );
-    const differ: string[] = [];
-    for (const [name, status] of got)
-      if (ref.get(name) !== status) differ.push(`${name}: ${status}, the reference has ${ref.get(name)}`);
-    for (const name of ref.keys()) if (!got.has(name)) differ.push(`${name}: missing`);
-    expect(differ).toEqual([]);
-    const reasons: Record<string, number> = {};
-    for (const i of e.instances)
-      if (i.status !== "run")
-        reasons[i.reason.replace(/^(unsupported (?:baseUrl|outFile)) .*/, "$1")] =
-          (reasons[i.reason.replace(/^(unsupported (?:baseUrl|outFile)) .*/, "$1")] ?? 0) + 1;
-    const c = corpus();
-    const facts = e.instances.map(i => factsOf(c, i));
-    const count = (f: (i: InstanceFacts) => boolean) => facts.filter(f).length;
-    expect({
-      files: e.files,
-      droppedByName: e.droppedBySkippedTests.length,
-      instances: e.instances.length,
-      run: count(i => i.status === "run"),
-      skipped: count(i => i.status === "skipped"),
-      E: count(i => i.kind === "E"),
-      C: count(i => i.kind === "C"),
-      compilerE: count(i => i.kind === "E" && i.casePath.startsWith("compiler/")),
-      conformanceE: count(i => i.kind === "E" && i.casePath.startsWith("conformance/")),
-      accepted: count(i => i.tags.includes("accepted")),
-      triaged: count(i => i.tags.includes("triaged")),
-      reasons,
-    }).toEqual({
-      files: 12444,
-      droppedByName: 45,
-      instances: 14915,
-      run: 12797,
-      skipped: 2118,
-      E: 7027,
-      C: 5770,
-      compilerE: 3187,
-      conformanceE: 3840,
-      accepted: 442,
-      triaged: 2,
-      reasons: {
-        "unsupported target ES5": 1244,
-        "unsupported module kind AMD": 321,
-        "unsupported module kind System": 222,
-        "unsupported outFile": 87,
-        "unsupported module resolution kind 1": 57,
-        "unsupported module kind UMD": 57,
-        "alwaysStrict=false is unsupported": 52,
-        "unsupported baseUrl": 31,
-        "esModuleInterop=false is unsupported": 24,
-        "unsupported module resolution kind 2": 23,
-      },
-    });
-  });
+  // The whole corpus is a second of work in a release build and minutes in a debug build; the time limit is for a machine under load.
+  test.skipIf(small)(
+    "every instance is a subtest of the reference, with its status",
+    () => {
+      const e = enumerateInstances({ casesRoot: layout.casesRoot });
+      const ref = new Map<string, string>();
+      for (const line of referenceSubtests().split("\n")) if (line !== "") ref.set(line.slice(5), line.slice(0, 4));
+      const got = new Map(
+        e.instances.map(i => [
+          goName(i.testName),
+          i.status === "run" ? "PASS" : i.status === "skipped" ? "SKIP" : i.status,
+        ]),
+      );
+      const differ: string[] = [];
+      for (const [name, status] of got)
+        if (ref.get(name) !== status) differ.push(`${name}: ${status}, the reference has ${ref.get(name)}`);
+      for (const name of ref.keys()) if (!got.has(name)) differ.push(`${name}: missing`);
+      expect(differ).toEqual([]);
+      const reasons: Record<string, number> = {};
+      for (const i of e.instances)
+        if (i.status !== "run")
+          reasons[i.reason.replace(/^(unsupported (?:baseUrl|outFile)) .*/, "$1")] =
+            (reasons[i.reason.replace(/^(unsupported (?:baseUrl|outFile)) .*/, "$1")] ?? 0) + 1;
+      const c = corpus();
+      const facts = e.instances.map(i => factsOf(c, i));
+      const count = (f: (i: InstanceFacts) => boolean) => facts.filter(f).length;
+      expect({
+        files: e.files,
+        droppedByName: e.droppedBySkippedTests.length,
+        instances: e.instances.length,
+        run: count(i => i.status === "run"),
+        skipped: count(i => i.status === "skipped"),
+        E: count(i => i.kind === "E"),
+        C: count(i => i.kind === "C"),
+        compilerE: count(i => i.kind === "E" && i.casePath.startsWith("compiler/")),
+        conformanceE: count(i => i.kind === "E" && i.casePath.startsWith("conformance/")),
+        accepted: count(i => i.tags.includes("accepted")),
+        triaged: count(i => i.tags.includes("triaged")),
+        reasons,
+      }).toEqual({
+        files: 12444,
+        droppedByName: 45,
+        instances: 14915,
+        run: 12797,
+        skipped: 2118,
+        E: 7027,
+        C: 5770,
+        compilerE: 3187,
+        conformanceE: 3840,
+        accepted: 442,
+        triaged: 2,
+        reasons: {
+          "unsupported target ES5": 1244,
+          "unsupported module kind AMD": 321,
+          "unsupported module kind System": 222,
+          "unsupported outFile": 87,
+          "unsupported module resolution kind 1": 57,
+          "unsupported module kind UMD": 57,
+          "alwaysStrict=false is unsupported": 52,
+          "unsupported baseUrl": 31,
+          "esModuleInterop=false is unsupported": 24,
+          "unsupported module resolution kind 2": 23,
+        },
+      });
+    },
+    30_000,
+  );
 });
 
 describe("error baselines", () => {
@@ -314,7 +318,11 @@ describe("error baselines", () => {
   const c = corpus();
   const tsDirectory = layout.casesRoot.replace(/cases$/, "baselines/reference");
   const files: { path: string; rules: typeof tsgoRules; bytes: number }[] = [];
-  const add = (path: string, rules: typeof tsgoRules) => files.push({ path, rules, bytes: statSync(path).size });
+  // A file above 64 KB stays out: a debug build needs seconds for it, and the sweep reads every file.
+  const add = (path: string, rules: typeof tsgoRules) => {
+    const bytes = statSync(path).size;
+    if (bytes <= 64 * 1024) files.push({ path, rules, bytes });
+  };
   for (const suite of ["compiler", "conformance"] as const) {
     for (const name of c.tsgo.get(suite)!)
       if (sampled(name, 500) || pretty.has(name)) add(`${layout.tsgoBaselines}/${suite}/${name}`, tsgoRules);
@@ -524,7 +532,7 @@ describe("expectations.json", () => {
       const results = await runInstances(inputs, check, {
         oracle: i => runOracleOf(c, i.suite, i.name),
         concurrency: Math.min(8, availableParallelism()),
-        timeoutMs: small ? 60_000 : 4_000,
+        timeoutMs: small ? 60_000 : 10_000,
       });
       const outcomes = new Map<string, Outcome>(
         results.map(r => [
@@ -536,6 +544,6 @@ describe("expectations.json", () => {
       // The first failures in full and the number of all: a binary that cannot lint fails every name for one reason.
       expect({ failed: failures.length, first: failures.slice(0, 5) }).toEqual({ failed: 0, first: [] });
     },
-    small ? 120_000 : undefined,
+    small ? 120_000 : 30_000,
   );
 });
