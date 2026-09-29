@@ -75,7 +75,8 @@ interface Section {
   unit?: TestFile;
 }
 
-const plainHead = /^(.+?)\((\d+|--),(\d+|--)\): (error|warning|suggestion|message) TS(-?\d+): (.*)$/s;
+// A name does not start with a space: a line of a chain does.
+const plainHead = /^(\S.*?)\((\d+|--),(\d+|--)\): (error|warning|suggestion|message) TS(-?\d+): (.*)$/s;
 const globalHead = /^(error|warning|suggestion|message) TS(-?\d+): (.*)$/s;
 const sectionHead = /^==== (.*) \((\d+) errors\) ====$/s;
 const relatedLine = /^!!! related TS(-?\d+)(?: (.+?):(\d+|--):(\d+|--))?: (.*)$/s;

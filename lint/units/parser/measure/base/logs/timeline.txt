@@ -47,3 +47,5 @@ END   35-release-rebuild rc=0 wall=590s lockwait=14s run=576s 2026-09-29T18:20:3
 START 36-gd-small-installed 2026-09-29T18:20:42Z load=600.75 510.54 375.37 cmd: sh -c cd /workspace/notes/lint/units/parser/grammar-diff && /workspace/bun/build/release/bun harness.mjs corpus.small.json /tmp/parser-base/gd-a/installed.small.jsonl.gz --jobs=8
 END   36-gd-small-installed rc=0 wall=41s lockwait=18s run=23s 2026-09-29T18:21:23Z load=474.34 490.78 374.50
 START 37-miri-ast 2026-09-29T18:21:23Z load=474.34 490.78 374.50 cmd: env MIRIFLAGS=-Zmiri-tree-borrows cargo miri test -p bun_ast --lib --offline
+END   37-miri-ast rc=0 wall=213s lockwait=84s run=129s 2026-09-29T18:24:56Z load=387.18 413.70 365.62
+START 33b-clippy-ast-primary 2026-09-29T18:25:04Z load=371.73 409.61 364.81 cmd: cargo clippy -p bun_ast --no-deps --message-format=short --target-dir /tmp/parser-base/tgt-clippy2
