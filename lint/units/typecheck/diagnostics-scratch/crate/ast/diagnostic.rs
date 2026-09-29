@@ -168,14 +168,26 @@ impl Diagnostic {
     }
 }
 
+// A message that Format of upstream panics on: it has arguments, and fewer than its highest placeholder needs.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub struct InvalidPlaceholderFault {
+    pub diagnostic: DiagnosticId,
+    pub message: MessageId,
+    pub argument_count: u32,
+}
+
 pub struct DiagnosticStore {
     arena: Arena<DiagnosticId, Diagnostic>,
+    faults: Vec<InvalidPlaceholderFault>,
+    fault_count: u32,
 }
 
 impl Default for DiagnosticStore {
     fn default() -> Self {
         Self {
             arena: Arena::new(),
+            faults: Vec::new(),
+            fault_count: 0,
         }
     }
 }
