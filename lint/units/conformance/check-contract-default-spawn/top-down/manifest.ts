@@ -17,7 +17,7 @@ import {
 } from "./check";
 
 export const manifestVersion = 1;
-export const conformanceVariable = "BUN_FEATURE_FLAG_LINT_CONFORMANCE";
+export const conformanceVariable = "BUN_INTERNAL_LINT_CONFORMANCE";
 
 export interface ManifestInstance {
   id: string;

@@ -14,7 +14,7 @@ if (process.env.BUN_FEATURE_FLAG_EXPERIMENTAL_LINT !== "1") {
   process.stderr.write("error: --lint needs BUN_FEATURE_FLAG_EXPERIMENTAL_LINT=1\n");
   process.exit(1);
 }
-if (process.env.BUN_FEATURE_FLAG_LINT_CONFORMANCE === "1") {
+if (process.env.BUN_INTERNAL_LINT_CONFORMANCE === "1") {
   await manifest(args[1]);
   process.exit(0);
 }
