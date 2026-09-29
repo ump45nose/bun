@@ -1,5 +1,6 @@
 == R-REL
   before TYPES: Type.AsLiteralType@typ706 Type.AsMappedType@typ712 Type.AsReverseMappedType@typ713 Type.AsTypeParameter@typ715 Type.AsUnionType@typ716 Type.AsIntersectionType@typ717 Type.AsIndexType@typ718 Type.AsIndexedAccessType@typ719 Type.AsTemplateLiteralType@typ720 Type.AsStringMappingType@typ721 Type.AsSubstitutionType@typ722 Type.AsConditionalType@typ723 Type.AsTypeReference@typ730 Type.AsInterfaceType@typ731 Type.Distributed@typ736 Type.Target@typ748 Type.Types@typ776 Type.TargetTupleType@typ790 Type.Symbol@typ794 InterfaceType.TypeParameters@typ1042
+  before LINKS: symbolArenaLinkStore.Get@lin33
   before MAPPER: newTypeMapper@map40 newSimpleTypeMapper@map114
   before UTIL: NewDiagnosticForNode@uti22 isStaticPrivateIdentifierProperty@uti72 getDeclarationModifierFlagsFromSymbol@uti713 isObjectLiteralType@uti824 isNumericLiteralName@uti898 isLateBoundName@uti986
   before T-KEYS: getRelationKey@17723
@@ -32,7 +33,6 @@
   AFTER (type layer that lands after inference) T-MAPPED: c.getTypeParameterFromMappedType@22784 c.getConstraintTypeFromMappedType@22792 c.getNameTypeFromMappedType@22800 c.getTemplateTypeFromMappedType@22811 c.isMappedTypeWithKeyofConstraintDeclaration@22823 c.getApparentMappedTypeKeys@22832 getMappedTypeModifiers@29135 c.getCombinedMappedTypeOptionality@29163 isPartialMappedType@29183
   AFTER (type layer that lands after inference) K-TEMPLATE: c.templateLiteralTypesDefinitelyUnrelated@rel2354 c.isTypeMatchedByTemplateLiteralType@rel2365 c.isMemberOfStringMapping@rel2531
   AFTER later:binder.go: binder.GetSymbolNameForPrivateIdentifier@bin369
-  AFTER later:c18_identifiers_property_access_this: c.forEachProperty@11997 c.getDeclaringClass@12011 c.isPropertyInClassDerivedFrom@12030
   AFTER later:c20_object_literals_spread: c.isNonGenericObjectType@13627 c.isReadonlySymbol@13950
   AFTER later:c50_contextual_properties_inference_context: c.isContextSensitive@31020
   AFTER later:c51_type_facts_awaited: c.isFunctionObjectType@31263 c.getTypeWithFacts@31273

@@ -59,4 +59,6 @@ inference.go:1650	hasInferenceCandidates	I-INFER		c14_expressions,c15_calls
 inference.go:1654	hasInferenceCandidatesOrDefault	I-INFER		c50_contextual_properties_inference_context
 inference.go:1669	hasOverlappingInferences	I-INFER		c14_expressions
 inference.go:1678	c.mergeInferences	I-INFER		c14_expressions
+checker.go:11997	c.forEachProperty	R-REL		c18_identifiers_property_access_this
+checker.go:12011	c.getDeclaringClass	R-REL		c18_identifiers_property_access_this
 checker.go:13217	c.isExactOptionalPropertyMismatch	R-REL		c19_assertions_binary_operators,jsx.go

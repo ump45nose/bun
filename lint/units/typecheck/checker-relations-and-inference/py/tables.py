@@ -20,7 +20,7 @@ FINAL = [
     ('R-VARIANCE', R, 3935, 3999), ('R-REL', R, 4001, 4019), ('R-DISCRIM', R, 4021, 4130), ('R-REL', R, 4132, 4471),
     ('R-SIGREL', R, 4473, 4608), ('R-REL', R, 4610, 5026), ('omitted: tracing only', R, 5028, 5044),
     ('I-INFER', I, 11, 998), ('I-REVMAP', I, 1000, 1183), ('I-INFER', I, 1185, 1684),
-    ('R-REL', C, 12019, 12026), ('R-REL', C, 13208, 13219), ('R-REL', C, 27988, 28023), ('R-REL', C, 28163, 28248),
+    ('R-REL', C, 11995, 12037), ('R-REL', C, 13208, 13219), ('R-REL', C, 27988, 28023), ('R-REL', C, 28163, 28248),
 ]
 ORDER = ['R-REL', 'R-SIGREL', 'R-VARIANCE', 'R-DISCRIM', 'R-ELAB', 'I-INFER', 'I-REVMAP']
 CORE = [

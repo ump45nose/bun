@@ -46,6 +46,8 @@ func roundTrip(text string) (status string, out string) {
 	clone := ec.Factory.DeepCloneNode(typeNode)
 	var visit func(n *ast.Node) bool
 	visit = func(n *ast.Node) bool {
+		// a clone keeps the flags of the parsed node: the node builder's own nodes are marked as synthesized
+		n.Flags |= ast.NodeFlagsSynthesized
 		switch n.Kind {
 		case ast.KindTypeLiteral, ast.KindTupleType, ast.KindMappedType:
 			ec.AddEmitFlags(n, printer.EFSingleLine)

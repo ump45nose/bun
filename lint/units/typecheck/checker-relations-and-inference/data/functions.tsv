@@ -265,7 +265,10 @@ I-INFER	inference.go	1654-1656	hasInferenceCandidatesOrDefault	0
 I-INFER	inference.go	1658-1667	hasTypeParameterDefault	0		
 I-INFER	inference.go	1669-1676	hasOverlappingInferences	0		
 I-INFER	inference.go	1678-1684	c.mergeInferences	0		
+R-REL	checker.go	11995-12008	c.forEachProperty	0		
+R-REL	checker.go	12010-12016	c.getDeclaringClass	0		
 R-REL	checker.go	12018-12026	c.isValidOverrideOf	1		
+R-REL	checker.go	12028-12038	c.isPropertyInClassDerivedFrom	1		
 R-REL	checker.go	13208-13215	c.getExactOptionalUnassignableProperties	1		
 R-REL	checker.go	13217-13219	c.isExactOptionalPropertyMismatch	0		
 R-REL	checker.go	27988-28023	c.getNormalizedType	0		

@@ -31,7 +31,7 @@ internal/checker/relater.go	5028-5044	omitted: tracing only: r.traceUnionsOrInte
 internal/checker/inference.go	11-998	I-INFER: c.getInferenceState .. c.inferToMappedType (28)	checker/inference.rs	not started	89d5d5b
 internal/checker/inference.go	1000-1183	I-REVMAP: c.inferTypeForHomomorphicMappedType .. c.replaceIndexedAccess (9)	checker/inference.rs	not started	89d5d5b
 internal/checker/inference.go	1185-1684	I-INFER: c.typesDefinitelyUnrelated .. c.mergeInferences (40)	checker/inference.rs	not started	89d5d5b
-internal/checker/checker.go	12019-12026	R-REL: c.isValidOverrideOf (1)	checker/c18_identifiers_property_access_this.rs	not started	89d5d5b
+internal/checker/checker.go	11995-12037	R-REL: c.forEachProperty .. c.isPropertyInClassDerivedFrom (4)	checker/c18_identifiers_property_access_this.rs	not started	89d5d5b
 internal/checker/checker.go	13208-13219	R-REL: c.getExactOptionalUnassignableProperties .. c.isExactOptionalPropertyMismatch (2)	checker/c19_assertions_binary_operators.rs	not started	89d5d5b
 internal/checker/checker.go	27988-28023	R-REL: c.getNormalizedType (1)	checker/c45_base_constraints_normalization.rs	not started	89d5d5b
 internal/checker/checker.go	28163-28248	R-REL: c.getNormalizedUnionOrIntersectionType .. c.getSingleBaseForNonAugmentingSubtype (4)	checker/c45_base_constraints_normalization.rs	not started	89d5d5b
