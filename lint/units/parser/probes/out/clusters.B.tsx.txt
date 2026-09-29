@@ -33,7 +33,7 @@ class B  dialect tsx  config plain: 784 inputs in 36 clusters
     "<A | >"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,newCall,newNoArgs,newMember,…]   tsc @6+1 in "f<A | >(x);"
     "<A & >"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,newCall,newNoArgs,newMember,…]   tsc @6+1 in "f<A & >(x);"
     "<(a: ) => void>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]   tsc @6+1 in "f<(a: ) => void>(x);"
-    … 1 more
+    "<keyof () => void>"  [instClassExtends,instClassExtendsCall]   tsc @25+1 in "class C extends f<keyof () => void> {}"
 
 [04-type-params-args / targsExpr]  tsc TS1139 Type parameter declaration expected.   (1 inputs, 1 distinct)
     "<A,,B>"  [instAsync]   tsc @8+1 in "async<A,,B>(x);"
@@ -45,7 +45,13 @@ class B  dialect tsx  config plain: 784 inputs in 36 clusters
     "<A>"  [instDecoratorNoCall]   tsc @2+0 in "@f<A> class C {}"
     "<A, B>"  [instDecoratorNoCall]   tsc @2+0 in "@f<A, B> class C {}"
     "<A, B, C>"  [instDecoratorNoCall]   tsc @2+0 in "@f<A, B, C> class C {}"
-    … 34 more
+    "<A | B>"  [instDecoratorNoCall]   tsc @2+0 in "@f<A | B> class C {}"
+    "<| A>"  [instDecoratorNoCall]   tsc @2+0 in "@f<| A> class C {}"
+    "<A extends B ? C : D>"  [instDecoratorNoCall]   tsc @2+0 in "@f<A extends B ? C : D> class C {}"
+    "<() => void>"  [instDecoratorNoCall]   tsc @2+0 in "@f<() => void> class C {}"
+    "<(a: A) => B>"  [instDecoratorNoCall]   tsc @2+0 in "@f<(a: A) => B> class C {}"
+    "<new () => A>"  [instDecoratorNoCall]   tsc @2+0 in "@f<new () => A> class C {}"
+    … 28 more
 
 [04-type-params-args / targsExpr]  tsc TS1385 Function type notation must be parenthesized when used in a union type.   (49 inputs, 1 distinct)
     "<A | () => void>"  [call,callNoArgs,memberCall,optionalCall,optionalCall2,optionalCall3,newCall,newNoArgs,…]   tsc @5+11 in "f<A | () => void>(x);"
@@ -57,7 +63,13 @@ class B  dialect tsx  config plain: 784 inputs in 36 clusters
     "<A,>"  [instMember,instOptional]   tsc @11+4 in "const v = f<A,>.x;"
     "<>"  [instMember,instOptional]   tsc @11+2 in "const v = f<>.x;"
     "<A | B>"  [instMember,instOptional]   tsc @11+7 in "const v = f<A | B>.x;"
-    … 31 more
+    "<| A>"  [instMember,instOptional]   tsc @11+5 in "const v = f<| A>.x;"
+    "<A extends B ? C : D>"  [instMember,instOptional]   tsc @11+21 in "const v = f<A extends B ? C : D>.x;"
+    "<() => void>"  [instMember,instOptional]   tsc @11+12 in "const v = f<() => void>.x;"
+    "<(a: A) => B>"  [instMember,instOptional]   tsc @11+13 in "const v = f<(a: A) => B>.x;"
+    "<new () => A>"  [instMember,instOptional]   tsc @11+13 in "const v = f<new () => A>.x;"
+    "<{ a: A }>"  [instMember,instOptional]   tsc @11+10 in "const v = f<{ a: A }>.x;"
+    … 25 more
 
 [04-type-params-args / targsHeritage]  tsc TS1005 ',' expected.   (9 inputs, 9 distinct)
     "class C implements A | B {}"  [-]   tsc @21+1 in "class C implements A | B {}"
@@ -66,7 +78,9 @@ class B  dialect tsx  config plain: 784 inputs in 36 clusters
     "class C implements A extends B ? D : E {}"  [-]   tsc @31+1 in "class C implements A extends B ? D : E {}"
     "class C implements unique symbol {}"  [-]   tsc @26+6 in "class C implements unique symbol {}"
     "class C implements readonly A[] {}"  [-]   tsc @28+1 in "class C implements readonly A[] {}"
-    … 3 more
+    "class C implements abstract new () => A {}"  [-]   tsc @28+3 in "class C implements abstract new () => A {}"
+    "class C implements a is B {}"  [-]   tsc @21+2 in "class C implements a is B {}"
+    "class C extends await b {}"  [-]   tsc @22+1 in "class C extends await b {}"
 
 [04-type-params-args / targsHeritage]  tsc TS1011 An element access expression should take an argument.   (1 inputs, 1 distinct)
     "class C implements string[] {}"  [-]   tsc @26+0 in "class C implements string[] {}"
@@ -168,7 +182,7 @@ class B  dialect tsx  config plain: 784 inputs in 36 clusters
     "(x as T, z) => y"  [-]   tsc @12+2 in "(x as T, z) => y"
     "async (x as T) => y"  [-]   tsc @15+2 in "async (x as T) => y"
     "label as T: x"  [-]   tsc @10+1 in "label as T: x"
-    … 1 more
+    "label!: x"  [-]   tsc @6+1 in "label!: x"
 
 [05-assertions / varAnnot]  tsc TS1005 ',' expected.   (5 inputs, 5 distinct)
     "let { a }!: T = b"  [-]   tsc @9+1 in "let { a }!: T = b"

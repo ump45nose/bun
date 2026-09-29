@@ -32,11 +32,7 @@ class A1c  dialect dts  config plain: 35 inputs in 9 clusters
     "export const x: A<B<C>>;"  [-]
     "export const x: A extends B ? C : D;"  [-]
     "export const x: keyof typeof y;"  [-]
-    "export const x: readonly A[];"  [-]
-    "export const x: [a: A, b?: B, ...c: C[]];"  [-]
-    "export const x: `a${string}`;"  [-]
-    "export const x: -1;"  [-]
-    "export const x: 1n;"  [-]
+    … 5 more
 
 [10-declaration-files / directive]  bun The constant "…" must be initialized   (2 inputs, 2 distinct)
     "// @ts-ignore\nexport const x: T;"  [-]

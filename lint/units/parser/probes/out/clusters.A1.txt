@@ -22,7 +22,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "([a] = []) => void"  [alias,param,arrowRet,callArg,as,field]
     "({ a = 1 }) => void"  [arrowRet]
     "({ a: b = 1 }) => void"  [arrowRet,callArg]
-    … 13 more
+    "([a = 1]) => void"  [alias,param,arrowRet,callArg,as,field]
+    "({ [k]: v }) => void"  [alias,param,callArg,as,field]
+    … 11 more
 
 [01-type-forms / fn]  bun Unexpected …   (24 inputs, 6 distinct)
     tsc also: TS2842 x9, TS2304 x7, TS7006 x7, TS2371 x5, TS2564 x5, TS7031 x5, TS2369 x5, TS2322 x3
@@ -64,7 +66,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "[...enum: A[]]"  [alias,param]
     "[...export: A[]]"  [alias,param]
     "[...extends: A[]]"  [alias,param]
-    … 5 more
+    "[...super: A[]]"  [alias,param]
+    "[...switch: A[]]"  [alias,param]
+    … 3 more
 
 [01-type-forms / lit]  bun Invalid assignment target   (1 inputs, 1 distinct)
     tsc also: TS2304 x1, TS2357 x1
@@ -119,7 +123,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "enum"  [arrowRet,fnTypeParam]
     "default"  [arrowRet,fnTypeParam]
     "super"  [arrowRet,fnTypeParam]
-    … 19 more
+    "instanceof"  [arrowRet,fnTypeParam]
+    "extends"  [arrowRet,fnTypeParam]
+    … 17 more
 
 [01-type-forms / ref]  bun Unexpected …   (233 inputs, 29 distinct)
     tsc also: TS2304 x226, TS2503 x8
@@ -133,7 +139,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "enum"  [alias,var,param,ret,arrowParam,as,field,member]
     "default"  [alias,var,param,ret,arrowParam,as,field,member]
     "super"  [alias,var,param,ret,arrowParam,as,field,member]
-    … 19 more
+    "instanceof"  [alias,var,param,ret,arrowParam,as,field,member]
+    "extends"  [alias,var,param,ret,arrowParam,as,field,member]
+    … 17 more
 
 [01-type-forms / tmpl]  bun Expected "…" but found "…"   (2 inputs, 1 distinct)
     tsc also: TS2304 x2, TS7006 x1, TS2322 x1
@@ -234,7 +242,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "public a"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
     "public a?"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
     "public a?: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
-    … 12 more
+    "public a = 1"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "public a: A = 1"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    … 10 more
 
 [03-signatures / arrowSig]  bun Invalid binding pattern   (28 inputs, 7 distinct)
     tsc also: TS2730 x28, TS2304 x16, TS7006 x12, TS2318 x7, TS2680 x4, TS2526 x4, TS7041 x4
@@ -258,7 +268,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "this: A, a: B"  [arrowRet,arrowInCondRet]
     "a, this: A"  [arrowRet,arrowInCondRet]
     "this: this"  [arrowRet,arrowInCondRet]
-    … 3 more
+    "this: typeof this"  [arrowRet,arrowInCondRet]
+    "this"  [arrowInCondRet]
+    … 1 more
 
 [03-signatures / declSig]  bun Expected "…" but found "…"   (218 inputs, 22 distinct)
     tsc also: TS2369 x214, TS2304 x120, TS7006 x74, TS2318 x18, TS2371 x15, TS7032 x4, TS7019 x2
@@ -272,7 +284,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "public a"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
     "public a?"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
     "public a?: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
-    … 12 more
+    "public a = 1"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    "public a: A = 1"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    … 10 more
 
 [03-signatures / declSig]  bun Setter p must have exactly 1 argument (there are 0)   (4 inputs, 4 distinct)
     tsc also: TS2784 x4, TS7032 x1, TS7006 x1, TS2304 x1, TS2502 x1
@@ -302,7 +316,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "a = b = c"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "a: A = b as A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "a = <A>b"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
-    … 31 more
+    "a = b!"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "a: (b: B) => C = d"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    … 29 more
 
 [03-signatures / memberSig]  bun Unexpected …   (15 inputs, 3 distinct)
     tsc also: TS2842 x15, TS2304 x3
@@ -322,7 +338,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "a = b = c"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
     "a: A = b as A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
     "a = <A>b"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
-    … 35 more
+    "a = b!"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "a: (b: B) => C = d"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    … 33 more
 
 [03-signatures / typeSig]  bun Unexpected …   (53 inputs, 10 distinct)
     tsc also: TS2304 x37, TS2371 x23, TS2842 x20, TS7031 x5, TS2369 x5, TS7006 x5
@@ -476,7 +494,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "protected readonly x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
     "public override x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
     "public override readonly x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
-    … 37 more
+    "override readonly x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
+    "public x"  [method,staticMethod,setter,fn,arrow,objMethod]
+    … 35 more
 
 [07-module-syntax / attributes]  bun Expected "…" but found "…"   (2 inputs, 2 distinct)
     tsc also: TS2318 x2, TS2858 x1, TS2307 x1
@@ -504,7 +524,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "type if as A"  [exportLocal,exportType]
     "if as A"  [exportLocal,exportType]
     "if"  [exportLocal]
-    … 5 more
+    "type this"  [exportLocal,exportType]
+    "type null"  [exportLocal,exportType]
+    … 3 more
 
 [07-module-syntax / exportType]  bun Expected identifier but found "…"   (3 inputs, 3 distinct)
     tsc also: TS2304 x2
@@ -561,7 +583,9 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "declare 1;"  [-]
     "declare \"s\";"  [-]
     "declare"  [-]
-    … 17 more
+    "declare as any"  [-]
+    "declare!"  [-]
+    … 15 more
 
 [08-declare-namespace-enum / declName]  bun Cannot use "…" as an identifier here   (4 inputs, 2 distinct)
     tsc also: TS2480 x2, TS2304 x2
@@ -607,7 +631,7 @@ class A1  dialect ts  config plain: 2537 inputs in 105 clusters
     "enum E { [\"x\"] = 1 }"  [-]
     "enum E { ['x'] = 1, B = E.x }"  [-]
     "enum E { [`x`] = 1 }"  [-]
-    … 1 more
+    "enum E { [1] = 1 }"  [-]
 
 [08-declare-namespace-enum / enum]  bun Unexpected …   (1 inputs, 1 distinct)
     tsc also: TS2660 x1

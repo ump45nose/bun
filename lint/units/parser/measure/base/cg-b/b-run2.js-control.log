@@ -1,0 +1,6 @@
+==334804== Cachegrind, a high-precision tracing profiler
+==334804== Copyright (C) 2002-2025, and GNU GPL'd, by Nicholas Nethercote et al.
+==334804== Using Valgrind-3.27.1 and LibVEX; rerun with -h for copyright info
+==334804== Command: /workspace/notes/lint/units/parser/measure/base/bin/bun-profile /workspace/notes/lint/benchroot/bench/snippets/transpiler-typescript.mjs --iterations=20 --group=js-control
+==334804== 
+group                    files   input bytes        passes output length            ms

@@ -1,5 +1,5 @@
 group 08-declare-namespace-enum  dialect dts  config plain  inputs 2704
-counts A1=11 A2=159 AA=594 AAg=1376 B=14 RR=550
+counts A1=11 A1c=8 A1s=3 A2=159 AA=594 AAg=1376 B=14 RR=550
 
 calls of Bun that differ from transformSync without tsconfig: 8 inputs
   "declare class C { accessor x: T; }"  base=ok  ts.plain.scanImports="Expected \";\" but found \"x\"" ts.deco.transformSync="Expected \";\" but found \"x\"" ts.deco.scan="Expected \";\" but found \"x\"" ts.deco.scanImports="Expected \";\" but found \"x\"" tsx.plain.scanImports="Expected \";\" but found \"x\"" tsx.deco.transformSync="Expected \";\" but found \"x\"" tsx.deco.scan="Expected \";\" but found \"x\"" tsx.deco.scanImports="Expected \";\" but found \"x\""

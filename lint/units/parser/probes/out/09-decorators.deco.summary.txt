@@ -1,5 +1,5 @@
 group 09-decorators  dialect ts  config deco  inputs 4100
-counts A1=77 A2=512 AA=1385 AAg=911 B=103 CRASH=2 RR=1110
+counts A1=77 A1c=48 A1s=29 A2=512 AA=1385 AAg=911 B=103 CRASH=2 RR=1110
 
 calls of Bun that differ from transformSync without tsconfig: 944 inputs
   "@d()! class C {}"  base=ok  ts.plain.scanImports=ok ts.deco.transformSync=ok ts.deco.scan=ok ts.deco.scanImports=ok tsx.plain.scanImports=ok tsx.deco.transformSync=ok tsx.deco.scan=ok tsx.deco.scanImports=ok

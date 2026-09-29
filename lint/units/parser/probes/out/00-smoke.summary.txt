@@ -1,5 +1,5 @@
 group 00-smoke  dialect ts  config plain  inputs 9
-counts A1=4 AA=1 B=3 RR=1
+counts A1=4 A1c=3 A1s=1 AA=1 B=3 RR=1
 
 calls of Bun that differ from transformSync without tsconfig: 1 inputs
   "type T = { foo(1): void }"  base="Backtrack"  ts.plain.scanImports="Backtrack Failed to scan imports" ts.deco.scanImports="Backtrack Failed to scan imports" tsx.plain.scanImports="Backtrack Failed to scan imports" tsx.deco.scanImports="Backtrack Failed to scan imports"

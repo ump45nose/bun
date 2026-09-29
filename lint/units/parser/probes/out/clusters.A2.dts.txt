@@ -62,7 +62,13 @@ class A2  dialect dts  config plain: 176 inputs in 67 clusters
     "declare module;"  [-]
     "declare module"  [-]
     "declare x;"  [-]
-    … 22 more
+    "declare x: T;"  [-]
+    "declare 1;"  [-]
+    "declare \"s\";"  [-]
+    "declare"  [-]
+    "declare as any"  [-]
+    "declare!"  [-]
+    … 16 more
 
 [08-declare-namespace-enum / declare]  bun Unexpected …  /  tsc TS1079 A 'declare' modifier cannot be used with an import declaration.   (1 inputs, 1 distinct)
     tsc also: TS2307 x1
@@ -165,7 +171,13 @@ class A2  dialect dts  config plain: 176 inputs in 67 clusters
     "enum E { 1.5 }"  [-]
     "enum E { 0x10 }"  [-]
     "enum E { 1n }"  [-]
-    … 11 more
+    "enum E { [x] }"  [-]
+    "enum E { [x] = 1 }"  [-]
+    "enum E { [\"x\"] }"  [-]
+    "enum E { [\"x\"] = 1 }"  [-]
+    "enum E { ['x'] = 1, B = E.x }"  [-]
+    "enum E { [`x`] = 1 }"  [-]
+    … 5 more
 
 [08-declare-namespace-enum / enum]  bun Unexpected …  /  tsc TS1046 Top-level declarations in .d.ts files must start with either a 'declare' or 'export' modifier.   (1 inputs, 1 distinct)
     tsc also: TS2660 x1
@@ -212,7 +224,9 @@ class A2  dialect dts  config plain: 176 inputs in 67 clusters
     "{ module N {} }"  [-]
     "for (;;) namespace N {}"  [-]
     "label: namespace N {}"  [-]
-    … 3 more
+    "() => { namespace N {} }"  [-]
+    "switch (a) { case 1: namespace N {} }"  [-]
+    "try { namespace N {} } catch {}"  [-]
 
 [08-declare-namespace-enum / namespace]  bun Expected "…" but found "…"  /  tsc TS1040 'async' modifier cannot be used in an ambient context.   (1 inputs, 1 distinct)
     "async namespace N {}"  [-]
@@ -231,7 +245,10 @@ class A2  dialect dts  config plain: 176 inputs in 67 clusters
     "@d namespace N {}"  [-]
     "function f() { namespace N {} }"  [-]
     "function f() { module N {} }"  [-]
-    … 4 more
+    "class C { static { namespace N {} } }"  [-]
+    "namespace N { { namespace M {} } }"  [-]
+    "namespace N { function f() { namespace M {} } }"  [-]
+    "namespace N { if (a) namespace M {} }"  [-]
 
 [08-declare-namespace-enum / namespace]  bun Expected "…" but found "…"m"…"  /  tsc TS1046 Top-level declarations in .d.ts files must start with either a 'declare' or 'export' modifier.   (2 inputs, 2 distinct)
     "module \"m\" {}"  [-]
@@ -248,7 +265,11 @@ class A2  dialect dts  config plain: 176 inputs in 67 clusters
     "namespace N { export default function () {} }"  [-]
     "namespace N { export * from \"x\" }"  [-]
     "namespace N { export * as a from \"x\" }"  [-]
-    … 5 more
+    "namespace N { export { x } }"  [-]
+    "namespace N { export { x } from \"y\" }"  [-]
+    "namespace N { export {} }"  [-]
+    "namespace N { super.x }"  [-]
+    "namespace N { export using x = y }"  [-]
 
 [08-declare-namespace-enum / overload]  bun Expected "…" but found "…"  /  tsc TS1046 Top-level declarations in .d.ts files must start with either a 'declare' or 'export' modifier.   (2 inputs, 2 distinct)
     tsc also: TS2369 x1, TS2304 x1

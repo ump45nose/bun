@@ -1,5 +1,5 @@
 group 10-declaration-files  dialect dts  config plain  inputs 380
-counts A1=27 A2=17 AA=222 AAg=112 B=1 RR=1
+counts A1=27 A1c=27 A2=17 AA=222 AAg=112 B=1 RR=1
 
 calls of Bun that differ from transformSync without tsconfig: 6 inputs
   "break;"  base="Cannot use \"break\" here"  ts.plain.scanImports=ok ts.deco.scanImports=ok tsx.plain.scanImports=ok tsx.deco.scanImports=ok

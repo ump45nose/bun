@@ -24,7 +24,13 @@ class A2  dialect tsx  config plain: 1358 inputs in 100 clusters
     "<A,>"  [instImport]
     "<>"  [instImport]
     "<A | B>"  [instImport]
-    … 37 more
+    "<| A>"  [instImport]
+    "<A extends B ? C : D>"  [instImport]
+    "<() => void>"  [instImport]
+    "<(a: A) => B>"  [instImport]
+    "<new () => A>"  [instImport]
+    "<{ a: A }>"  [instImport]
+    … 31 more
 
 [04-type-params-args / targsExpr]  bun Unexpected …  /  tsc TS17019 '?' at the end of a type is not valid TypeScript syntax. Did you mean to write 'any'?   (43 inputs, 1 distinct)
     tsc also: TS2304 x43, TS2347 x5, TS2318 x2, TS2558 x2, TS2364 x1, TS2635 x1
@@ -109,7 +115,12 @@ class A2  dialect tsx  config plain: 1358 inputs in 100 clusters
     "<readonly T>"  [getter,setter,objGetter]
     "<static T>"  [getter,setter,objGetter]
     "<abstract T>"  [getter,setter,objGetter]
-    … 6 more
+    "<declare T>"  [getter,setter,objGetter]
+    "<override T>"  [getter,setter,objGetter]
+    "<accessor T>"  [getter,setter,objGetter]
+    "<async T>"  [getter,setter,objGetter]
+    "<public in T>"  [getter,setter,objGetter]
+    "<T extends A?>"  [getter,setter,objGetter]
 
 [04-type-params-args / tparams]  bun Expected "…" but found "…"  /  tsc TS1273 'abstract' modifier cannot appear on a type parameter   (25 inputs, 1 distinct)
     tsc also: TS2304 x4, TS2318 x1
@@ -190,7 +201,13 @@ class A2  dialect tsx  config plain: 1358 inputs in 100 clusters
     "<const in T>"  [getter,setter,objGetter]
     "<in const T>"  [getter,setter,objGetter]
     "<const out T>"  [getter,setter,objGetter]
-    … 17 more
+    "<out const T>"  [getter,setter,objGetter]
+    "<const in out T>"  [getter,setter,objGetter]
+    "<in out const T>"  [getter,setter,objGetter]
+    "<out in T>"  [getter,setter,objGetter]
+    "<in in T>"  [getter,setter,objGetter]
+    "<out out T>"  [getter,setter,objGetter]
+    … 11 more
 
 [04-type-params-args / tparams]  bun The modifier "…" is not valid here  /  tsc TS1274 'in' modifier can only appear on a type parameter of a class, interface or type alias   (202 inputs, 12 distinct)
     tsc also: TS2304 x36, TS2318 x12
@@ -200,7 +217,12 @@ class A2  dialect tsx  config plain: 1358 inputs in 100 clusters
     "<in const T>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
     "<const in out T>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
     "<in out const T>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
-    … 6 more
+    "<in in T>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+    "<in T, out U>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+    "<in out T, const U>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+    "<in out>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+    "<in out out>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+    "<in public T>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
 
 [04-type-params-args / tparams]  bun The modifier "…" is not valid here  /  tsc TS1274 'out' modifier can only appear on a type parameter of a class, interface or type alias   (135 inputs, 8 distinct)
     tsc also: TS2304 x38, TS2318 x8
@@ -210,7 +232,8 @@ class A2  dialect tsx  config plain: 1358 inputs in 100 clusters
     "<out in T>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
     "<out out T>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
     "<out out>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
-    … 2 more
+    "<out out = A>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
+    "<out out, T>"  [fnDecl,fnExpr,namedFnExpr,asyncFn,generator,declareFn,method,staticMethod,…]
 
 [04-type-params-args / tparams]  bun The modifier "…" is not valid here  /  tsc TS1277 'const' modifier can only appear on a type parameter of a function, method or class   (20 inputs, 10 distinct)
     tsc also: TS2637 x7
@@ -220,7 +243,10 @@ class A2  dialect tsx  config plain: 1358 inputs in 100 clusters
     "<const out T>"  [iface,alias]
     "<out const T>"  [iface,alias]
     "<const in out T>"  [iface,alias]
-    … 4 more
+    "<in out const T>"  [iface,alias]
+    "<const const T>"  [iface,alias]
+    "<in out T, const U>"  [iface,alias]
+    "<const out>"  [iface,alias]
 
 [04-type-params-args / tparams]  bun Unexpected …  /  tsc TS1092 Type parameters cannot appear on a constructor declaration.   (1 inputs, 1 distinct)
     tsc also: TS2304 x1

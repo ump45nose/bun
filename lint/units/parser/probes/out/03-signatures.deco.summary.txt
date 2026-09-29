@@ -1,5 +1,5 @@
 group 03-signatures  dialect ts  config deco  inputs 11880
-counts A1=983 A2=1255 AA=5033 AAg=1084 B=228 RR=3297
+counts A1=983 A1c=41 A1s=942 A2=1255 AA=5033 AAg=1084 B=228 RR=3297
 
 calls of Bun that differ from transformSync without tsconfig: 339 inputs
   "type X = { (,): void };"  base="Backtrack"  ts.plain.scanImports="Backtrack Failed to scan imports" ts.deco.scanImports="Backtrack Failed to scan imports" tsx.plain.scanImports="Backtrack Failed to scan imports" tsx.deco.scanImports="Backtrack Failed to scan imports"

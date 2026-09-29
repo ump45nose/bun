@@ -48,7 +48,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d @e a: A"  [genericArrow]
     "@d public a: A"  [genericArrow]
     "@d readonly a: A"  [genericArrow]
-    … 10 more
+    "@d ...a: A[]"  [genericArrow]
+    "@d { a }: A"  [genericArrow]
+    "@d [a]: A"  [genericArrow]
+    "@d a = 1"  [genericArrow]
+    "@d a?: A"  [genericArrow]
+    "@a.b.c a"  [genericArrow]
+    … 4 more
 
 [03-signatures / arrowSig]  bun Expected "…" but found "…"  /  tsc TS1212 Identifier expected. 'public' is a reserved word in strict mode.   (6 inputs, 1 distinct)
     tsc also: TS2369 x6, TS7006 x6, TS2304 x2, TS2318 x1
@@ -300,7 +306,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d @e a: A"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
     "@d public a: A"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
     "@d readonly a: A"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
-    … 10 more
+    "@d ...a: A[]"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
+    "@d { a }: A"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
+    "@d [a]: A"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
+    "@d a = 1"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
+    "@d a?: A"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
+    "@a.b.c a"  [fnDecl,fnExpr,declareFn,overload,objMethod,generator,asyncFn]
+    … 4 more
 
 [03-signatures / declSig]  bun Expected identifier but found "…"  /  tsc TS1274 'in' modifier can only appear on a type parameter of a class, interface or type alias   (15 inputs, 1 distinct)
     tsc also: TS2304 x15, TS2318 x1
@@ -322,7 +334,7 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "a: A, ...b: B[]"  [setter]
     "a = 1, b = 2"  [setter]
     "{ a, b }: A, [c, d]: B"  [setter]
-    … 1 more
+    "public, private"  [setter]
 
 [03-signatures / declSig]  bun Unexpected …  /  tsc TS17020 '?' at the start of a type is not valid TypeScript syntax. Did you mean to write 'any'?   (15 inputs, 1 distinct)
     tsc also: TS2304 x15, TS2318 x1
@@ -344,7 +356,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d @e a: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "@d public a: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "@d readonly a: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
-    … 10 more
+    "@d ...a: A[]"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "@d { a }: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "@d [a]: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "@d a = 1"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "@d a?: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "@a.b.c a"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    … 4 more
 
 [03-signatures / memberSig]  bun Backtrack  /  tsc TS1274 'in' modifier can only appear on a type parameter of a class, interface or type alias   (5 inputs, 1 distinct)
     tsc also: TS2304 x5
@@ -551,7 +569,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d @e a: A"  [ctorType,abstractCtorType,genericFnType]
     "@d public a: A"  [ctorType,abstractCtorType,genericFnType]
     "@d readonly a: A"  [ctorType,abstractCtorType,genericFnType]
-    … 10 more
+    "@d ...a: A[]"  [ctorType,abstractCtorType,genericFnType]
+    "@d { a }: A"  [ctorType,abstractCtorType,genericFnType]
+    "@d [a]: A"  [ctorType,abstractCtorType,genericFnType]
+    "@d a = 1"  [ctorType,abstractCtorType,genericFnType]
+    "@d a?: A"  [ctorType,abstractCtorType,genericFnType]
+    "@a.b.c a"  [ctorType,abstractCtorType,genericFnType]
+    … 4 more
 
 [03-signatures / typeSig]  bun Unexpected …  /  tsc TS1274 'in' modifier can only appear on a type parameter of a class, interface or type alias   (6 inputs, 1 distinct)
     tsc also: TS2304 x6
@@ -848,7 +872,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "export x?: T;"  [class,abstractClass,declareClass,classExpr]
     "export x!: T;"  [class,abstractClass,declareClass,classExpr]
     "export m() {}"  [class,abstractClass,declareClass,classExpr]
-    … 14 more
+    "export m(): void;"  [class,abstractClass,declareClass,classExpr]
+    "export 1: T;"  [class,abstractClass,declareClass,classExpr]
+    "export [x]: T;"  [class,abstractClass,declareClass,classExpr]
+    "export #x: T;"  [class,abstractClass,declareClass,classExpr]
+    "export get x() { return 1 }"  [class,abstractClass,declareClass,classExpr]
+    "export set x(v) {}"  [class,abstractClass,declareClass,classExpr]
+    … 8 more
 
 [06-class-members / modifier]  bun Expected "…" but found "…"  /  tsc TS1039 Initializers are not allowed in ambient contexts.   (1 inputs, 1 distinct)
     "accessor x = 1;"  [declareClass]
@@ -861,7 +891,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "async x?: T;"  [declareClass]
     "async x!: T;"  [declareClass]
     "async \"x\": T;"  [declareClass]
-    … 11 more
+    "async 1: T;"  [declareClass]
+    "async [x]: T;"  [declareClass]
+    "async #x: T;"  [declareClass]
+    "async get x() { return 1 }"  [declareClass]
+    "async set x(v) {}"  [declareClass]
+    "async static x: T;"  [declareClass]
+    … 5 more
 
 [06-class-members / modifier]  bun Expected "…" but found "…"  /  tsc TS1042 'async' modifier cannot be used here.   (42 inputs, 14 distinct)
     tsc also: TS2304 x27, TS7008 x6, TS7032 x3, TS7006 x3
@@ -871,7 +907,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "async x?: T;"  [class,abstractClass,classExpr]
     "async x!: T;"  [class,abstractClass,classExpr]
     "async \"x\": T;"  [class,abstractClass,classExpr]
-    … 8 more
+    "async 1: T;"  [class,abstractClass,classExpr]
+    "async [x]: T;"  [class,abstractClass,classExpr]
+    "async #x: T;"  [class,abstractClass,classExpr]
+    "async get x() { return 1 }"  [class,abstractClass,classExpr]
+    "async set x(v) {}"  [class,abstractClass,classExpr]
+    "async readonly x: T;"  [class,abstractClass,classExpr]
+    … 2 more
 
 [06-class-members / modifier]  bun Expected "…" but found "…"  /  tsc TS1071 'accessor' modifier cannot appear on an index signature.   (4 inputs, 1 distinct)
     tsc also: TS2304 x4
@@ -912,7 +954,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "const x?: T;"  [class,abstractClass,declareClass,classExpr]
     "const x!: T;"  [class,abstractClass,declareClass,classExpr]
     "const m() {}"  [class,abstractClass,declareClass,classExpr]
-    … 15 more
+    "const m(): void;"  [class,abstractClass,declareClass,classExpr]
+    "const 1: T;"  [class,abstractClass,declareClass,classExpr]
+    "const [x]: T;"  [class,abstractClass,declareClass,classExpr]
+    "const #x: T;"  [class,abstractClass,declareClass,classExpr]
+    "const get x() { return 1 }"  [class,abstractClass,declareClass,classExpr]
+    "const set x(v) {}"  [class,abstractClass,declareClass,classExpr]
+    … 9 more
 
 [06-class-members / modifier]  bun Expected "…" but found "…"  /  tsc TS1253 Abstract properties can only appear within an abstract class.   (3 inputs, 1 distinct)
     tsc also: TS2304 x3
@@ -930,7 +978,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "in x?: T;"  [class,abstractClass,declareClass,classExpr]
     "in x!: T;"  [class,abstractClass,declareClass,classExpr]
     "in m() {}"  [class,abstractClass,declareClass,classExpr]
-    … 15 more
+    "in m(): void;"  [class,abstractClass,declareClass,classExpr]
+    "in 1: T;"  [class,abstractClass,declareClass,classExpr]
+    "in [x]: T;"  [class,abstractClass,declareClass,classExpr]
+    "in #x: T;"  [class,abstractClass,declareClass,classExpr]
+    "in get x() { return 1 }"  [class,abstractClass,declareClass,classExpr]
+    "in set x(v) {}"  [class,abstractClass,declareClass,classExpr]
+    … 9 more
 
 [06-class-members / modifier]  bun Expected "…" but found "…"  /  tsc TS1274 'out' modifier can only appear on a type parameter of a class, interface or type alias   (84 inputs, 21 distinct)
     tsc also: TS2304 x40, TS7008 x8, TS7032 x4, TS7006 x4, TS2318 x4, TS2391 x3
@@ -940,7 +994,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "out x?: T;"  [class,abstractClass,declareClass,classExpr]
     "out x!: T;"  [class,abstractClass,declareClass,classExpr]
     "out m() {}"  [class,abstractClass,declareClass,classExpr]
-    … 15 more
+    "out m(): void;"  [class,abstractClass,declareClass,classExpr]
+    "out 1: T;"  [class,abstractClass,declareClass,classExpr]
+    "out [x]: T;"  [class,abstractClass,declareClass,classExpr]
+    "out #x: T;"  [class,abstractClass,declareClass,classExpr]
+    "out get x() { return 1 }"  [class,abstractClass,declareClass,classExpr]
+    "out set x(v) {}"  [class,abstractClass,declareClass,classExpr]
+    … 9 more
 
 [06-class-members / modifier]  bun Expected "…" but found "…"  /  tsc TS1275 'accessor' modifier can only appear on a property declaration.   (32 inputs, 8 distinct)
     tsc also: TS7032 x4, TS7006 x4, TS2318 x4, TS2391 x3
@@ -950,7 +1010,8 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "accessor set x(v) {}"  [class,abstractClass,declareClass,classExpr]
     "accessor *m() {}"  [class,abstractClass,declareClass,classExpr]
     "accessor constructor() {}"  [class,abstractClass,declareClass,classExpr]
-    … 2 more
+    "accessor async m() {}"  [class,abstractClass,declareClass,classExpr]
+    "accessor accessor() {}"  [class,abstractClass,declareClass,classExpr]
 
 [06-class-members / modifier]  bun Expected "…" but found "…"  /  tsc TS1276 An 'accessor' property cannot be declared optional.   (4 inputs, 1 distinct)
     tsc also: TS2304 x4
@@ -1112,7 +1173,11 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "public [x]"  [method,staticMethod,setter,fn,objMethod]
     "readonly { x }"  [method,staticMethod,setter,fn,objMethod]
     "readonly [x]"  [method,staticMethod,setter,fn,objMethod]
-    … 5 more
+    "private { x } = {}"  [method,staticMethod,fn,objMethod]
+    "public { x }: T = {}"  [method,staticMethod,fn,objMethod]
+    "override { x }"  [method,staticMethod,setter,fn,objMethod]
+    "override [x]"  [method,staticMethod,setter,fn,objMethod]
+    "@d public { x }: T"  [method,staticMethod,setter]
 
 [06-class-members / paramProp]  bun Expected "…" but found "…"  /  tsc TS1206 Decorators are not valid here.   (3 inputs, 1 distinct)
     tsc also: TS2304 x3, TS2369 x2
@@ -1235,7 +1300,11 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "public [x]"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
     "readonly { x }"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
     "readonly [x]"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
-    … 5 more
+    "private { x } = {}"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+    "public { x }: T = {}"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+    "override { x }"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+    "override [x]"  [ctor,ctorOverload,ctorExpr,ctorDerived,declareCtor,abstractCtor,stringCtor]
+    "@d public { x }: T"  [ctor,ctorDerived,abstractCtor,stringCtor]
 
 [06-class-members / paramProp]  bun Expected identifier but found "…"  /  tsc TS1206 Decorators are not valid here.   (27 inputs, 12 distinct)
     tsc also: TS2304 x23, TS2369 x18, TS7006 x4
@@ -1245,7 +1314,12 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d readonly x"  [fn,objMethod]
     "@d public readonly x: T"  [fn,objMethod]
     "@d @e public x: T"  [fn,objMethod]
-    … 6 more
+    "@d public"  [fn,objMethod]
+    "@d public: T"  [fn,objMethod]
+    "@d ...x: T[]"  [fn,objMethod]
+    "@d public ...x: T[]"  [fn,objMethod]
+    "@d { x }: T"  [fn,objMethod]
+    "@d x: T, @e public y: U"  [fn,objMethod]
 
 [06-class-members / paramProp]  bun Expected identifier but found "…"  /  tsc TS1274 'in' modifier can only appear on a type parameter of a class, interface or type alias   (12 inputs, 1 distinct)
     tsc also: TS2304 x12
@@ -1285,7 +1359,9 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d declare namespace N {}"  [-]
     "@d declare enum E {}"  [-]
     "@d declare interface I {}"  [-]
-    … 3 more
+    "@d declare type T = 1;"  [-]
+    "@d declare module \"m\" {}"  [-]
+    "@d declare global {}"  [-]
 
 [09-decorators / classPos]  bun Expected "…" but found "…"  /  tsc TS8038 Decorators may not appear after 'export' or 'export default' if they also appear before 'export'.   (3 inputs, 3 distinct)
     tsc also: TS2304 x3
@@ -1406,7 +1482,8 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d static accessor x = 1;"  [classExpr]
     "@d accessor x = 1;"  [classExpr]
     "@d accessor [x] = 1;"  [classExpr]
-    … 2 more
+    "@d accessor x() {}"  [classExpr]
+    "@d accessor static x;"  [classExpr]
 
 [09-decorators / memberPos]  bun Expected "…" but found "…"  /  tsc TS1275 'accessor' modifier can only appear on a property declaration.   (4 inputs, 1 distinct)
     tsc also: TS2304 x4
@@ -1432,7 +1509,7 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d static #x = 1;"  [class,abstractClass,declareClass,classExpr]
     "@d static #m() {}"  [class,abstractClass,declareClass,classExpr]
     "@d get #x() { return 1 }"  [class,abstractClass,declareClass,classExpr,decoratedClass]
-    … 1 more
+    "@d set #x(v) {}"  [class,abstractClass,declareClass,classExpr,decoratedClass]
 
 [09-decorators / memberPos]  bun Expected identifier but found "…"  /  tsc TS18036 Class decorators can't be used with static private identifier. Consider removing the experimental decorator.   (2 inputs, 2 distinct)
     tsc also: TS2304 x2
@@ -1464,7 +1541,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d var x;"  [-]
     "@d let x;"  [-]
     "@d const x = 1;"  [-]
-    … 28 more
+    "@d using x = y;"  [-]
+    "@d enum E {}"  [-]
+    "@d const enum E {}"  [-]
+    "@d interface I {}"  [-]
+    "@d type T = 1;"  [-]
+    "@d namespace N {}"  [-]
+    … 22 more
 
 [09-decorators / otherPos]  bun Expected identifier but found "…"  /  tsc TS1206 Decorators are not valid here.   (3 inputs, 3 distinct)
     tsc also: TS7006 x2, TS2391 x1, TS2304 x1, TS2318 x1
@@ -1492,7 +1575,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d @e a: A"  [methodSig]
     "@d a?: A"  [methodSig]
     "@d a = 1"  [methodSig]
-    … 39 more
+    "@d a: A = 1"  [methodSig]
+    "@d ...a: A[]"  [methodSig]
+    "@d ...a"  [methodSig]
+    "@d { a }: A"  [methodSig]
+    "@d [a]: A"  [methodSig]
+    "@d { a } = {}"  [methodSig]
+    … 33 more
 
 [09-decorators / paramPos]  bun Expected "…" but found "…"  /  tsc TS1051 A 'set' accessor cannot have an optional parameter.   (1 inputs, 1 distinct)
     tsc also: TS2369 x1, TS2304 x1
@@ -1506,7 +1595,10 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d private a"  [overload,abstractMethod,declareMethod,classExprMethod]
     "@d protected a?: A"  [overload,abstractMethod,declareMethod,classExprMethod]
     "@d override a: A"  [overload,abstractMethod,declareMethod,classExprMethod]
-    … 4 more
+    "this: A, @d a: B"  [arrow,fnType]
+    "a: A, @d b: B"  [arrow,fnType]
+    "a: A, b: B, @d c: C"  [arrow,fnType]
+    "a: A | B extends C ? D : E, @d b: B"  [arrow,fnType]
 
 [09-decorators / paramPos]  bun Expected identifier but found "…"  /  tsc TS1206 Decorators are not valid here.   (191 inputs, 45 distinct)
     tsc also: TS2304 x102, TS7006 x79, TS2369 x24, TS7019 x4, TS2339 x4, TS2371 x3, TS7032 x1
@@ -1516,7 +1608,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "@d() a: A"  [fn,fnExpr,objMethod,declareFn]
     "@d @e a: A"  [fn,fnExpr,objMethod,declareFn]
     "@d a?: A"  [fn,fnExpr,objMethod,declareFn]
-    … 39 more
+    "@d a = 1"  [fn,fnExpr,objMethod,declareFn]
+    "@d a: A = 1"  [fn,fnExpr,objMethod,declareFn]
+    "@d ...a: A[]"  [fn,fnExpr,objMethod,declareFn]
+    "@d ...a"  [fn,fnExpr,objMethod,declareFn]
+    "@d { a }: A"  [fn,fnExpr,objMethod,declareFn]
+    "@d [a]: A"  [fn,fnExpr,objMethod,declareFn]
+    … 33 more
 
 [09-decorators / paramPos]  bun Setter p must have exactly 1 argument (there are 2)  /  tsc TS1049 A 'set' accessor must have exactly one parameter.   (4 inputs, 4 distinct)
     tsc also: TS2304 x4
@@ -1540,7 +1638,13 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "export const x: { a: A; b(): B; [k: string]: C };"  [-]
     "export const x: () => void;"  [-]
     "export const x: new () => A;"  [-]
-    … 11 more
+    "export const x: typeof y;"  [-]
+    "export const x: import(\"y\").Z;"  [-]
+    "export const x: typeof import(\"y\");"  [-]
+    "export const x: A<B<C>>;"  [-]
+    "export const x: A extends B ? C : D;"  [-]
+    "export const x: keyof typeof y;"  [-]
+    … 5 more
 
 [10-declaration-files / module]  bun Expected "…" but found "…"m"…"  /  tsc TS1035 Only ambient modules can use quoted names.   (1 inputs, 1 distinct)
     tsc also: TS2304 x1
@@ -1573,7 +1677,10 @@ class A2  dialect ts  config deco: 3088 inputs in 331 clusters
     "export const x: unique symbol;"  [-]
     "export namespace N { const x: T; function f(): void; class C {} }"  [-]
     "export namespace N { export const x: T; }"  [-]
-    … 4 more
+    "const x: number;"  [-]
+    "const x;"  [-]
+    "namespace N { const x: T; }"  [-]
+    "{ const x: T; }"  [-]
 
 [10-declaration-files / topLevel]  bun The declaration "…" must be initialized  /  tsc TS1155 'using' declarations must be initialized.   (1 inputs, 1 distinct)
     tsc also: TS2304 x1

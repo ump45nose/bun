@@ -46,9 +46,7 @@ class A1c  dialect ts  config plain: 853 inputs in 68 clusters
     "[...extends: A[]]"  [alias,param]
     "[...super: A[]]"  [alias,param]
     "[...switch: A[]]"  [alias,param]
-    "[...instanceof: A[]]"  [alias,param]
-    "[...with: A[]]"  [alias,param]
-    "[...return: A[]]"  [alias,param]
+    … 3 more
 
 [01-type-forms / op]  bun Expected "…" but found "…"   (3 inputs, 1 distinct)
     tsc also: TS2304 x3, TS7006 x1
@@ -101,23 +99,7 @@ class A1c  dialect ts  config plain: 853 inputs in 68 clusters
     "super"  [arrowRet,fnTypeParam]
     "instanceof"  [arrowRet,fnTypeParam]
     "extends"  [arrowRet,fnTypeParam]
-    "export"  [arrowRet,fnTypeParam]
-    "return"  [arrowRet,fnTypeParam]
-    "switch"  [arrowRet,fnTypeParam]
-    "while"  [arrowRet,fnTypeParam]
-    "do"  [arrowRet,fnTypeParam]
-    "for"  [arrowRet,fnTypeParam]
-    "try"  [arrowRet,fnTypeParam]
-    "catch"  [arrowRet,fnTypeParam]
-    "throw"  [arrowRet,fnTypeParam]
-    "else"  [arrowRet,fnTypeParam]
-    "case"  [arrowRet,fnTypeParam]
-    "break"  [arrowRet,fnTypeParam]
-    "continue"  [arrowRet,fnTypeParam]
-    "debugger"  [arrowRet,fnTypeParam]
-    "finally"  [arrowRet,fnTypeParam]
-    "if.x"  [arrowRet,fnTypeParam]
-    "class<T>"  [arrowRet,fnTypeParam]
+    … 17 more
 
 [01-type-forms / ref]  bun Unexpected …   (233 inputs, 29 distinct)
     tsc also: TS2304 x226, TS2503 x8
@@ -133,23 +115,7 @@ class A1c  dialect ts  config plain: 853 inputs in 68 clusters
     "super"  [alias,var,param,ret,arrowParam,as,field,member]
     "instanceof"  [alias,var,param,ret,arrowParam,as,field,member]
     "extends"  [alias,var,param,ret,arrowParam,as,field,member]
-    "export"  [alias,var,param,ret,arrowParam,as,field,member]
-    "return"  [alias,var,param,ret,arrowParam,as,field,member]
-    "switch"  [alias,var,param,ret,arrowParam,as,field,member]
-    "while"  [alias,var,param,ret,arrowParam,as,field,member]
-    "do"  [alias,var,param,ret,arrowParam,as,field,member]
-    "for"  [alias,var,param,ret,arrowParam,as,field,member]
-    "try"  [alias,var,param,ret,arrowParam,as,field,member]
-    "catch"  [alias,var,param,ret,arrowParam,as,field,member]
-    "throw"  [alias,var,param,ret,arrowParam,as,field,member]
-    "else"  [alias,var,param,ret,arrowParam,as,field,member]
-    "case"  [alias,var,param,ret,arrowParam,as,field,member]
-    "break"  [alias,var,param,ret,arrowParam,as,field,member]
-    "continue"  [alias,var,param,ret,arrowParam,as,field,member]
-    "debugger"  [alias,var,param,ret,arrowParam,as,field,member]
-    "finally"  [alias,var,param,ret,arrowParam,as,field,member]
-    "if.x"  [alias,var,param,ret,arrowParam,as,field,member]
-    "class<T>"  [alias,var,param,ret,arrowParam,as,field,member]
+    … 17 more
 
 [01-type-forms / tmpl]  bun Expected "…" but found "…"   (2 inputs, 1 distinct)
     tsc also: TS2304 x2, TS7006 x1, TS2322 x1
@@ -314,9 +280,7 @@ class A1c  dialect ts  config plain: 853 inputs in 68 clusters
     "if"  [exportLocal]
     "type this"  [exportLocal]
     "type null"  [exportLocal]
-    "type true"  [exportLocal]
-    "default as default"  [exportLocal,exportType]
-    "type default as default"  [exportLocal]
+    … 3 more
 
 [07-module-syntax / exportType]  bun Expected identifier but found "…"   (3 inputs, 3 distinct)
     tsc also: TS2304 x2
@@ -365,20 +329,7 @@ class A1c  dialect ts  config plain: 853 inputs in 68 clusters
     "declare as any"  [-]
     "declare!"  [-]
     "declare {}"  [-]
-    "declare { x }"  [-]
-    "declare if (a) {}"  [-]
-    "declare for (;;) {}"  [-]
-    "declare label: x;"  [-]
-    "declare try {} catch {}"  [-]
-    "declare throw x;"  [-]
-    "declare debugger;"  [-]
-    "declare async () => {};"  [-]
-    "declare new C;"  [-]
-    "declare this;"  [-]
-    "declare import(\"x\");"  [-]
-    "declare import.meta;"  [-]
-    "declare abstract;"  [-]
-    "declare async;"  [-]
+    … 14 more
 
 [08-declare-namespace-enum / declName]  bun Cannot use "…" as an identifier here   (2 inputs, 1 distinct)
     "await"  [declareClass,abstractClass]

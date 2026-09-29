@@ -1,5 +1,5 @@
 group 10-declaration-files  dialect ts  config deco  inputs 380
-counts A1=7 A2=40 AA=288 AAg=43 B=1 RR=1
+counts A1=7 A1c=5 A1s=2 A2=40 AA=288 AAg=43 B=1 RR=1
 
 calls of Bun that differ from transformSync without tsconfig: 6 inputs
   "break;"  base="Cannot use \"break\" here"  ts.plain.scanImports=ok ts.deco.scanImports=ok tsx.plain.scanImports=ok tsx.deco.scanImports=ok

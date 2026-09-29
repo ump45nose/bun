@@ -1,5 +1,5 @@
 group 05-assertions  dialect tsx  config plain  inputs 4713
-counts A1=115 A2=238 AA=2269 AAg=259 B=82 RR=1750
+counts A1=115 A1c=36 A1s=79 A2=238 AA=2269 AAg=259 B=82 RR=1750
 
 calls of Bun that differ from transformSync without tsconfig: 6 inputs
   "const v = y || <T>x = y;"  base="Syntax Error"  ts.plain.scanImports=ok ts.deco.scanImports=ok

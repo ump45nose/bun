@@ -10,7 +10,9 @@ class B  dialect ts  config deco: 417 inputs in 39 clusters
     "a as A"  [arrowRet,genericArrow]   tsc @18+1 in "const f = (a as A): void => {};"
     "a satisfies A"  [arrowRet,genericArrow]   tsc @25+1 in "const f = (a satisfies A): void => {};"
     "<A>a"  [arrowRet]   tsc @16+1 in "const f = (<A>a): void => {};"
-    … 3 more
+    "a<A>"  [arrowRet]   tsc @16+1 in "const f = (a<A>): void => {};"
+    "a!: A"  [asyncArrow]   tsc @19+1 in "const f = async (a!: A) => 0;"
+    "(a): A"  [asyncArrow]   tsc @20+1 in "const f = async ((a): A) => 0;"
 
 [03-signatures / arrowSig]  tsc TS1005 ';' expected.   (12 inputs, 6 distinct)
     "a!"  [arrow,asyncArrow]   tsc @15+2 in "const f = (a!) => 0;"
@@ -160,7 +162,8 @@ class B  dialect ts  config deco: 417 inputs in 39 clusters
     "@-d"  [classDecl,classDeclNewline,classExpr,field,fieldNewline,method,staticField,param]   tsc @1+1 in "@-d class C {}"
     "@!d"  [classDecl,classDeclNewline,classExpr,field,fieldNewline,method,staticField,param]   tsc @1+1 in "@!d class C {}"
     "@++d"  [classDecl,classDeclNewline,classExpr,field,fieldNewline,method,staticField,param]   tsc @1+2 in "@++d class C {}"
-    … 2 more
+    "@<any>d"  [classDecl,classDeclNewline,classExpr,field,fieldNewline,method,computed,computedField,…]   tsc @1+1 in "@<any>d class C {}"
+    "@await d"  [classExpr]   tsc @16+0 in "const c = @await d class {};"
 
 [09-decorators / expr]  tsc TS1146 Declaration expected.   (2 inputs, 1 distinct)
     "@await d"  [classDecl,classDeclNewline]   tsc @6+0 in "@await d class C {}"

@@ -21,7 +21,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "<T>(a: T) => T"  [catch]
     "[A, B]"  [catch]
     "[a: A, b?: B]"  [catch]
-    … 9 more
+    "{ a: A }"  [catch]
+    "{ [K in A]: B }"  [catch]
+    … 7 more
 
 [01-type-forms / core]  tsc TS1225 Cannot find parameter 'a'.   (6 inputs, 3 distinct)
     tsc also: TS2304 x4
@@ -349,7 +351,7 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "a is this"  [ret]
     "asserts a is this"  [ret]
     "a is\nB"  [ret]
-    … 1 more
+    "asserts a is\nB"  [ret]
 
 [01-type-forms / pred]  tsc TS1225 Cannot find parameter 'abstract'.   (2 inputs, 1 distinct)
     tsc also: TS7006 x1, TS2322 x1
@@ -776,7 +778,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "[K in A as B extends C ? D : E]: F"  [iface]
     "[K in A as infer U]: B"  [iface]
     "[as in A as as]: B"  [iface]
-    … 3 more
+    "[K in A](): B"  [iface]
+    "[K in A]<T>(): B"  [iface]
+    … 1 more
 
 [02-object-types / mapped]  tsc TS1212 Identifier expected. 'let' is a reserved word in strict mode.   (3 inputs, 1 distinct)
     tsc also: TS2304 x3, TS7061 x1
@@ -1062,7 +1066,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "a: A = b as A"  [setter]
     "a = <A>b"  [setter]
     "a = b!"  [setter]
-    … 7 more
+    "a: (b: B) => C = d"  [setter]
+    "{ a } = {}"  [setter]
+    … 5 more
 
 [03-signatures / declSig]  tsc TS1053 A 'set' accessor cannot have rest parameter.   (5 inputs, 5 distinct)
     tsc also: TS7032 x3, TS2304 x2, TS7031 x2, TS7019 x1
@@ -1094,7 +1100,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "@d a = 1"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor]
     "@d a?: A"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor,setter]
     "@a.b.c a"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor,setter]
-    … 6 more
+    "@a.b() a"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor,setter]
+    "@(a) a"  [method,methodOverload,abstractMethod,declareMethod,ctor,ctorOverload,declareCtor,setter]
+    … 4 more
 
 [03-signatures / declSig]  tsc TS1210 Code contained in a class is evaluated in JavaScript's strict mode which does not allow this use of 'arguments'. For more information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode.   (8 inputs, 2 distinct)
     tsc also: TS7031 x5, TS7006 x3
@@ -1438,7 +1446,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "<T,>"  [ctor]
     "<T, U,>"  [ctor]
     "<const T>"  [ctor]
-    … 79 more
+    "<const const T>"  [ctor]
+    "<T extends A extends B ? C : D>"  [ctor]
+    … 77 more
 
 [04-type-params-args / tparams]  tsc TS1094 An accessor cannot have type parameters.   (267 inputs, 89 distinct)
     tsc also: TS7032 x89, TS7006 x89, TS2304 x81, TS2368 x24, TS2503 x6, TS2315 x4, TS2526 x1
@@ -1452,7 +1462,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "<T,>"  [getter,setter,objGetter]
     "<T, U,>"  [getter,setter,objGetter]
     "<const T>"  [getter,setter,objGetter]
-    … 79 more
+    "<const const T>"  [getter,setter,objGetter]
+    "<T extends A extends B ? C : D>"  [getter,setter,objGetter]
+    … 77 more
 
 [04-type-params-args / tparams]  tsc TS1212 Identifier expected. 'implements' is a reserved word in strict mode.   (14 inputs, 1 distinct)
     tsc also: TS2304 x3, TS2318 x1
@@ -2017,7 +2029,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "x: T = 1;"  [declareClass]
     "x?: T = 1;"  [declareClass]
     "x? = 1;"  [declareClass]
-    … 13 more
+    "#x: T = 1;"  [declareClass]
+    "x: T = 1\ny: U = 2"  [declareClass]
+    … 11 more
 
 [06-class-members / member]  tsc TS1040 'async' modifier cannot be used in an ambient context.   (10 inputs, 10 distinct)
     tsc also: TS2318 x4, TS2583 x3, TS2697 x1
@@ -2117,7 +2131,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "m?<T>() {}"  [declareClass]
     "\"m\"() {}"  [declareClass]
     "\"m\"?() {}"  [declareClass]
-    … 77 more
+    "1() {}"  [declareClass]
+    "[m]() {}"  [declareClass]
+    … 75 more
 
 [06-class-members / member]  tsc TS1184 Modifiers cannot appear here.   (28 inputs, 7 distinct)
     tsc also: TS2304 x10
@@ -2320,7 +2336,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "readonly = 1;"  [declareClass]
     "static x = 1;"  [declareClass]
     "static = 1;"  [declareClass]
-    … 14 more
+    "abstract = 1;"  [declareClass]
+    "override x = 1;"  [declareClass]
+    … 12 more
 
 [06-class-members / modifier]  tsc TS1040 'async' modifier cannot be used in an ambient context.   (9 inputs, 9 distinct)
     tsc also: TS2318 x2, TS4112 x1
@@ -2388,7 +2406,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "public\nm() {}"  [declareClass]
     "public public() {}"  [declareClass]
     "static public() {}"  [declareClass]
-    … 97 more
+    "private m() {}"  [declareClass]
+    "private get x() { return 1 }"  [declareClass]
+    … 95 more
 
 [06-class-members / modifier]  tsc TS1184 Modifiers cannot appear here.   (36 inputs, 9 distinct)
     "public static { }"  [class,abstractClass,declareClass,classExpr]
@@ -2450,7 +2470,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "abstract [x]: T;"  [class,declareClass,classExpr]
     "abstract #x: T;"  [class,declareClass,classExpr]
     "abstract static x: T;"  [class,declareClass,classExpr]
-    … 3 more
+    "abstract readonly x: T;"  [class,declareClass,classExpr]
+    "abstract abstract;"  [class,declareClass,classExpr]
+    … 1 more
 
 [06-class-members / modifier]  tsc TS1255 A definite assignment assertion '!' is not permitted in this context.   (32 inputs, 26 distinct)
     tsc also: TS2304 x32, TS4112 x1
@@ -2464,7 +2486,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "protected x!: T;"  [declareClass]
     "protected!: T;"  [declareClass]
     "readonly x!: T;"  [declareClass]
-    … 16 more
+    "readonly!: T;"  [declareClass]
+    "static!: T;"  [declareClass]
+    … 14 more
 
 [06-class-members / modifier]  tsc TS1267 Property 'x' cannot have an initializer because it is marked abstract.   (1 inputs, 1 distinct)
     "abstract x = 1;"  [abstractClass]
@@ -2581,7 +2605,8 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "public = 1"  [fn,arrow,objMethod]
     "public: T = 1"  [fn,arrow,objMethod]
     "...public: T[]"  [fn,arrow,objMethod]
-    … 2 more
+    "public\n"  [fn,arrow,objMethod]
+    "public\n, y"  [fn,arrow,objMethod]
 
 [06-class-members / paramProp]  tsc TS1213 Identifier expected. 'implements' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
     tsc also: TS2369 x1, TS7006 x1
@@ -2621,7 +2646,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "public = 1"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod]
     "public: T = 1"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod]
     "...public: T[]"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod]
-    … 6 more
+    "public\n"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod,…]
+    "public\n, y"  [ctor,ctorOverload,ctorExpr,ctorDerived,abstractCtor,stringCtor,method,staticMethod]
+    … 4 more
 
 [06-class-members / paramProp]  tsc TS1213 Identifier expected. 'static' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (1 inputs, 1 distinct)
     tsc also: TS2369 x1, TS7006 x1
@@ -2662,7 +2689,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "export as namespace let;"  [-]
     "export as namespace any;"  [-]
     "export\nas namespace X;"  [-]
-    … 4 more
+    "export as\nnamespace X;"  [-]
+    "export as namespace\nX;"  [-]
+    … 2 more
 
 [07-module-syntax / exportAssign]  tsc TS1315 Global module exports may only appear in declaration files.   (3 inputs, 3 distinct)
     tsc also: TS2304 x1
@@ -2879,7 +2908,8 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "declare class C { readonly x: T = 1; }"  [-]
     "declare class C { static x = 1; }"  [-]
     "declare namespace N { let x = 1; }"  [-]
-    … 2 more
+    "declare module \"m\" { var x = 1; }"  [-]
+    "declare global { var x = 1; }"  [-]
 
 [08-declare-namespace-enum / declare]  tsc TS1040 'async' modifier cannot be used in an ambient context.   (5 inputs, 5 distinct)
     tsc also: TS2583 x3
@@ -2925,7 +2955,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "if (a) declare var x: T;"  [-]
     "if (a) declare const x: T;"  [-]
     "if (a) { declare const x: T; }"  [-]
-    … 9 more
+    "{ declare var x: T; }"  [-]
+    "{ declare let x: T; }"  [-]
+    … 7 more
 
 [08-declare-namespace-enum / declare]  tsc TS1206 Decorators are not valid here.   (1 inputs, 1 distinct)
     tsc also: TS2304 x1
@@ -2959,7 +2991,7 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "declare const x = f();"  [-]
     "declare const x = {};"  [-]
     "declare const x = [];"  [-]
-    … 1 more
+    "declare const { a } = b;"  [-]
 
 [08-declare-namespace-enum / declare]  tsc TS1255 A definite assignment assertion '!' is not permitted in this context.   (3 inputs, 3 distinct)
     tsc also: TS2304 x3
@@ -3110,7 +3142,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "is"  [module,declareModule]
     "asserts"  [module,declareModule]
     "infer"  [module,declareModule]
-    … 41 more
+    "keyof"  [module,declareModule]
+    "readonly"  [module,declareModule]
+    … 39 more
 
 [08-declare-namespace-enum / enum]  tsc TS1029 'export' modifier must precede 'declare' modifier.   (1 inputs, 1 distinct)
     "declare export enum E {}"  [-]
@@ -3255,7 +3289,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "@d(1, 2)"  [param]
     "@d(...a)"  [param]
     "@d({ a: 1 })"  [param]
-    … 78 more
+    "@d(() => {})"  [param]
+    "@d((a: A): B => c)"  [param]
+    … 76 more
 
 [09-decorators / expr]  tsc TS1213 Identifier expected. 'interface' is a reserved word in strict mode. Class definitions are automatically in strict mode.   (3 inputs, 1 distinct)
     tsc also: TS2304 x3
@@ -3354,7 +3390,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "@d accessor \"x\" = 1;"  [declareClass]
     "@d accessor\nx = 1;"  [declareClass]
     "@d accessor = 1;"  [declareClass]
-    … 4 more
+    "@d #x = 1;"  [declareClass]
+    "@d static #x = 1;"  [declareClass]
+    … 2 more
 
 [09-decorators / memberPos]  tsc TS1040 'async' modifier cannot be used in an ambient context.   (5 inputs, 5 distinct)
     tsc also: TS2304 x5, TS2318 x3, TS2697 x1
@@ -3376,7 +3414,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "@d m(): void {}"  [declareClass]
     "@d m<T>(a: T): T { return a }"  [declareClass]
     "@d m?() {}"  [declareClass]
-    … 28 more
+    "@d static m() {}"  [declareClass]
+    "@d public m() {}"  [declareClass]
+    … 26 more
 
 [09-decorators / memberPos]  tsc TS1206 Decorators are not valid here.   (38 inputs, 8 distinct)
     tsc also: TS2304 x30, TS2390 x4
@@ -3434,7 +3474,9 @@ class AAg  dialect ts  config plain: 6406 inputs in 735 clusters
     "@d ...a"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,setter,overload,abstractMethod,…]
     "@d { a }: A"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,setter,overload,abstractMethod,…]
     "@d [a]: A"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,setter,overload,abstractMethod,…]
-    … 34 more
+    "@d { a } = {}"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,overload,abstractMethod,declareMethod,…]
+    "this: A, @d a: B"  [method,decoratedMethod,staticMethod,ctor,decoratedClassCtor,setter,overload,abstractMethod,…]
+    … 32 more
 
 [10-declaration-files / bodyless]  tsc TS1005 '{' expected.   (6 inputs, 6 distinct)
     tsc also: TS2304 x4, TS7033 x1, TS7032 x1, TS7006 x1

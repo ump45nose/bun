@@ -42,7 +42,8 @@ class A1s  dialect ts  config plain: 1684 inputs in 86 clusters
     "(a = {}) => void"  [alias,param,arrowRet,callArg,as,field]
     "({ a } = {}) => void"  [alias,param,arrowRet,callArg,as,field]
     "([a] = []) => void"  [alias,param,arrowRet,callArg,as,field]
-    … 2 more
+    "({ a = 1 }) => void"  [arrowRet]
+    "([a = 1]) => void"  [alias,param,arrowRet,callArg,as,field]
 
 [01-type-forms / fn]  bun Expected "…" but found "…"  /  tsc TS2842   (9 inputs, 3 distinct)
     tsc also: TS2842 x9, TS2304 x4, TS7006 x2, TS2322 x2, TS2564 x1, TS7031 x1
@@ -126,7 +127,11 @@ class A1s  dialect ts  config plain: 1684 inputs in 86 clusters
     "public readonly a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
     "private override readonly a: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
     "public a"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
-    … 10 more
+    "public a?"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "public a?: A"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "public a = 1"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    "public a: A = 1"  [arrow,arrowRet,asyncArrow,genericArrow,arrowInCond,arrowInCondRet]
+    … 6 more
 
 [03-signatures / arrowSig]  bun Expected "…" but found "…"  /  tsc TS2462   (2 inputs, 2 distinct)
     tsc also: TS2462 x2, TS7031 x2
@@ -179,7 +184,11 @@ class A1s  dialect ts  config plain: 1684 inputs in 86 clusters
     "public readonly a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
     "private override readonly a: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
     "public a"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
-    … 12 more
+    "public a?"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    "public a?: A"  [fnDecl,fnExpr,declareFn,overload,method,methodOverload,abstractMethod,declareMethod,…]
+    "public a = 1"  [fnDecl,fnExpr,method,objMethod,generator,asyncFn]
+    "public a: A = 1"  [fnDecl,fnExpr,method,objMethod,generator,asyncFn]
+    … 8 more
 
 [03-signatures / declSig]  bun Expected "…" but found "…"  /  tsc TS2369 TS2371   (15 inputs, 3 distinct)
     tsc also: TS2369 x15, TS2371 x15, TS2304 x5
@@ -209,7 +218,11 @@ class A1s  dialect ts  config plain: 1684 inputs in 86 clusters
     "public readonly a: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "private override readonly a: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "public a"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
-    … 7 more
+    "public a?"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "public a?: A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "public readonly"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "readonly readonly"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    … 3 more
 
 [03-signatures / memberSig]  bun Expected "…" but found "…"  /  tsc TS2369 TS2371   (15 inputs, 3 distinct)
     tsc also: TS2369 x15, TS2371 x15, TS2304 x7
@@ -227,7 +240,11 @@ class A1s  dialect ts  config plain: 1684 inputs in 86 clusters
     "a = {}"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "a = (1, 2)"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
     "a = b = c"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
-    … 13 more
+    "a: A = b as A"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "a = <A>b"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "a = b!"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    "a: (b: B) => C = d"  [callSig,constructSig,methodSig,ifaceMethod,ifaceCall]
+    … 9 more
 
 [03-signatures / memberSig]  bun Expected "…" but found "…"  /  tsc TS2842   (10 inputs, 2 distinct)
     tsc also: TS2842 x10, TS2304 x2
@@ -250,7 +267,11 @@ class A1s  dialect ts  config plain: 1684 inputs in 86 clusters
     "public readonly a: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
     "private override readonly a: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
     "public a"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
-    … 7 more
+    "public a?"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "public a?: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "public readonly"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "public a\n: A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    … 3 more
 
 [03-signatures / typeSig]  bun Expected "…" but found "…"  /  tsc TS2369 TS2371   (21 inputs, 3 distinct)
     tsc also: TS2369 x21, TS2371 x21, TS2304 x15, TS2322 x3
@@ -268,7 +289,11 @@ class A1s  dialect ts  config plain: 1684 inputs in 86 clusters
     "a = {}"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
     "a = (1, 2)"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
     "a = b = c"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
-    … 13 more
+    "a: A = b as A"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "a = <A>b"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "a = b!"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    "a: (b: B) => C = d"  [fnType,ctorType,abstractCtorType,genericFnType,fnTypeInUnion,fnTypeAsArg,fnTypeArrowRet]
+    … 9 more
 
 [03-signatures / typeSig]  bun Expected "…" but found "…"  /  tsc TS2842   (15 inputs, 5 distinct)
     tsc also: TS2842 x15, TS2304 x11, TS2322 x5, TS7031 x1
@@ -386,7 +411,11 @@ class A1s  dialect ts  config plain: 1684 inputs in 86 clusters
     "public readonly x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
     "private readonly x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
     "protected readonly x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
-    … 39 more
+    "public override x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
+    "public override readonly x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
+    "override readonly x: T"  [method,staticMethod,setter,fn,arrow,objMethod]
+    "public x"  [method,staticMethod,setter,fn,arrow,objMethod]
+    … 35 more
 
 [06-class-members / paramProp]  bun Expected "…" but found "…"  /  tsc TS2730 TS2369   (1 inputs, 1 distinct)
     tsc also: TS2730 x1, TS2304 x1, TS2369 x1
@@ -416,7 +445,7 @@ class A1s  dialect ts  config plain: 1684 inputs in 86 clusters
     "type this"  [exportType]
     "type null"  [exportType]
     "type true"  [exportType]
-    … 1 more
+    "type default as default"  [exportType]
 
 [07-module-syntax / importType]  bun Expected "…" but found "…"  /  tsc TS2857   (1 inputs, 1 distinct)
     tsc also: TS2318 x1, TS2307 x1, TS2857 x1
