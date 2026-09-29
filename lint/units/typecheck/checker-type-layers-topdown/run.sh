@@ -19,5 +19,6 @@ python3 sites.py nil > "$W/nil_sites.tsv"
 python3 sites.py eager > "$W/eager_args.tsv"
 python3 standins.py in > "$W/standins_in.txt"
 python3 standins.py later > "$W/standins_later.tsv"
-for f in layers.txt port_status_rows.tsv recursion.txt writes.tsv nil_sites.tsv eager_args.tsv standins_in.txt standins_later.tsv; do cmp "$W/$f" "$HERE/data/$f"; done
+python3 worktables.py > "$W/layers_compact.txt"
+for f in layers.txt port_status_rows.tsv recursion.txt writes.tsv nil_sites.tsv eager_args.tsv standins_in.txt standins_later.tsv layers_compact.txt; do cmp "$W/$f" "$HERE/data/$f"; done
 echo "tables ok"
