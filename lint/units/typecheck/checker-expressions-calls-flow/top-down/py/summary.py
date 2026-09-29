@@ -7,12 +7,13 @@ def group(z):
     if z in ORDER: return 'this unit'
     if z in ('I-INFER', 'I-REVMAP'): return 'inference'
     if z in ('K-KEYOF', 'K-INDEXED', 'K-SUBST', 'K-COND', 'T-MAPPED', 'K-TEMPLATE', 'K-IMPORTTYPE'): return 'keyof..template'
-    if z == 'jsx': return 'jsx'
-    if z == 'grammarchecks': return 'grammar'
-    if z in ('c12_iteration_types', 'c51_type_facts_awaited', 'c47_promised_mapped_template'): return 'iteration, awaited, promised'
+    if z == 'X-JSX': return 'jsx'
+    if z == 'X-GRAMMAR': return 'grammar'
+    if z in ('X-ITER', 'X-ASYNC'): return 'iteration, awaited'
+    if z in ('X-DECORATOR', 'X-COLLISION', 'X-MARKREF'): return 'decorators, collisions, mark references'
     return 'declaration checks and the rest'
-GROUPS = ['this unit', 'inference', 'keyof..template', 'iteration, awaited, promised', 'jsx', 'grammar', 'declaration checks and the rest']
-print('layer\tstep\tfunctions\tlines\tclosures\tcodes\tpanics\tasserts\t' + '\t'.join('forward: ' + g for g in GROUPS) + '\tforward total\tcalled from earlier steps')
+GROUPS = ['this unit', 'inference', 'keyof..template', 'iteration, awaited', 'jsx', 'grammar', 'decorators, collisions, mark references', 'declaration checks and the rest']
+print('layer\tposition\tfunctions\tlines\tclosures\tcodes\tpanics\tasserts\t' + '\t'.join('forward: ' + g for g in GROUPS) + '\tforward total\tcalled from earlier steps')
 for L in ORDER:
     fl = mine(L)
     fwd = collections.defaultdict(set)

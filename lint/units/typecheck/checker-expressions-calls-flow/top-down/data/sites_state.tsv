@@ -30,16 +30,16 @@ E-CALL	checker.go:8519	c.getResolvedSignature	c.resolutionStart = saveResolution
 E-CALL	checker.go:8535	c.getResolvedSignature	links.resolvedSignature = result
 E-CALL	checker.go:8537	c.getResolvedSignature	links.resolvedSignature = cached
 E-FUNC	checker.go:10251	c.contextuallyCheckFunctionExpressionOrObjectLiteralMethod	links.flags |= NodeCheckFlagsContextChecked
-E-OPER	checker.go:10849	c.checkMetaProperty	if node.Name().Text() == "defer" {
-E-OPER	checker.go:10850	c.checkMetaProperty	debug.Assert(!ast.IsCallExpression(node.Parent) || node.Parent.Expression() != node, "Trying to get the type of `import.defer` in `import.defer(...)`")
+E-CORE	checker.go:10849	c.checkMetaProperty	if node.Name().Text() == "defer" {
+E-CORE	checker.go:10850	c.checkMetaProperty	debug.Assert(!ast.IsCallExpression(node.Parent) || node.Parent.Expression() != node, "Trying to get the type of `import.defer` in `import.defer(...)`")
 E-ACCESS	checker.go:11312	c.parameterInitializerContainsUndefined	if !c.pushTypeResolution(declaration, TypeSystemPropertyNameInitializerIsUndefined) {
 E-ACCESS	checker.go:11317	c.parameterInitializerContainsUndefined	if !c.popTypeResolution() {
 E-ACCESS	checker.go:11322	c.parameterInitializerContainsUndefined	links.flags |= NodeCheckFlagsInitializerIsUndefinedComputed | core.IfElse(containsUndefined, NodeCheckFlagsInitializerIsUndefined, 0)
 E-ACCESS	checker.go:11630	c.reportNonexistentProperty	links.flags |= NodeCheckFlagsTypeChecked
 E-LITERAL	checker.go:13257	c.checkObjectLiteral	c.pushCachedContextualType(node)
 E-LITERAL	checker.go:13424	c.checkObjectLiteral	c.popContextualType()
-E-LITERAL	checker.go:13865	c.getNarrowedTypeOfSymbol	links.flags |= NodeCheckFlagsInCheckIdentifier
-E-LITERAL	checker.go:13872	c.getNarrowedTypeOfSymbol	links.flags &^= NodeCheckFlagsInCheckIdentifier
+E-ACCESS	checker.go:13865	c.getNarrowedTypeOfSymbol	links.flags |= NodeCheckFlagsInCheckIdentifier
+E-ACCESS	checker.go:13872	c.getNarrowedTypeOfSymbol	links.flags &^= NodeCheckFlagsInCheckIdentifier
 E-CTX	checker.go:29594	c.getContextuallyTypedParameterType	cached := links.resolvedSignature
 E-CTX	checker.go:29595	c.getContextuallyTypedParameterType	links.resolvedSignature = c.anySignature
 E-CTX	checker.go:29605	c.getContextuallyTypedParameterType	links.resolvedSignature = cached

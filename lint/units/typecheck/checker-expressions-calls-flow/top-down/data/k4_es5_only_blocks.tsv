@@ -5,13 +5,6 @@ E-CORE	c.checkExpressionEx	checker.go:7647-7661	1	7647-7648x1 7651-7656x1 7659-7
 E-CORE	c.instantiateTypeWithSingleGenericCallSignature	checker.go:7689-7759	1	7689-7690x1 7690-7692x1
 E-CORE	c.checkExpressionWorker	checker.go:7821-7925	1	7821-7822x1 7833-7834x1 7837-7837x1
 E-FACTS	c.convertAutoToAny	checker.go:31339-31347	1	31339-31340x1 31346-31346x1
-E-FUNC	c.checkCollisionsForDeclarationName	checker.go:10534-10551	1	10534-10535x1 10538-10543x1 10548-10548x1
-E-FUNC	c.checkCollisionWithRequireExportsInGeneratedCode	checker.go:10553-10571	1	10553-10555x1 10555-10557x1
-E-FUNC	c.checkCollisionWithGlobalObjectInGeneratedCode	checker.go:10573-10587	1	10573-10574x1 10574-10576x1
-E-FUNC	c.needCollisionCheckForIdentifier	checker.go:10589-10615	1	10589-10590x1 10590-10592x1
-E-FUNC	c.recordPotentialCollisionWithWeakMapSetInGeneratedCode	checker.go:10629-10636	1	10629-10631x1
-E-FUNC	c.checkCollisionWithGlobalPromiseInGeneratedCode	checker.go:10648-10662	1	10648-10649x1 10649-10651x1
-E-FUNC	c.recordPotentialCollisionWithReflectInGeneratedCode	checker.go:10664-10670	1	10664-10665x1
 F-NARROW	c.getFlowState	flow.go:52-59	1	52-54x1 54-56x1 57-58x1
 F-NARROW	c.putFlowState	flow.go:61-67	1	61-67x1
 F-REACH	c.isReachableFlowNode	flow.go:2513-2520	1	2513-2520x1

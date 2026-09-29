@@ -8,7 +8,6 @@ E-CORE	c.checkExpression	checker.go:7643-7645	2	7643-7645x2
 E-CORE	c.checkExpressionEx	checker.go:7647-7661	3	7647-7648x3 7651-7656x3 7659-7660x3
 E-CORE	c.instantiateTypeWithSingleGenericCallSignature	checker.go:7689-7759	3	7689-7690x3 7690-7692x3
 E-CORE	c.checkExpressionWorker	checker.go:7821-7925	3	7821-7822x3 7823-7824x1 7833-7834x1 7837-7837x1 7856-7857x1
-E-LITERAL	c.getNarrowedTypeOfSymbol	checker.go:13824-13928	1	13824-13827x1 13827-13828x1 13927-13927x1
 E-ACCESS	c.checkIdentifier	checker.go:11132-11290	1	11132-11133x1 11136-11137x1 11140-11140x1 11147-11147x1 11150-11152x1 11155-11161x1 11164-11166x1 11195-11198x1 11198-11199x1 11210-11210x1 11213-11231x1 11237-11251x1 11256-11257x1 11263-11264x1 11266-11268x1 11272-11272x1 11280-11280x1 11285-11285x1 11289-11289x1
 E-ACCESS	c.checkPropertyAccessExpression	checker.go:11334-11340	1	11334-11335x1 11338-11339x1
 E-ACCESS	c.checkPropertyAccessExpressionOrQualifiedName	checker.go:11348-11480	1	11348-11352x1 11355-11358x1 11403-11404x1 11413-11413x1 11415-11417x1 11457-11459x1 11462-11466x1 11470-11470x1 11475-11476x1 11479-11479x1
@@ -19,16 +18,11 @@ E-ACCESS	c.checkPropertyNotUsedBeforeDeclaration	checker.go:11800-11820	1	11800-
 E-ACCESS	c.checkPropertyAccessibility	checker.go:11844-11846	1	11844-11846x1
 E-ACCESS	c.checkPropertyAccessibilityEx	checker.go:11848-11865	1	11848-11850x1 11850-11851x1 11852-11853x1 11864-11864x1
 E-ACCESS	c.checkPropertyAccessibilityAtLocation	checker.go:11877-11989	1	11877-11879x1 11907-11909x1 11919-11919x1 11919-11921x1
+E-ACCESS	c.getNarrowedTypeOfSymbol	checker.go:13824-13928	1	13824-13827x1 13827-13828x1 13927-13927x1
+E-ACCESS	c.markPropertyAsReferenced	checker.go:27829-27853	1	27829-27830x1 27833-27835x1 27835-27837x1
 E-FACTS	c.getTypeFacts	checker.go:31097-31099	1	31097-31099x1
 E-FACTS	c.getTypeFactsWorker	checker.go:31105-31239	1	31105-31106x1 31112-31113x1 31182-31184x1 31184-31186x1 31189-31189x1 31189-31193x1
 E-FACTS	c.convertAutoToAny	checker.go:31339-31347	1	31339-31340x1 31346-31346x1
-E-FUNC	c.checkCollisionsForDeclarationName	checker.go:10534-10551	1	10534-10535x1 10538-10543x1 10548-10548x1
-E-FUNC	c.checkCollisionWithRequireExportsInGeneratedCode	checker.go:10553-10571	1	10553-10555x1 10555-10557x1
-E-FUNC	c.checkCollisionWithGlobalObjectInGeneratedCode	checker.go:10573-10587	1	10573-10574x1 10574-10576x1
-E-FUNC	c.needCollisionCheckForIdentifier	checker.go:10589-10615	1	10589-10590x1 10590-10592x1
-E-FUNC	c.recordPotentialCollisionWithWeakMapSetInGeneratedCode	checker.go:10629-10636	1	10629-10631x1
-E-FUNC	c.checkCollisionWithGlobalPromiseInGeneratedCode	checker.go:10648-10662	1	10648-10649x1 10649-10651x1
-E-FUNC	c.recordPotentialCollisionWithReflectInGeneratedCode	checker.go:10664-10670	1	10664-10665x1
 F-NARROW	c.getNarrowableTypeForReference	checker.go:31614-31630	2	31614-31615x2 31625-31626x2 31629-31629x2
 F-NARROW	c.isGenericTypeWithUnionConstraint	checker.go:31642-31647	2	31642-31643x2 31646-31646x2
 F-NARROW	c.getFlowState	flow.go:52-59	3	52-54x3 54-56x1 57-58x3

@@ -8,7 +8,7 @@ for L in ORDER:
     fl = mine(L)
     n = sum(f['end'] - f['decl'] + 1 for f in fl)
     tn += len(fl); tl += n
-    print('== %s functions %d lines %d step %d of typecheck.md K3' % (L, len(fl), n, RANK[L]))
+    print('== %s functions %d lines %d' % (L, len(fl), n))
     bychunk = collections.OrderedDict()
     for f in fl: bychunk.setdefault('checker/%s.rs' % f['chunk'], []).append(f)
     for ch, ff in bychunk.items():
@@ -52,5 +52,3 @@ for L in ORDER:
     print('called only inside the layer: %s' % ' '.join(sorted(own - called)))
     print('not called in checker or binder: %s' % ' '.join(sorted(set(short(f) for f in fl) - own - called)))
 print('== total functions %d lines %d' % (tn, tl))
-cl = sorted([f for f in fns if f['claimed']], key=lambda f: (f['file'], f['decl']))
-print('== inside the ranges of this unit but of an earlier layer: ' + ' '.join('%s[%s %d-%d]' % (short(f), f['claimed'], f['decl'], f['end']) for f in cl))

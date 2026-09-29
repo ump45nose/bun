@@ -37,7 +37,7 @@ E-OPER	checker.go:12728	c.checkObjectLiteralDestructuringPropertyAssignment	retu
 E-OPER	checker.go:12858	c.checkAssignmentOperator	leftType = c.checkPropertyAccessExpression(left, CheckModeNormal, true /*writeOnly*/)
 E-LITERAL	checker.go:13363	c.checkObjectLiteral	if contextualType != nil && checkMode&CheckModeInferential != 0 && checkMode&CheckModeSkipContextSensitive == 0 && (ast.IsPropertyAssignment(memberDecl) || ast.IsMethodDeclaration(memberDecl)) && c.is
 E-LITERAL	checker.go:13381	c.checkObjectLiteral	t := c.getReducedType(c.checkExpressionEx(memberDecl.Expression(), checkMode&CheckModeInferential))
-E-LITERAL	checker.go:13866	c.getNarrowedTypeOfSymbol	parentType := c.getTypeForBindingElementParent(parent, CheckModeNormal)
+E-ACCESS	checker.go:13866	c.getNarrowedTypeOfSymbol	parentType := c.getTypeForBindingElementParent(parent, CheckModeNormal)
 T-RETINFER	checker.go:20254	c.getReturnTypeFromBody	returnType = c.checkExpressionCachedEx(body, checkMode & ^CheckModeSkipGenericFunctions)
 T-RETINFER	checker.go:20395	c.checkAndAggregateReturnExpressionTypes	t := c.checkExpressionCachedEx(expr, checkMode & ^CheckModeSkipGenericFunctions)
 T-RETINFER	checker.go:20441	c.checkAndAggregateYieldOperandTypes	yieldExprType = c.checkExpressionEx(yieldExpr.Expression(), checkMode & ^CheckModeSkipGenericFunctions)

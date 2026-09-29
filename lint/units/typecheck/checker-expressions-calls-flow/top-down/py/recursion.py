@@ -1,7 +1,8 @@
 # Recursion of the twelve layers: the largest strongly connected component, self recursion, and the cycles through functions of
 # the layers that stay when the tested entries are taken out of the graph. Edges: calls, function values, function-valued fields.
-# The further tested entries of this unit are read from ../data/tested_entries.txt (written by hand).
-import collections, sys
+# The tested entries of the twelve layers are read from ../data/tested_entries.txt: the 54 names of ../../bottom-up/data/recursion.txt.
+# usage: recursion.py [--without-printer]
+import collections, os, sys
 from zones import *
 P = 'Checker.'
 key = lambda f: (f['pkg'], f['q'])
@@ -54,6 +55,7 @@ def sccs(nodes):
 comps = sccs(set(byname))
 big = set(max(comps, key=len))
 own = set(key(f) for f in fns if f['mine'])
+HERE = os.path.dirname(os.path.abspath(__file__))
 def sh(k): return short(byname[k])
 if __name__ == '__main__':
     print('functions %d, largest component %d, functions of the layers %d, of them inside the largest component %d' % (len(byname), len(big), len(own), len(own & big)))
@@ -83,18 +85,19 @@ if __name__ == '__main__':
     SIB_FREE = [('checker', 'getSymbolPath'), ('checker', 'isThislessType'), ('checker', 'getConstituentCount'), ('checker', 'TypeMapper.Map'), ('checker', 'CompareTypes')]
     SIB_OTHER = 'checkSourceElement checkDeferredNode isTypeRelatedTo checkTypeRelatedToEx inferTypes resolveAlias resolveEntityName getExportsOfModule getResolvedMembersOrExportsOfSymbol'.split()
     EXPECTED_OF_US = 'checkExpressionEx checkExpressionCachedEx getTypeOfExpression getFlowTypeOfReferenceEx getContextualType getTypeFacts getTypeWithFacts'.split()
+    missing = [n for n in EXPECTED_OF_US if n not in open(HERE + '/../data/tested_entries.txt').read().split()]
+    print('== entries that the type layers research expects of these layers and that the list lacks: ' + (' '.join(missing) or 'none'))
     MORE = open(HERE + '/../data/tested_entries.txt').read().split()
     S = set(SIB_FREE)
-    for n in SIB_OWN + SIB_OTHER + EXPECTED_OF_US + MORE:
+    for n in SIB_OWN + SIB_OTHER + MORE:
         k = ('checker', P + n) if ('checker', P + n) in byname else ('checker', n)
         if k not in byname: sys.exit('no such function: ' + n)
         S.add(k)
-    DROP = set(k for k, f in byname.items() if f['zone'] in ('P-PRINTER', 'emitresolver', 'services', 'exports'))
+    DROP = set(k for k, f in byname.items() if f['zone'] in ('PRINTER', 'API-EMIT', 'API-SERVICES', 'API-EXPORTS', 'API-REFRESOLVER')) if '--without-printer' in sys.argv else set()
     rest = sccs(set(byname) - S - DROP)
     bad = [c for c in rest if (len(c) > 1 or c[0] in graph[c[0]]) and any(k in own for k in c)]
-    print('== tested entries expected of this unit by the sibling units: ' + ' '.join(EXPECTED_OF_US))
-    print('== further tested entries of this unit: ' + ' '.join(MORE))
-    print('== the type printer, emitresolver.go, services.go and exports.go are taken out of the graph: their own units test their hubs')
+    print('== tested entries of the twelve layers (data/tested_entries.txt, the list of the bottom-up pass): %d' % len(MORE))
+    print('== graph: ' + ('without the type printer, emitresolver.go, services.go, exports.go' if DROP else 'all functions of checker and binder'))
     print('== cycles through functions of the layers that pass no tested entry: %d' % len(bad))
     for c in sorted(bad, key=lambda c: (-len(c), sorted(c))):
         o = sorted(sh(k) + '[' + byname[k]['zone'] + ']' for k in c if k in own)
