@@ -10,7 +10,6 @@ use crate::ShellCompletions;
 use bun_core::{Global, Output};
 use bun_core::{ZStr, strings};
 use bun_js_printer as js_printer;
-use bun_paths::{self, PathBuffer};
 use bun_sys::{self, Fd, File};
 
 use super::add_catalog;
@@ -425,7 +424,7 @@ fn update_package_json_and_install_with_manager_with_updates(
         }
         _ => {
             if matches!(manager.options.patch_features, PatchFeatures::Commit { .. }) {
-                let mut pathbuf = PathBuffer::uninit();
+                let mut pathbuf = bun_paths::path_buffer_pool::get();
                 if let Some(stuff) =
                     patch_package::do_patch_commit(manager, &mut pathbuf, log_level)?
                 {
@@ -706,7 +705,7 @@ pub(super) fn remove_leftover_node_modules(
     updates: &[UpdateRequest],
 ) {
     let cwd = bun_sys::Dir::cwd();
-    let mut node_modules_buf = PathBuffer::uninit();
+    let mut node_modules_buf = bun_paths::path_buffer_pool::get();
     node_modules_buf[..b"node_modules".len()].copy_from_slice(b"node_modules");
     node_modules_buf[b"node_modules".len()] = bun_paths::SEP;
     let name_hashes = manager.lockfile.packages.items_name_hash();
@@ -848,7 +847,7 @@ pub fn update_package_json_and_install_and_cli(
         if manager.options.global {
             if !manager.options.bin_path.is_empty() {
                 if let TrackInstalledBin::Basename(basename) = &manager.track_installed_bin {
-                    let mut path_buf = PathBuffer::uninit();
+                    let mut path_buf = bun_paths::path_buffer_pool::get();
                     let needs_to_print = if let Some(path_env) = bun_core::env_var::PATH.get() {
                         // This is not perfect
                         //

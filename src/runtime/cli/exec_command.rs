@@ -5,7 +5,6 @@ use bun_core::{Global, Output};
 use bun_options_types::schema::api;
 
 use crate::shell::Interpreter;
-use bun_paths;
 
 use crate::command::Context;
 
@@ -83,13 +82,6 @@ impl ExecCommand {
             }
         };
 
-        // if (code > 0) {
-        //     if (code != 2 and !silent) {
-        //         Output.prettyErrorln("<r><red>error<r><d>:<r> script <b>\"{s}\"<r> exited with code {d}<r>", .{ name, code });
-        //         Output.flush();
-        //     }
-
         Global::exit(u32::from(code));
-        // }
     }
 }

@@ -13,7 +13,7 @@ use bun_install::package_manager_real::{
     package_manager_options::LogLevel, setup_global_dir,
 };
 use bun_install::{DependencyID, PackageID, PackageManager, migration};
-use bun_paths::{self as Path, PathBuffer};
+use bun_paths as Path;
 use bun_resolver::fs as Fs;
 use bun_sys::{self, Dir, Fd, File};
 
@@ -429,7 +429,7 @@ Learn more about these at <magenta>https://bun.com/docs/cli/pm<r>.\n";
                 let mut process_env = bun_dotenv::Loader::init();
                 process_env.load_process()?;
                 let cache_dir = fetch_cache_directory_path(&mut process_env, None);
-                let mut rm_buf = PathBuffer::uninit();
+                let mut rm_buf = bun_paths::path_buffer_pool::get();
                 let rm_dir = match Dir::cwd().make_open_path(&cache_dir.path, Default::default()) {
                     Ok(d) => d,
                     Err(err) => {
@@ -521,7 +521,7 @@ Learn more about these at <magenta>https://bun.com/docs/cli/pm<r>.\n";
                 Global::exit(if had_err { 1 } else { 0 });
             }
 
-            let mut dir = PathBuffer::uninit();
+            let mut dir = bun_paths::path_buffer_pool::get();
             let fd = get_cache_directory(pm);
             let outpath = match bun_sys::get_fd_path(fd, &mut dir) {
                 Ok(p) => &p[..],

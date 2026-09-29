@@ -167,7 +167,6 @@ mod _impl {
     use bun_jsc::{
         EncodedSliceJsc as _, JSGlobalObject, JSValue, JsResult, StringJsc, SysErrorJsc, WebWorker,
     };
-    use bun_paths::PathBuffer;
 
     #[cfg(windows)]
     unsafe extern "C" {
@@ -229,9 +228,24 @@ mod _impl {
         if let Some(worker) = vm.worker_ref() {
             // was explicitly overridden for the worker?
             if let Some(exec_argv) = worker.exec_argv() {
-                return JSValue::create_array_from_iter(global_object, exec_argv.iter(), |&wtf| {
-                    super::worker_option_string(wtf).into_js(global_object)
-                });
+                let array =
+                    JSValue::create_array_from_iter(global_object, exec_argv.iter(), |&wtf| {
+                        super::worker_option_string(wtf).into_js(global_object)
+                    })?;
+                // `=strict` is the process's and no Worker runs without it, so a Worker reads it
+                // here whatever `execArgv` it was given (which cannot contain it: the Worker
+                // constructor throws). Node.js's flag is not added: in Node.js a Worker's
+                // `process.execArgv` is what it was given.
+                if bun_core::code_generation_from_strings()
+                    == bun_core::CodeGenerationFromStrings::Disallowed
+                {
+                    array.push(
+                        global_object,
+                        BunString::static_("--disallow-code-generation-from-strings=strict")
+                            .into_js(global_object)?,
+                    )?;
+                }
+                return Ok(array);
             }
         }
 
@@ -301,7 +315,10 @@ mod _impl {
                 std::sync::LazyLock::new(|| {
                     let mut set = bun_collections::StringSet::new();
                     for param in crate::cli::arguments::AUTO_PARAMS.iter() {
-                        if param.takes_value != bun_clap::Values::None {
+                        // An optional value is only ever written `--name=value`.
+                        if param.takes_value != bun_clap::Values::None
+                            && param.takes_value != bun_clap::Values::OneOptional
+                        {
                             if let Some(name) = param.names.long {
                                 let mut k = Vec::with_capacity(2 + name.len());
                                 k.extend_from_slice(b"--");
@@ -448,7 +465,7 @@ mod _impl {
     fn get_cwd(global_object: &JSGlobalObject) -> JsResult<JSValue> {
         // Real syscall (not `bun_core::cwd`): Node's process.cwd() calls
         // uv_cwd(), so a deleted cwd must surface here.
-        let mut buf = PathBuffer::uninit();
+        let mut buf = bun_paths::path_buffer_pool::get();
         match bun_sys::getcwd(&mut buf[..]) {
             bun_sys::Result::Ok(len) => {
                 bun_string_jsc::create_utf8_for_js(global_object, &buf[..len])
@@ -496,7 +513,7 @@ mod _impl {
         // SAFETY: `bun_vm()` returns the live per-thread VM for this global.
         let vm = global_object.bun_vm().as_mut();
 
-        let mut buf = PathBuffer::uninit();
+        let mut buf = bun_paths::path_buffer_pool::get();
         let Ok(slice) = to.slice_z_buf(&mut buf) else {
             return Err(global_object.throw(format_args!("Invalid path")));
         };

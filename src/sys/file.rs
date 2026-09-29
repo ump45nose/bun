@@ -5,7 +5,6 @@
 //! are safe to drop). Use [`File::into_raw`] to hand the fd off,
 //! [`File::borrow`] for a non-owning `&File` view of someone else's fd.
 //! All methods preserve OS errno via [`crate::Maybe`].
-#![allow(clippy::module_inception)]
 
 use super::*;
 
@@ -144,9 +143,6 @@ impl File {
     pub fn read(&self, buf: &mut [u8]) -> Maybe<usize> {
         read(self.handle, buf)
     }
-    pub fn write(&self, buf: &[u8]) -> Maybe<usize> {
-        write(self.handle, buf)
-    }
     pub fn write_all(&self, mut buf: &[u8]) -> Maybe<()> {
         while !buf.is_empty() {
             let n = write(self.handle, buf)?;
@@ -283,9 +279,9 @@ impl File {
         {
             let rt = windows::GetFileType(self.handle.native());
             if rt == windows::FILE_TYPE_UNKNOWN {
-                let err = windows::get_last_win32_error();
+                let err = windows::Win32Error::get();
                 if err != windows::Win32Error::SUCCESS {
-                    return Err(Error::from_code(err.to_e(), Tag::fstat));
+                    return Err(Error::from_win32(err, Tag::fstat));
                 }
             }
             Ok(match rt {

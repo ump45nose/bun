@@ -2,16 +2,14 @@ use bun_core::Output;
 use bun_core::strings;
 #[cfg(not(windows))]
 use bun_core::{Global, env_var, note, pretty_errorln, print_errorln};
-#[cfg(windows)]
-use bun_paths::WPathBuffer;
 #[cfg(not(windows))]
-use bun_paths::{PathBuffer, platform, resolve_path};
+use bun_paths::{platform, resolve_path};
 #[cfg(not(windows))]
 use bun_sys::E;
 use bun_sys::{self, File};
 
 #[cfg(not(windows))]
-use crate::shell_completions::{Shell, ShellCompletionsExt as _};
+use crate::cli::shell_completions::{Shell, ShellCompletionsExt as _};
 
 pub(crate) struct InstallCompletionsCommand;
 
@@ -25,7 +23,7 @@ impl InstallCompletionsCommand {
 
     #[cfg(not(windows))]
     fn install_bunx_symlink_posix(cwd: &[u8]) -> Result<(), crate::Error> {
-        let mut buf = PathBuffer::uninit();
+        let mut buf = bun_paths::path_buffer_pool::get();
 
         // don't install it if it's already there
         if bun_which::which(
@@ -41,7 +39,7 @@ impl InstallCompletionsCommand {
 
         // first try installing the symlink into the same directory as the bun executable
         let exe = bun_core::self_exe_path()?;
-        let mut link_buf = PathBuffer::uninit();
+        let mut link_buf = bun_paths::path_buffer_pool::get();
         let link_path = buf_print_z(
             &mut link_buf,
             format_args!(
@@ -116,7 +114,7 @@ impl InstallCompletionsCommand {
             strings::last_index_of_char_t(image_path, u16::from(b'\\')).expect("unreachable");
         let image_dirname = &image_path[..last_sep + 1];
 
-        let mut bunx_path_buf = WPathBuffer::uninit();
+        let mut bunx_path_buf = bun_paths::w_path_buffer_pool::get();
 
         let cmd_suffix: &[u16] = if bun_core::env::IS_DEBUG {
             w!("bunx-debug.cmd")
@@ -190,7 +188,7 @@ impl InstallCompletionsCommand {
 
         const CONTENT: &[u8] = include_bytes!("uninstall.ps1");
 
-        let mut bunx_path_buf = WPathBuffer::uninit();
+        let mut bunx_path_buf = bun_paths::w_path_buffer_pool::get();
         let uninstaller_path = strings::concat_buf_t::<u16>(
             &mut bunx_path_buf,
             &[
@@ -533,12 +531,12 @@ impl InstallCompletionsCommand {
 
             // Check if they need to load the zsh completions file into their .zshrc
             if shell == Shell::Zsh {
-                let mut completions_path_buf = PathBuffer::uninit();
+                let mut completions_path_buf = bun_paths::path_buffer_pool::get();
                 let completions_path: &[u8] = resolve_path::join_string_buf::<platform::Auto>(
                     &mut completions_path_buf,
                     &[completions_dir, filename],
                 );
-                let mut zshrc_filepath = PathBuffer::uninit();
+                let mut zshrc_filepath = bun_paths::path_buffer_pool::get();
                 let needs_to_tell_them_to_add_completions_file: bool = 'brk: {
                     let dot_zshrc: File = 'zshrc: {
                         'first: {
@@ -633,11 +631,6 @@ impl InstallCompletionsCommand {
                     let Ok(read) = dot_zshrc.pread_all(&mut buf, 0) else {
                         break 'brk true;
                     };
-
-                    #[cfg(windows)]
-                    {
-                        dot_zshrc.seek_to(0)?;
-                    }
 
                     let contents = &buf[..read];
 

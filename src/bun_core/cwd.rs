@@ -128,7 +128,7 @@ pub fn get_z() -> &'static ZStr {
 /// Node starts from a deleted directory — and [`require`] reports the error
 /// to commands that must not guess.
 pub fn startup() {
-    let mut buf = PathBuffer::uninit();
+    let mut buf = PathBuffer::ZEROED;
     match crate::getcwd(&mut buf) {
         Ok(cwd) => {
             set(cwd.as_bytes());

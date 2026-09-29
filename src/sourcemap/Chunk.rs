@@ -1,6 +1,5 @@
 use bun_ast::{Loc, Source};
 use bun_core::{MutableString, strings};
-use bun_paths::PathBuffer;
 use bun_ptr::RawSlice;
 
 use crate::{
@@ -75,7 +74,7 @@ fn print_source_map_contents_json<const ASCII_ONLY: bool>(
     include_sources_contents: bool,
     mappings: &[u8],
 ) -> Result<(), crate::Error> {
-    let mut filename_buf = PathBuffer::uninit();
+    let mut filename_buf = bun_paths::path_buffer_pool::get();
     let mut filename: &[u8] = source.path.text;
     let top_level_dir: &[u8] = bun_core::cwd::get();
     // The separator after the directory (a root's own) becomes the leading `/`.

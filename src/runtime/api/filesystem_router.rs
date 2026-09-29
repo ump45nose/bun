@@ -47,7 +47,7 @@ use crate::webcore::{Request, Response};
 // (`crate::api::filesystem_router::FrameworkFileSystemRouter`). The
 // implementation is `bake::framework_router::JSFrameworkRouter`; re-export the
 // real type so the codegen-generated thunks resolve without a stub.
-pub use crate::bake::framework_router::JSFrameworkRouter as FrameworkFileSystemRouter;
+pub(crate) use crate::bake::framework_router::JSFrameworkRouter as FrameworkFileSystemRouter;
 
 const DEFAULT_EXTENSIONS: &[&[u8]] = &[b"tsx", b"jsx", b"ts", b"mjs", b"cjs", b"js"];
 
@@ -86,7 +86,7 @@ bun_jsc::codegen_cached_accessors!("FileSystemRouter"; routes);
 // mutate. The codegen shim may still emit `this: &mut FileSystemRouter` —
 // `&mut T` reborrows to `&T` so the impls compile against either.
 #[bun_jsc::JsClass]
-pub struct FileSystemRouter {
+pub(crate) struct FileSystemRouter {
     // BACKREF — interned `RefString`s live in the VM cache and outlive this
     // router (we hold +1 via `claim` in `constructor`, released in `finalize`).
     pub(crate) origin: Option<BackRef<RefString>>,
@@ -513,7 +513,7 @@ impl FileSystemRouter {
     }
 
     #[bun_jsc::host_fn(method)]
-    pub fn r#match(
+    pub(crate) fn r#match(
         this: &Self,
         global_this: &JSGlobalObject,
         callframe: &CallFrame,
@@ -665,7 +665,7 @@ impl FileSystemRouter {
     // and requires `fn finalize(self: Box<Self>)`; clippy::boxed_local is a
     // false positive on that contract.
     #[allow(clippy::boxed_local)]
-    pub fn finalize(mut self: Box<Self>) {
+    pub(crate) fn finalize(mut self: Box<Self>) {
         // Note: `BackRef` Derefs to `&RefString`; use `.get()` to avoid
         // resolving to `<BackRef as Deref>::deref`.
         if let Some(p) = self.asset_prefix.take() {
@@ -681,7 +681,7 @@ impl FileSystemRouter {
 }
 
 #[bun_jsc::JsClass(no_construct, no_constructor)]
-pub struct MatchedRoute {
+pub(crate) struct MatchedRoute {
     /// Self-referential: always points at `self.route_holder`. See `init`.
     // Note: `Match<'a>` borrows (a) the resolver's process-lifetime DirnameStore for
     // `name`/`file_path`/`basename`/`path` and (b) `self.pathname_backing` for
@@ -832,7 +832,7 @@ impl MatchedRoute {
         bun_string_jsc::create_utf8_for_js(global_this, this.route().file_path)
     }
 
-    pub fn finalize(self: Box<Self>) {
+    pub(crate) fn finalize(self: Box<Self>) {
         Self::deinit(self);
     }
 
@@ -895,9 +895,7 @@ impl MatchedRoute {
 
     #[bun_jsc::host_fn(getter)]
     pub(crate) fn get_script_src(this: &Self, global_this: &JSGlobalObject) -> JsResult<JSValue> {
-        // `bun_object::get_public_path_with_asset_prefix` takes `core::fmt::Write`, so write
-        // into a `String` (path components are UTF-8 in practice).
-        let mut writer = String::with_capacity(MAX_PATH_BYTES);
+        let mut src: Vec<u8> = Vec::new();
         let origin_url = if let Some(ref origin) = this.origin {
             URL::parse(origin.leak())
         } else {
@@ -916,10 +914,10 @@ impl MatchedRoute {
             } else {
                 b""
             },
-            &mut writer,
+            &mut src,
             path::Platform::Posix,
         );
-        bun_string_jsc::create_utf8_for_js(global_this, writer.as_bytes())
+        bun_string_jsc::create_utf8_for_js(global_this, &src)
     }
 
     #[bun_jsc::host_fn(getter)]

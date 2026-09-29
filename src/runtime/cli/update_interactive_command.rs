@@ -226,7 +226,7 @@ impl UpdateInteractiveCommand {
         // Write the updated package.json
         // Routes through `bun_sys::File::write_file` (cwd-relative
         // open + write + close) per src/CLAUDE.md.
-        let mut path_zbuf = PathBuffer::uninit();
+        let mut path_zbuf = bun_paths::path_buffer_pool::get();
         let path_z = path::resolve_path::z(package_json_path, &mut path_zbuf);
         if let Err(err) =
             bun_sys::File::write_file(bun_sys::Fd::cwd(), path_z, &new_package_json_source)
@@ -328,7 +328,7 @@ impl UpdateInteractiveCommand {
         while let Some((workspace_path, workspace_update_idxs)) = it.next() {
             // Build the package.json path for this workspace
             let root_dir = bun_core::cwd::get();
-            let mut path_buf = PathBuffer::uninit();
+            let mut path_buf = bun_paths::path_buffer_pool::get();
             let package_json_path =
                 Self::build_package_json_path(root_dir, workspace_path, &mut path_buf);
 
@@ -457,7 +457,7 @@ impl UpdateInteractiveCommand {
         while let Some((workspace_path, updates_for_workspace)) = workspace_it.next() {
             // Build the package.json path for this workspace
             let root_dir = bun_core::cwd::get();
-            let mut path_buf = PathBuffer::uninit();
+            let mut path_buf = bun_paths::path_buffer_pool::get();
             let package_json_path =
                 Self::build_package_json_path(root_dir, workspace_path, &mut path_buf);
 
@@ -1224,10 +1224,7 @@ impl UpdateInteractiveCommand {
         let result = match Self::process_multi_select(&mut state, terminal_size) {
             Ok(r) => r,
             Err(err) => {
-                if matches!(
-                    err,
-                    crate::Error::EndOfStream | crate::Error::Core(bun_core::Error::EndOfStream)
-                ) {
+                if matches!(err, crate::Error::Core(bun_core::Error::EndOfStream)) {
                     Output::flush();
                     bun_core::prettyln!("\n<r><red>x<r> Cancelled");
                     Global::exit(0);
@@ -1939,7 +1936,7 @@ impl UpdateInteractiveCommand {
                     // ctrl+c, ctrl+d
                     reprint_menu = false;
                     cleanup_and_reprint!(reprint_menu);
-                    return Err(crate::Error::EndOfStream);
+                    return Err(crate::Error::Core(bun_core::Error::EndOfStream));
                 }
                 b' ' => {
                     state.selected[state.cursor] = !state.selected[state.cursor];
