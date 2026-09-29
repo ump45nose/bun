@@ -6,7 +6,6 @@ use crate::core::{TextRange, compute_ecma_line_starts};
 use crate::diagnostics::{self, Category, Locale};
 use crate::diagnosticwriter::{FormattingOptions, write_format_diagnostics};
 use crate::ids::{DiagnosticId, NodeId};
-use core::cmp::Ordering;
 
 struct TestFile {
     name: &'static [u8],
@@ -151,7 +150,7 @@ fn chain_related_and_columns() {
         files: &files,
     };
     let mut list = vec![after_separator, head, wide, global];
-    list.sort_by(|a, b| view.compare_diagnostics(*a, *b));
+    crate::slices::sort_stable_func(&mut list, |a, b| view.compare_diagnostics(a, b));
     assert_eq!(list, vec![global, wide, head, after_separator]);
     assert_eq!(
         plain(&store, &files, &list),
@@ -232,7 +231,7 @@ fn collection_deduplicates_at_add_and_program_merges() {
         files: &files,
     };
     assert!(view.equal_diagnostics_no_related_info(kept, first));
-    assert_eq!(view.compare_diagnostics(first, third), Ordering::Equal);
+    assert_eq!(view.compare_diagnostics(first, third), 0);
     assert_eq!(
         plain(&store, &files, &merged),
         b"a.ts(1,1): error TS2300: Duplicate identifier 'a'.\na.ts(2,1): error TS2300: Duplicate identifier 'b'.\na.ts(2,1): error TS2300: Duplicate identifier 'c'.\n"

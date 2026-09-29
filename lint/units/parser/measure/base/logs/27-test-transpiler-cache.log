@@ -1,0 +1,5 @@
+# HEAD e3566be889 dirty: []
+$ BUN_DEBUG_QUIET_LOGS=1 bun scripts/build.ts --profile=debug --quiet test test/cli/run/transpiler-cache.test.ts --timeout "180000"
+bun test v1.4.3 (e3566be88)
+
+test/cli/run/transpiler-cache.test.ts:

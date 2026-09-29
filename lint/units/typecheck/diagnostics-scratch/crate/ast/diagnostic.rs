@@ -389,7 +389,7 @@ impl<'a, F: SourceFiles + ?Sized> Diagnostics<'a, F> {
             && a.code == b.code
             && a.category == b.category
             && a.source == b.source
-            && self.compare_message_identity(d1, d2) == Ordering::Equal
+            && self.compare_message_identity(d1, d2) == 0
             && a.message_args == b.message_args
             && a.message_chain.len() == b.message_chain.len()
             && a.message_chain
@@ -407,7 +407,7 @@ impl<'a, F: SourceFiles + ?Sized> Diagnostics<'a, F> {
     }
 
     // Two table messages with one code have one key, so the keys are only built when something else is compared.
-    fn compare_message_identity(&self, d1: DiagnosticId, d2: DiagnosticId) -> Ordering {
+    fn compare_message_identity(&self, d1: DiagnosticId, d2: DiagnosticId) -> isize {
         let (a, b) = (&self.store[d1], &self.store[d2]);
         if a.message == b.message
             && a.message.is_valid()
@@ -416,11 +416,12 @@ impl<'a, F: SourceFiles + ?Sized> Diagnostics<'a, F> {
             && a.message_key.is_empty()
             && b.message_key.is_empty()
         {
-            return Ordering::Equal;
+            return 0;
         }
-        self.get_diagnostic_message_identity(d1)
-            .bytes()
-            .cmp(self.get_diagnostic_message_identity(d2).bytes())
+        compare_strings(
+            self.get_diagnostic_message_identity(d1).bytes(),
+            self.get_diagnostic_message_identity(d2).bytes(),
+        )
     }
 
     fn equal_message_chain(&self, c1: DiagnosticId, c2: DiagnosticId, depth: u32) -> bool {
@@ -445,9 +446,9 @@ impl<'a, F: SourceFiles + ?Sized> Diagnostics<'a, F> {
         c1: &[DiagnosticId],
         c2: &[DiagnosticId],
         depth: u32,
-    ) -> Ordering {
-        let c = c2.len().cmp(&c1.len());
-        if c != Ordering::Equal || depth > MAX_NESTING {
+    ) -> isize {
+        let c = compare_lengths(c2.len(), c1.len());
+        if c != 0 || depth > MAX_NESTING {
             return c;
         }
         for (a, b) in c1.iter().zip(c2) {
@@ -456,11 +457,11 @@ impl<'a, F: SourceFiles + ?Sized> Diagnostics<'a, F> {
                 &self.store[*b].message_chain,
                 depth + 1,
             );
-            if c != Ordering::Equal {
+            if c != 0 {
                 return c;
             }
         }
-        Ordering::Equal
+        0
     }
 
     fn compare_message_chain_content(
@@ -468,14 +469,14 @@ impl<'a, F: SourceFiles + ?Sized> Diagnostics<'a, F> {
         c1: &[DiagnosticId],
         c2: &[DiagnosticId],
         depth: u32,
-    ) -> Ordering {
+    ) -> isize {
         if depth > MAX_NESTING {
-            return Ordering::Equal;
+            return 0;
         }
         for (a, b) in c1.iter().zip(c2) {
             let (a, b) = (&self.store[*a], &self.store[*b]);
-            let c = a.message_args.cmp(&b.message_args);
-            if c != Ordering::Equal {
+            let c = compare_string_slices(&a.message_args, &b.message_args);
+            if c != 0 {
                 return c;
             }
             if !a.message_chain.is_empty() {
@@ -484,82 +485,75 @@ impl<'a, F: SourceFiles + ?Sized> Diagnostics<'a, F> {
                     &b.message_chain,
                     depth + 1,
                 );
-                if c != Ordering::Equal {
+                if c != 0 {
                     return c;
                 }
             }
         }
-        Ordering::Equal
+        0
     }
 
-    fn compare_related_info(
-        &self,
-        r1: &[DiagnosticId],
-        r2: &[DiagnosticId],
-        depth: u32,
-    ) -> Ordering {
-        let c = r2.len().cmp(&r1.len());
-        if c != Ordering::Equal {
+    fn compare_related_info(&self, r1: &[DiagnosticId], r2: &[DiagnosticId], depth: u32) -> isize {
+        let c = compare_lengths(r2.len(), r1.len());
+        if c != 0 {
             return c;
         }
         for (a, b) in r1.iter().zip(r2) {
             let c = self.compare_diagnostics_at(*a, *b, depth + 1);
-            if c != Ordering::Equal {
+            if c != 0 {
                 return c;
             }
         }
-        Ordering::Equal
+        0
     }
 
-    pub fn compare_diagnostics(&self, d1: DiagnosticId, d2: DiagnosticId) -> Ordering {
+    pub fn compare_diagnostics(&self, d1: DiagnosticId, d2: DiagnosticId) -> isize {
         self.compare_diagnostics_at(d1, d2, 0)
     }
 
-    fn compare_diagnostics_at(&self, d1: DiagnosticId, d2: DiagnosticId, depth: u32) -> Ordering {
+    fn compare_diagnostics_at(&self, d1: DiagnosticId, d2: DiagnosticId, depth: u32) -> isize {
         if d1 == d2 || depth > MAX_NESTING {
-            return Ordering::Equal;
+            return 0;
         }
         let (a, b) = (&self.store[d1], &self.store[d2]);
-        let c = self
-            .get_diagnostic_path(d1)
-            .cmp(self.get_diagnostic_path(d2));
-        if c != Ordering::Equal {
+        let c = compare_strings(self.get_diagnostic_path(d1), self.get_diagnostic_path(d2));
+        if c != 0 {
             return c;
         }
-        let c = a.loc.pos().cmp(&b.loc.pos());
-        if c != Ordering::Equal {
+        let c = (a.loc.pos() as isize) - (b.loc.pos() as isize);
+        if c != 0 {
             return c;
         }
-        let c = a.loc.end().cmp(&b.loc.end());
-        if c != Ordering::Equal {
+        let c = (a.loc.end() as isize) - (b.loc.end() as isize);
+        if c != 0 {
             return c;
         }
-        let c = a.code.cmp(&b.code);
-        if c != Ordering::Equal {
+        let c = (a.code as isize) - (b.code as isize);
+        if c != 0 {
             return c;
         }
-        let c = (a.category as u8).cmp(&(b.category as u8));
-        if c != Ordering::Equal {
+        let c = (a.category as isize) - (b.category as isize);
+        if c != 0 {
             return c;
         }
-        let c = a.source.cmp(&b.source);
-        if c != Ordering::Equal {
+        let c = compare_strings(&a.source, &b.source);
+        if c != 0 {
             return c;
         }
         let c = self.compare_message_identity(d1, d2);
-        if c != Ordering::Equal {
+        if c != 0 {
             return c;
         }
-        let c = a.message_args.cmp(&b.message_args);
-        if c != Ordering::Equal {
+        let c = compare_string_slices(&a.message_args, &b.message_args);
+        if c != 0 {
             return c;
         }
         let c = self.compare_message_chain_size(&a.message_chain, &b.message_chain, 0);
-        if c != Ordering::Equal {
+        if c != 0 {
             return c;
         }
         let c = self.compare_message_chain_content(&a.message_chain, &b.message_chain, 0);
-        if c != Ordering::Equal {
+        if c != 0 {
             return c;
         }
         self.compare_related_info(&a.related_information, &b.related_information, depth)
@@ -653,12 +647,12 @@ impl DiagnosticsCollection {
         } else {
             self.get_global_diagnostics(d)
         };
-        let i = diagnostics
-            .partition_point(|&e| d.compare_diagnostics(e, diagnostic) == Ordering::Less);
-        match diagnostics.get(i) {
-            Some(&found) if d.compare_diagnostics(found, diagnostic) == Ordering::Equal => found,
-            _ => DiagnosticId::NIL,
+        let (i, ok) =
+            binary_search_func(&diagnostics, diagnostic, |a, b| d.compare_diagnostics(a, b));
+        if ok {
+            return diagnostics.get(i).copied().unwrap_or_default();
         }
+        DiagnosticId::NIL
     }
 
     pub fn get_global_diagnostics<F: SourceFiles + ?Sized>(
@@ -666,8 +660,9 @@ impl DiagnosticsCollection {
         d: Diagnostics<'_, F>,
     ) -> Vec<DiagnosticId> {
         if !self.non_file_diagnostics_sorted {
-            self.non_file_diagnostics
-                .sort_by(|a, b| d.compare_diagnostics(*a, *b));
+            sort_stable_func(&mut self.non_file_diagnostics, |a, b| {
+                d.compare_diagnostics(a, b)
+            });
             self.non_file_diagnostics_sorted = true;
         }
         self.non_file_diagnostics.clone()
@@ -682,7 +677,7 @@ impl DiagnosticsCollection {
             return Vec::new();
         };
         if self.file_diagnostics_sorted.insert(file, ()).is_none() {
-            list.sort_by(|a, b| d.compare_diagnostics(*a, *b));
+            sort_stable_func(list, |a, b| d.compare_diagnostics(a, b));
         }
         list.clone()
     }
@@ -698,7 +693,7 @@ impl DiagnosticsCollection {
                 diagnostics.extend_from_slice(list);
             }
         }
-        diagnostics.sort_by(|a, b| d.compare_diagnostics(*a, *b));
+        sort_func(&mut diagnostics, |a, b| d.compare_diagnostics(a, b));
         diagnostics
     }
 }

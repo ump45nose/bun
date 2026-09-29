@@ -11,6 +11,7 @@ pub mod compiler;
 pub mod core;
 pub mod diagnostics;
 pub mod diagnosticwriter;
+pub mod slices;
 
 #[cfg(test)]
 mod tests;

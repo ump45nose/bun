@@ -1,6 +1,7 @@
 // Port of SortAndDeduplicateDiagnostics and compactAndMergeRelatedInfos of internal/compiler/program.go.
 use crate::ast::diagnostic::{DiagnosticStore, Diagnostics, SourceFiles};
 use crate::ids::DiagnosticId;
+use crate::slices::sort_func;
 
 pub fn sort_and_deduplicate_diagnostics<F: SourceFiles + ?Sized>(
     store: &mut DiagnosticStore,
@@ -9,7 +10,7 @@ pub fn sort_and_deduplicate_diagnostics<F: SourceFiles + ?Sized>(
 ) -> Vec<DiagnosticId> {
     let mut diagnostics = diagnostics.to_vec();
     let d = Diagnostics { store, files };
-    diagnostics.sort_by(|a, b| d.compare_diagnostics(*a, *b));
+    sort_func(&mut diagnostics, |a, b| d.compare_diagnostics(a, b));
     compact_and_merge_related_infos(store, files, diagnostics)
 }
 
@@ -42,7 +43,7 @@ fn compact_and_merge_related_infos<F: SourceFiles + ?Sized>(
             }
             if !related_infos.is_empty() {
                 let view = Diagnostics { store, files };
-                related_infos.sort_by(|a, b| view.compare_diagnostics(*a, *b));
+                sort_func(&mut related_infos, |a, b| view.compare_diagnostics(a, b));
                 related_infos.dedup_by(|b, a| view.equal_diagnostics(*a, *b));
                 d = store.clone_diagnostic(d);
                 store.set_related_info(d, related_infos);
