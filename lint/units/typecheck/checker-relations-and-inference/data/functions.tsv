@@ -85,7 +85,7 @@ R-VARIANCE	relater.go	1476-1485	c.hasCovariantVoidArgument	0
 R-SIGREL	relater.go	1487-1489	c.isSignatureAssignableTo	0		
 R-SIGREL	relater.go	1491-1673	c.compareSignaturesRelated	0	1224,2202,2203,2204,2205,2328,2685,2849	
 R-SIGREL	relater.go	1675-1705	c.compareTypePredicateRelatedTo	0	1226,1227,2518	
-R-SIGREL	relater.go	1707-1720	c.isTopSignature	0		
+prior T-SIGSHAPE	relater.go	1707-1720	c.isTopSignature	0		
 prior T-SIGSHAPE	relater.go	1722-1735	c.getParameterCount	0		
 prior T-SIGSHAPE	relater.go	1737-1739	c.getMinArgumentCount	0		
 prior T-SIGSHAPE	relater.go	1741-1780	c.getMinArgumentCountEx	2		
@@ -106,12 +106,12 @@ prior T-SIGSHAPE	relater.go	1954-1960	c.isInstantiatedGenericParameter	0
 prior T-SIGSHAPE	relater.go	1962-1974	c.getParameterNameAtPosition	0		
 prior T-SIGSHAPE	relater.go	1976-1990	c.getTupleElementLabel	0		
 prior T-SIGSHAPE	relater.go	1992-2047	c.getTupleElementLabelFromBindingElement	0		
-prior K-PRED	relater.go	2049-2081	c.getTypePredicateOfSignature	0		
-prior K-PRED	relater.go	2083-2111	c.getUnionOrIntersectionTypePredicate	0		
-prior K-PRED	relater.go	2113-2115	c.typePredicateKindsMatch	0		
-prior K-PRED	relater.go	2117-2131	c.createTypePredicateFromTypePredicateNode	1		
-prior K-PRED	relater.go	2133-2139	c.instantiateTypePredicate	0		
-prior K-PRED	relater.go	2141-2143	c.newTypePredicate	0		
+prior T-SIGSHAPE or K-PRED	relater.go	2049-2081	c.getTypePredicateOfSignature	0		
+prior T-SIGSHAPE or K-PRED	relater.go	2083-2111	c.getUnionOrIntersectionTypePredicate	0		
+prior T-SIGSHAPE or K-PRED	relater.go	2113-2115	c.typePredicateKindsMatch	0		
+prior T-SIGSHAPE or K-PRED	relater.go	2117-2131	c.createTypePredicateFromTypePredicateNode	1		
+prior T-SIGSHAPE or K-PRED	relater.go	2133-2139	c.instantiateTypePredicate	0		
+prior T-SIGSHAPE or K-PRED	relater.go	2141-2143	c.newTypePredicate	0		
 prior T-SIGSHAPE	relater.go	2145-2150	c.isResolvingReturnTypeOfSignature	0		
 R-SIGREL	relater.go	2152-2185	c.findMatchingSignatures	0		
 R-SIGREL	relater.go	2187-2195	c.findMatchingSignature	0		
@@ -120,14 +120,14 @@ R-SIGREL	relater.go	2260-2278	c.isMatchingSignature	0
 R-SIGREL	relater.go	2280-2301	c.compareTypeParametersIdentical	0		
 R-SIGREL	relater.go	2303-2313	c.compareTypePredicatesIdentical	0		
 R-REL	relater.go	2315-2352	c.getEffectiveConstraintOfIntersection	0		
-R-REL	relater.go	2354-2363	c.templateLiteralTypesDefinitelyUnrelated	0		
-R-REL	relater.go	2365-2376	c.isTypeMatchedByTemplateLiteralType	0		
-R-REL	relater.go	2378-2395	c.inferTypesFromTemplateLiteralType	1		
-R-REL	relater.go	2397-2500	c.inferFromLiteralPartsToTemplateLiteral	2		
-R-REL	relater.go	2502-2507	c.getStringLikeTypeForType	0		
-R-REL	relater.go	2509-2529	c.isValidTypeForTemplateLiteralPlaceholder	1		
-R-REL	relater.go	2531-2549	c.isMemberOfStringMapping	0		
-R-REL	relater.go	2551-2557	c.applyTargetStringMappingToSource	0		
+later K-TEMPLATE	relater.go	2354-2363	c.templateLiteralTypesDefinitelyUnrelated	0		
+later K-TEMPLATE	relater.go	2365-2376	c.isTypeMatchedByTemplateLiteralType	0		
+later K-TEMPLATE	relater.go	2378-2395	c.inferTypesFromTemplateLiteralType	1		
+later K-TEMPLATE	relater.go	2397-2500	c.inferFromLiteralPartsToTemplateLiteral	2		
+later K-TEMPLATE	relater.go	2502-2507	c.getStringLikeTypeForType	0		
+later K-TEMPLATE	relater.go	2509-2529	c.isValidTypeForTemplateLiteralPlaceholder	1		
+later K-TEMPLATE	relater.go	2531-2549	c.isMemberOfStringMapping	0		
+later K-TEMPLATE	relater.go	2551-2557	c.applyTargetStringMappingToSource	0		
 R-SIGREL	relater.go	2559-2567	visibilityToString	0		
 R-REL	relater.go	2599-2606	c.getRelater	0		
 R-REL	relater.go	2608-2619	c.putRelater	0		

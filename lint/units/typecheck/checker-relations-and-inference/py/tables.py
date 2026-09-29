@@ -13,12 +13,12 @@ R = 'checker/relater.go'; I = 'checker/inference.go'; C = 'checker/checker.go'
 FINAL = [
     ('R-REL', R, 18, 87), ('prior T-CONSTRAINT', R, 89, 96), ('R-REL', R, 98, 422), ('R-ELAB', R, 424, 675),
     ('R-REL', R, 677, 808), ('prior T-CONSTRAINT', R, 810, 870), ('R-DISCRIM', R, 872, 950), ('R-REL', R, 952, 1028),
-    ('R-DISCRIM', R, 1030, 1268), ('R-REL', R, 1270, 1315), ('R-VARIANCE', R, 1317, 1485), ('R-SIGREL', R, 1487, 1720),
-    ('prior T-SIGSHAPE', R, 1722, 1913), ('prior T-TUPLE', R, 1915, 1945), ('prior T-SIGSHAPE', R, 1947, 2047),
-    ('prior K-PRED', R, 2049, 2143), ('prior T-SIGSHAPE', R, 2145, 2150), ('R-SIGREL', R, 2152, 2313),
-    ('R-REL', R, 2315, 2557), ('R-SIGREL', R, 2559, 2567), ('R-REL', R, 2569, 3933), ('R-VARIANCE', R, 3935, 3999),
-    ('R-REL', R, 4001, 4019), ('R-DISCRIM', R, 4021, 4130), ('R-REL', R, 4132, 4471), ('R-SIGREL', R, 4473, 4608),
-    ('R-REL', R, 4610, 5026), ('omitted: tracing only', R, 5028, 5044),
+    ('R-DISCRIM', R, 1030, 1268), ('R-REL', R, 1270, 1315), ('R-VARIANCE', R, 1317, 1485), ('R-SIGREL', R, 1487, 1705),
+    ('prior T-SIGSHAPE', R, 1707, 1913), ('prior T-TUPLE', R, 1915, 1945), ('prior T-SIGSHAPE', R, 1947, 2047),
+    ('prior T-SIGSHAPE or K-PRED', R, 2049, 2143), ('prior T-SIGSHAPE', R, 2145, 2150), ('R-SIGREL', R, 2152, 2313),
+    ('R-REL', R, 2315, 2352), ('later K-TEMPLATE', R, 2354, 2557), ('R-SIGREL', R, 2559, 2567), ('R-REL', R, 2569, 3933),
+    ('R-VARIANCE', R, 3935, 3999), ('R-REL', R, 4001, 4019), ('R-DISCRIM', R, 4021, 4130), ('R-REL', R, 4132, 4471),
+    ('R-SIGREL', R, 4473, 4608), ('R-REL', R, 4610, 5026), ('omitted: tracing only', R, 5028, 5044),
     ('I-INFER', I, 11, 998), ('I-REVMAP', I, 1000, 1183), ('I-INFER', I, 1185, 1684),
     ('R-REL', C, 12019, 12026), ('R-REL', C, 13208, 13219), ('R-REL', C, 27988, 28023), ('R-REL', C, 28163, 28248),
 ]
@@ -70,6 +70,8 @@ for f in fns:
     f['own'] = f['my'] if f['my'] in ORDER else None
     f['other'] = pick(TYPE_LAYERS + CORE, f)
     if f['my'] and f['my'].startswith('prior '):
+        f['other'] = f['my'][6:].split(' or ')[0]
+    if f['my'] and f['my'].startswith('later '):
         f['other'] = f['my'][6:]
     f['sec'] = section(f)
     by.setdefault(f['name'], f)
@@ -92,7 +94,7 @@ rows = ['upstream path\tlines\tgroup\tRust module\tstate\tcommit']
 for L, file, lo, hi in FINAL:
     fs = sorted([f for f in fns if f['file'] == file and lo <= f['decl'] <= hi], key=lambda f: f['decl'])
     names = (short(fs[0]['name']) + (' .. ' + short(fs[-1]['name']) if len(fs) > 1 else '')) if fs else 'types and constants'
-    module = {R: 'checker/relater.rs', I: 'checker/inference.rs', C: 'checker/checker.rs'}[file]
+    module = {R: 'checker/relater.rs', I: 'checker/inference.rs', C: 'checker/' + section({'file': C, 'decl': lo}) + '.rs'}[file]
     rows.append(f"internal/{file}\t{lo}-{hi}\t{L}: {names} ({len(fs)})\t{module}\tnot started\t89d5d5b")
 w('port_status_rows.tsv', rows)
 

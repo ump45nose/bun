@@ -1,13 +1,13 @@
 == R-REL
-  before TYPES: Type.AsIntrinsicType@typ705 Type.AsLiteralType@typ706 Type.AsMappedType@typ712 Type.AsReverseMappedType@typ713 Type.AsTypeParameter@typ715 Type.AsUnionType@typ716 Type.AsIntersectionType@typ717 Type.AsIndexType@typ718 Type.AsIndexedAccessType@typ719 Type.AsTemplateLiteralType@typ720 Type.AsStringMappingType@typ721 Type.AsSubstitutionType@typ722 Type.AsConditionalType@typ723 Type.AsTypeReference@typ730 Type.AsInterfaceType@typ731 Type.Distributed@typ736 Type.Target@typ748 Type.Types@typ776 Type.TargetTupleType@typ790 Type.Symbol@typ794 InterfaceType.TypeParameters@typ1042
+  before TYPES: Type.AsLiteralType@typ706 Type.AsMappedType@typ712 Type.AsReverseMappedType@typ713 Type.AsTypeParameter@typ715 Type.AsUnionType@typ716 Type.AsIntersectionType@typ717 Type.AsIndexType@typ718 Type.AsIndexedAccessType@typ719 Type.AsTemplateLiteralType@typ720 Type.AsStringMappingType@typ721 Type.AsSubstitutionType@typ722 Type.AsConditionalType@typ723 Type.AsTypeReference@typ730 Type.AsInterfaceType@typ731 Type.Distributed@typ736 Type.Target@typ748 Type.Types@typ776 Type.TargetTupleType@typ790 Type.Symbol@typ794 InterfaceType.TypeParameters@typ1042
   before MAPPER: newTypeMapper@map40 newSimpleTypeMapper@map114
-  before UTIL: NewDiagnosticForNode@uti22 isStaticPrivateIdentifierProperty@uti72 getDeclarationModifierFlagsFromSymbol@uti713 isObjectLiteralType@uti824 isNumericLiteralName@uti898 isValidNumberString@uti927 isValidBigIntString@uti935 isLateBoundName@uti986
+  before UTIL: NewDiagnosticForNode@uti22 isStaticPrivateIdentifierProperty@uti72 getDeclarationModifierFlagsFromSymbol@uti713 isObjectLiteralType@uti824 isNumericLiteralName@uti898 isLateBoundName@uti986
   before T-KEYS: getRelationKey@17723
   before K-OBJ: c.createTypeReference@25226
   before D-SINK: c.addDiagnostic@14086
   before S-MERGE: createDiagnosticForNode@14358 c.getParentOfSymbol@14459
   before M-MODULE: c.getMembersOfSymbol@16218
-  before K-LIT: c.getRegularTypeOfLiteralType@25396 isFreshLiteralType@25424 c.getStringLiteralType@25428 getStringLiteralValue@25469 isLiteralType@25516 isUnitType@25533 c.getBaseTypeOfLiteralType@25557 c.getBaseTypeOfEnumLikeType@25593
+  before K-LIT: c.getRegularTypeOfLiteralType@25396 isFreshLiteralType@25424 isLiteralType@25516 isUnitType@25533 c.getBaseTypeOfLiteralType@25557 c.getBaseTypeOfEnumLikeType@25593
   before K-PRED: c.IsEmptyAnonymousObjectType@26599 c.isEmptyObjectType@26608 someType@26660 everyType@26667 c.filterType@26681 containsType@26739 c.isErrorType@26761 c.maybeTypeOfKind@27729 c.isUnknownLikeUnionType@27926 c.typeHasCallOrConstructSignatures@27984 c.extractTypesOfKind@28278 c.getTargetType@31607
   before K-GENERIC: c.isGenericObjectType@24995 c.isGenericIndexType@24999 c.isGenericTupleType@25027 c.isGenericMappedType@25031
   before K-UNION: c.getUnionType@25740
@@ -30,7 +30,7 @@
   AFTER (type layer that lands after inference) K-SUBST: c.getSubstitutionIntersection@26950
   AFTER (type layer that lands after inference) K-COND: c.getTrueTypeFromConditionalType@24662 c.getFalseTypeFromConditionalType@24670
   AFTER (type layer that lands after inference) T-MAPPED: c.getTypeParameterFromMappedType@22784 c.getConstraintTypeFromMappedType@22792 c.getNameTypeFromMappedType@22800 c.getTemplateTypeFromMappedType@22811 c.isMappedTypeWithKeyofConstraintDeclaration@22823 c.getApparentMappedTypeKeys@22832 getMappedTypeModifiers@29135 c.getCombinedMappedTypeOptionality@29163 isPartialMappedType@29183
-  AFTER (type layer that lands after inference) K-TEMPLATE: c.getTemplateLiteralType@29268 c.getStringMappingType@29346
+  AFTER (type layer that lands after inference) K-TEMPLATE: c.templateLiteralTypesDefinitelyUnrelated@rel2354 c.isTypeMatchedByTemplateLiteralType@rel2365 c.isMemberOfStringMapping@rel2531
   AFTER later:binder.go: binder.GetSymbolNameForPrivateIdentifier@bin369
   AFTER later:c18_identifiers_property_access_this: c.forEachProperty@11997 c.getDeclaringClass@12011 c.isPropertyInClassDerivedFrom@12030
   AFTER later:c20_object_literals_spread: c.isNonGenericObjectType@13627 c.isReadonlySymbol@13950
@@ -43,15 +43,12 @@
 == R-SIGREL
   before TYPES: Type.Target@typ748
   before MAPPER: newTypeMapper@map40
-  before UTIL: IsTypeAny@uti287
-  before K-PRED: c.getTypePredicateOfSignature@rel2049 c.typePredicateKindsMatch@rel2113
-  before T-TUPLE: c.isArrayType@23595
   before T-CONSTRAINT: c.getConstraintFromTypeParameter@17165 c.getConstraintOrUnknownFromTypeParameter@17203 c.getDefaultOrUnknownFromTypeParameter@22158
   before T-LOOKUP: c.getSignaturesOfType@19073
   before T-SIGDECL: c.getReturnTypeOfSignature@20115 c.getNonCircularReturnTypeOfSignature@20165
-  before T-SIGSHAPE: signatureHasRestParameter@17132 c.getTypeOfParameter@17136 c.getParameterCount@rel1726 c.getMinArgumentCount@rel1737 c.hasEffectiveRestParameter@rel1782 c.getTypeAtPosition@rel1790 c.tryGetTypeAtPosition@rel1798 c.getRestOrAnyTypeAtPosition@rel1819 c.getNonArrayRestType@rel1891 c.getThisTypeOfSignature@rel1947 c.isInstantiatedGenericParameter@rel1954 c.getParameterNameAtPosition@rel1962
+  before T-SIGSHAPE: c.isTopSignature@rel1708 c.getParameterCount@rel1726 c.getMinArgumentCount@rel1737 c.hasEffectiveRestParameter@rel1782 c.getTypeAtPosition@rel1790 c.tryGetTypeAtPosition@rel1798 c.getRestOrAnyTypeAtPosition@rel1819 c.getNonArrayRestType@rel1891 c.getThisTypeOfSignature@rel1947 c.isInstantiatedGenericParameter@rel1954 c.getParameterNameAtPosition@rel1962 c.getTypePredicateOfSignature@rel2049 c.typePredicateKindsMatch@rel2113
   before T-SIGINST: c.getSingleCallSignature@19455 c.getErasedSignature@19510 c.getCanonicalSignature@19523 c.instantiateSignatureInContextOf@19580 c.instantiateSignatureEx@20733
-  before T-INSTANTIATE: c.getTypeArguments@22007 c.instantiateType@22214
+  before T-INSTANTIATE: c.instantiateType@22214
   before T-SYMTYPE: c.GetNonNullableType@18777
   AFTER later:c51_type_facts_awaited: c.getTypeFacts@31097
   AFTER later:printer.go: c.TypeToString@pri43 c.signatureToString@pri179 c.typePredicateToString@pri229
@@ -107,7 +104,7 @@
   before K-OBJ: c.newAnonymousType@25213 c.newIndexInfo@25386
   before S-MERGE: c.newSymbol@14170
   before K-LIT: c.getRegularTypeOfLiteralType@25396 c.getNumberLiteralType@25437 c.parseBigIntLiteralType@25465 getStringLiteralValue@25469 getNumberLiteralValue@25473 getBigIntLiteralValue@25477 getBooleanLiteralValue@25481 isLiteralType@25516 c.getBaseTypeOfLiteralType@25557 c.getWidenedLiteralType@25610
-  before K-PRED: someType@26660 c.filterType@26681 c.maybeTypeOfKind@27729 c.getTypePredicateOfSignature@rel2049 c.typePredicateKindsMatch@rel2113
+  before K-PRED: someType@26660 c.filterType@26681 c.maybeTypeOfKind@27729
   before K-GENERIC: c.isGenericMappedType@25031
   before K-UNION: c.mapType@25684 c.getUnionType@25740 c.getUnionTypeEx@25751
   before K-INTERSECT: c.getIntersectionType@26175
@@ -117,7 +114,7 @@
   before T-LOOKUP: c.getPropertiesOfType@18960 c.getPropertiesOfObjectType@18968 c.getPropertyOfType@19001 c.getSignaturesOfType@19073 c.getIndexInfosOfType@19088 c.getApplicableIndexInfo@19122 c.isApplicableIndexType@19168
   before T-APPARENT: c.getApparentType@21843 c.getReducedType@21933
   before T-SIGDECL: c.getReturnTypeOfSignature@20115
-  before T-SIGSHAPE: c.getParameterCount@rel1726 c.getTypeAtPosition@rel1790 c.getRestTypeAtPosition@rel1829 c.getEffectiveRestType@rel1899 c.getThisTypeOfSignature@rel1947
+  before T-SIGSHAPE: c.getParameterCount@rel1726 c.getTypeAtPosition@rel1790 c.getRestTypeAtPosition@rel1829 c.getEffectiveRestType@rel1899 c.getThisTypeOfSignature@rel1947 c.getTypePredicateOfSignature@rel2049 c.typePredicateKindsMatch@rel2113
   before T-SIGINST: c.getErasedSignature@19510 c.getBaseSignature@19552
   before T-INSTANTIATE: c.getTypeArguments@22007 c.instantiateType@22214 c.clearActiveMapperCaches@22289
   before T-SYMTYPE: c.getTypeOfSymbol@16587 c.getNullableType@18764 c.removeMissingType@29215 c.removeMissingOrUndefinedType@29222
@@ -127,7 +124,7 @@
   AFTER (type layer that lands after inference) K-SUBST: c.isNoInferType@26945 c.getSubstitutionIntersection@26950 c.getActualTypeVariable@31694
   AFTER (type layer that lands after inference) K-COND: c.getTrueTypeFromConditionalType@24662 c.getFalseTypeFromConditionalType@24670
   AFTER (type layer that lands after inference) T-MAPPED: c.getConstraintTypeFromMappedType@22792 c.getNameTypeFromMappedType@22800 c.getTemplateTypeFromMappedType@22811
-  AFTER (type layer that lands after inference) K-TEMPLATE: applyStringMapping@29365
+  AFTER (type layer that lands after inference) K-TEMPLATE: applyStringMapping@29365 c.isTypeMatchedByTemplateLiteralType@rel2365 c.inferTypesFromTemplateLiteralType@rel2378
   AFTER later:c20_object_literals_spread: c.isNonGenericObjectType@13627 c.isConstTypeVariable@13746
   AFTER later:c48_contextual_types: c.getContextualType@29466 c.getContextualTypeForObjectLiteralMethod@30087
 == I-REVMAP

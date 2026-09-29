@@ -2,7 +2,7 @@ where	function	layer	callers in layers that land before	callers in later layers
 relater.go:117	c.isTypeIdenticalTo	R-REL	T-CONSTRAINT	c07_check_functions,c09_check_classes_interfaces,c11_check_variables_decorators,emitresolver.go,nodebuilder_hover.go,nodebuilderimpl.go
 relater.go:121	c.compareTypesIdentical	R-REL	T-UIMEMBERS	c09_check_classes_interfaces,c16_function_expressions_collisions,nodebuilder_hover.go,pseudotypenodebuilder.go
 relater.go:135	c.compareTypesAssignableWorker	R-REL	C-INIT	
-relater.go:149	c.isTypeAssignableTo	R-REL	K-PRED,T-INSTANTIATE,T-LOOKUP,T-MEMBERS,T-SIGDECL,T-SYMTYPE,T-TUPLE	K-COND,K-INDEXED,K-KEYOF,c06_check_members_type_nodes,c07_check_functions,c08_check_statements,c09_check_classes_interfaces,c12_iteration_types,c14_expressions,c15_calls,c16_function_expressions_collisions,c19_assertions_binary_operators,c20_object_literals_spread,c50_contextual_properties_inference_context,exports.go,flow.go,jsx.go,services.go
+relater.go:149	c.isTypeAssignableTo	R-REL	K-PRED,T-INSTANTIATE,T-LOOKUP,T-MEMBERS,T-SIGDECL,T-SYMTYPE,T-TUPLE	K-COND,K-INDEXED,K-KEYOF,K-TEMPLATE,c06_check_members_type_nodes,c07_check_functions,c08_check_statements,c09_check_classes_interfaces,c12_iteration_types,c14_expressions,c15_calls,c16_function_expressions_collisions,c19_assertions_binary_operators,c20_object_literals_spread,c50_contextual_properties_inference_context,exports.go,flow.go,jsx.go,services.go
 relater.go:153	c.isTypeSubtypeOf	R-REL	K-INTERSECT	c15_calls,c51_type_facts_awaited,flow.go
 relater.go:157	c.isTypeStrictSubtypeOf	R-REL	K-INTERSECT	flow.go
 relater.go:161	c.isTypeComparableTo	R-REL		c19_assertions_binary_operators
@@ -34,8 +34,6 @@ relater.go:2152	c.findMatchingSignatures	R-SIGREL	T-UIMEMBERS
 relater.go:2187	c.findMatchingSignature	R-SIGREL	T-UIMEMBERS	
 relater.go:2200	c.compareSignaturesIdentical	R-SIGREL	T-UIMEMBERS	c16_function_expressions_collisions,nodebuilder_hover.go
 relater.go:2280	c.compareTypeParametersIdentical	R-SIGREL	T-UIMEMBERS	c16_function_expressions_collisions
-relater.go:2365	c.isTypeMatchedByTemplateLiteralType	R-REL	K-UNION	
-relater.go:2531	c.isMemberOfStringMapping	R-REL	K-UNION	
 relater.go:2559	visibilityToString	R-SIGREL		grammarchecks.go
 relater.go:2863	c.isTypeSubsetOf	R-REL		flow.go
 relater.go:4993	c.isTypeDerivedFrom	R-REL	K-UNION	flow.go

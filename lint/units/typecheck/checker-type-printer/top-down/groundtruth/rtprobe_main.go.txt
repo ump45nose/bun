@@ -1,6 +1,7 @@
 // Research probe: parses each input line as a type, deep clones the type node into an emit context, marks it the way
 // the checker's node builder marks its nodes, prints it with the checker's type printer settings and compares.
-// usage: rtprobe <file with one type text per line> [strip]   (strip: parenthesized type nodes are removed first)
+// usage: rtprobe <file with one type text per line> [strip|single]   (strip: parenthesized type nodes are removed
+// first; single: the same, printed with the single line writer and the trailing semicolon omitted)
 //     output: ok|diff|noparse|panic <tab> text [<tab> printed]
 package main
 
@@ -15,7 +16,7 @@ import (
 	"github.com/microsoft/typescript-go/internal/printer"
 )
 
-var stripParens bool
+var stripParens, singleLine bool
 
 func roundTrip(text string) (status string, out string) {
 	defer func() {
@@ -55,10 +56,19 @@ func roundTrip(text string) (status string, out string) {
 		return false
 	}
 	visit(clone)
-	p := printer.NewPrinter(printer.PrinterOptions{RemoveComments: true}, printer.PrintHandlers{}, ec)
-	w := printer.NewTextWriter("", 0)
-	p.Write(clone, nil, w, nil)
-	out = w.String()
+	if singleLine {
+		// the settings of symbolToStringEx and signatureToStringEx: single line writer, trailing semicolon omitted
+		p := printer.NewPrinter(printer.PrinterOptions{RemoveComments: true, OmitTrailingSemicolon: true, NeverAsciiEscape: true}, printer.PrintHandlers{}, ec)
+		w, put := printer.GetSingleLineStringWriter()
+		defer put()
+		p.Write(clone, nil, w, nil)
+		out = w.String()
+	} else {
+		p := printer.NewPrinter(printer.PrinterOptions{RemoveComments: true}, printer.PrintHandlers{}, ec)
+		w := printer.NewTextWriter("", 0)
+		p.Write(clone, nil, w, nil)
+		out = w.String()
+	}
 	if out == text {
 		return "ok", ""
 	}
@@ -66,7 +76,8 @@ func roundTrip(text string) (status string, out string) {
 }
 
 func main() {
-	stripParens = len(os.Args) > 2 && os.Args[2] == "strip"
+	stripParens = len(os.Args) > 2
+	singleLine = len(os.Args) > 2 && os.Args[2] == "single"
 	f, err := os.Open(os.Args[1])
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

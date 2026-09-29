@@ -1,0 +1,26 @@
+upstream path	lines	group	Rust module	state	commit
+internal/checker/checker.go	2398-2477	F-UNREACH: c.checkSourceElementUnreachable .. c.isSourceElementUnreachable (2 functions, 79 lines)	checker/c05_check_source_file.rs	not started	89d5d5b
+internal/checker/checker.go	7419-7942	E-CORE: c.checkExpressionStatement .. c.getSymbolForPrivateIdentifierExpression (26 functions, 490 lines)	checker/c14_expressions.rs	not started	89d5d5b
+internal/checker/checker.go	7944-8064	E-ACCESS: c.checkSuperExpression .. c.isInConstructorArgumentInitializer (2 functions, 120 lines)	checker/c14_expressions.rs	not started	89d5d5b
+internal/checker/checker.go	8066-8210	E-LITERAL: c.checkTemplateExpression .. isSpreadIntoCallOrNew (7 functions, 139 lines)	checker/c14_expressions.rs	not started	89d5d5b
+internal/checker/checker.go	8212-8355	E-ACCESS: c.checkQualifiedName .. c.getConstituentProperty (9 functions, 132 lines)	checker/c14_expressions.rs	not started	89d5d5b
+internal/checker/checker.go	8357-8405	E-CALL: c.checkImportCallExpression (1 functions, 49 lines)	checker/c14_expressions.rs	not started	89d5d5b
+internal/checker/checker.go	8412-9719	E-CALL: c.checkCallExpression .. c.createCombinedSymbolForOverloadFailure (41 functions, 1239 lines)	checker/c15_calls.rs	not started	89d5d5b
+internal/checker/checker.go	9739-10131	E-CALL: c.reportCallResolutionErrors .. c.checkTaggedTemplateExpression (16 functions, 373 lines)	checker/c15_calls.rs	not started	89d5d5b
+internal/checker/checker.go	10133-10705	E-FUNC: c.checkParenthesizedExpression .. c.checkClassNameCollisionWithObject (29 functions, 535 lines)	checker/c16_function_expressions_collisions.rs	not started	89d5d5b
+internal/checker/checker.go	10707-11130	E-OPER: c.checkTypeOfExpression .. c.checkSyntheticExpression (23 functions, 402 lines)	checker/c17_unary_meta_yield.rs	not started	89d5d5b
+internal/checker/checker.go	11132-12376	E-ACCESS: c.checkIdentifier .. c.classDeclarationExtendsNull (53 functions, 1140 lines)	checker/c18_identifiers_property_access_this.rs	not started	89d5d5b
+internal/checker/checker.go	12378-13233	E-OPER: c.checkAssertion .. c.checkReferenceExpression (34 functions, 803 lines)	checker/c19_assertions_binary_operators.rs	not started	89d5d5b
+internal/checker/checker.go	13235-13609	E-LITERAL: c.checkObjectLiteral .. c.isValidSpreadType (7 functions, 364 lines)	checker/c20_object_literals_spread.rs	not started	89d5d5b
+internal/checker/checker.go	13627-13989	E-LITERAL: c.isNonGenericObjectType .. c.checkExpressionForMutableLocation (17 functions, 346 lines)	checker/c20_object_literals_spread.rs	not started	89d5d5b
+internal/checker/checker.go	20240-20564	T-RETINFER: c.getReturnTypeFromBody .. c.createGeneratorType (12 functions, 313 lines)	checker/c34_return_types.rs	not started	89d5d5b
+internal/checker/checker.go	20649-20720	T-RETINFER: c.getTypePredicateFromBody .. c.checkIfExpressionRefinesParameter (3 functions, 70 lines)	checker/c34_return_types.rs	not started	89d5d5b
+internal/checker/checker.go	29466-30162	E-CTX: c.getContextualType .. c.getContextualImportAttributeType (27 functions, 654 lines)	checker/c48_contextual_types.rs	not started	89d5d5b
+internal/checker/checker.go	30165-30672	E-CALL: c.getEffectiveCallArguments .. c.getClassElementPropertyKeyType (28 functions, 474 lines)	checker/c49_call_arguments_decorator_signatures.rs	not started	89d5d5b
+internal/checker/checker.go	30674-31095	E-CTX: c.getTypeOfPropertyOfContextualType .. c.getInferenceContext (28 functions, 377 lines)	checker/c50_contextual_properties_inference_context.rs	not started	89d5d5b
+internal/checker/checker.go	31097-31347	E-FACTS: c.getTypeFacts .. c.convertAutoToAny (12 functions, 237 lines)	checker/c51_type_facts_awaited.rs	not started	89d5d5b
+internal/checker/checker.go	31594-31605	F-NARROW: c.isSomeSymbolAssigned .. c.isSomeSymbolAssignedWorker (2 functions, 11 lines)	checker/c51_type_facts_awaited.rs	not started	89d5d5b
+internal/checker/checker.go	31614-31692	F-NARROW: c.getNarrowableTypeForReference .. c.isGenericTypeWithUndefinedConstraint (7 functions, 73 lines)	checker/c51_type_facts_awaited.rs	not started	89d5d5b
+internal/checker/flow.go	24-2511	F-NARROW: FlowType.isNil .. c.getFlowTypeInStaticBlocks (118 functions, 2305 lines)	checker/flow.rs	not started	89d5d5b
+internal/checker/flow.go	2513-2652	F-REACH: c.isReachableFlowNode .. c.isPostSuperFlowNodeWorker (5 functions, 134 lines)	checker/flow.rs	not started	89d5d5b
+internal/checker/flow.go	2655-2764	F-NARROW: c.isSymbolAssignedDefinitely .. c.extendAssignmentPosition (7 functions, 92 lines)	checker/flow.rs	not started	89d5d5b
