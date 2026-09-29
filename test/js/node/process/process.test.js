@@ -388,6 +388,49 @@ it("process.chdir() to a missing directory reports the current directory and lea
   }
 });
 
+it("process.cwd() in a Worker follows a process.chdir() on the main thread", async () => {
+  using dir = tempDir("process-cwd-worker", { "sub/.keep": "" });
+  await using proc = Bun.spawn({
+    cmd: [
+      bunExe(),
+      "-e",
+      `
+        const { Worker } = require("node:worker_threads");
+        const worker = new Worker(
+          \`const { parentPort } = require("node:worker_threads");
+            parentPort.on("message", () => parentPort.postMessage(process.cwd()));\`,
+          { eval: true },
+        );
+        const ask = () =>
+          new Promise((resolve, reject) => {
+            worker.once("message", resolve);
+            worker.once("error", reject);
+            worker.postMessage(0);
+          });
+        (async () => {
+          const start = process.cwd();
+          // The Worker reads its working directory once before the move, so it has one cached.
+          const before = await ask();
+          process.chdir("sub");
+          const after = await ask();
+          console.log(JSON.stringify({ before: before === start, after: after === process.cwd(), moved: process.cwd() !== start }));
+          await worker.terminate();
+        })().catch(e => { console.error(e); process.exit(1); });
+      `,
+    ],
+    env: bunEnv,
+    cwd: String(dir),
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+  expect({ out: JSON.parse(stdout.trim() || "null"), stderr: exitCode === 0 ? "" : stderr, exitCode }).toEqual({
+    out: { before: true, after: true, moved: true },
+    stderr: "",
+    exitCode: 0,
+  });
+});
+
 it("process.hrtime()", async () => {
   const start = process.hrtime();
   const end = process.hrtime(start);
