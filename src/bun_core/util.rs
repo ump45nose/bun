@@ -4028,15 +4028,21 @@ pub fn intern_argv(v: Vec<&'static ZStr>) -> &'static [&'static ZStr] {
 /// Writes the current working directory into the caller's `PathBuffer` and
 /// returns the NUL-terminated slice on success.
 pub fn getcwd(buf: &mut PathBuffer) -> crate::CrateResult<&ZStr> {
+    #[cfg(unix)]
     let len = getcwd_len(&mut buf.0)?;
+    #[cfg(windows)]
+    let len = {
+        let mut wide = WPathBuffer::ZEROED;
+        getcwd_len(&mut buf.0, &mut wide.0)?
+    };
     Ok(ZStr::from_buf(&buf.0, len))
 }
 
 /// Length-returning core of [`getcwd`]; `buf` holds the NUL-terminated path.
-/// The OS error, if any, is left in `errno` / `GetLastError` for callers that
-/// want it (`bun_sys::getcwd`).
+/// The OS error, if any, is left in `errno` for callers that want it
+/// (`bun_sys::getcwd`).
+#[cfg(unix)]
 pub fn getcwd_len(buf: &mut [u8]) -> crate::CrateResult<usize> {
-    #[cfg(unix)]
     // SAFETY: `getcwd` writes at most `buf.len()` bytes; on success the
     // returned pointer aliases `buf` and is NUL-terminated, so `strlen` reads
     // in-bounds.
@@ -4050,42 +4056,41 @@ pub fn getcwd_len(buf: &mut [u8]) -> crate::CrateResult<usize> {
         }
         Ok(libc::strlen(p))
     }
-    #[cfg(windows)]
-    {
-        // Windows: `kernel32.GetCurrentDirectoryW`, transcoded to UTF-8.
-        unsafe extern "system" {
-            fn GetCurrentDirectoryW(nBufferLength: u32, lpBuffer: *mut u16) -> u32;
-        }
-        let mut wbuf = WPathBuffer::ZEROED;
-        // SAFETY: `wbuf` has `PATH_MAX_WIDE` writable u16 units.
-        let n = unsafe { GetCurrentDirectoryW(wbuf.0.len() as u32, wbuf.0.as_mut_ptr()) } as usize;
-        if n == 0 {
-            return Err(crate::CrateError::Unexpected);
-        }
-        const ERROR_FILENAME_EXCED_RANGE: u32 = 206;
-        if n >= wbuf.0.len() {
-            bun_windows_sys::kernel32::SetLastError(ERROR_FILENAME_EXCED_RANGE);
-            return Err(crate::CrateError::NameTooLong);
-        }
-        // Drop a `\\?\` prefix and transcode to UTF-8, the form every other
-        // path in the process is compared against.
-        const LONG_PATH_PREFIX: [u16; 4] = [b'\\' as u16, b'\\' as u16, b'?' as u16, b'\\' as u16];
-        let src = crate::strings::trim_prefix_comptime::<u16>(&wbuf.0[..n], &LONG_PATH_PREFIX);
-        let last = buf.len() - 1;
-        let result = crate::strings::copy_utf16_into_utf8(&mut buf[..last], src);
-        if (result.read as usize) < src.len() {
-            bun_windows_sys::kernel32::SetLastError(ERROR_FILENAME_EXCED_RANGE);
-            return Err(crate::CrateError::NameTooLong);
-        }
-        let written = result.written as usize;
-        buf[written] = 0;
-        Ok(written)
+}
+
+/// Length-returning core of [`getcwd`]; `buf` holds the NUL-terminated path.
+/// `wide` is scratch for `GetCurrentDirectoryW`, `PATH_MAX_WIDE` units, from
+/// the caller so that one reached from JS can take it from the pool. The OS
+/// error, if any, is left in `GetLastError` for callers that want it
+/// (`bun_sys::getcwd`).
+#[cfg(windows)]
+pub fn getcwd_len(buf: &mut [u8], wide: &mut [u16]) -> crate::CrateResult<usize> {
+    unsafe extern "system" {
+        fn GetCurrentDirectoryW(nBufferLength: u32, lpBuffer: *mut u16) -> u32;
     }
-    #[cfg(not(any(unix, windows)))]
-    {
-        let _ = buf;
-        Err(crate::CrateError::Unexpected)
+    // SAFETY: `wide` has `wide.len()` writable u16 units.
+    let n = unsafe { GetCurrentDirectoryW(wide.len() as u32, wide.as_mut_ptr()) } as usize;
+    if n == 0 {
+        return Err(crate::CrateError::Unexpected);
     }
+    const ERROR_FILENAME_EXCED_RANGE: u32 = 206;
+    if n >= wide.len() {
+        bun_windows_sys::kernel32::SetLastError(ERROR_FILENAME_EXCED_RANGE);
+        return Err(crate::CrateError::NameTooLong);
+    }
+    // Drop a `\\?\` prefix and transcode to UTF-8, the form every other
+    // path in the process is compared against.
+    const LONG_PATH_PREFIX: [u16; 4] = [b'\\' as u16, b'\\' as u16, b'?' as u16, b'\\' as u16];
+    let src = crate::strings::trim_prefix_comptime::<u16>(&wide[..n], &LONG_PATH_PREFIX);
+    let last = buf.len() - 1;
+    let result = crate::strings::copy_utf16_into_utf8(&mut buf[..last], src);
+    if (result.read as usize) < src.len() {
+        bun_windows_sys::kernel32::SetLastError(ERROR_FILENAME_EXCED_RANGE);
+        return Err(crate::CrateError::NameTooLong);
+    }
+    let written = result.written as usize;
+    buf[written] = 0;
+    Ok(written)
 }
 
 // ── which ─────────────────────────────────────────────────────────────────

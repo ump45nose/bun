@@ -3904,7 +3904,8 @@ mod windows_impl {
         Ok(Fd::from_native(target as _))
     }
     pub fn getcwd(buf: &mut [u8]) -> Maybe<usize> {
-        bun_core::util::getcwd_len(buf)
+        let mut wide = bun_paths::w_path_buffer_pool::get();
+        bun_core::util::getcwd_len(buf, &mut wide[..])
             .map_err(|_| Error::from_win32(w::Win32Error::get(), Tag::getcwd))
     }
     pub fn mkdirat(dir: impl AsFd, path: &ZStr, _mode: Mode) -> Maybe<()> {
