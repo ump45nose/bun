@@ -41,6 +41,6 @@ def sc(v):
         out.append(comp)
 for v in graph:
     if v not in index: sc(v)
-for comp in out:
+for comp in sorted(out, key=lambda comp: sorted(comp)):
     if len(comp) > 1 or comp[0] in graph[comp[0]]:
         print(len(comp), ', '.join(sorted(short(x) for x in comp)))

@@ -176,4 +176,4 @@ DIAG (0,0) TS2318 Cannot find global type 'Number'.
 DIAG (0,0) TS2318 Cannot find global type 'Object'.
 DIAG (0,0) TS2318 Cannot find global type 'RegExp'.
 DIAG (0,0) TS2318 Cannot find global type 'String'.
-PROGRAMCALLS [SourceFiles=1 BindSourceFiles=1 Options=1]
+PROGRAMCALLS [BindSourceFiles=1 Options=1 SourceFiles=1]

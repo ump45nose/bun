@@ -5,6 +5,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -196,5 +197,6 @@ func main() {
 	for k, v := range p.calls {
 		names = append(names, fmt.Sprintf("%s=%d", k, v))
 	}
+	sort.Strings(names)
 	fmt.Printf("PROGRAMCALLS %v\n", names)
 }

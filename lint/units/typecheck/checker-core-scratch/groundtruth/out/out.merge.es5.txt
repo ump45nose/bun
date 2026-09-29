@@ -101,4 +101,4 @@ SYMBOL #11 name="\"amb\"" flags=0x2000200 checkFlags=0x0 decls=2
 SYMBOL #12 name="\"/m1\"" flags=0x2000600 checkFlags=0x0 decls=2
 SYMBOL #13 name="A" flags=0x2000040 checkFlags=0x0 decls=2
 GLOBALS count=138 transient=6
-PROGRAMCALLS [GetModeForUsageLocation=1 GetResolvedModule=1 GetSourceFileForResolvedModule=1 GetSourceFile=1 BindSourceFiles=1 Options=1 SourceFiles=1]
+PROGRAMCALLS [BindSourceFiles=1 GetModeForUsageLocation=1 GetResolvedModule=1 GetSourceFile=1 GetSourceFileForResolvedModule=1 Options=1 SourceFiles=1]

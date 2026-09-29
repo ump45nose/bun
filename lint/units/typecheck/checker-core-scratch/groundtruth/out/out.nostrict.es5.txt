@@ -178,4 +178,4 @@ SYMBOL #4 name="unknown" flags=0x2000004 checkFlags=0x0 decls=0
 SYMBOL #5 name="globalThis" flags=0x2000600 checkFlags=0x8 decls=0
 SYMBOL #6 name="\\xFEtype" flags=0x2000800 checkFlags=0x0 decls=0
 GLOBALS count=135 transient=2
-PROGRAMCALLS [SourceFiles=1 BindSourceFiles=1 Options=1]
+PROGRAMCALLS [BindSourceFiles=1 Options=1 SourceFiles=1]

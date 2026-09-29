@@ -67,7 +67,15 @@ export function declarationLines(dump, positions, fileBaseName) {
       return `Decl(${fileBaseName}, ${l}, ${c})`;
     });
     const more = symbol.decls.length > 5 ? ` ... and ${symbol.decls.length - 5} more` : "";
-    out.push({ node: parent.name, line, text, decls, more, symbolName: symbol.name });
+    // The printed name ends with the symbol's own name when that name is a plain identifier written as such in the first declaration.
+    let own = /^"([A-Za-z_$][A-Za-z0-9_$]*)"$/.exec(symbol.name)?.[1];
+    if (own === "default" || symbol.decls.length === 0) own = undefined;
+    if (own !== undefined) {
+      const first = dump.nodes[index(symbol.decls[0])];
+      const firstName = first?.name ? dump.nodes[index(first.name)] : undefined;
+      if (!firstName || firstName.kind !== "KindIdentifier" || positions.text(firstName.pos, firstName.end) !== own) own = undefined;
+    }
+    out.push({ node: parent.name, line, text, decls, more, own });
   }
   out.sort((a, b) => index(a.node) - index(b.node));
   return out;
@@ -76,7 +84,7 @@ export function declarationLines(dump, positions, fileBaseName) {
 export function checkAgainstBaseline(expected, baselineLines, fileBaseName) {
   const problems = [];
   const used = new Set();
-  let checked = 0;
+  let checked = 0, named = 0;
   for (const e of expected) {
     let found = false, seen = false, last = "";
     for (let i = 0; i < baselineLines.length; i++) {
@@ -91,18 +99,25 @@ export function checkAgainstBaseline(expected, baselineLines, fileBaseName) {
       if (foreign && own.length < want.length) want = want.slice(0, own.length);
       if (own.length !== want.length || own.some((d, k) => d !== want[k])) continue;
       if (!foreign && !b.symbol.endsWith(e.more + ")")) continue;
-      used.add(i); found = true; break;
+      used.add(i); found = true;
+      const comma = b.symbol.indexOf(", Decl(");
+      const display = b.symbol.slice("Symbol(".length, comma >= 0 ? comma : b.symbol.length - 1);
+      if (e.own !== undefined) {
+        named++;
+        if (display !== e.own && !display.endsWith("." + e.own)) problems.push(`line ${e.line} ${JSON.stringify(e.text)}: the name ${display} does not end with ${e.own}`);
+      }
+      break;
     }
     checked++;
     if (!seen) problems.push(`line ${e.line} ${JSON.stringify(e.text)}: the baseline has no line for this declaration name`);
     else if (!found) problems.push(`line ${e.line} ${JSON.stringify(e.text)}: want ${e.decls.join(", ")}${e.more}, the baseline has ${last}`);
   }
-  return { checked, problems };
+  return { checked, named, problems };
 }
 
 if (import.meta.main) {
   const [selection, unitsDir, dumpsDir] = process.argv.slice(2);
-  let files = 0, checked = 0, bad = 0, lines = 0;
+  let files = 0, checked = 0, named = 0, bad = 0, lines = 0;
   for (const row of fs.readFileSync(selection, "utf8").split("\n").filter(Boolean)) {
     const f = row.split("\t");
     const [id, rel, suite, stem, , unit] = f;
@@ -113,8 +128,8 @@ if (import.meta.main) {
     if (!baseline.ok) { console.log("cannot read the baseline of", id, baseline.why); bad++; continue; }
     const base = path.basename(virtual);
     const r = checkAgainstBaseline(declarationLines(dump, new Positions(source), base), baseline.lines, base);
-    files++; checked += r.checked; lines += baseline.lines.length;
+    files++; checked += r.checked; named += r.named; lines += baseline.lines.length;
     if (r.problems.length) { bad++; console.log(id, r.problems.slice(0, 3).join("\n   ")); }
   }
-  console.log(JSON.stringify({ files, declarationNamesChecked: checked, baselineResultLines: lines, filesWithProblems: bad }));
+  console.log(JSON.stringify({ files, declarationNamesChecked: checked, namesChecked: named, baselineResultLines: lines, filesWithProblems: bad }));
 }
