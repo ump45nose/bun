@@ -9,8 +9,8 @@ has `--lint`: the installed bun 1.4.3 and the debug build of the cli worktree (1
 the operand of `bun --lint x.ts`. No unit has an `API.md` or a `NEEDS.md`.
 
 Every number was measured on Linux x64 on the pinned clones (typescript-go 89d5d5b, TypeScript 5848bc5) with
-`needs-and-lint-channel/top-down/probes/run.sh`. Nothing was measured on Windows or on macOS: no such machine
-was available.
+`needs-and-lint-channel/top-down/probes/run.sh` and the commands of `HOWTO.txt` beside it. Nothing was
+measured on Windows or on macOS: no such machine was available.
 
 How to read an entry. To: the owner of the file. Ask: the exact thing. Unlocks: how many of the 12,797 run
 instances depend on it (E: the oracle has errors, 7,027. C: the oracle has none, 5,770). The sets of different
@@ -45,7 +45,8 @@ Why this one and not the three others:
   default libraries (9 set `noLib`). The 15 library files of a `target: es2015` program are 2,669,841 bytes:
   today's parser, which skips the types, needs 6 ms for them in the release build and 284 ms to 311 ms in the
   debug build. So one process per instance costs at least 0.56 s per instance in a debug build before any
-  check: about two hours for one sweep. The batch form pays the start and the libraries once per process.
+  check: about two hours of process time for one sweep. The batch form pays the start and the libraries once
+  per process.
 - (a) marks a stand-in with `error TS-1`. The reference uses the code -1 itself for an ad hoc message
   (`internal/diagnostics/diagnostics.go:152-159`, used at `internal/testutil/harnessutil/harnessutil.go:699`),
   so the runner could not tell a stand-in from a diagnostic of the reference.
@@ -145,7 +146,7 @@ Ask.
      is set, then `compilerOptions`); `"rootedPaths": true` (175 instances: a text of the instance names a
      file by an absolute path such as `/.lib/react.d.ts`, to be found below `root`);
      `"useCaseSensitiveFileNames": false` (5 instances); `"captureSuggestions": true` (1 instance:
-     diagnostics of category `suggestion` are part of the result, `harnessutil.go:670-672`).
+     diagnostics of category `suggestion` are part of the result, `harnessutil.go:686-688`).
 3. The report: stdout, one line of JSON per instance, in the order of the manifest. A line is written and
    flushed when its instance is done. Nothing else on stdout. `bun_core::fmt::write_json_string`
    (`src/bun_core/fmt.rs:42`) quotes a string.
@@ -168,8 +169,8 @@ Ask.
    - `file` is a file of the instance, or a default library file: then only its last component
      (`lib.<name>.d.ts`) is read.
    - The diagnostics are what the harness of the reference collects (CH-3 point 2). No diagnostic of a lint
-     rule: the cases are full of code that the first rules of C3 report (with the configuration of this
-     repository, oxlint reports more than 6,900 errors in `tests/cases/compiler` alone).
+     rule: the oracle has none, and the cases hold code that the first rules of C3 report (15 case files
+     have a `debugger` statement; a rough search finds an empty pattern in about 120).
    - `standIns`: the names of the stand-in log of this instance, each once, in the order of the first reach.
    - A field that is not named here makes the line unreadable.
 4. Exit code 0 when every instance has its line. Exit code 1 with a text on stderr when the manifest is
@@ -201,10 +202,11 @@ Ask.
    be dropped in silence.
 2. The diagnostics of one program as the harness collects them, not as the command line does:
    configuration file, program, syntactic, semantic and global diagnostics, the declaration diagnostics when
-   the options emit declarations, the suggestions on request (`harnessutil.go:661-672`), then
-   `compiler.SortAndDeduplicateDiagnostics` (`internal/compiler/program.go:1597`). The command line collects
-   the semantic diagnostics only when there is no syntactic one (`program.go:1939-1991`); at least 324
-   baselines hold a diagnostic of the parser together with another one. Each diagnostic gives: category,
+   the options emit declarations, the suggestions on request (`harnessutil.go:675-689`, taken after the
+   emit), then `compiler.SortAndDeduplicateDiagnostics` (`internal/compiler/program.go:1597`). The command
+   line collects the semantic diagnostics only when there is no syntactic one (`program.go:1939-1991`); at
+   least 288 baselines hold a code that only the parser or the scanner reports together with a code that
+   neither of them reports. Each diagnostic gives: category,
    code, message text, the chain as a tree, the file, start and length, and the related information with
    the same fields.
 3. The stand-in log of one run: the names, each once, in the order of the first reach, and empty again for
@@ -282,7 +284,7 @@ To: integrator. Ask: one entry in `"exclude"`: `"cli/lint/conformance/corpus"` (
 `test/fixtures`).
 
 Why. `"include"` has `**/*.ts`, `**/*.tsx`, `**/*.mts`, `**/*.cts`. The project has 2,978 such files today;
-the corpus adds 12,444. Measured with tsc 6.0.2 on every 62nd case as one project: 181 files give 1,005
+the corpus adds 12,444 case files. Measured with tsc 6.0.2 on every 62nd case as one project: 181 files give 1,005
 errors in 156 files (TS2300, TS2451: the cases are scripts that declare the same names). With the 14 files
 of the sample that have a syntax error, tsc prints only their 63 syntax errors and nothing else, so the
 corpus would hide every real error of `cd test && bun run typecheck`. No workflow runs that command; it is a
@@ -336,8 +338,10 @@ for the one spawn that hands a manifest over and removes it for every other spaw
 
 To: integrator. For information, no file to change.
 
-- Files: 22,185 (cases 12,444 and 4 of `tests/lib` and the licence files in `corpus/ts`: 21,507 with 9,056
-  baselines of TypeScript; `corpus/tsgo`: 678). The repository tracks 19,932 files today.
+- Files: 22,185 with the layout of the sync prototype. `corpus/ts`: 21,507 (12,445 files of the two case
+  directories, 4 of `tests/lib`, 9,056 baselines of TypeScript, 2 licence files). `corpus/tsgo`: 678 (674
+  baselines that differ, the 2 lists, 2 licence files). The 108 library files of LB-2 come on top. The
+  repository tracks 19,932 files today.
 - The longest path becomes 202 characters (today 159):
   `test/cli/lint/conformance/corpus/tsgo/testdata/baselines/reference/submodule/conformance/ClassAndModuleThatMergeWithModulesExportedGenericFunctionAndNonGenericClassStaticFunctionOfTheSameName.errors.txt`.
 - `.gitignore:139` (`*.generated.ts`) hides one case,
@@ -373,9 +377,9 @@ Proposal: the conformance unit copies `internal/bundled/libs` once, verbatim, to
 `API.md` names the path. K4, K5 and the manifest of CH-2 read that directory. There is no second copy until
 a later unit embeds the libraries in the binary.
 
-Unlocks: 12,788 run instances load a default library. Until then: the sweep on this machine takes
-`--lib-directory /workspace/ref/typescript-go/internal/bundled/libs`; in CI no instance that needs a library
-can run.
+Unlocks: 12,788 run instances load a default library. Until then: a sweep against the reference clones on
+this machine reads `/workspace/ref/typescript-go/internal/bundled/libs`; in CI no instance that needs a
+library can run.
 
 ## 4. Licence
 

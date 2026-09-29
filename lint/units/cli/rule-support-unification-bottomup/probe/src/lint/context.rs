@@ -4,9 +4,9 @@ use bun_ast::{Case, Expr, Loc, Log, Ref, Source};
 use bun_core::StackCheck;
 use bun_js_parser::parse::parse_entry::ParsedOnly;
 
+use super::Diagnostic;
 use super::rule::Rule;
 use super::tokens::{self, CaseTest, Tokens};
-use super::Diagnostic;
 
 /// The global names that a report can depend on.
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -59,7 +59,11 @@ const TOO_DEEP: Rule = Rule {
 };
 
 impl<'p, 'a> Context<'p, 'a> {
-    pub(crate) fn new(parsed: &'p ParsedOnly<'p, 'a>, source: &'a Source, arena: &'a bun_alloc::Arena) -> Self {
+    pub(crate) fn new(
+        parsed: &'p ParsedOnly<'p, 'a>,
+        source: &'a Source,
+        arena: &'a bun_alloc::Arena,
+    ) -> Self {
         Context {
             parsed,
             source,
@@ -87,7 +91,11 @@ impl<'p, 'a> Context<'p, 'a> {
 
     /// The spelling of an identifier or of a binding. Empty for a reference that names nothing.
     pub(crate) fn name_of(&self, r#ref: Ref) -> &'a [u8] {
-        if r#ref.is_valid() { self.parsed.name_of(r#ref) } else { b"" }
+        if r#ref.is_valid() {
+            self.parsed.name_of(r#ref)
+        } else {
+            b""
+        }
     }
 
     /// A declaration of `ref` is somewhere in the file.
@@ -100,7 +108,14 @@ impl<'p, 'a> Context<'p, 'a> {
     }
 
     /// Held until the walk ends; dropped when the file declares every name of `names`.
-    pub(crate) fn report_if_global(&mut self, rule: &'static Rule, start: u32, len: u32, text: Vec<u8>, names: Globals) {
+    pub(crate) fn report_if_global(
+        &mut self,
+        rule: &'static Rule,
+        start: u32,
+        len: u32,
+        text: Vec<u8>,
+        names: Globals,
+    ) {
         let Some(severity) = rule.category.default_level() else {
             return;
         };
@@ -122,7 +137,12 @@ impl<'p, 'a> Context<'p, 'a> {
     pub(crate) fn too_deep(&mut self, loc: Loc) {
         if !core::mem::replace(&mut self.cut, true) {
             let start = u32::try_from(loc.start).unwrap_or(0);
-            self.report(&TOO_DEEP, start, 0, b"This file is nested too deeply to check all of it.".to_vec());
+            self.report(
+                &TOO_DEEP,
+                start,
+                0,
+                b"This file is nested too deeply to check all of it.".to_vec(),
+            );
         }
     }
 
@@ -191,18 +211,25 @@ impl<'p, 'a> Context<'p, 'a> {
 
     /// Probe only. A span longer than 64 KiB is not scanned: a chain of n operands would cost n scans of its head.
     pub(crate) fn stress_binary(&mut self, node: &bun_ast::E::Binary, loc: Loc) {
-        let Ok(own) = u32::try_from(loc.start) else { return };
+        let Ok(own) = u32::try_from(loc.start) else {
+            return;
+        };
         if node.right.loc.start - loc.start > 65536 {
             return;
         }
         self.stress[0] += 1;
-        if self.closes(own, node.right.loc, &[&node.left, &node.right]).is_none() {
+        if self
+            .closes(own, node.right.loc, &[&node.left, &node.right])
+            .is_none()
+        {
             self.stress_failed.push(("binary", loc.start));
         }
     }
 
     pub(crate) fn stress_member(&mut self, loc: Loc, to: Loc, target: &Expr, index: Option<&Expr>) {
-        let Ok(own) = u32::try_from(loc.start) else { return };
+        let Ok(own) = u32::try_from(loc.start) else {
+            return;
+        };
         if to.start - loc.start > 65536 {
             return;
         }
@@ -227,7 +254,9 @@ impl<'p, 'a> Context<'p, 'a> {
             if self.case_test(value).is_none() {
                 self.stress_failed.push(("case", value.loc.start));
             }
-            if tokens::case_before(self.text(), u32::try_from(value.loc.start).unwrap_or(0)).is_some() {
+            if tokens::case_before(self.text(), u32::try_from(value.loc.start).unwrap_or(0))
+                .is_some()
+            {
                 self.stress[4] += 1;
             }
         }
@@ -247,7 +276,10 @@ impl<'p, 'a> Context<'p, 'a> {
         for (kind, at) in self.stress_failed.iter().take(12) {
             let from = (*at as usize).saturating_sub(40);
             let to = (*at as usize + 80).min(self.text().len());
-            eprintln!("  failed {kind} at {at}: {:?}", String::from_utf8_lossy(&self.text()[from..to]));
+            eprintln!(
+                "  failed {kind} at {at}: {:?}",
+                String::from_utf8_lossy(&self.text()[from..to])
+            );
         }
     }
 }

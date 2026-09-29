@@ -19,7 +19,14 @@ fn is_typeof(expr: &Expr) -> bool {
 fn is_type_name(name: &[u8]) -> bool {
     matches!(
         name,
-        b"symbol" | b"undefined" | b"object" | b"boolean" | b"number" | b"string" | b"function" | b"bigint"
+        b"symbol"
+            | b"undefined"
+            | b"object"
+            | b"boolean"
+            | b"number"
+            | b"string"
+            | b"function"
+            | b"bigint"
     )
 }
 
@@ -47,15 +54,31 @@ fn sibling(context: &mut Context<'_, '_>, value: &Expr) {
             }
             Globals::NONE
         }
-        ExprData::ENumber(_) | ExprData::EBigInt(_) | ExprData::EBoolean(_) | ExprData::ENull(_) => Globals::NONE,
+        ExprData::ENumber(_)
+        | ExprData::EBigInt(_)
+        | ExprData::EBoolean(_)
+        | ExprData::ENull(_) => Globals::NONE,
         ExprData::ERegExp(reg_exp) => {
             let len = reg_exp.value.slice().len() as u32;
-            context.report(&RULE, start, len, b"Invalid typeof comparison value.".to_vec());
+            context.report(
+                &RULE,
+                start,
+                len,
+                b"Invalid typeof comparison value.".to_vec(),
+            );
             return;
         }
-        ExprData::EIdentifier(identifier) if context.name_of(identifier.ref_) == b"undefined" => Globals::UNDEFINED,
+        ExprData::EIdentifier(identifier) if context.name_of(identifier.ref_) == b"undefined" => {
+            Globals::UNDEFINED
+        }
         _ => return,
     };
     let len = context.token_len(start);
-    context.report_if_global(&RULE, start, len, b"Invalid typeof comparison value.".to_vec(), names);
+    context.report_if_global(
+        &RULE,
+        start,
+        len,
+        b"Invalid typeof comparison value.".to_vec(),
+        names,
+    );
 }

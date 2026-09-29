@@ -38,7 +38,7 @@ pub(crate) fn e_object(cx: &mut Context<'_, '_>, node: &E::Object, is_target: bo
         }
         let entry = defined.entry(name.clone()).or_insert((false, false));
         if (gets && entry.0) || (sets && entry.1) {
-            cx.report(NAME, key.loc, format_args!("Duplicate key '{}'.", String::from_utf8_lossy(&name)));
+            cx.report(NAME, key.loc, format_args!("Duplicate key '{}'.", crate::names::display(&name)));
         }
         let entry = defined.entry(name.clone()).or_insert((false, false));
         entry.0 |= gets;

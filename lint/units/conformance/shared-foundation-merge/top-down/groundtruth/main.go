@@ -85,6 +85,7 @@ type textRow struct {
 	LineStarts []int    `json:"ls"`
 	TrimRight  string   `json:"trimRight"`
 	TrimSpace  string   `json:"trimSpace"`
+	TrimWhite  string   `json:"trimWhite"`
 	Blank      string   `json:"blank"`
 	Skip       []int    `json:"skip"`
 	LineChar   [][2]int `json:"lc"`
@@ -113,6 +114,7 @@ func textRecord(s string) textRow {
 	}
 	r.TrimRight = b64(strings.TrimRightFunc(s, unicode.IsSpace))
 	r.TrimSpace = b64(strings.TrimSpace(s))
+	r.TrimWhite = b64(strings.TrimFunc(s, stringutil.IsWhiteSpaceLike))
 	r.Blank = b64(nonWhitespace.ReplaceAllString(s, " "))
 	for p := 0; p <= len(s); p++ {
 		r.Skip = append(r.Skip, SkipTrivia(s, p))
@@ -372,6 +374,39 @@ type sortRow struct {
 	Sorted []string `json:"sorted"`
 }
 
+type tableDigest struct {
+	K       string `json:"k"`
+	Lower   string `json:"lower"`
+	FoldKey string `json:"foldKey"`
+	Space   string `json:"space"`
+	White   string `json:"white"`
+}
+
+// Digests of the tables over every code point, so that a test can hold them in place of the tables.
+func tableDigests() tableDigest {
+	lower, fold, space, white := sha256.New(), sha256.New(), sha256.New(), sha256.New()
+	for r := rune(0); r <= unicode.MaxRune; r++ {
+		if l := unicode.ToLower(r); l != r {
+			fmt.Fprintf(lower, "%x %x\n", r, l)
+		}
+		key := r
+		for n := unicode.SimpleFold(r); n != r; n = unicode.SimpleFold(n) {
+			key = min(key, n)
+		}
+		if key != r {
+			fmt.Fprintf(fold, "%x %x\n", r, key)
+		}
+		if unicode.IsSpace(r) {
+			fmt.Fprintf(space, "%x\n", r)
+		}
+		if stringutil.IsWhiteSpaceLike(r) {
+			fmt.Fprintf(white, "%x %v %v\n", r, stringutil.IsWhiteSpaceSingleLine(r), stringutil.IsLineBreak(r))
+		}
+	}
+	sum := func(h interface{ Sum([]byte) []byte }) string { return hex.EncodeToString(h.Sum(nil)) }
+	return tableDigest{K: "tables", Lower: sum(lower), FoldKey: sum(fold), Space: sum(space), White: sum(white)}
+}
+
 func vectors(path string) {
 	f, err := os.Create(path)
 	if err != nil {
@@ -388,6 +423,7 @@ func vectors(path string) {
 		}
 	}
 	emit(map[string]string{"k": "version", "unicode": unicode.Version})
+	emit(tableDigests())
 	for _, s := range fixedTexts {
 		emit(textRecord(s))
 	}

@@ -17,3 +17,7 @@ Probes of the research unit "c1-seam-arbitration" (top-down pass). Nothing here 
    bad.ts "Unexpected ;" at bad.ts:1:9; visit.js "Invalid assignment target"; break.js; const.ts (error and note); x.d.ts "The constant "x" must be initialized" (false).
    nomacros: macro.ts "Macros are disabled". defaults: tla.ts and deco.js are errors, macro.ts panics at visit_expr.rs:2341 (macro_context).
    Corpus: every 4th source file under test/js/bun, test/js/node, test/js/web, test/cli (1,702 files, no .d.ts): 4 files with errors, all four are fixtures with a syntax error on purpose; 0 warnings; 0 panics; 25 s.
+
+3. The planned src/runtime/cli/lint_command.rs, type-checked with the rustc arguments of the crate bun_runtime (deny warnings; metadata only, nothing linked, nothing rebuilt):
+     /workspace/tools/lk python3 typecheck/check.py "$PWD/typecheck/lint_command_typecheck.rs" /tmp/c1tc/out
+   Result (2026-09-29, e3566be889): exit 0, no diagnostics. The file differs from the plan only where its header says so.

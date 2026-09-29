@@ -24,7 +24,11 @@ pub(crate) struct Token {
 }
 
 /// The spans under `roots`, sorted. `None`: nested too deeply to collect.
-pub(crate) fn spans_under(source: &[u8], roots: &[&Expr], stack_check: StackCheck) -> Option<Vec<Span>> {
+pub(crate) fn spans_under(
+    source: &[u8],
+    roots: &[&Expr],
+    stack_check: StackCheck,
+) -> Option<Vec<Span>> {
     let mut collector = Collector {
         source,
         spans: Vec::new(),
@@ -78,7 +82,10 @@ impl<'ast> Visitor<'ast> for Collector<'_> {
 
     // Nothing inside the element is read: its children are not walked.
     fn visit_e_jsx_element(&mut self, node: &'ast E::JSXElement, loc: Loc) {
-        let (Ok(start), Ok(close)) = (u32::try_from(loc.start), usize::try_from(node.close_tag_loc.start)) else {
+        let (Ok(start), Ok(close)) = (
+            u32::try_from(loc.start),
+            usize::try_from(node.close_tag_loc.start),
+        ) else {
             self.cut = true;
             return;
         };
@@ -111,7 +118,9 @@ fn template_text_end(source: &[u8], mut at: usize) -> Option<(u32, bool)> {
         match *source.get(at)? {
             b'\\' => at += 2,
             b'`' => return Some((u32::try_from(at + 1).ok()?, false)),
-            b'$' if source.get(at + 1) == Some(&b'{') => return Some((u32::try_from(at + 2).ok()?, true)),
+            b'$' if source.get(at + 1) == Some(&b'{') => {
+                return Some((u32::try_from(at + 2).ok()?, true));
+            }
             _ => at += 1,
         }
     }
@@ -150,7 +159,10 @@ impl<'c, 's> Tokens<'c, 's> {
     }
 
     fn span_at(&self, start: u32) -> Option<Span> {
-        let index = self.spans.binary_search_by_key(&start, |span| span.start).ok()?;
+        let index = self
+            .spans
+            .binary_search_by_key(&start, |span| span.start)
+            .ok()?;
         self.spans.get(index).copied()
     }
 
@@ -182,9 +194,15 @@ impl<'c, 's> Tokens<'c, 's> {
             }
             T::TTemplateHead => {
                 self.templates.push(0);
-                Some(Token { opaque: true, ..plain })
+                Some(Token {
+                    opaque: true,
+                    ..plain
+                })
             }
-            T::TNoSubstitutionTemplateLiteral => Some(Token { opaque: true, ..plain }),
+            T::TNoSubstitutionTemplateLiteral => Some(Token {
+                opaque: true,
+                ..plain
+            }),
             T::TOpenBrace => {
                 if let Some(open) = self.templates.last_mut() {
                     *open += 1;
@@ -205,7 +223,11 @@ impl<'c, 's> Tokens<'c, 's> {
                 }
                 self.seat(end);
                 Some(Token {
-                    t: if opens { T::TTemplateMiddle } else { T::TTemplateTail },
+                    t: if opens {
+                        T::TTemplateMiddle
+                    } else {
+                        T::TTemplateTail
+                    },
                     start,
                     end,
                     opaque: true,
@@ -288,7 +310,9 @@ impl CaseTest {
                     return None;
                 }
                 waiting = around;
-            } else if token.t == T::TTemplateMiddle && !matches!(stack.last(), Some((T::TTemplateTail, _))) {
+            } else if token.t == T::TTemplateMiddle
+                && !matches!(stack.last(), Some((T::TTemplateTail, _)))
+            {
                 return None;
             }
             trailing = 0;
@@ -312,9 +336,15 @@ impl CaseTest {
     }
 }
 
-/// Two spellings of one word, or of one private name: a token with a `\` is nothing else.
+/// Two spellings of one word or of one private name: `\u0061` is `a`. A string with that escape is another string.
 fn same_name(a: &[u8], b: &[u8]) -> bool {
-    if bun_core::strings::index_of_char(a, b'\\').is_none() && bun_core::strings::index_of_char(b, b'\\').is_none() {
+    let is_word = |text: &[u8]| matches!(text.first(), Some(first) if first.is_ascii_alphabetic() || matches!(first, b'_' | b'$' | b'\\' | b'#') || *first >= 0x80);
+    if !is_word(a) || !is_word(b) {
+        return false;
+    }
+    if bun_core::strings::index_of_char(a, b'\\').is_none()
+        && bun_core::strings::index_of_char(b, b'\\').is_none()
+    {
         return false;
     }
     match (spelled(a), spelled(b)) {
@@ -336,14 +366,17 @@ fn spelled(name: &[u8]) -> Option<Vec<u8>> {
             return None;
         }
         let (digits, next) = if name.get(at + 2) == Some(&b'{') {
-            let close = at + 3 + bun_core::strings::index_of_char(name.get(at + 3..)?, b'}')? as usize;
+            let close =
+                at + 3 + bun_core::strings::index_of_char(name.get(at + 3..)?, b'}')? as usize;
             (name.get(at + 3..close)?, close + 1)
         } else {
             (name.get(at + 2..at + 6)?, at + 6)
         };
         let mut value = 0u32;
         for &digit in digits {
-            value = value.checked_mul(16)?.checked_add(char::from(digit).to_digit(16)?)?;
+            value = value
+                .checked_mul(16)?
+                .checked_add(char::from(digit).to_digit(16)?)?;
         }
         let mut utf8 = [0u8; 4];
         out.extend_from_slice(char::from_u32(value)?.encode_utf8(&mut utf8).as_bytes());
@@ -432,7 +465,10 @@ pub(crate) fn case_before(source: &[u8], own: u32) -> Option<u32> {
         return None;
     }
     if let Some(&before) = start.checked_sub(1).and_then(|index| source.get(index)) {
-        if before.is_ascii_alphanumeric() || matches!(before, b'_' | b'$' | b'\\' | b'#') || before >= 0x80 {
+        if before.is_ascii_alphanumeric()
+            || matches!(before, b'_' | b'$' | b'\\' | b'#')
+            || before >= 0x80
+        {
             return None;
         }
     }

@@ -37,6 +37,7 @@ bun order37.ts
 echo "== baselines with a diagnostic of the parser or the scanner"
 bun syntactic.ts
 bun syn1.ts
+bun synmix.ts
 echo "== comment runs and words in what the corpus copies"
 bun comments.ts
 echo "== cost of one process and of the library files (depends on the load of the machine)"

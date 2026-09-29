@@ -58,7 +58,12 @@ pub(crate) fn e_object(context: &mut Context<'_, '_>, node: &E::Object) {
         if defined & defines != 0 {
             if let Ok(start) = u32::try_from(key.loc.start) {
                 let len = key_len(context, key, start);
-                context.report(&RULE, start, len, text(&[b"Duplicate key '", name.bytes(), b"'."]));
+                context.report(
+                    &RULE,
+                    start,
+                    len,
+                    text(&[b"Duplicate key '", name.bytes(), b"'."]),
+                );
             }
         }
         defined |= defines;

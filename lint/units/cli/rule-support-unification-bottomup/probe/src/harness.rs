@@ -46,7 +46,8 @@ fn run(paths: Vec<String>) {
         options.features.top_level_await = true;
         let define = bun_js_parser::Define::default();
         let mut log = bun_ast::Log::init();
-        let Ok(parser) = bun_js_parser::Parser::init(options, &mut log, &source, &define, &arena) else {
+        let Ok(parser) = bun_js_parser::Parser::init(options, &mut log, &source, &define, &arena)
+        else {
             writeln!(out, "{path}\tPARSE").unwrap();
             continue;
         };
@@ -54,13 +55,22 @@ fn run(paths: Vec<String>) {
         let no_lint = std::env::var_os("PROBE_PARSE_ONLY").is_some();
         let result = parser.parse_only(|parsed| {
             let parsed_at = started.elapsed();
-            let diagnostics = if no_lint { Vec::new() } else { crate::lint::lint(parsed, &source, &arena) };
+            let diagnostics = if no_lint {
+                Vec::new()
+            } else {
+                crate::lint::lint(parsed, &source, &arena)
+            };
             (diagnostics, parsed_at, started.elapsed())
         });
         match result {
             Ok((diagnostics, parse_time, both)) => {
                 if std::env::var_os("PROBE_TIMES").is_some() {
-                    eprintln!("{path}: parse {:?}, walk and rules {:?}, {} reports", parse_time, both - parse_time, diagnostics.len());
+                    eprintln!(
+                        "{path}: parse {:?}, walk and rules {:?}, {} reports",
+                        parse_time,
+                        both - parse_time,
+                        diagnostics.len()
+                    );
                 }
                 writeln!(out, "{path}\tOK").unwrap();
                 for d in diagnostics {
@@ -86,7 +96,12 @@ pub(crate) fn main() {
     let mut paths = Vec::new();
     for arg in std::env::args().skip(1) {
         match arg.strip_prefix('@') {
-            Some(list) => paths.extend(std::fs::read_to_string(list).unwrap().lines().map(str::to_owned)),
+            Some(list) => paths.extend(
+                std::fs::read_to_string(list)
+                    .unwrap()
+                    .lines()
+                    .map(str::to_owned),
+            ),
             None => paths.push(arg),
         }
     }
@@ -96,7 +111,10 @@ pub(crate) fn main() {
         .stack_size(STACK)
         .spawn(move || {
             let probe = 0u8;
-            crate::shims::STACK_TOP.store((&raw const probe) as usize, core::sync::atomic::Ordering::Relaxed);
+            crate::shims::STACK_TOP.store(
+                (&raw const probe) as usize,
+                core::sync::atomic::Ordering::Relaxed,
+            );
             crate::shims::STACK_SIZE.store(STACK, core::sync::atomic::Ordering::Relaxed);
             bun_core::StackCheck::configure_thread();
             run(paths);

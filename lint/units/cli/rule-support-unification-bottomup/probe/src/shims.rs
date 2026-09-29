@@ -18,8 +18,10 @@ extern "C" fn Bun__StackCheck__getMaxStack() -> *mut c_void {
     (base.saturating_sub(size) + 4 * 1024 * 1024) as *mut c_void
 }
 
-pub(crate) static STACK_TOP: core::sync::atomic::AtomicUsize = core::sync::atomic::AtomicUsize::new(0);
-pub(crate) static STACK_SIZE: core::sync::atomic::AtomicUsize = core::sync::atomic::AtomicUsize::new(0);
+pub(crate) static STACK_TOP: core::sync::atomic::AtomicUsize =
+    core::sync::atomic::AtomicUsize::new(0);
+pub(crate) static STACK_SIZE: core::sync::atomic::AtomicUsize =
+    core::sync::atomic::AtomicUsize::new(0);
 
 #[repr(C)]
 struct SimdutfResult {
@@ -40,16 +42,25 @@ unsafe extern "C" fn simdutf__validate_ascii(buf: *const u8, len: usize) -> bool
 #[unsafe(no_mangle)]
 unsafe extern "C" fn simdutf__utf8_length_from_utf16le(input: *const u16, length: usize) -> usize {
     let units = unsafe { core::slice::from_raw_parts(input, length) };
-    char::decode_utf16(units.iter().copied()).map(|c| c.map_or(3, char::len_utf8)).sum()
+    char::decode_utf16(units.iter().copied())
+        .map(|c| c.map_or(3, char::len_utf8))
+        .sum()
 }
 
 #[unsafe(no_mangle)]
-unsafe extern "C" fn simdutf__utf8_length_from_utf16le_with_replacement(input: *const u16, length: usize) -> usize {
+unsafe extern "C" fn simdutf__utf8_length_from_utf16le_with_replacement(
+    input: *const u16,
+    length: usize,
+) -> usize {
     unsafe { simdutf__utf8_length_from_utf16le(input, length) }
 }
 
 #[unsafe(no_mangle)]
-unsafe extern "C" fn simdutf__convert_utf16le_to_utf8_with_errors(buf: *const u16, len: usize, out: *mut u8) -> SimdutfResult {
+unsafe extern "C" fn simdutf__convert_utf16le_to_utf8_with_errors(
+    buf: *const u16,
+    len: usize,
+    out: *mut u8,
+) -> SimdutfResult {
     let units = unsafe { core::slice::from_raw_parts(buf, len) };
     let mut written = 0usize;
     let mut read = 0usize;
@@ -62,10 +73,18 @@ unsafe extern "C" fn simdutf__convert_utf16le_to_utf8_with_errors(buf: *const u1
                 written += s.len();
                 read += c.len_utf16();
             }
-            Err(_) => return SimdutfResult { status: 6, count: read },
+            Err(_) => {
+                return SimdutfResult {
+                    status: 6,
+                    count: read,
+                };
+            }
         }
     }
-    SimdutfResult { status: 0, count: written }
+    SimdutfResult {
+        status: 0,
+        count: written,
+    }
 }
 
 #[unsafe(no_mangle)]
@@ -113,7 +132,10 @@ unsafe extern "C" fn WTF__parseDouble(bytes: *const u8, length: usize, counted: 
         return 0.0;
     }
     unsafe { *counted = i };
-    core::str::from_utf8(&s[..i]).ok().and_then(|t| t.parse::<f64>().ok()).unwrap_or(f64::NAN)
+    core::str::from_utf8(&s[..i])
+        .ok()
+        .and_then(|t| t.parse::<f64>().ok())
+        .unwrap_or(f64::NAN)
 }
 
 #[unsafe(no_mangle)]
@@ -136,12 +158,24 @@ extern "C" fn bun_restore_stdio() {}
 extern "C" fn on_before_reload_process_posix() {}
 
 #[unsafe(no_mangle)]
-unsafe extern "C" fn posix_spawn_bun(_: *mut c_int, _: *const c_char, _: *const c_void, _: *const *const c_char, _: *const *const c_char) -> isize {
+unsafe extern "C" fn posix_spawn_bun(
+    _: *mut c_int,
+    _: *const c_char,
+    _: *const c_void,
+    _: *const *const c_char,
+    _: *const *const c_char,
+) -> isize {
     std::process::abort()
 }
 
 #[unsafe(no_mangle)]
-unsafe extern "C" fn compress2(_: *mut u8, _: *mut usize, _: *const u8, _: usize, _: c_int) -> c_int {
+unsafe extern "C" fn compress2(
+    _: *mut u8,
+    _: *mut usize,
+    _: *const u8,
+    _: usize,
+    _: c_int,
+) -> c_int {
     std::process::abort()
 }
 
@@ -151,12 +185,23 @@ extern "Rust" fn __bun_macro_context_get_remap(_: *mut c_void, _: &[u8]) -> Opti
 }
 
 #[unsafe(no_mangle)]
-extern "C" fn WTFReportAssertionFailure(_: *const c_char, _: c_int, _: *const c_char, _: *const c_char) {
+extern "C" fn WTFReportAssertionFailure(
+    _: *const c_char,
+    _: c_int,
+    _: *const c_char,
+    _: *const c_char,
+) {
     std::process::abort()
 }
 
 #[unsafe(no_mangle)]
-extern "C" fn WTFReportAssertionFailureWithMessage(_: *const c_char, _: c_int, _: *const c_char, _: *const c_char, _: *const c_char) {
+extern "C" fn WTFReportAssertionFailureWithMessage(
+    _: *const c_char,
+    _: c_int,
+    _: *const c_char,
+    _: *const c_char,
+    _: *const c_char,
+) {
     std::process::abort()
 }
 
@@ -179,7 +224,11 @@ fn js_number(x: f64) -> String {
         return "0".into();
     }
     if x.is_infinite() {
-        return if x > 0.0 { "Infinity".into() } else { "-Infinity".into() };
+        return if x > 0.0 {
+            "Infinity".into()
+        } else {
+            "-Infinity".into()
+        };
     }
     if x < 0.0 {
         return format!("-{}", js_number(-x));

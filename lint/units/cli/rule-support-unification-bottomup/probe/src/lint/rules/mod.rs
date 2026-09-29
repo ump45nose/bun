@@ -16,7 +16,11 @@ use bun_ast::OpCode;
 
 /// `<`, `<=`, `>`, `>=`, `==`, `!=`, `===`, `!==`.
 pub(crate) fn is_comparison(op: OpCode) -> bool {
-    is_equality(op) || matches!(op, OpCode::BinLt | OpCode::BinLe | OpCode::BinGt | OpCode::BinGe)
+    is_equality(op)
+        || matches!(
+            op,
+            OpCode::BinLt | OpCode::BinLe | OpCode::BinGt | OpCode::BinGe
+        )
 }
 
 /// `==`, `!=`, `===`, `!==`.

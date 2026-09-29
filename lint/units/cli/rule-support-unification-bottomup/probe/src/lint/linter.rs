@@ -3,9 +3,9 @@
 use bun_ast::walk::{self, Visitor};
 use bun_ast::{B, E, Expr, ExprData, G, Loc, OpCode, S, Stmt, StmtData};
 
+use super::Diagnostic;
 use super::context::Context;
 use super::rules;
-use super::Diagnostic;
 
 #[allow(clippy::disallowed_methods)]
 pub(crate) fn run(context: Context<'_, '_>, stmts: &[Stmt]) -> Vec<Diagnostic> {
@@ -183,8 +183,11 @@ impl<'ast> Visitor<'ast> for Linter<'_, '_> {
         if self.stress {
             self.context.stress_binary(node, loc);
         }
-        let is_default = node.op == OpCode::BinAssign && self.take(core::ptr::from_ref(node).addr());
-        if node.op == OpCode::BinAssign && matches!(node.left.data, ExprData::EArray(_) | ExprData::EObject(_)) {
+        let is_default =
+            node.op == OpCode::BinAssign && self.take(core::ptr::from_ref(node).addr());
+        if node.op == OpCode::BinAssign
+            && matches!(node.left.data, ExprData::EArray(_) | ExprData::EObject(_))
+        {
             self.mark(&node.left);
         }
         if !is_default {
@@ -199,14 +202,16 @@ impl<'ast> Visitor<'ast> for Linter<'_, '_> {
 
     fn visit_e_dot(&mut self, node: &'ast E::Dot, loc: Loc) {
         if self.stress {
-            self.context.stress_member(loc, node.name_loc, &node.target, None);
+            self.context
+                .stress_member(loc, node.name_loc, &node.target, None);
         }
         walk::walk_e_dot(self, node);
     }
 
     fn visit_e_index(&mut self, node: &'ast E::Index, loc: Loc) {
         if self.stress {
-            self.context.stress_member(loc, node.index.loc, &node.target, Some(&node.index));
+            self.context
+                .stress_member(loc, node.index.loc, &node.target, Some(&node.index));
         }
         walk::walk_e_index(self, node);
     }

@@ -32,6 +32,16 @@ export function trimSpace(s: string): string {
   return s.slice(start, end);
 }
 
+// strings.TrimFunc
+export function trimFunc(s: string, f: (r: number) => boolean): string {
+  const cps = [...s];
+  let start = 0;
+  let end = cps.length;
+  while (start < end && f(cps[start].codePointAt(0)!)) start++;
+  while (end > start && f(cps[end - 1].codePointAt(0)!)) end--;
+  return cps.slice(start, end).join("");
+}
+
 // strings.TrimPrefix
 export function trimPrefix(s: string, prefix: string): string {
   return s.startsWith(prefix) ? s.slice(prefix.length) : s;

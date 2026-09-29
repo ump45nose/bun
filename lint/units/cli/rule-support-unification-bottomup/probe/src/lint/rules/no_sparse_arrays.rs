@@ -14,7 +14,12 @@ static RULE: Rule = Rule {
 pub(crate) fn e_array(context: &mut Context<'_, '_>, node: &E::Array) {
     for item in node.items.as_slice() {
         if let (ExprData::EMissing(_), Ok(comma)) = (&item.data, u32::try_from(item.loc.start)) {
-            context.report(&RULE, comma, 1, b"Unexpected comma in middle of array.".to_vec());
+            context.report(
+                &RULE,
+                comma,
+                1,
+                b"Unexpected comma in middle of array.".to_vec(),
+            );
         }
     }
 }

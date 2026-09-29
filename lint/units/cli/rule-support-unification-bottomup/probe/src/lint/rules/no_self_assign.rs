@@ -53,7 +53,9 @@ fn each_self_assignment(context: &mut Context<'_, '_>, left: &Expr, right: &Expr
                 }
             }
         }
-        (ExprData::ESpread(l), ExprData::ESpread(r)) => each_self_assignment(context, &l.value, &r.value),
+        (ExprData::ESpread(l), ExprData::ESpread(r)) => {
+            each_self_assignment(context, &l.value, &r.value)
+        }
         (ExprData::EObject(l), ExprData::EObject(r)) if !r.properties.as_slice().is_empty() => {
             let r = r.properties.as_slice();
             // What is written before the last spread of the right side may be overwritten by it.
@@ -88,7 +90,10 @@ fn each_property(context: &mut Context<'_, '_>, left: &G::Property, right: &G::P
     else {
         return;
     };
-    let same = match (static_name::of_key(left_key), static_name::of_key(right_key)) {
+    let same = match (
+        static_name::of_key(left_key),
+        static_name::of_key(right_key),
+    ) {
         (Some(left), Some(right)) => left.bytes() == right.bytes(),
         _ => false,
     };
@@ -103,17 +108,23 @@ fn is_same_reference(context: &Context<'_, '_>, left: &Expr, right: &Expr) -> bo
         return false;
     }
     match (&left.data, &right.data) {
-        (ExprData::EThis(_), ExprData::EThis(_)) | (ExprData::ESuper(_), ExprData::ESuper(_)) => true,
-        (ExprData::EIdentifier(l), ExprData::EIdentifier(r)) => context.name_of(l.ref_) == context.name_of(r.ref_),
+        (ExprData::EThis(_), ExprData::EThis(_)) | (ExprData::ESuper(_), ExprData::ESuper(_)) => {
+            true
+        }
+        (ExprData::EIdentifier(l), ExprData::EIdentifier(r)) => {
+            context.name_of(l.ref_) == context.name_of(r.ref_)
+        }
         (ExprData::EPrivateIdentifier(l), ExprData::EPrivateIdentifier(r)) => {
             context.name_of(l.ref_) == context.name_of(r.ref_)
         }
         (ExprData::EDot(_) | ExprData::EIndex(_), ExprData::EDot(_) | ExprData::EIndex(_)) => {
-            let (Some(left_target), Some(right_target)) = (target_of(left), target_of(right)) else {
+            let (Some(left_target), Some(right_target)) = (target_of(left), target_of(right))
+            else {
                 return false;
             };
             if let Some(name) = static_name::of_member(left) {
-                return static_name::of_member(right).is_some_and(|other| other.bytes() == name.bytes())
+                return static_name::of_member(right)
+                    .is_some_and(|other| other.bytes() == name.bytes())
                     && is_same_reference(context, left_target, right_target);
             }
             let (ExprData::EIndex(l), ExprData::EIndex(r)) = (&left.data, &right.data) else {
@@ -150,7 +161,9 @@ fn is_same_literal(left: &Expr, right: &Expr) -> bool {
         (ExprData::ENull(_), ExprData::ENull(_)) => true,
         (ExprData::EBoolean(l), ExprData::EBoolean(r)) => l.value == r.value,
         (ExprData::ENumber(l), ExprData::ENumber(r)) => l.value() == r.value(),
-        (ExprData::EString(l), ExprData::EString(r)) if !l.prefer_template && !r.prefer_template => {
+        (ExprData::EString(l), ExprData::EString(r))
+            if !l.prefer_template && !r.prefer_template =>
+        {
             match (static_name::of_key(left), static_name::of_key(right)) {
                 (Some(l), Some(r)) => l.bytes() == r.bytes(),
                 _ => false,
@@ -195,7 +208,12 @@ fn report(context: &mut Context<'_, '_>, node: &Expr) {
     };
     let name = without_white_space(source);
     let len = context.token_len(start);
-    context.report(&RULE, start, len, text(&[b"'", &name, b"' is assigned to itself."]));
+    context.report(
+        &RULE,
+        start,
+        len,
+        text(&[b"'", &name, b"' is assigned to itself."]),
+    );
 }
 
 /// `text.replace(/\s+/gu, "")`.

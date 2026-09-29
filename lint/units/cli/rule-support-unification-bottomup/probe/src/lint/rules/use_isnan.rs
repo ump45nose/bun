@@ -20,7 +20,11 @@ fn nan(context: &Context<'_, '_>, expr: &Expr) -> Globals {
     };
     let target = match &expr.data {
         ExprData::EIdentifier(identifier) => {
-            return if context.name_of(identifier.ref_) == b"NaN" { Globals::NAN } else { Globals::NONE };
+            return if context.name_of(identifier.ref_) == b"NaN" {
+                Globals::NAN
+            } else {
+                Globals::NONE
+            };
         }
         ExprData::EDot(dot) => &dot.target,
         ExprData::EIndex(index) => &index.target,
@@ -48,7 +52,9 @@ pub(crate) fn e_binary(context: &mut Context<'_, '_>, node: &E::Binary, loc: Loc
     let Ok(own) = u32::try_from(loc.start) else {
         return;
     };
-    let start = context.start_of(loc, node.right.loc, &[&node.left, &node.right]).unwrap_or(own);
+    let start = context
+        .start_of(loc, node.right.loc, &[&node.left, &node.right])
+        .unwrap_or(own);
     let len = context.token_len(start);
     context.report_if_global(
         &RULE,
@@ -66,7 +72,8 @@ pub(crate) fn s_switch(context: &mut Context<'_, '_>, node: &S::Switch, loc: Loc
             &RULE,
             start,
             6,
-            b"'switch(NaN)' can never match a case clause. Use Number.isNaN instead of the switch.".to_vec(),
+            b"'switch(NaN)' can never match a case clause. Use Number.isNaN instead of the switch."
+                .to_vec(),
             names,
         );
     }

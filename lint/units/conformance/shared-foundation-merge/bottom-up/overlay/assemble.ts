@@ -20,6 +20,7 @@ export const moduleMap: [committed: string, source: string][] = [
   [runner + "vfs.ts", here + "/runner/vfs.ts"],
   [runner + "vfstest.ts", here + "/runner/vfstest.ts"],
   [runner + "text_model.ts", here + "/runner/text_model.ts"],
+  [runner + "UPSTREAM_PORTED", here + "/runner/UPSTREAM_PORTED"],
   [runner + "test_case_parser.ts", "instance-materialisation/prototype/test_case_parser.ts"],
   [runner + "harnessutil.ts", "instance-materialisation/prototype/harnessutil.ts"],
   [runner + "options_table.json", "instance-materialisation/prototype/options_table.json"],
@@ -238,6 +239,11 @@ const edits: Edit[] = [
   // vfsmatch.ts: strings.ToLower.
   [r("vfsmatch.ts"), "if (!p.caseSensitive) lit = lit.toLowerCase();", "if (!p.caseSensitive) lit = toLower(lit);", 1],
   [r("vfsmatch.ts"), `import type { MemFs } from "./vfstest";\n`, `import { toLower } from "./gostrings";\nimport type { MemFs } from "./vfstest";\n`, 1],
+  // tsconfig.ts: the white space and the line breaks of the scanner of upstream, which the classes of JavaScript are not.
+  [r("tsconfig.ts"), `import { toLower } from "./gostrings";`, `import { toLower } from "./gostrings";\nimport { isLineBreak, isWhiteSpaceLike } from "./stringutil";`, 1],
+  [r("tsconfig.ts"), `while (i < n && /[\\s\\uFEFF]/.test(text[i])) i++;`, "while (i < n && isWhiteSpaceLike(text.charCodeAt(i))) i++;", 1],
+  [r("tsconfig.ts"), `if (/[\\s\\uFEFF]/.test(text[i])) i++;`, "if (isWhiteSpaceLike(text.charCodeAt(i))) i++;", 1],
+  [r("tsconfig.ts"), `while (i < n && text[i] !== "\\n" && text[i] !== "\\r") i++;`, "while (i < n && !isLineBreak(text.charCodeAt(i))) i++;", 2],
   // The two functions of tspath that had a short form take the arguments of upstream.
   [r("tsconfig.ts"), "toPath(configFileName, basePath)", "toPath(configFileName, basePath, true)", 1],
   [r("compiler_runner.ts"), "getAnyExtensionFromPath(basename)", "getAnyExtensionFromPath(basename, undefined, false)", 1],
@@ -283,6 +289,14 @@ const edits: Edit[] = [
   // index.ts: a case that cannot be read is told apart, and the file of the post-emit order is beside the runner.
   [r("index.ts"), `  const content = readFile(file).contents;\n`, `  const read = readFile(file);\n  if (!read.ok) return { ok: false, status: "invalid", reason: "Could not read test file: " + file };\n  const content = read.contents;\n`, 1],
   [r("index.ts"), `new URL("../../oracle-and-expectations/top-down/vectors/post-emit-order.txt", import.meta.url)`, `new URL("../post-emit-order.txt", import.meta.url)`, 1],
+  // index.ts: a link and its target are names of the file system, as harnessutil.go:208 makes them; the roots are such names already.
+  [
+    r("index.ts"),
+    "links: [...t.symlinks].map(([path, target]) => ({ path, target })),",
+    "links: [...t.symlinks].map(([path, target]) => ({\n        path: getNormalizedAbsolutePath(path, t.currentDirectory),\n        target: getNormalizedAbsolutePath(target, t.currentDirectory),\n      })),",
+    1,
+  ],
+  [r("index.ts"), `import { readFile } from "./vfs";\n`, `import { getNormalizedAbsolutePath } from "./tspath";\nimport { readFile } from "./vfs";\n`, 1],
   // sweep.ts and the test: the runner is a directory, and the test reads the vectors of the research where they are.
   ["test/cli/lint/conformance/sweep.ts", `} from "./runner/index";`, `} from "./runner";`, 1],
   ["test/cli/lint/conformance.test.ts", `} from "./conformance/runner/index";`, `} from "./conformance/runner";`, 1],

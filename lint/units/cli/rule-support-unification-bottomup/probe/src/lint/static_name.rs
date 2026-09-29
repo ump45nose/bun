@@ -24,10 +24,16 @@ pub(crate) fn of_key(key: &Expr) -> Option<Name<'_>> {
         ExprData::EString(string) => of_string(string),
         ExprData::ENumber(number) => {
             let mut buffer = [0u8; 124];
-            Some(Name::Owned(bun_core::fmt::FormatDouble::dtoa(&mut buffer, number.value()).to_vec()))
+            Some(Name::Owned(
+                bun_core::fmt::FormatDouble::dtoa(&mut buffer, number.value()).to_vec(),
+            ))
         }
         ExprData::EBigInt(big) => of_big_int(big.value.slice()),
-        ExprData::EBoolean(boolean) => Some(Name::Borrowed(if boolean.value { b"true" } else { b"false" })),
+        ExprData::EBoolean(boolean) => Some(Name::Borrowed(if boolean.value {
+            b"true"
+        } else {
+            b"false"
+        })),
         ExprData::ENull(_) => Some(Name::Borrowed(b"null")),
         ExprData::ERegExp(reg_exp) => Some(of_reg_exp(reg_exp)),
         _ => None,
@@ -72,7 +78,13 @@ fn of_big_int(digits: &[u8]) -> Option<Name<'_>> {
         if bun_core::strings::index_of_char(digits, b'_').is_none() {
             return Some(Name::Borrowed(digits));
         }
-        return Some(Name::Owned(digits.iter().copied().filter(|&digit| digit != b'_').collect()));
+        return Some(Name::Owned(
+            digits
+                .iter()
+                .copied()
+                .filter(|&digit| digit != b'_')
+                .collect(),
+        ));
     }
     // The conversion is quadratic: a literal longer than this is not compared.
     if digits.len() > 4096 {

@@ -71,5 +71,15 @@
 	{
 		"code": "switch (a) { case <a b=\":\"/>.c: case <a b=\":\"/>.c: }",
 		"jsx": true
-	}
+	},
+	"switch (a) { case '\\u0061': case 'a': }",
+	"switch (a) { case \"\\x61\": case \"a\": }",
+	"switch (a) { case `\\u0061`: case `a`: }",
+	"switch (a) { case /\\u0061/: case /a/: }",
+	"switch (a) { case a.\\u0062\\u0063: case a.bc: case a.b\\u0063: }",
+	"switch (a) { case \\u0061\\u0062: case ab: case a\\u{62}: }",
+	"switch (a) { case a.#\\u0062 in c: case a.#b in c: }",
+	"switch (a) { case {\\u0061: 1}.a: case {a: 1}.a: }",
+	"switch (a) { case 0x1: case 0X1: case 1e0: case 1E0: }",
+	"switch (a) { case a.if: case a.if: case a.\\u0069f: }"
 ]

@@ -27,6 +27,7 @@ import {
   padLeft,
   sortedStrings,
   toLower,
+  trimFunc,
   trimSpace,
   unicodeToLower,
 } from "../runner/gostrings";
@@ -185,6 +186,17 @@ for (const line of load(vecPath).split("\n")) {
   counts[k] = (counts[k] ?? 0) + 1;
   if (k === "version") {
     eq("unicode version of the vectors", unicodeVersion, v.unicode, v);
+  } else if (k === "tables") {
+    // The same digests from the functions of the merged set: what a test can hold in place of the tables of Go.
+    const h = { lower: createHash("sha256"), foldKey: createHash("sha256"), space: createHash("sha256"), white: createHash("sha256") };
+    for (let r = 0; r <= MaxRune; r++) {
+      const x = r.toString(16);
+      if (unicodeToLower(r) !== r) h.lower.update(`${x} ${unicodeToLower(r).toString(16)}\n`);
+      if (foldKey(r) !== r) h.foldKey.update(`${x} ${foldKey(r).toString(16)}\n`);
+      if (isSpace(r)) h.space.update(`${x}\n`);
+      if (isWhiteSpaceLike(r)) h.white.update(`${x} ${isWhiteSpaceSingleLine(r)} ${isLineBreak(r)}\n`);
+    }
+    eq("digests of the tables", [h.lower.digest("hex"), h.foldKey.digest("hex"), h.space.digest("hex"), h.white.digest("hex")], [v.lower, v.foldKey, v.space, v.white], "tables");
   } else if (k === "text") {
     const s = b(v.s);
     const id = hex(s).slice(0, 60);
@@ -214,6 +226,8 @@ for (const line of load(vecPath).split("\n")) {
       eq("bytes of a ByteString", fromByteString(s).toString("hex"), hex(s), id);
       eq("lineDelimiter.Split on decoded text", d.split(/\r?\n/).map(x => hex(enc(x))), v.split.map((x: string) => hex(b(x))), id);
       eq("strings.TrimSpace", hex(enc(trimSpace(d))), hex(b(v.trimSpace)), id);
+      eq("strings.TrimFunc(IsWhiteSpaceLike)", hex(enc(trimFunc(d, isWhiteSpaceLike))), hex(b(v.trimWhite)), id);
+      eq("strings.TrimFunc(IsSpace)", hex(enc(trimFunc(d, isSpace))), hex(b(v.trimSpace)), id);
       eq("strings.ToLower", hex(enc(toLower(d))), hex(b(v.toLower)), id);
       eq("tspath.ToFileNameLowerCase", hex(enc(tspath.toFileNameLowerCase(d))), hex(b(v.toFileNameLowerCase)), id);
     } else {

@@ -1,0 +1,39 @@
+Research unit "needs-and-lint-channel", top-down pass. Research only: no file of the repository was changed.
+
+NEEDS.draft.md   the draft of /workspace/notes/lint/units/conformance/NEEDS.md. To use it:
+                 cp NEEDS.draft.md /workspace/notes/lint/units/conformance/NEEDS.md
+probes/run.sh    recreates every count of the draft that comes from the corpus (about one minute):
+                 ./probes/run.sh /tmp/some-scratch-directory
+                 It reads the reference clones, the vectors of the earlier research units
+                 (enumerator-topdown, enumerator, instance-materialisation, error-baseline-format) and
+                 typecheck/diagnostics-groundtruth/data/msguse.tsv.gz.
+
+Measurements that run.sh does not repeat, with the commands (W = /workspace/wt/conformance, TS = the TypeScript clone):
+
+1. Attributes of typecheck's fixtures (VN-1).
+   cd $W && git check-attr text eol -- test/cli/lint/typecheck/fixtures/a.ts        -> text: set, eol: lf
+   Scratch repository with the root .gitattributes of $W: git add of compiler/ExportAssignment7.ts (76 bytes,
+   blob 9c8b78da) under test/cli/lint/typecheck/fixtures/ stores blob 6d7e2a43 (71 bytes); under a directory
+   whose .gitattributes says "* -text" it stores 9c8b78da.
+
+2. test/tsconfig.json (RP-1). A tsconfig with the options of the test project and every 62nd .ts case as "files":
+   /workspace/bun/node_modules/.bin/tsc -p tsconfig.json --pretty false
+   195 files: 63 errors, all syntactic, in 14 files. Without those 14: 1,005 errors in 156 of 181 files.
+
+3. oxlint.json (RP-2). A copy of tests/cases/compiler at <scratch>/test/cli/lint/conformance/corpus/compiler, with
+   oxlint.json and scripts/oxlint-plugins/bun.js of $W beside it:
+   /workspace/bun/node_modules/.bin/oxlint --config oxlint.json --fix --quiet     -> "Found 0 warnings and 6966 errors."
+   diff -rq <copy> $TS/tests/cases/compiler | grep -c '^Files'                    -> 106
+
+4. Ignore rules (RP-6). The paths of the corpus through git check-ignore --no-index -v --stdin in $W:
+   one hit, .gitignore:139 *.generated.ts, tests/cases/conformance/parser/ecmascript5/parserSyntaxWalker.generated.ts.
+
+5. Longest path (RP-6, CI-1): awk over the upstream paths with the prefix of the sync prototype -> 202; git ls-files in $W -> 159.
+
+6. The binaries run the operand: BUN_FEATURE_FLAG_EXPERIMENTAL_LINT=1 <bun> --lint marker.ts prints what marker.ts prints,
+   with /workspace/bun/build/release/bun and with /workspace/wt/cli/build/debug/bun-debug (1.4.3-debug+e3566be88).
+
+7. The prototype of the batch form: bun test ./manifest.test.ts ./plain.test.ts in check-contract-default-spawn/top-down: 23 pass.
+
+Not measured: anything on Windows or macOS; a real `bun --lint`; LeakSanitizer on the lint path; oxlint --fix on the
+conformance directory (only compiler was copied).

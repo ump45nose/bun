@@ -33,6 +33,10 @@ pub(crate) fn e_binary(context: &mut Context<'_, '_>, node: &E::Binary) {
         &RULE,
         start,
         1,
-        text(&[b"Unexpected negating the left operand of '", op, b"' operator."]),
+        text(&[
+            b"Unexpected negating the left operand of '",
+            op,
+            b"' operator.",
+        ]),
     );
 }

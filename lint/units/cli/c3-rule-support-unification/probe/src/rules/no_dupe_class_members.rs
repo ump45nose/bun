@@ -56,7 +56,7 @@ pub(crate) fn class(cx: &mut Context<'_, '_>, class: &G::Class) {
             }
         };
         if duplicate {
-            cx.report(NAME, key.loc, format_args!("Duplicate name '{}'.", String::from_utf8_lossy(&name)));
+            cx.report(NAME, key.loc, format_args!("Duplicate name '{}'.", crate::names::display(&name)));
         }
     }
 }

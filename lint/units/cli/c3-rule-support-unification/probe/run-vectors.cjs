@@ -71,7 +71,7 @@ for (const rule of ["no-duplicate-case", "no-self-assign"]) {
 // D
 const dir = `${ROOT}/c3-rule-support-unification/vectors`;
 if (fs.existsSync(dir)) for (const f of fs.readdirSync(dir)) {
-  if (!f.endsWith(".json")) continue;
+  if (!f.endsWith(".json") || f.endsWith(".eslint-rejects.json")) continue;
   const rule = f.replace(/\.json$/, "");
   for (const v of JSON.parse(fs.readFileSync(`${dir}/${f}`, "utf8"))) {
     add({ rule, family: "D", file: `vectors/${f}`, code: v.code, jsx: !!v.jsx, eslint: v.eslint.map(e => `${e.line}:${e.column} ${e.message}`),
@@ -109,8 +109,10 @@ for (const c of cases) {
   s.cases++;
   const reports = got.get(c.id);
   if (reports === null || reports === undefined) { s.rejected++; show.push(`REJECTED ${key}: ${JSON.stringify(c.code)}  eslint: ${c.eslint.join(" | ") || "(none)"}`); continue; }
+  // Half a surrogate pair prints as U+FFFD.
+  const lone = s => s.replace(/[\ud800-\udbff](?![\udc00-\udfff])|(?<![\ud800-\udbff])[\udc00-\udfff]/g, "\ufffd");
   const mine = reports.filter(r => r.rule === c.rule).map(r => `${lineCol(c.code, r.start)} ${r.message}`).sort();
-  const eslint = c.eslint.slice().sort();
+  const eslint = c.eslint.map(lone).sort();
   const eslintDedup = [...new Set(eslint)];
   const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   if (same(mine, eslint)) s.asEslint++;

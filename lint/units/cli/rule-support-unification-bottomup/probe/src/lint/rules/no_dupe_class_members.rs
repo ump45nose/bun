@@ -61,7 +61,12 @@ pub(crate) fn class(context: &mut Context<'_, '_>, class: &G::Class) {
         if defined & clashes != 0 {
             if let Ok(start) = u32::try_from(key.loc.start) {
                 let len = key_len(context, key, start);
-                context.report(&RULE, start, len, text(&[b"Duplicate name '", name.bytes(), b"'."]));
+                context.report(
+                    &RULE,
+                    start,
+                    len,
+                    text(&[b"Duplicate name '", name.bytes(), b"'."]),
+                );
             }
         }
         defined |= defines;

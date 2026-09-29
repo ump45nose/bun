@@ -14,5 +14,10 @@ pub(crate) fn s_debugger(context: &mut Context<'_, '_>, loc: Loc) {
     let Ok(start) = u32::try_from(loc.start) else {
         return;
     };
-    context.report(&RULE, start, 8, b"Unexpected 'debugger' statement.".to_vec());
+    context.report(
+        &RULE,
+        start,
+        8,
+        b"Unexpected 'debugger' statement.".to_vec(),
+    );
 }
