@@ -74,7 +74,7 @@ for (const suite of ["compiler", "conformance"] as const) {
         useCaseSensitiveFileNames: v.useCaseSensitiveFileNames,
         symlinks: Object.fromEntries([...v.symlinks].sort((a, b) => (a[0] < b[0] ? -1 : 1))),
         configFileNames: v.configFileNames ?? null,
-        configOptions: sortKeys(v.configOptions),
+        configOptions: sortKeys(v.configOptions === undefined ? undefined : { ...(v.configOptions as object), noLib: undefined }),
       };
       const theirs = {
         currentDirectory: t.currentDirectory,
@@ -87,7 +87,7 @@ for (const suite of ["compiler", "conformance"] as const) {
         useCaseSensitiveFileNames: t.useCaseSensitiveFileNames,
         symlinks: Object.fromEntries(Object.entries(t.symlinks).sort((a, b) => (a[0] < b[0] ? -1 : 1))),
         configFileNames: t.configFileNames,
-        configOptions: sortKeys(t.configOptions),
+        configOptions: sortKeys(t.configOptions == null ? t.configOptions : { ...t.configOptions, noLib: undefined }),
       };
       let ok = true;
       for (const k of Object.keys(mine) as (keyof typeof mine)[]) {

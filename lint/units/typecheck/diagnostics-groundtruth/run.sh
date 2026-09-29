@@ -42,4 +42,8 @@ cmp "$W/go.cmp" "$W/rust.cmp"
 "$W/driver" < "$W/vectors-external.txt" > "$W/rust-external.out"
 grep -v -E '^(PRETTY|REL) ' "$W/go-external.out" | cmp - "$W/rust-external.out"
 "$W/driver" < "$W/vectors-keys.txt" | cmp - "$W/go-keys.out"
+SMALL=1 bun "$HERE/diff/genvec.mjs" "$W/small-vectors.txt" > /dev/null
+cmp "$W/small-vectors.txt" "$HERE/golden/small/vectors.txt"
+"$W/driver" < "$W/small-vectors.txt" | sed -e 's/ INVALID kept=.*$//' > "$W/small-rust.out"
+bun "$HERE/diff/digests.mjs" "$W/small-rust.out" | cmp - "$HERE/golden/small/expected-digests.txt"
 echo "ground truth ok"

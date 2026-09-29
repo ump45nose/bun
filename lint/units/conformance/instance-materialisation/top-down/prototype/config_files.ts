@@ -43,8 +43,10 @@ export interface FileSelectionOptions {
   module: number;
   moduleResolution: number;
   target: number;
+  // read for the lib.d.ts rule of @libFiles (harnessutil.go:149)
+  noLib: number;
 }
-const names = ["outDir", "declarationDir", "allowJs", "checkJs", "resolveJsonModule", "module", "moduleResolution", "target"] as const;
+const names = ["outDir", "declarationDir", "allowJs", "checkJs", "resolveJsonModule", "module", "moduleResolution", "target", "noLib"] as const;
 type Name = (typeof names)[number];
 const kindOf: Record<Name, "string" | "boolean" | "enum"> = {
   outDir: "string",
@@ -55,9 +57,10 @@ const kindOf: Record<Name, "string" | "boolean" | "enum"> = {
   module: "enum",
   moduleResolution: "enum",
   target: "enum",
+  noLib: "boolean",
 };
 function empty(): FileSelectionOptions {
-  return { outDir: "", declarationDir: "", allowJs: 0, checkJs: 0, resolveJsonModule: 0, module: 0, moduleResolution: 0, target: 0 };
+  return { outDir: "", declarationDir: "", allowJs: 0, checkJs: 0, resolveJsonModule: 0, module: 0, moduleResolution: 0, target: 0, noLib: 0 };
 }
 
 const configDirTemplate = "${configDir}";

@@ -79,13 +79,14 @@ function tieCase(n) {
   }
   out.push(`CASE tie${caseNo++}`, ...lines, `TOP ${top.join(" ")}`, "END");
 }
-for (let i = 0; i < 150; i++) makeCase("mixed");
-for (let i = 0; i < 40; i++) makeCase("onefile");
-for (let i = 0; i < 20; i++) makeCase("global");
-for (let i = 0; i < 40; i++) makeCase("deep");
-for (let i = 0; i < 40; i++) makeCase("big");
-for (const n of [8, 12, 13, 14, 20, 33, 50, 64, 100, 200]) for (let k = 0; k < 4; k++) tieCase(n);
-for (const n of [0, 1, 2, 7, 8, 12, 13, 20, 49, 50, 51, 64, 100, 127, 128, 129, 500, 1000, 4097]) for (const div of [1, 2, 16, 1000000]) for (const shape of ["random", "sorted", "reversed", "fewvalues", "sawtooth", "almost", "organ"]) {
+const small = process.env.SMALL === "1";
+for (let i = 0; i < (small ? 30 : 150); i++) makeCase("mixed");
+for (let i = 0; i < (small ? 8 : 40); i++) makeCase("onefile");
+for (let i = 0; i < (small ? 4 : 20); i++) makeCase("global");
+for (let i = 0; i < (small ? 8 : 40); i++) makeCase("deep");
+for (let i = 0; i < (small ? 6 : 40); i++) makeCase("big");
+for (const n of small ? [8, 12, 13, 20, 50] : [8, 12, 13, 14, 20, 33, 50, 64, 100, 200]) for (let k = 0; k < (small ? 1 : 4); k++) tieCase(n);
+for (const n of process.env.SMALL === "1" ? [0, 1, 2, 12, 13, 20, 50, 64, 129, 300] : [0, 1, 2, 7, 8, 12, 13, 20, 49, 50, 51, 64, 100, 127, 128, 129, 500, 1000, 4097]) for (const div of process.env.SMALL === "1" ? [1, 16] : [1, 2, 16, 1000000]) for (const shape of ["random", "sorted", "reversed", "fewvalues", "sawtooth", "almost", "organ"]) {
   const xs = [];
   for (let i = 0; i < n; i++) xs.push(shape === "random" ? ri(n * 4 + 1) : shape === "sorted" ? i : shape === "reversed" ? n - i : shape === "fewvalues" ? ri(5) * 16 + ri(16) : shape === "sawtooth" ? (i % 17) * 3 : shape === "almost" ? (rnd() < 0.05 ? ri(n + 1) : i) : Math.min(i, n - i));
   out.push(`SORT ${div}${xs.length ? " " + xs.join(" ") : ""}`);

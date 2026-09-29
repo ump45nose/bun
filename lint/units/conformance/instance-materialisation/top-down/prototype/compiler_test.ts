@@ -150,9 +150,14 @@ export function newCompilerTest(content: string, fileName: string, configuration
     const value = rawLibFiles.trim();
     if (!value.startsWith("-") && value !== "") libFiles = value.split(",").filter(v => v !== "");
   }
-  let noLib = false;
+  // harnessutil.go:90-110: the options of the config unit, then the settings of the case
+  let noLib = (configOptions as { noLib?: number } | undefined)?.noLib === 2;
   const rawNoLib = harnessConfig?.get("nolib");
-  if (rawNoLib !== undefined) noLib = rawNoLib.toLowerCase() === "true";
+  if (rawNoLib !== undefined) {
+    const lower = rawNoLib.toLowerCase();
+    if (lower !== "true" && lower !== "false") return { ok: false, status: "invalid", reason: `Value for option 'noLib' must be a boolean, got: ${rawNoLib}` };
+    noLib = lower === "true";
+  }
   const programFileNames: string[] = [];
   for (const file of toBeCompiled) {
     const name = getNormalizedAbsolutePath(file.unitName, currentDirectory);
