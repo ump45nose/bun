@@ -7030,6 +7030,181 @@ describe("fs.close on stdio descriptors", () => {
   });
 });
 
+// A file system can report a write error first at close(2): NFS, SMB and FUSE
+// do that for ENOSPC, EDQUOT and EIO. CI has no such mount, so an LD_PRELOAD
+// shim (close-fault-shim.c) fails the first close of each file named
+// "<name>.<errno>.close-fault", after the descriptor is released, and writes
+// one line to stderr for each close of such a file. glibc only, same as the
+// statfs shim above.
+describe.skipIf(!isGlibc || !cc)("a close(2) that reports an error", () => {
+  const dir = tempDirWithFiles("fs-close-fault", {});
+  const shim = join(dir, "close-fault-shim.so");
+  const { ENOSPC, EDQUOT, EIO, EINTR, EINPROGRESS } = os.constants.errno;
+
+  beforeAll(() => {
+    const compile = Bun.spawnSync({
+      cmd: [cc!, "-shared", "-fPIC", "-o", shim, join(import.meta.dir, "close-fault-shim.c"), "-ldl"],
+      env: bunEnv,
+    });
+    if (compile.exitCode !== 0) {
+      throw new Error(`Failed to build the close fault shim:\n${compile.stderr.toString()}`);
+    }
+    // Written here, without the shim: the http2 test only reads it.
+    writeFileSync(join(dir, `body.${EIO}.close-fault`), "hello");
+  });
+
+  async function runWithCloseFault(source: string, env: Record<string, string> = {}) {
+    await using proc = Bun.spawn({
+      cmd: [bunExe(), "-e", source],
+      env: { ...bunEnv, LD_PRELOAD: bunEnv.LD_PRELOAD ? `${shim}:${bunEnv.LD_PRELOAD}` : shim, ...env },
+      cwd: dir,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+    let parsed: unknown = stdout;
+    try {
+      parsed = JSON.parse(stdout);
+    } catch {}
+    return {
+      stdout: parsed,
+      stderr: stderr.split("\n").filter(line => line.length > 0 && !line.startsWith("WARNING: ASAN interferes")),
+      exitCode,
+    };
+  }
+
+  const script = (body: string) => `
+    const fs = require("node:fs");
+    const data = Buffer.alloc(4096, "a");
+    const settle = async fn => {
+      try {
+        await fn();
+        return "returned";
+      } catch (e) {
+        return e.code + " " + e.syscall;
+      }
+    };
+    const out = {};
+    ${body}
+    console.log(JSON.stringify(out));
+  `;
+
+  it.concurrent("fs.closeSync, fs.close, FileHandle.close and fs.createWriteStream report it", async () => {
+    const result = await runWithCloseFault(
+      script(`
+        for (const [name, errno] of [["ENOSPC", ${ENOSPC}], ["EDQUOT", ${EDQUOT}], ["EIO", ${EIO}]]) {
+          const fd = fs.openSync("closeSync." + errno + ".close-fault", "w");
+          fs.writeSync(fd, data);
+          out["closeSync " + name] = await settle(() => fs.closeSync(fd));
+        }
+
+        const fd = fs.openSync("close.${ENOSPC}.close-fault", "w");
+        fs.writeSync(fd, data);
+        out.close = await settle(() => new Promise((resolve, reject) => fs.close(fd, e => (e ? reject(e) : resolve()))));
+
+        const handle = await fs.promises.open("FileHandle.${ENOSPC}.close-fault", "w");
+        await handle.write(data);
+        out.fileHandle = await settle(() => handle.close());
+        out.fileHandleFd = handle.fd;
+
+        const stream = fs.createWriteStream("stream.${ENOSPC}.close-fault");
+        out.createWriteStream = await settle(
+          () => new Promise((resolve, reject) => stream.on("error", reject).on("close", resolve).end(data)),
+        );
+      `),
+    );
+    expect(result).toEqual({
+      stdout: {
+        "closeSync ENOSPC": "ENOSPC close",
+        "closeSync EDQUOT": "EDQUOT close",
+        "closeSync EIO": "EIO close",
+        close: "ENOSPC close",
+        fileHandle: "ENOSPC close",
+        fileHandleFd: -1,
+        createWriteStream: "ENOSPC close",
+      },
+      // One line for each file: one close released its descriptor.
+      stderr: [ENOSPC, EDQUOT, EIO, ENOSPC, ENOSPC, ENOSPC].map(errno => `close-fault: errno ${errno}`),
+      exitCode: 0,
+    });
+  });
+
+  it.concurrent("EINTR and EINPROGRESS are a close in progress, not an error", async () => {
+    const result = await runWithCloseFault(
+      script(`
+        for (const [name, errno] of [["EINTR", ${EINTR}], ["EINPROGRESS", ${EINPROGRESS}]]) {
+          const fd = fs.openSync("closeSync." + errno + ".close-fault", "w");
+          fs.writeSync(fd, data);
+          out["closeSync " + name] = await settle(() => fs.closeSync(fd));
+        }
+      `),
+    );
+    expect(result).toEqual({
+      stdout: { "closeSync EINTR": "returned", "closeSync EINPROGRESS": "returned" },
+      stderr: [`close-fault: errno ${EINTR}`, `close-fault: errno ${EINPROGRESS}`],
+      exitCode: 0,
+    });
+  });
+
+  // These calls close their descriptor themselves and drop the result of the
+  // close. The failed close must not end the process.
+  it.concurrent("a descriptor that bun closes for itself does not end the process", async () => {
+    const result = await runWithCloseFault(
+      script(`
+        out.writeFileSync = await settle(() => fs.writeFileSync("writeFileSync.${ENOSPC}.close-fault", data));
+        out.bunWrite = await settle(() => Bun.write("bun-write.${ENOSPC}.close-fault", data));
+      `),
+    );
+    const settled = expect.stringMatching(/^(returned|ENOSPC close)$/);
+    expect(result).toEqual({
+      stdout: { writeFileSync: settled, bunWrite: settled },
+      stderr: [`close-fault: errno ${ENOSPC}`, `close-fault: errno ${ENOSPC}`],
+      exitCode: 0,
+    });
+  });
+
+  // respondWithFile opens the file for reading. When statCheck cancels the
+  // send, http2 closes the descriptor, and nothing can act on the result of
+  // that close. Not concurrent, and with a timeout: a debug build takes seconds
+  // to load node:http2.
+  it("http2 respondWithFile ignores it", async () => {
+    const result = await runWithCloseFault(
+      `
+        const http2 = require("node:http2");
+        const server = http2.createServer();
+        server.on("stream", stream => {
+          stream.respondWithFile("body.${EIO}.close-fault", {}, {
+            statCheck() {
+              stream.respond({ ":status": 200 });
+              stream.end("from statCheck");
+              return false;
+            },
+          });
+        });
+        server.listen(0, () => {
+          const client = http2.connect("http://localhost:" + server.address().port);
+          const request = client.request({ ":path": "/" });
+          let body = "";
+          request.setEncoding("utf8");
+          request.on("data", chunk => (body += chunk));
+          request.on("end", () => {
+            client.close();
+            server.close();
+            console.log(JSON.stringify({ body }));
+          });
+          request.end();
+        });
+      `,
+      { CLOSE_FAULT_READERS: "1" },
+    );
+    expect(result).toEqual({
+      stdout: { body: "from statCheck" },
+      stderr: [`close-fault: errno ${EIO}`],
+      exitCode: 0,
+    });
+  }, 30_000);
+});
+
 // A throw inside a node-style async callback must surface as an
 // uncaughtException, as in node, where these callbacks run off the libuv
 // request completion rather than from a promise reaction.

@@ -2997,7 +2997,7 @@ function withStreamFrame(handler) {
 }
 function tryClose(fd) {
   try {
-    fs.close(fd);
+    fs.close(fd, () => {});
   } catch {}
 }
 

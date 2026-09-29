@@ -52,7 +52,7 @@ pub trait FdExt: Copy + Sized {
     ) -> Option<sys::Error>;
     /// fd allows you to close standard io. It also returns the error.
     /// Use fd API to implement `node:fs` close: stdio must actually close and
-    /// EBADF must surface to the caller. Consider fd the raw close method.
+    /// the error must surface to the caller. Consider fd the raw close method.
     fn close_allowing_standard_io(self, return_address: Option<usize>) -> Option<sys::Error>;
     /// Assumes given a valid file descriptor. If error, the handle has not been closed.
     fn make_lib_uv_owned(self) -> Result<Fd, MakeLibUvOwnedError>;
@@ -68,6 +68,11 @@ pub trait FdExt: Copy + Sized {
 impl FdExt for Fd {
     fn close(self) {
         let err = self.close_allowing_bad_file_descriptor(None);
+        // EBADF is a use after close. Any other errno is the file system's
+        // report, and the descriptor is released.
+        #[cfg(unix)]
+        debug_assert!(err.is_none_or(|e| e.get_errno() != sys::E::EBADF));
+        #[cfg(windows)]
         debug_assert!(err.is_none()); // use after close!
     }
 
