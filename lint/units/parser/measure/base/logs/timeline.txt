@@ -49,3 +49,4 @@ END   36-gd-small-installed rc=0 wall=41s lockwait=18s run=23s 2026-09-29T18:21:
 START 37-miri-ast 2026-09-29T18:21:23Z load=474.34 490.78 374.50 cmd: env MIRIFLAGS=-Zmiri-tree-borrows cargo miri test -p bun_ast --lib --offline
 END   37-miri-ast rc=0 wall=213s lockwait=84s run=129s 2026-09-29T18:24:56Z load=387.18 413.70 365.62
 START 33b-clippy-ast-primary 2026-09-29T18:25:04Z load=371.73 409.61 364.81 cmd: cargo clippy -p bun_ast --no-deps --message-format=short --target-dir /tmp/parser-base/tgt-clippy2
+END   33b-clippy-ast-primary rc=0 wall=106s lockwait=30s run=76s 2026-09-29T18:26:50Z load=523.89 448.93 383.40
