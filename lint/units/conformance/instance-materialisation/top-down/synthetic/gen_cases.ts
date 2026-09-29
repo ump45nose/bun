@@ -150,6 +150,8 @@ emit("libfiles_subdir", ["// @libFiles: react18/react18.d.ts"], [["a.ts", x]]);
 emit("casing_vary", ["// @useCaseSensitiveFileNames: true, false"], [["a.ts", x], ["B.ts", x]]);
 emit("casing_upper_value", ["// @useCaseSensitiveFileNames: FALSE"], [["a.ts", x]]);
 emit("casing_bad_value", ["// @useCaseSensitiveFileNames: no"], [["a.ts", x]]);
+emit("package_folder_names", [], [["/p/tsconfig.json", cfg({})], ["/p/jspm_pac\u212aages/k.ts", x], ["/p/NODE_MODULES/n.ts", x], ["/p/node_module\u017f/s.ts", x], ["/p/Bower_Components/b.ts", x], ["/p/node_modules2/m.ts", x], ["/p/\u0130/i.ts", x]]);
+emit("package_folder_include", [], [["/p/tsconfig.json", cfg({ include: ["*/*.ts"] })], ["/p/jspm_pac\u212aages/k.ts", x], ["/p/NODE_MODULES/n.ts", x], ["/p/src/s.ts", x], ["/p/.git/g.ts", x]]);
 emit("cwd_root", ["// @currentDirectory: /"], [["a.ts", x], ["sub/b.ts", x]]);
 emit("cwd_trailing_slash", ["// @currentDirectory: /w/"], [["a.ts", x]]);
 emit("cwd_dos", ["// @currentDirectory: c:/w"], [["a.ts", x], ["c:/x/b.ts", x]]);

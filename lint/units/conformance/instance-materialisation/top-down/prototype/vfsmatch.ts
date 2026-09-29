@@ -201,11 +201,11 @@ function isHiddenPath(name: string): boolean {
   return name.length > 0 && name[0] === ".";
 }
 
-// vfsmatch.go:493; strings.EqualFold on ASCII names
+// vfsmatch.go:493; the length is counted in bytes there, so a name with a letter outside ASCII never has one of the three lengths and folds alike
 function isPackageFolder(name: string): boolean {
-  const lower = name.toLowerCase();
-  if (name.length !== lower.length) return false;
-  return (name.length === 12 && lower === "node_modules") || (name.length === 13 && lower === "jspm_packages") || (name.length === 16 && lower === "bower_components");
+  if (!/^[\x00-\x7f]*$/.test(name)) return false;
+  const lower = name.replace(/[A-Z]/g, c => String.fromCharCode(c.charCodeAt(0) + 32));
+  return lower === "node_modules" || lower === "jspm_packages" || lower === "bower_components";
 }
 
 function ensureTrailingSlash(s: string): string {

@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime/coverage"
 	"sort"
 	"strconv"
 	"strings"
@@ -701,6 +702,8 @@ func (d *dumper) checkSymbols(st *stats, unit string, baselinePath string, sourc
 var perUnit bool
 
 var (
+	coverDir    string
+	coverCount  int
 	harness     bool
 	optionRegex = regexp.MustCompile(`^\/{2}\s*@(\w+)\s*:\s*([^\r\n]*)`)
 )
@@ -734,6 +737,9 @@ func main() {
 			harness = true
 		case "-perunit":
 			perUnit = true
+		case "-cover":
+			coverDir = args[1]
+			args = args[1:]
 		case "-symbols":
 			symbolsDir = args[1]
 			args = args[1:]
@@ -793,6 +799,12 @@ func one(outdir string, symbolsDir string, opts ast.ExternalModuleIndicatorOptio
 		Path:                           tspath.Path(fileName),
 		ExternalModuleIndicatorOptions: opts,
 	}, text, kind)
+	if coverDir != "" {
+		if err := coverage.ClearCounters(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+	}
 	failed := ""
 	func() {
 		defer func() {
@@ -826,6 +838,22 @@ func one(outdir string, symbolsDir string, opts ast.ExternalModuleIndicatorOptio
 	} else if failed == "" {
 		d.w = bufio.NewWriter(discard{})
 		d.run()
+	}
+	if coverDir != "" {
+		dir := filepath.Join(coverDir, strconv.Itoa(coverCount))
+		coverCount++
+		os.MkdirAll(dir, 0o755)
+		os.WriteFile(filepath.Join(dir, "name.txt"), []byte(name+"\n"), 0o644)
+		if err := coverage.WriteCountersDir(dir); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		if coverCount == 1 {
+			if err := coverage.WriteMetaDir(coverDir); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+		}
 	}
 	if failed != "" {
 		fmt.Printf("PANIC %s: %s\n", name, failed)

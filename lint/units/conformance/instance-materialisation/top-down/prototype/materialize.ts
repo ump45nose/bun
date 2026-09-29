@@ -37,7 +37,8 @@ const rootedJsonString = /"((?:\/|[a-zA-Z]:[\\/])[^"\n]*)"/g;
 export function findObstacles(test: CompilerTest, platform: Platform, rootLength: number, readsAbsolutePaths: boolean): Obstacle[] {
   const out: Obstacle[] = [];
   const files = [...test.toBeCompiled, ...test.otherFiles];
-  const paths = [...new Set([...files.map(f => f.unitName), ...test.symlinks.keys()])];
+  // the program file names hold the names that @libFiles adds
+  const paths = [...new Set([...files.map(f => f.unitName), ...test.symlinks.keys(), ...test.symlinks.values(), ...test.programFileNames, test.currentDirectory])];
   const lower = new Map<string, string>();
   for (const p of paths) {
     const root = p.slice(0, getRootLength(p));

@@ -81,6 +81,9 @@ for (const suite of ["compiler", "conformance"] as const) {
           links++;
           if (onDisk.get(p) !== "link") { bad("link missing " + p); continue; }
           let a = "", b = "";
+          const targetExists = [...expected.keys()].some(k => k === e.link || k.startsWith(e.link + "/"));
+          // a link to nothing stays a link to nothing
+          if (!targetExists) continue;
           try { a = realpathSync(real); b = realpathSync(m.value.toReal(e.link)); } catch (x) { bad("link does not resolve " + p); continue; }
           if (a !== b) bad(`link ${p} resolves to ${a}, wanted ${b}`);
         } else {
