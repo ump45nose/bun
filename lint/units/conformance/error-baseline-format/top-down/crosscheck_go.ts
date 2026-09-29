@@ -48,9 +48,7 @@ function toJson(c: Case): string {
     chain: d.messageChain.map(conv),
     related: d.relatedInformation.map(conv),
   });
-  // The ground truth keeps the order of its input: the order is the one of the port's sort.
-  const sorted = c.diagnostics.slice().sort((a, b) => compareDiagnostics(rules, a, b));
-  const diagnostics = sorted.map(conv);
+  const diagnostics = c.diagnostics.map(conv);
   return JSON.stringify({
     name: c.name,
     pretty: c.pretty,
@@ -223,6 +221,9 @@ if (mode === "corpus") {
   for (let k = 0; k < count; k++) cases.push(genCase(k, mode === "wild"));
 }
 
+// The ground truth keeps the order of its input, and the summary of the pretty form reads the input in its order:
+// both writers get the diagnostics in the order of the port's sort.
+for (const c of cases) c.diagnostics = c.diagnostics.slice().sort((a, b) => compareDiagnostics(rules, a, b));
 const input = join("/tmp", `crosscheck-${mode}-${process.pid}.jsonl`);
 writeFileSync(input, cases.map(toJson).join("\n") + "\n");
 const run = spawnSync(gt, [input], { maxBuffer: 1 << 30, encoding: "utf8" });

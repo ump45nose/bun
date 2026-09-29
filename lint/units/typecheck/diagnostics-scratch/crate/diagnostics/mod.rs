@@ -95,7 +95,7 @@ macro_rules! messages {
         pub(crate) static CODES: [u32; MESSAGE_COUNT] = [$($code),*];
         pub(crate) static INFO: [u8; MESSAGE_COUNT] = [$($crate::diagnostics::info($crate::diagnostics::Category::$category, $flags, $text)),*];
         pub(crate) const TEXT_LENS: [u16; MESSAGE_COUNT] = [$($text.len() as u16),*];
-        pub(crate) static TEXTS: &str = concat!($($text),*);
+        pub(crate) const TEXTS: &str = concat!($($text),*);
     };
 }
 
