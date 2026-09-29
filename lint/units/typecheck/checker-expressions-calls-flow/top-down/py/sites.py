@@ -60,3 +60,26 @@ if mode == 'nodes':
             if s.startswith('//') or s.startswith('func '): continue
             if pat.search(src[i]) and not re.search(r'(symbol|Symbol|result|merged|clone|prop|lateSymbol|newSymbol|metaPropertySymbol|attributeSymbol)\.Parent = ', src[i]):
                 print('%s\t%s:%d\t%s\t%s' % (f['zone'], f['file'].split('/')[-1], i + 1, short(f), s[:200]))
+if mode == 'eager':
+    # core.IfElse, core.OrElse and core.Coalesce evaluate every argument: sites where an argument after the first holds a call.
+    print('layer\tsite\tfunction\thelper\targuments after the first')
+    for f in own:
+        src = srcs.setdefault(f['file'], open(REF + f['file'], encoding='utf-8').read().split('\n'))
+        text = '\n'.join(src[f['decl'] - 1:f['end']])
+        for m in re.finditer(r'core\.(IfElse|OrElse|Coalesce)\(', text):
+            depth = 0; args = []; cur = ''; i = m.end()
+            while i < len(text):
+                ch = text[i]
+                if ch in '([{': depth += 1
+                if ch in ')]}':
+                    if depth == 0: break
+                    depth -= 1
+                if ch == ',' and depth == 0: args.append(cur); cur = ''
+                else: cur += ch
+                i += 1
+            args.append(cur)
+            rest = [' '.join(a.split()) for a in args[1:]]
+            # a nested helper of the same family is not a call of its own
+            if any(re.search(r'\b(?!core\.IfElse|core\.OrElse|core\.Coalesce)[\w.]+\(', a) for a in rest):
+                line = f['decl'] + text[:m.start()].count('\n')
+                print('%s\t%s:%d\t%s\t%s\t%s' % (f['zone'], f['file'].split('/')[-1], line, short(f), m.group(1), ' | '.join(rest)[:200]))
