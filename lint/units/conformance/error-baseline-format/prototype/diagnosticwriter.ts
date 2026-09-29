@@ -120,6 +120,10 @@ export function getECMALineOfPosition(sourceFile: FileLike, pos: number): number
 export function getECMALineAndUTF16CharacterOfPosition(sourceFile: FileLike, pos: number): [number, number] {
   const lineMap = getECMALineStarts(sourceFile);
   const line = computeLineOfPosition(lineMap, pos);
+  // Go panics on a slice that ends after the text or that starts before line 0.
+  if (line < 0 || pos > sourceFile.text.length) {
+    throw new RangeError(`slice bounds out of range [${line < 0 ? "" : lineMap[line]}:${pos}] with length ${sourceFile.text.length}`);
+  }
   const character = utf16Len(sourceFile.text.slice(lineMap[line], pos));
   return [line, character];
 }

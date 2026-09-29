@@ -190,6 +190,9 @@ func (d *dumper) node(label string, node *ast.Node, parent *ast.Node, indent int
 func diag(w *bufio.Writer, label string, ds []*ast.Diagnostic) {
 	for _, x := range ds {
 		fmt.Fprintf(w, "%s [%d,%d) TS%d cat=%d %s\n", label, x.Pos(), x.End(), x.Code(), int(x.Category()), strconv.QuoteToASCII(x.String()))
+		for _, r := range x.RelatedInformation() {
+			fmt.Fprintf(w, "%s.related [%d,%d) TS%d cat=%d %s\n", label, r.Pos(), r.End(), r.Code(), int(r.Category()), strconv.QuoteToASCII(r.String()))
+		}
 	}
 }
 

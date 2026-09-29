@@ -221,6 +221,20 @@ export function toGo(dump, text, stats, opts = {}) {
       for (const n of g.fields.get("HeritageClauses")?.nodes ?? []) clearInheritedAwait(n);
       for (const n of g.fields.get("Members")?.nodes ?? []) clearInheritedAwait(n);
     }
+    // Rule: the `assert` keyword of import attributes is a parse error in typescript-go, so the next finished node carries the error flag.
+    if (r.kind === SK.ImportAttributes && r.props.get("token")?.int === SK.AssertKeyword) {
+      const first = g.fields.get("Attributes")?.nodes[0];
+      const target = first ? (first.fields.get("name") ?? first) : g;
+      target.flags = (target.flags | (1 << 15)) >>> 0;
+    }
+    // Rule: an element access without an argument reports its error after the missing identifier is finished.
+    if (r.kind === SK.ElementAccessExpression) {
+      const a = g.fields.get("ArgumentExpression");
+      if (a && a.kind === "Identifier" && a.pos === a.end && a.fields.get("Text") === "" && a.flags & (1 << 15)) {
+        a.flags = (a.flags & ~(1 << 15)) >>> 0;
+        g.flags = (g.flags | (1 << 15)) >>> 0;
+      }
+    }
     // Rule: JSDoc presence flags.
     if (!isJS && !opts.noJSDocFlags && JSDOC_HOSTS.has(g.kind) && precedingJSDocHasTag(r, null)) {
       g.flags |= GO_HAS_JSDOC;
