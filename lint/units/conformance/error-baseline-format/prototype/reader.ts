@@ -109,7 +109,13 @@ function parseFlattenedMessage(lines: string[], category: Category, code: number
   return root;
 }
 
-function byteOffsetOfUtf16Column(text: ByteString, from: number, units: number): number {
+// The byte offset of a UTF-16 column. Only TypeScript names a column between the halves of a surrogate pair.
+function byteOffsetOfUtf16Column(text: ByteString, from: number, units: number, rules: Rules): number {
+  if (rules === "tsc") {
+    const pos = tsc.advanceUtf16(text, from, units);
+    if (pos === undefined) fail(`column ${units + 1} is outside of the text`);
+    return pos;
+  }
   let pos = from;
   let n = 0;
   while (n < units && pos < text.length) {
@@ -156,6 +162,7 @@ class StandInFile implements ParsedFile {
 }
 
 interface RuleOps {
+  rules: Rules;
   stripPrefixes(text: string): string;
   // What the writer prints in front of the tildes for a span that starts `squiggleStart` bytes into the line.
   squigglePrefix(line: ByteString, squiggleStart: number): ByteString;
@@ -164,6 +171,7 @@ interface RuleOps {
 }
 
 const tsgoOps: RuleOps = {
+  rules: "tsgo",
   stripPrefixes: text => removeTestPathPrefixes(text, false),
   squigglePrefix(line, squiggleStart) {
     if (squiggleStart > line.length) fail("the span starts after the end of its line, where the Go writer cannot slice");
@@ -180,18 +188,12 @@ const tsgoOps: RuleOps = {
 };
 
 const tscOps: RuleOps = {
+  rules: "tsc",
   stripPrefixes: tsc.removeTestPathPrefixes,
   squigglePrefix: (line, squiggleStart) => tsc.squiggle(line, squiggleStart, 0),
   bytesOfTildes(line, squiggleStart, count) {
-    let pos = squiggleStart;
-    let n = 0;
-    while (n < count) {
-      if (pos >= line.length) fail("more tildes than UTF-16 code units on the line");
-      const [r, size] = decodeRune(line, pos);
-      n += r >= 0x10000 ? 2 : 1;
-      pos += size;
-    }
-    if (n !== count) fail("the tildes end inside a surrogate pair");
+    const pos = tsc.advanceUtf16(line, squiggleStart, count);
+    if (pos === undefined) fail("more tildes than UTF-16 code units on the line");
     return pos - squiggleStart;
   },
 };
@@ -419,7 +421,7 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
       if (r.line === undefined || r.character === undefined) fail("a masked related position in a file that has a section");
       const starts = computeECMALineStarts(file.text);
       if (r.line > starts.length) fail(`related line ${r.line} is outside of ${name}`);
-      r.pos = byteOffsetOfUtf16Column(file.text, starts[r.line - 1], r.character - 1);
+      r.pos = byteOffsetOfUtf16Column(file.text, starts[r.line - 1], r.character - 1, rules);
       r.end = r.pos;
     }
   }
@@ -476,7 +478,7 @@ function readSection(section: Section, fileErrors: ParsedDiagnostic[], ops: Rule
         if (state[k] === 0) {
           if (d.line! - 1 < lineIndex) fail(`the span at line ${d.line} of ${section.unitName} has no squiggle`);
           if (d.line! - 1 !== lineIndex) continue;
-          spans[k].pos = byteOffsetOfUtf16Column(line, 0, d.character! - 1) + thisLineStart;
+          spans[k].pos = byteOffsetOfUtf16Column(line, 0, d.character! - 1, ops.rules) + thisLineStart;
           state[k] = 1;
         }
         const errStart = spans[k].pos;
@@ -713,7 +715,7 @@ function applyPrettyTops(diagnostics: ParsedDiagnostic[], tops: PrettyTop[], rul
         const [next, size] = r.pos < file.text.length ? decodeRune(file.text, r.pos) : [0, 0];
         if (size === 0 || next === 0x0a || next === 0x0d) lastCharacter = firstLineChar;
       }
-      r.end = byteOffsetOfUtf16Column(file.text, starts[lastLine - 1], lastCharacter);
+      r.end = byteOffsetOfUtf16Column(file.text, starts[lastLine - 1], lastCharacter, rules);
       r.hasLength = true;
     }
   });

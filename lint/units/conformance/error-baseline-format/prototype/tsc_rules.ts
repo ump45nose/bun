@@ -2,7 +2,7 @@
 // src/compiler/watch.ts at 5848bc5) in the places where they differ from the rules of the Go harness.
 // Positions of a Diagnostic stay UTF-8 byte offsets; each function converts where TypeScript counts UTF-16 units.
 import type { Diagnostic, FileLike } from "./diagnosticwriter";
-import { Category, categoryName, flattenDiagnosticMessage, getECMALineAndUTF16CharacterOfPosition, getECMALineStarts } from "./diagnosticwriter";
+import { Category, categoryName, flattenDiagnosticMessage, getECMALineStarts } from "./diagnosticwriter";
 import { type ByteString, byteStringToUtf8, decodeRune, padLeft, utf16Len, utf8ToByteString } from "./go_compat";
 import { convertToRelativePath } from "./tspath";
 
@@ -57,6 +57,56 @@ function isJsWhiteSpace(r: number): boolean {
   return r >= 0x2000 && r <= 0x200a;
 }
 
+// A position of TypeScript counts UTF-16 code units, and it can fall between the two halves of a surrogate
+// pair. As a byte offset that position is the start of the four bytes of the code point plus two.
+function isHalf(text: ByteString, pos: number): boolean {
+  if (pos < 2 || pos > text.length - 2) return false;
+  const lead = text.charCodeAt(pos - 2);
+  return lead >= 0xf0 && lead <= 0xf4 && decodeRune(text, pos - 2)[1] === 4;
+}
+
+// The number of UTF-16 code units of text[from:to]; both ends can be half positions.
+export function utf16Units(text: ByteString, from: number, to: number): number {
+  let n = 0;
+  let i = from;
+  if (i < to && isHalf(text, i)) {
+    n++;
+    i += 2;
+  }
+  while (i < to) {
+    const [r, size] = decodeRune(text, i);
+    if (size === 4 && i + 2 === to) {
+      n++;
+      break;
+    }
+    n += r >= 0x10000 ? 2 : 1;
+    i += size;
+  }
+  return n;
+}
+
+// The byte offset that is `units` UTF-16 code units after `from`; undefined when the text ends before.
+export function advanceUtf16(text: ByteString, from: number, units: number): number | undefined {
+  let n = 0;
+  let i = from;
+  if (n < units && isHalf(text, i)) {
+    n++;
+    i += 2;
+  }
+  while (n < units) {
+    if (i >= text.length) return undefined;
+    const [r, size] = decodeRune(text, i);
+    if (r >= 0x10000) {
+      if (n + 1 === units) return i + 2;
+      n += 2;
+    } else {
+      n++;
+    }
+    i += size;
+  }
+  return i;
+}
+
 // line.substr(0, squiggleStart).replace(/\S/g, " ") + new Array(Math.min(length, line.length - squiggleStart) + 1).join("~")
 // where squiggleStart and length count bytes here and UTF-16 code units in TypeScript.
 export function squiggle(line: ByteString, squiggleStart: number, length: number): ByteString {
@@ -64,19 +114,29 @@ export function squiggle(line: ByteString, squiggleStart: number, length: number
   const prefixEnd = Math.min(squiggleStart, line.length);
   for (let i = 0; i < prefixEnd; ) {
     const [r, size] = decodeRune(line, i);
-    const units = r >= 0x10000 ? 2 : 1;
-    out += isJsWhiteSpace(r) ? line.slice(i, i + size) : " ".repeat(units);
+    if (size === 4 && i + 2 === prefixEnd) {
+      out += " ";
+      break;
+    }
+    out += isJsWhiteSpace(r) ? line.slice(i, i + size) : " ".repeat(r >= 0x10000 ? 2 : 1);
     i += size;
   }
-  // A start one past the end of the line makes new Array(0); further out TypeScript throws a RangeError.
   const lineUnits = utf16Len(line);
-  const startUnits = utf16Len(line.slice(0, prefixEnd)) + (squiggleStart - prefixEnd);
-  const lengthUnits = utf16Len(line.slice(prefixEnd, Math.min(line.length, Math.max(prefixEnd, squiggleStart + length)))) +
-    Math.max(0, squiggleStart + length - Math.max(line.length, squiggleStart));
-  const count = Math.min(lengthUnits, lineUnits - startUnits);
+  // A start one past the end of the line makes new Array(0); further out TypeScript throws a RangeError.
+  const startUnits = utf16Units(line, 0, prefixEnd) + (squiggleStart - prefixEnd);
+  const spanEnd = squiggleStart + length;
+  const count = spanEnd <= line.length ? Math.min(utf16Units(line, squiggleStart, spanEnd), lineUnits - startUnits) : lineUnits - startUnits;
   if (count + 1 < 0) throw new RangeError("Invalid array length");
   out += "~".repeat(Math.max(0, count));
   return out;
+}
+
+// getLineAndCharacterOfPosition: 0-based line and UTF-16 column, for a position that can be a half position.
+export function getLineAndCharacterOfPosition(file: FileLike, pos: number): [number, number] {
+  const lineMap = getECMALineStarts(file);
+  let line = 0;
+  for (let i = 0; i < lineMap.length && lineMap[i] <= pos; i++) line = i;
+  return [line, utf16Units(file.text, lineMap[line], pos)];
 }
 
 // ---- program.ts ----
@@ -114,7 +174,7 @@ function formatColorAndReset(text: string, formatStyle: string): string {
 }
 
 function formatLocation(file: FileLike, start: number): string {
-  const [firstLine, firstLineChar] = getECMALineAndUTF16CharacterOfPosition(file, start);
+  const [firstLine, firstLineChar] = getLineAndCharacterOfPosition(file, start);
   const relativeFileName = convertToRelativePath(file.fileName, formatOpts);
   let output = "";
   output += formatColorAndReset(relativeFileName, Cyan);
@@ -128,7 +188,7 @@ function formatLocation(file: FileLike, start: number): string {
 function formatDiagnostic(diagnostic: Diagnostic, newLine: string): string {
   const errorMessage = `${categoryName(diagnostic.category)} TS${diagnostic.code}: ${flattenDiagnosticMessage(diagnostic, newLine)}${newLine}`;
   if (diagnostic.file !== undefined) {
-    const [line, character] = getECMALineAndUTF16CharacterOfPosition(diagnostic.file, diagnostic.pos);
+    const [line, character] = getLineAndCharacterOfPosition(diagnostic.file, diagnostic.pos);
     const relativeFileName = convertToRelativePath(diagnostic.file.fileName, formatOpts);
     return `${relativeFileName}(${line + 1},${character + 1}): ` + errorMessage;
   }
@@ -157,8 +217,8 @@ function utf16View(file: FileLike): { text: string; lineStarts: number[] } {
 }
 
 function formatCodeSpan(file: FileLike, start: number, length: number, indent: string, squiggleColor: string, newLine: string): string {
-  const [firstLine, firstLineChar] = getECMALineAndUTF16CharacterOfPosition(file, start);
-  const [lastLine, lastLineChar] = getECMALineAndUTF16CharacterOfPosition(file, start + length);
+  const [firstLine, firstLineChar] = getLineAndCharacterOfPosition(file, start);
+  const [lastLine, lastLineChar] = getLineAndCharacterOfPosition(file, start + length);
   const view = utf16View(file);
   const lastLineInFile = view.lineStarts.length - 1;
 
@@ -217,7 +277,7 @@ function formatDiagnosticsWithColorAndContext(diagnostics: Diagnostic[], newLine
       output += newLine;
       output += formatCodeSpan(diagnostic.file, diagnostic.pos, diagnostic.end - diagnostic.pos, "", getCategoryFormat(diagnostic.category), newLine);
     }
-    if (diagnostic.relatedInformation.length > 0 || (diagnostic as { tscEmptyRelated?: boolean }).tscEmptyRelated) {
+    if (diagnostic.relatedInformation.length > 0) {
       output += newLine;
       for (const related of diagnostic.relatedInformation) {
         if (related.file !== undefined) {
@@ -254,7 +314,7 @@ function getFilesInErrorForSummary(diagnostics: Diagnostic[]): (ReportFileInErro
     if (fileName === undefined) return undefined;
     const diagnosticForFileName = diagnostics.find(d => d.file !== undefined && d.file.fileName === fileName);
     if (diagnosticForFileName !== undefined) {
-      const [line] = getECMALineAndUTF16CharacterOfPosition(diagnosticForFileName.file!, diagnosticForFileName.pos);
+      const [line] = getLineAndCharacterOfPosition(diagnosticForFileName.file!, diagnosticForFileName.pos);
       return { fileName, line: line + 1 };
     }
     return undefined;
