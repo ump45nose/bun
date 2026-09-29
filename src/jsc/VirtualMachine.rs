@@ -2132,11 +2132,17 @@ impl VirtualMachine {
             panic!("Uncaught exception while handling uncaught exception");
         }
         self.is_handling_uncaught_exception = true;
-        let handled = Bun__handleUncaughtException(
-            global_object,
-            err.to_error().unwrap_or(err),
-            if is_rejection { 1 } else { 0 },
-        ) > 0;
+        let handled = match jsc::from_js_host_call_generic(global_object, || {
+            Bun__handleUncaughtException(
+                global_object,
+                err.to_error().unwrap_or(err),
+                if is_rejection { 1 } else { 0 },
+            )
+        }) {
+            Ok(handled) => handled > 0,
+            // A worker's capture callback called process.exit(): the termination is taken, or it unwinds the script above.
+            Err(_) => true,
+        };
         if !handled {
             // `beforeExit` has already been dispatched, so the run is winding
             // down and there is no loop turn left to defer to: print the error

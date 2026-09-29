@@ -717,6 +717,37 @@ describe("error event", () => {
   });
 });
 
+// The worker reports the entry point's error with no script frame beneath it, so the callback's process.exit() has nothing to unwind.
+test.concurrent.each([
+  ["throws", 'throw new Error("boom");'],
+  ["rejects", 'await 0; throw new Error("boom");'],
+])(
+  "process.exit() in an uncaughtException capture callback ends a worker whose entry point %s",
+  async (_label, entry) => {
+    const source = `process.setUncaughtExceptionCaptureCallback(() => process.exit(42)); ${entry}`;
+    await using proc = Bun.spawn({
+      cmd: [
+        bunExe(),
+        "-e",
+        `const { Worker } = require("node:worker_threads");
+         const worker = new Worker(${JSON.stringify(source)}, { eval: true });
+         worker.on("error", err => console.log("error", err.message));
+         worker.on("exit", code => console.log("exit", code));`,
+      ],
+      env: bunEnv,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+    expect({ stdout, stderr, exitCode, signalCode: proc.signalCode }).toEqual({
+      stdout: "exit 42\n",
+      stderr: "",
+      exitCode: 0,
+      signalCode: null,
+    });
+  },
+);
+
 describe("getHeapSnapshot", () => {
   test("throws if the wrong options are passed", () => {
     const worker = new Worker("", { eval: true });
