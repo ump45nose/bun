@@ -2,7 +2,8 @@
 // without an alias symbol, so the structure is printed). Every top-level `declare const x: <type>` of the last file
 // gives one line:
 //   <variable name> <tab> TypeToString <tab> typeToStringEx with UseFullyQualifiedType <tab> typeToString with the variable declaration as enclosing declaration
-// usage: ctpprobe2 [-strict|-nostrict] <virtual-name>=<path>...      (lib files first, names starting with lib.)
+// usage: ctpprobe2 [-strict|-nostrict] [-notrunc] <virtual-name>=<path>...      (lib files first, names starting with lib.)
+// -notrunc sets noErrorTruncation, which the reference's test harness sets for every case by default.
 package main
 
 import (
@@ -160,6 +161,8 @@ func main() {
 			options.Strict = core.TSTrue
 		case "-nostrict":
 			options.Strict = core.TSFalse
+		case "-notrunc":
+			options.NoErrorTruncation = core.TSTrue
 		}
 		args = args[1:]
 	}

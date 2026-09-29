@@ -476,7 +476,9 @@ describe("expectations.json", () => {
   const lists = parseExpectations(text);
   // A debug or sanitizer build starts a process in about a second: it runs a sample of the lists, a release build runs them all.
   const listed = sampleListed(lists, small ? 16 : Infinity);
-  const check = replay ? replayCheck(i => runOracleOf(corpus(), i.suite, i.name)) : createSpawnCheck({ command: [bunExe()], env: bunEnv });
+  const check = replay
+    ? replayCheck(i => runOracleOf(corpus(), i.suite, i.name))
+    : createSpawnCheck({ command: [bunExe()], env: bunEnv });
   const instanceOf = (name: string) => {
     const path = cases().get(caseBaseName(name));
     return path === undefined ? undefined : enumerateCase(layout.casesRoot, path).find(i => i.name === name);
@@ -486,16 +488,23 @@ describe("expectations.json", () => {
     expect(formatExpectations(lists)).toBe(text);
   });
 
-  test.each(groupsOf(listed, 400).map((g, k) => [k + 1, g] as const))("lists run instances of the kind of their list: group %d", (_k, group) => {
-    const c = corpus();
-    const facts = new Map<string, InstanceFacts>();
-    for (const { name } of group) {
-      const instance = instanceOf(name);
-      if (instance !== undefined) facts.set(name, factsOf(c, instance));
-    }
-    const part: Expectations = { level: lists.level, E: group.filter(n => n.list === "E").map(n => n.name), C: group.filter(n => n.list === "C").map(n => n.name) };
-    expect(checkLists(part, facts)).toEqual([]);
-  });
+  test.each(groupsOf(listed, 400).map((g, k) => [k + 1, g] as const))(
+    "lists run instances of the kind of their list: group %d",
+    (_k, group) => {
+      const c = corpus();
+      const facts = new Map<string, InstanceFacts>();
+      for (const { name } of group) {
+        const instance = instanceOf(name);
+        if (instance !== undefined) facts.set(name, factsOf(c, instance));
+      }
+      const part: Expectations = {
+        level: lists.level,
+        E: group.filter(n => n.list === "E").map(n => n.name),
+        C: group.filter(n => n.list === "C").map(n => n.name),
+      };
+      expect(checkLists(part, facts)).toEqual([]);
+    },
+  );
 
   // One batch at a time: a batch keeps as many processes in flight as it may, and a second batch beside it would double them.
   test.each(groupsOf(listed, small ? 8 : 64).map((g, k) => [k + 1, g] as const))(
@@ -509,7 +518,8 @@ describe("expectations.json", () => {
         const instance = instanceOf(name);
         const r = instance?.status === "run" ? inputOf(instance, { layout, materialiseBelow: String(dir) }) : undefined;
         if (r?.ok) inputs.push(r.input);
-        else failures.push({ name, status: "error", detail: r === undefined ? "no run instance of this name" : r.reason });
+        else
+          failures.push({ name, status: "error", detail: r === undefined ? "no run instance of this name" : r.reason });
       }
       const results = await runInstances(inputs, check, {
         oracle: i => runOracleOf(c, i.suite, i.name),
@@ -517,7 +527,10 @@ describe("expectations.json", () => {
         timeoutMs: small ? 60_000 : 4_000,
       });
       const outcomes = new Map<string, Outcome>(
-        results.map(r => [r.name, { name: r.name, status: r.status, level: r.level ?? lists.level, detail: r.diff ?? r.reason }]),
+        results.map(r => [
+          r.name,
+          { name: r.name, status: r.status, level: r.level ?? lists.level, detail: r.diff ?? r.reason },
+        ]),
       );
       for (const f of verify(lists, outcomes)) failures.push({ name: f.name, status: f.reason, detail: f.detail });
       // The first failures in full and the number of all: a binary that cannot lint fails every name for one reason.

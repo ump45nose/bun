@@ -4,7 +4,8 @@
 # annotation of `declare const __vN: <text>;` in one file checked with lib.es5.d.ts and strict. The output is the
 # oracle of the node builder before relations exist: variable, input text, TypeToString, typeToStringEx with
 # UseFullyQualifiedType, typeToString with the declaration as enclosing declaration.
-# usage: sh run-typestrings.sh [work dir, default /tmp/ctp]      result: ../data/typestrings.tsv.gz
+# The run is made twice: with the default truncation and with noErrorTruncation (the harness default).
+# usage: sh run-typestrings.sh [work dir, default /tmp/ctp]      results: ../data/typestrings.tsv.gz ../data/typestrings.notrunc.tsv.gz
 set -e
 W=${1:-/tmp/ctp}
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -17,5 +18,7 @@ export PATH="$W/go126/bin:/tmp/rr/go126/bin:$PATH" GOTOOLCHAIN=local GOFLAGS=-mo
 awk -F'\t' '$1=="TYPE-SAME"{printf "declare const __v%d: %s;\n", n++, $2}' "$W/corpus/roundtrip.tsv" > "$W/corpus/vars.ts"
 awk -F'\t' '$1=="TYPE-SAME"{printf "__v%d\t%s\n", n++, $2}' "$W/corpus/roundtrip.tsv" > "$W/corpus/vars.index.tsv"
 "$W/ctpprobe2" -strict lib.es5.d.ts=$LIB/es5.d.ts vars.ts="$W/corpus/vars.ts" > "$W/corpus/typestrings.tsv"
+"$W/ctpprobe2" -strict -notrunc lib.es5.d.ts=$LIB/es5.d.ts vars.ts="$W/corpus/vars.ts" > "$W/corpus/typestrings.notrunc.tsv"
+paste "$W/corpus/vars.index.tsv" "$W/corpus/typestrings.notrunc.tsv" | cut -f1,2,4- | gzip -9 > "$HERE/../data/typestrings.notrunc.tsv.gz"
 paste "$W/corpus/vars.index.tsv" "$W/corpus/typestrings.tsv" | cut -f1,2,4- | gzip -9 > "$HERE/../data/typestrings.tsv.gz"
 wc -l < "$W/corpus/typestrings.tsv"

@@ -1,5 +1,4 @@
-// relater.go 18-115, 2569-2745, 3089-3222, 4862-4981 and inference.go 11-63, 294-368, 1251-1283, 1519-1528, 1625-1684.
-// Written on the conventions of ../../../conventions-scratch/rust. Callees of other layers are stand-ins.
+// relater.go 18-115, 2569-2745, 3089-3222, 4862-4981 and inference.go 11-63, 294-368, 1251-1283, 1519-1528, 1625-1684: callees of other layers are stand-ins.
 use crate::arena::Arena;
 use crate::checker::{Checker, Fallback};
 use crate::flags::{ObjectFlags, TypeFlags};
@@ -629,8 +628,7 @@ impl<'a> Checker<'a> {
         }
         let relation = self.rel.relaters[r].relation;
         let error_reporter: ErrorReporter = if report_errors { Some(r) } else { None };
-        // Before normalization: if `source` is type an object type, and `target` is primitive,
-        // skip all the checks we don't need and just return `isSimpleTypeRelatedTo` result
+        // An object source and a primitive target need only isSimpleTypeRelatedTo.
         if self.types[original_source]
             .flags
             .intersects(TypeFlags::OBJECT)
@@ -690,8 +688,7 @@ impl<'a> Checker<'a> {
         {
             return Ternary::TRUE;
         }
-        // See if we're relating a definitely non-nullable type to a union that includes null and/or undefined
-        // plus a single non-nullable type. If so, remove null and/or undefined from the target type.
+        // A definitely non-nullable source drops null and undefined from a target union that has one other constituent.
         if self.types[source].flags.intersects(DEFINITELY_NON_NULLABLE)
             && self.types[target].flags.intersects(TypeFlags::UNION)
         {
@@ -886,8 +883,7 @@ impl<'a> Checker<'a> {
                 && entry.intersects(RelationComparisonResult::FAILED)
                 && !entry.intersects(RelationComparisonResult::OVERFLOW)
             {
-                // We are elaborating errors and the cached result is a failure not due to a comparison overflow,
-                // so we will do the comparison again to generate an error message.
+                // A cached failure that is not an overflow is compared again when errors are wanted.
             } else {
                 self.rel.reliability_flags |= entry & RelationComparisonResult::REPORTS_MASK;
                 if report_errors && entry.intersects(RelationComparisonResult::OVERFLOW) {
@@ -1043,9 +1039,7 @@ impl<'a> Checker<'a> {
             {
                 return;
             }
-            // Transform a property incompatibility message for property 'x' followed by some elaboration message
-            // followed by a signature return type incompatibility message into a single return type incompatibility
-            // message for 'x()' or 'x(...)'
+            // A property message above a return type marker becomes one message for 'x()' or 'x(...)'.
             let name = self.get_property_name_arg(args.first().copied().unwrap_or_default());
             let second = self.get_chain_message(r, 1);
             let mut arg: Vec<u8> = Vec::new();
@@ -1069,9 +1063,7 @@ impl<'a> Checker<'a> {
                 let next = self.rel.relaters[r].error_chains[head].next;
                 self.rel.relaters[r].error_chain = self.rel.relaters[r].error_chains[next].next;
             }
-            // Transform a property incompatibility message for property 'x' followed by some elaboration message
-            // followed by a property incompatibility message for property 'y' into a single property incompatibility
-            // message for 'x.y'
+            // A property message above a property message becomes one message for 'x.y'.
             let second = self.get_chain_message(r, 1);
             if second == msg::TYPES_OF_PROPERTY_0_ARE_INCOMPATIBLE
                 || second == msg::THE_TYPES_OF_0_ARE_INCOMPATIBLE_BETWEEN_THESE_TYPES
@@ -1426,8 +1418,7 @@ impl<'a> Checker<'a> {
         self.map_set(ok);
         let save_inference_priority = n.inference_priority;
         n.inference_priority = InferencePriority::MAX_VALUE;
-        // We stop inferring and report a circularity if we encounter duplicate recursion identities on both
-        // the source side and the target side.
+        // Duplicate recursion identities on both sides stop the inference and report a circularity.
         let save_expanding_flags = n.expanding_flags;
         n.source_stack.push(source);
         n.target_stack.push(target);
