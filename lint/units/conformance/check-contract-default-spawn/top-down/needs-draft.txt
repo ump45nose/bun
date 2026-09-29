@@ -47,8 +47,9 @@ B2. For an internal diagnostic (a ported panic or assert) one line, with or with
     typecheck: the stand-in log is read per run, in the order of the first reach, each name once.
 
 ======================================================================================================
-C. The batch form (cli and typecheck). Needed for the options of an instance, for the levels "top" and
-   "whole", and for the time budget. Measured on a machine under load: one process per instance costs about
+C. The batch form (cli and typecheck). Needed before ANY instance can pass through the binary: it is the
+   only way by which the options of an instance reach the binary. Needed too for the level "baseline"
+   (spans, related information) and for the time budget. Measured on a machine under load: one process per instance costs about
    12 ms with a release build and 0.4 s to 1 s with a debug build; 1,000 instances through four processes of
    a stand-in command cost 1.1 s to 4.3 s, the files written to disk included.
 ======================================================================================================
@@ -100,6 +101,8 @@ C6. typecheck: an entry that sets one compiler option from its name and its JSON
 D. What the conformance unit does until then.
 ======================================================================================================
 Without A the probe of the default check refuses the binary and no instance is run.
-With A and without C every result of the default check has the level "loose": the first section of the
-baseline is compared, the options of the instance were not applied. Such a pass is listed and counted apart
-and never as "top" or "whole". A diagnostic of a rule fails the instance unless the caller names the rule.
+With A and without C a run by operands did not have the options of the instance (12,786 of the 12,797 run
+instances set a compiler option, and the harness sets noErrorTruncation for all): its status is "unsupported"
+and it is in no list. On request the runner compares its first section and reports the result apart.
+With C a result has the level "baseline" when every span and the related information are there, else
+"first-section". A diagnostic of a lint rule fails the instance unless the caller names the rule.
