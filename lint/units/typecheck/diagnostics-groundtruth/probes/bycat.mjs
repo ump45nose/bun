@@ -1,5 +1,5 @@
 import fs from "node:fs";
-const ts = JSON.parse(fs.readFileSync("/tmp/diagres/dm.json","utf8")), ex = JSON.parse(fs.readFileSync("/tmp/diagres/edm.json","utf8"));
+const ts = JSON.parse(fs.readFileSync("/workspace/ref/typescript-go/_submodules/TypeScript/src/compiler/diagnosticMessages.json","utf8")), ex = JSON.parse(fs.readFileSync("/workspace/ref/typescript-go/internal/diagnostics/extraDiagnosticMessages.json","utf8"));
 const m = new Map(); for (const [k,v] of Object.entries(ts)) m.set(v.code,{...v,text:k}); for (const [k,v] of Object.entries(ex)) m.set(v.code,{...v,text:k});
 const by = {}; for (const v of m.values()) { by[v.category] ??= {n:0,bytes:0}; by[v.category].n++; by[v.category].bytes += v.text.length; }
 console.log(by);

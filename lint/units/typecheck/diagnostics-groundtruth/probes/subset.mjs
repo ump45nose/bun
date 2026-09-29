@@ -3,7 +3,7 @@ const go=fs.readFileSync("/workspace/ref/typescript-go/internal/diagnostics/diag
 const re=/^var (\S+) = &Message\{code: (\d+), category: Category(\w+), key: ("(?:[^"\\]|\\.)*"), text: ("(?:[^"\\]|\\.)*")(.*)\}$/gm;
 let m; const byName=new Map();
 while((m=re.exec(go))) byName.set(m[1],{code:+m[2],cat:m[3],key:JSON.parse(m[4]),text:JSON.parse(m[5])});
-const use=fs.readFileSync("/tmp/diagres/msguse.tsv","utf8").trim().split("\n").map(l=>l.split("\t"));
+const use=require("node:zlib").gunzipSync(fs.readFileSync(new URL("../data/msguse.tsv.gz", import.meta.url))).toString().trim().split("\n").map(l=>l.split("\t"));
 function size(pk){ const s=new Set(use.filter(u=>pk.includes(u[0])).map(u=>u[1])); let b=0,kb=0,nb=0; for(const n of s){const e=byName.get(n); b+=Buffer.byteLength(e.text); kb+=e.key.length; nb+=n.length;} return {count:s.size,textBytes:b,keyBytes:kb}; }
 console.log("binder+checker", size(["binder","checker"]));
 console.log("+scanner+parser", size(["binder","checker","scanner","parser"]));

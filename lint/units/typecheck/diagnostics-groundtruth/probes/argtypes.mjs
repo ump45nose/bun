@@ -1,5 +1,5 @@
 import fs from "node:fs";
-const lines = fs.readFileSync("/tmp/diagres/diagargs.tsv","utf8").trim().split("\n");
+const lines = require("node:zlib").gunzipSync(fs.readFileSync(new URL("../data/diagargs.tsv.gz", import.meta.url))).toString().trim().split("\n");
 const byPkg = {};
 const examples = {};
 let zero=0, total=0;

@@ -436,7 +436,7 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
     }
     if (result === undefined) {
       if (firstError !== undefined) throw firstError;
-      if (options.units !== undefined) fail(`no unit has the name ${section.unitName}`);
+      if (options.units !== undefined) ambiguities.push(`${section.unitName}: no unit has this name, the section is read without one`);
       result = readSection(section, fileErrors, ops, ambiguities, undefined, expectedRelated, minLines(section.unitName));
     }
     const content = unit !== undefined ? unit.content : result.content;
