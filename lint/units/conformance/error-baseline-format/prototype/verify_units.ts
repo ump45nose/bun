@@ -117,7 +117,7 @@ for (const b of baselines) {
     bump("ok with units (" + rules + ")", b.path);
     // Section names against unit names.
     const strip = (n: string) => n.replace(/\/\.ts\/|\/\.lib\/|\/\.src\/|bundled:\/\/\/libs\//g, "");
-    const sectionNames = withUnits.files.map(f => f.unitName);
+    const sectionNames = withUnits.files.map(f => strip(f.unitName));
     const unitNames = all.map(u => strip(u.unitName));
     if (sectionNames.length !== unitNames.length) bump("number of sections is not the number of units", b.path, `${sectionNames.length} sections, ${unitNames.length} units`);
     else {
