@@ -756,7 +756,7 @@ function main() {
     "cause\trecords\tinputs\ttsc_codes\texamples\tbun_site\treference_production\twhat\n" + causeRows.join("\n") + "\n",
   );
   const byGroup = {};
-  for (const c of candidates) (byGroup[c.group] ??= []).push(c);
+  for (const c of candidates) if (tscAgrees(c.input, c.twin, c.decorators)) (byGroup[c.group] ??= []).push(c);
   fs.writeFileSync(path.join(outDir, `test-candidates${suffix}.json`), JSON.stringify(byGroup, null, 1) + "\n");
   summary.push(`test candidates (every row fails on the probed bun): ${Object.entries(byGroup).map(([g, l]) => `${g}=${l.length}`).join(" ")}`);
   fs.writeFileSync(
@@ -787,6 +787,21 @@ const NOISE_CODES = new Set([
   2833, 2836, 6133, 6196, 7005, 7006, 7008, 7010, 7011, 7013, 7015, 7016, 7017, 7019, 7020, 7022, 7023, 7024, 7027, 7031,
   7033, 7034, 7041, 7044, 7053,
 ]);
+
+// A candidate is kept only when tsc prints the same JavaScript for the input and for its twin.
+export function tscAgrees(input, twin, decorators) {
+  if (!ts) loadTypeScript();
+  const compilerOptions = { target: ts.ScriptTarget.ESNext, module: ts.ModuleKind.ESNext };
+  if (decorators) Object.assign(compilerOptions, { experimentalDecorators: true, emitDecoratorMetadata: true, strictNullChecks: false });
+  try {
+    const a = ts.transpileModule(input, { compilerOptions, fileName: "input.ts", reportDiagnostics: true });
+    const b = ts.transpileModule(twin, { compilerOptions, fileName: "input.ts", reportDiagnostics: true });
+    const plain = text => text.replace(/^var _[a-z](, _[a-z])*;\n/m, "").replace(/\b_[a-z]\b/g, "_");
+    return (a.diagnostics ?? []).length === 0 && plain(a.outputText) === plain(b.outputText);
+  } catch {
+    return false;
+  }
+}
 
 function tagOf(metaText, ctx) {
   const m =
