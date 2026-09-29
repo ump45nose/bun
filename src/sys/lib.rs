@@ -883,8 +883,8 @@ pub fn lstatat(fd: impl AsFd, path: &ZStr) -> Result<Stat> {
 /// After the OS working directory changed: record where we are in
 /// [`bun_core::cwd`] as the OS reports it. If it cannot report a name (an
 /// ancestor is unreadable, the path is longer than `PATH_MAX`), go back to the
-/// recorded directory and return the `getcwd` error, so an `Err` always means
-/// the working directory is unchanged.
+/// recorded directory and return the `getcwd` error. The process stays where
+/// it moved only if the recorded directory can no longer be entered.
 fn cwd_changed() -> Maybe<()> {
     let mut buf = bun_paths::path_buffer_pool::get();
     match getcwd(&mut buf[..]) {
@@ -916,7 +916,8 @@ pub fn require_cwd() -> Maybe<&'static ZStr> {
 }
 
 /// Change the process working directory; [`bun_core::cwd`] follows. On `Err`
-/// the working directory is unchanged.
+/// [`bun_core::cwd`] is unchanged, and the process is in that directory
+/// unless it could not be entered again.
 pub fn chdir(path: &ZStr) -> Maybe<()> {
     chdir_os(path)?;
     cwd_changed()
@@ -3022,7 +3023,8 @@ mod posix_impl {
         Ok(())
     }
     /// Change the process working directory to `fd`; [`bun_core::cwd`]
-    /// follows. On `Err` the working directory is unchanged.
+    /// follows. On `Err` [`bun_core::cwd`] is unchanged, and the process is in
+    /// that directory unless it could not be entered again.
     pub fn fchdir(fd: Fd) -> Maybe<()> {
         check!(safe_libc::fchdir(fd.native()), Tag::fchdir);
         super::cwd_changed()
@@ -4299,7 +4301,8 @@ mod windows_impl {
         Ok(())
     }
     /// Change the process working directory to `fd`; [`bun_core::cwd`]
-    /// follows. On `Err` the working directory is unchanged.
+    /// follows. On `Err` [`bun_core::cwd`] is unchanged, and the process is in
+    /// that directory unless it could not be entered again.
     pub fn fchdir(fd: Fd) -> Maybe<()> {
         let mut buf = bun_paths::path_buffer_pool::get();
         let p = super::get_fd_path(fd, &mut buf)?;
