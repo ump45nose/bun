@@ -215,7 +215,7 @@ const relatedFileName = new WeakMap<ParsedDiagnostic, string>();
 
 // The message lines of a diagnostic and its related information, from block[i].
 // acceptChainLine is asked about each line that the text alone cannot tell from a line of the file.
-function readMessageBlock(ops: RuleOps, block: string[], i: number, d: ParsedDiagnostic, acceptChainLine: (at: number) => boolean): MessageBlock {
+function readMessageBlock(ops: RuleOps, block: string[], i: number, d: ParsedDiagnostic, acceptChainLine: (at: number) => boolean, expected?: (number | undefined)[]): MessageBlock {
   const first = i;
   const message = flattenDiagnosticMessage(d, "\r\n");
   for (let line of ops.stripPrefixes(message).split("\n")) {
@@ -232,8 +232,16 @@ function readMessageBlock(ops: RuleOps, block: string[], i: number, d: ParsedDia
     i++;
     const messageLines = [m[5]];
     let level = 0;
+    // The pretty first section prints the message of a related entry with a file: its lines are counted there.
+    const known = expected?.[related.length];
     while (i < block.length) {
       const line = block[i];
+      if (known !== undefined) {
+        if (messageLines.length > known) break;
+        messageLines.push(line);
+        i++;
+        continue;
+      }
       if (line.startsWith("!!! ") || line.startsWith("==== ")) break;
       let spaces = 0;
       while (spaces < line.length && line[spaces] === " ") spaces++;
@@ -353,6 +361,16 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
     }
   }
 
+  // The positions of each file that the baseline names: the text of the section must hold every one of them.
+  const namedPositions: NamedPosition[] = [];
+  for (const head of heads) if (head.fileName !== undefined && head.line !== undefined) namedPositions.push({ fileName: head.fileName, line: head.line, character: head.character! });
+  for (const line of rest.split("\r\n")) {
+    const m = line.startsWith("!!! related TS") ? relatedPattern.exec(line) : null;
+    if (m !== null && m[2] !== undefined && m[3] !== "--") namedPositions.push({ fileName: m[2], line: Number(m[3]), character: Number(m[4]) });
+  }
+  const minLines = (unitName: string): NamedPosition[] =>
+    namedPositions.filter(n => comparePaths(ops.stripPrefixes(n.fileName), ops.stripPrefixes(unitName), comparePathsOptions) === 0);
+
   const printedBlocks = new Map<ParsedDiagnostic, string>();
   const commit = (d: ParsedDiagnostic, block: MessageBlock): void => {
     const before = printedBlocks.get(d);
@@ -364,12 +382,18 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
     }
   };
 
+  // In a pretty baseline: per related entry of a diagnostic, the number of lines that follow its first line.
+  const expectedRelated = (d: ParsedDiagnostic): (number | undefined)[] | undefined => {
+    if (!pretty) return undefined;
+    return prettyTops[d.order].related.map(r => (r === undefined ? undefined : r.messageLines.length - 1));
+  };
+
   // Global diagnostics.
   {
     let i = 0;
     for (const d of diagnostics) {
       if (fileNameOf.has(d)) continue;
-      const block = readMessageBlock(ops, globalLines, i, d, () => true);
+      const block = readMessageBlock(ops, globalLines, i, d, () => true, expectedRelated(d));
       commit(d, block);
       i = block.next;
     }
@@ -401,7 +425,7 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
     let firstError: unknown;
     for (const candidate of candidates) {
       try {
-        result = readSection(section, fileErrors, ops, ambiguities, candidate);
+        result = readSection(section, fileErrors, ops, ambiguities, candidate, expectedRelated, minLines(section.unitName));
         unit = candidate;
         usedUnits.add(candidate);
         break;
@@ -413,7 +437,7 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
     if (result === undefined) {
       if (firstError !== undefined) throw firstError;
       if (options.units !== undefined) fail(`no unit has the name ${section.unitName}`);
-      result = readSection(section, fileErrors, ops, ambiguities, undefined);
+      result = readSection(section, fileErrors, ops, ambiguities, undefined, expectedRelated, minLines(section.unitName));
     }
     const content = unit !== undefined ? unit.content : result.content;
     fileErrors.forEach((d, k) => {
@@ -483,6 +507,12 @@ export function readErrorBaseline(text: ByteString, options: ReadOptions = {}): 
   return { pretty, rules, diagnostics, files: testFiles, ambiguities };
 }
 
+interface NamedPosition {
+  fileName: string;
+  line: number;
+  character: number;
+}
+
 interface SectionResult {
   content: ByteString;
   spans: { pos: number; end: number; block: MessageBlock | undefined }[];
@@ -492,7 +522,15 @@ interface SectionResult {
 // One section: the lines of the file, each followed by the squiggles and messages of the spans that touch it.
 // A chain line of related information with four spaces or more looks like a line of the file: the reader tries
 // both readings, the chain first, and keeps the first one with which the rest of the section reads.
-function readSection(section: Section, fileErrors: ParsedDiagnostic[], ops: RuleOps, ambiguities: string[], unit: TestFile | undefined): SectionResult {
+function readSection(
+  section: Section,
+  fileErrors: ParsedDiagnostic[],
+  ops: RuleOps,
+  ambiguities: string[],
+  unit: TestFile | undefined,
+  expectedRelated: (d: ParsedDiagnostic) => (number | undefined)[] | undefined,
+  named: NamedPosition[],
+): SectionResult {
   const raw = section.lines;
   const unitLines = unit?.content.split(/\r?\n/).map(l => (l.endsWith("\r") ? l.slice(0, -1) : l));
   const unitLineStarts = unit === undefined ? undefined : computeECMALineStarts(unit.content);
@@ -544,11 +582,12 @@ function readSection(section: Section, fileErrors: ParsedDiagnostic[], ops: Rule
           // The span ends on this line: at the last tilde, which the end of the line can cut short.
           spans[k].end = Math.max(errStart, thisLineStart) + covered;
           state[k] = 2;
-          const block = readMessageBlock(ops, raw, i, d, () => {
+          const accept = (): boolean => {
             const decision = taken.length < decisions.length ? decisions[taken.length] : true;
             taken.push(decision);
             return decision;
-          });
+          };
+          const block = readMessageBlock(ops, raw, i, d, accept, expectedRelated(d));
           spans[k].block = block;
           i = block.next;
         } else if (squiggleStart + covered < line.length) {
@@ -560,6 +599,11 @@ function readSection(section: Section, fileErrors: ParsedDiagnostic[], ops: Rule
       if (state[k] !== 2) fail(`a span of ${section.unitName} at line ${fileErrors[k].line} has no message`);
     }
     if (unitLines !== undefined && unitLines.length !== contentLines.length) fail(`${section.unitName} has ${contentLines.length} lines and the unit has ${unitLines.length}`);
+    for (const n of named) {
+      if (n.line > contentLines.length) fail(`${section.unitName} has ${contentLines.length} lines and the baseline names its line ${n.line}`);
+      const units = ops.rules === "tsc" ? tsc.utf16Units(contentLines[n.line - 1], 0, contentLines[n.line - 1].length) : utf16Len(contentLines[n.line - 1]);
+      if (n.character - 1 > units) fail(`line ${n.line} of ${section.unitName} has ${units} code units and the baseline names its column ${n.character}`);
+    }
     return { content: contentLines.join("\n"), spans, taken };
   };
 
@@ -824,18 +868,14 @@ function applyPrettyTops(diagnostics: ParsedDiagnostic[], tops: PrettyTop[], rul
       let { lastLine, lastCharacter } = snippetEnd(p.rows);
       if (rules === "tsgo" && lastLine === p.line && lastCharacter === firstLineChar + 1) {
         // One tilde is what a span of no length and a span of one code unit both draw.
+        // At the end of a line and in front of a code point of two units only the span of no length exists.
         const [next, size] = r.pos < file.text.length ? decodeRune(file.text, r.pos) : [0, 0];
-        if (size === 0 || next === 0x0a || next === 0x0d) lastCharacter = firstLineChar;
+        if (size === 0 || next === 0x0a || next === 0x0d || next >= 0x10000) lastCharacter = firstLineChar;
       }
       // The Go writer draws tildes past the end of a line that ends in white space: the span ends with the line.
       const lineText = file.text.slice(starts[lastLine - 1], lastLine < starts.length ? starts[lastLine] : file.text.length).replace(/[\r\n]+$/, "");
       lastCharacter = Math.min(lastCharacter, utf16Len(lineText));
-      try {
-        r.end = byteOffsetOfUtf16Column(file.text, starts[lastLine - 1], lastCharacter, rules);
-      } catch (e) {
-        if (process.env.DEBUG_PRETTY) console.log(JSON.stringify({ name: file.fileName, text: file.text, starts, line: p.line, character: p.character, pos: r.pos, rows: p.rows, lastLine, lastCharacter, firstLineChar, lineText }));
-        throw e;
-      }
+      r.end = byteOffsetOfUtf16Column(file.text, starts[lastLine - 1], lastCharacter, rules);
       if (r.end < r.pos) r.end = r.pos;
       r.hasLength = true;
     }
