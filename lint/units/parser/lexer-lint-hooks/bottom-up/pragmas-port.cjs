@@ -78,7 +78,7 @@ function extractPragmas(range, text) {
       pos = skipTo(text, pos, "@"); if (pos < 0) break;
       const namePos = pos + 1; const nameEnd = skipNonBlanks(text, namePos);
       if (nameEnd === namePos) { pos++; continue; }
-      const lineEnd = lineEndPos(text, pos); const pragmaName = text.subarray(namePos, nameEnd).toString("utf8").toLowerCase();
+      const lineEnd = lineEndPos(text, pos); const pragmaName = text.subarray(namePos, nameEnd).toString("utf8").replace(/\u0130/g, "i").replace(/\u212a/g, "k").toLowerCase(); // Go strings.ToLower maps U+0130 to i and U+212A to k
       if (pragmaName === "jsx" || pragmaName === "jsxfrag" || pragmaName === "jsximportsource" || pragmaName === "jsxruntime") {
         const start = skipBlanks(text, nameEnd); const argEnd = skipNonBlanks(text, start);
         if (argEnd !== start) pragmas.push({ range, name: pragmaName, args: { factory: { name: "factory", value: text.subarray(start, argEnd).toString("utf8"), pos: range.pos + start, end: range.pos + argEnd } } });

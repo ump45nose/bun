@@ -6,7 +6,6 @@ import { dirname, join, resolve } from "node:path";
 import {
   type Check,
   type CheckInput,
-  type Expectations,
   type InstanceFacts,
   type Outcome,
   type RunResult,
@@ -25,16 +24,20 @@ import {
   readErrorBaseline,
   referenceLayout,
   reportText,
+  roundTrip,
   runInstances,
   runOracleOf,
   select,
+  tscRules,
   tsgoRules,
   updateCommand,
   usage,
   verify,
 } from "./index";
 
-const argv = process.argv.slice(2);
+// The prototype takes this switch before the options of the first wave are read: parseSweepArgs has to learn it.
+const roundTripOnly = process.argv.includes("--round-trip");
+const argv = process.argv.slice(2).filter(a => a !== "--round-trip");
 const fail = (message: string): never => {
   process.stderr.write(`sweep: ${message}\n\n${usage}`);
   process.exit(2);
@@ -54,6 +57,25 @@ if (o.help) {
 const started = performance.now();
 const layout = referenceLayout(o.reference);
 const corpus = loadCorpus(layout);
+
+// Every error baseline read and written again: the whole of what the test file samples.
+if (roundTripOnly) {
+  const differ: string[] = [];
+  let files = 0;
+  const one = (path: string, rules: typeof tsgoRules) => {
+    files++;
+    if (!roundTrip(readFileSync(path), rules).equal) differ.push(path);
+  };
+  for (const suite of ["compiler", "conformance"] as const) {
+    for (const name of corpus.tsgo.get(suite)!) one(`${layout.tsgoBaselines}/${suite}/${name}`, tsgoRules);
+  }
+  for (const name of corpus.ts ?? []) one(`${layout.tsBaselines}/${name}`, tscRules);
+  for (const path of differ) process.stdout.write(`differs: ${path}\n`);
+  process.stdout.write(
+    `${files - differ.length} of ${files} error baselines are the same bytes after a read and a write\n`,
+  );
+  process.exit(differ.length > 0 ? 1 : 0);
+}
 const expectationsPath = resolve(o.expectations ?? join(import.meta.dir, "expectations.json"));
 const lists = parseExpectations(readFileSync(expectationsPath, "utf8"));
 const listed = new Set([...lists.E, ...lists.C]);
@@ -262,5 +284,3 @@ const report = {
 writeFileSync(reportPath, JSON.stringify(report, null, 1) + "\n");
 process.stdout.write(`report ${reportPath}\n`);
 process.exit(staticFailures.length > 0 || shrunk || failures.length > 0 ? 1 : 0);
-
-export type { Expectations };
