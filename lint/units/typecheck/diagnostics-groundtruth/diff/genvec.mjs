@@ -85,6 +85,11 @@ for (let i = 0; i < 20; i++) makeCase("global");
 for (let i = 0; i < 40; i++) makeCase("deep");
 for (let i = 0; i < 40; i++) makeCase("big");
 for (const n of [8, 12, 13, 14, 20, 33, 50, 64, 100, 200]) for (let k = 0; k < 4; k++) tieCase(n);
+for (const n of [0, 1, 2, 7, 8, 12, 13, 20, 49, 50, 51, 64, 100, 127, 128, 129, 500, 1000, 4097]) for (const div of [1, 2, 16, 1000000]) for (const shape of ["random", "sorted", "reversed", "fewvalues", "sawtooth", "almost", "organ"]) {
+  const xs = [];
+  for (let i = 0; i < n; i++) xs.push(shape === "random" ? ri(n * 4 + 1) : shape === "sorted" ? i : shape === "reversed" ? n - i : shape === "fewvalues" ? ri(5) * 16 + ri(16) : shape === "sawtooth" ? (i % 17) * 3 : shape === "almost" ? (rnd() < 0.05 ? ri(n + 1) : i) : Math.min(i, n - i));
+  out.push(`SORT ${div}${xs.length ? " " + xs.join(" ") : ""}`);
+}
 const rels = [["/src", 1, "/src/a.ts"], ["/src", 1, "/src/dir/c.ts"], ["/src", 1, "/other/d.ts"], ["/src", 1, "a.ts"], ["/src", 1, "./a.ts"], ["/src", 1, "../a.ts"], ["/src/", 1, "/src/a.ts"], ["/", 1, "/a.ts"], ["/", 1, "/src/a.ts"], ["", 1, "/src/a.ts"], ["/src", 1, "/SRC/a.ts"], ["/src", 0, "/SRC/a.ts"], ["/Src", 0, "/src/Dir/A.ts"], ["/a/b/c", 1, "/a/x/y.ts"], ["/a/b/c", 1, "/a/b/c"], ["/a/b/c", 1, "/a/b/c/"], ["/a/b/c", 1, "/a/b"], ["c:/src", 1, "c:/src/a.ts"], ["c:/src", 1, "d:/src/a.ts"], ["c:/src", 0, "C:/SRC/a.ts"], ["c:\\src", 1, "c:\\src\\a.ts"], ["/src", 1, "//server/share/a.ts"], ["/src", 1, "file:///src/a.ts"], ["/src", 1, "http://x/a.ts"], ["/src", 1, "/src//a.ts"], ["/src", 1, "/src/./a.ts"], ["/src", 1, "/src/x/../a.ts"], ["/src", 1, ""], ["/src", 1, "/"], ["/.src", 1, "/.src/tests/cases/compiler/a.ts"], ["/.src", 1, "/.lib/lib.d.ts"], ["/home/src/workspaces/project", 1, "/home/src/workspaces/project/a.ts"], ["/home/src/workspaces/project", 1, "/home/src/tslibs/TS/Lib/lib.d.ts"]];
 for (const [c, s, p] of rels) out.push(`REL ${hex(B(c))} ${s} ${hex(B(p))}`);
 const fmts = [
@@ -96,5 +101,5 @@ const fmts = [
 for (const [t, a] of fmts) out.push(`FMT ${hex(B(t))} ${a.length}${a.length ? " " + a.map(x => hex(B(x))).join(" ") : ""}`);
 const rawArgs = [[0xff], [0xff, 0xfe], [0x61, 0xff, 0x62], [0xc3], [0xc3, 0x28], [0xe2, 0x82], [0xe2, 0x82, 0x41], [0xe2, 0x28, 0xa1], [0xed, 0xa0, 0x80], [0xf0, 0x9f, 0x98], [0xf0, 0x9f, 0x98, 0x80], [0xf4, 0x90, 0x80, 0x80], [0xc0, 0x80], [0xc1, 0xbf], [0xe0, 0x80, 0x80], [0xef, 0xbf, 0xbd], [0xef, 0xbf, 0xbd, 0xff], [0xff, 0xef, 0xbf, 0xbd, 0xff], [0x80], [0x80, 0x80, 0x41, 0x80], [0xf8, 0x88, 0x80, 0x80, 0x80], [0xe2, 0x82, 0xac, 0xff, 0xe2, 0x82]];
 for (const a of rawArgs) out.push(`FMT ${hex(B("<{0}>"))} 1 ${hex(Buffer.from(a))}`);
-fs.writeFileSync("/tmp/diagres/diff/vectors.txt", out.join("\n") + "\n");
+fs.writeFileSync(process.argv[2] ?? "vectors.txt", out.join("\n") + "\n");
 console.log("lines", out.length, "cases", caseNo);

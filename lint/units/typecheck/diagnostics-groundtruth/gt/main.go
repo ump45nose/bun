@@ -298,6 +298,30 @@ func main() {
 				args = append(args, unhex(f[3+i]))
 			}
 			fmt.Fprintf(w, "FMT %s\n", enhex(format(unhex(f[1]), args)))
+		case "SORT":
+			div := atoi(f[1])
+			var xs []int
+			for _, t := range f[2:] {
+				xs = append(xs, atoi(t))
+			}
+			cmpf := func(a, b int) int { return a/div - b/div }
+			u := slices.Clone(xs)
+			slices.SortFunc(u, cmpf)
+			st := slices.Clone(xs)
+			slices.SortStableFunc(st, cmpf)
+			var us, ss []string
+			for _, v := range u {
+				us = append(us, strconv.Itoa(v))
+			}
+			for _, v := range st {
+				ss = append(ss, strconv.Itoa(v))
+			}
+			var bs []string
+			for _, probe := range []int{-5, 0, 7, 16, 100, 1000, 100000} {
+				i, ok := slices.BinarySearchFunc(st, probe, cmpf)
+				bs = append(bs, fmt.Sprintf("%d:%v", i, ok))
+			}
+			fmt.Fprintf(w, "SORT %s | %s | %s\n", strings.Join(us, ","), strings.Join(ss, ","), strings.Join(bs, ","))
 		case "LINECOL":
 			file := files[atoi(f[1])]
 			d := ast.NewDiagnostic(file, core.NewTextRange(atoi(f[2]), atoi(f[2])), diagnostics.Identifier_expected)

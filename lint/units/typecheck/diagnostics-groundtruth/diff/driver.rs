@@ -160,6 +160,19 @@ fn main() {
                     Err(_) => writeln!(w, "FMT {} INVALID kept={}", enhex(b"PANIC:Invalid formatting placeholder"), enhex(&out)).unwrap(),
                 }
             }
+            "SORT" => {
+                let div = int(f[1]) as isize;
+                let xs: Vec<isize> = f[2..].iter().map(|t| int(t) as isize).collect();
+                let cmpf = |a: isize, b: isize| a / div - b / div;
+                let mut u = xs.clone();
+                sort_func(&mut u, cmpf);
+                let mut st = xs.clone();
+                sort_stable_func(&mut st, cmpf);
+                let us: Vec<String> = u.iter().map(|v| v.to_string()).collect();
+                let ss: Vec<String> = st.iter().map(|v| v.to_string()).collect();
+                let bs: Vec<String> = [-5isize, 0, 7, 16, 100, 1000, 100000].iter().map(|&probe| { let (i, ok) = diagproto::slices::binary_search_func(&st, probe, cmpf); format!("{i}:{ok}") }).collect();
+                writeln!(w, "SORT {} | {} | {}", us.join(","), ss.join(","), bs.join(",")).unwrap();
+            }
             "LINECOL" => {
                 let mut s = DiagnosticStore::default();
                 let p = int(f[2]) as i32;

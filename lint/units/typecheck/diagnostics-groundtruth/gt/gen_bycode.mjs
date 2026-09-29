@@ -5,5 +5,5 @@ let m, out = "// generated for the ground-truth probe\npackage main\n\nimport \"
 let n = 0;
 while ((m = re.exec(go))) { out += `\t${m[2]}: diagnostics.${m[1]},\n`; n++; }
 out += "}\n";
-fs.writeFileSync("/tmp/diagres/gt/mod/cmd/gt/zz_bycode.go", out);
+fs.writeFileSync(process.argv[2] ?? "zz_bycode.go", out);
 console.log(n);
