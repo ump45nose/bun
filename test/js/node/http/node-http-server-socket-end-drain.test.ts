@@ -207,6 +207,59 @@ describe.each(["http", "https"] as const)("%s: socket.end() ends only the write 
     });
   });
 
+  // Node.js parses the whole read before the close takes effect.
+  describe.each([
+    [
+      "end() and then destroy()",
+      (socket: Duplex) => (socket.end("HTTP/1.1 400 Bad Request\r\n\r\n"), socket.destroy()),
+    ],
+    ["destroySoon()", (socket: Duplex) => (socket as net.Socket).destroySoon()],
+    [
+      "end() and destroy() on 'finish'",
+      (socket: Duplex) => (socket.once("finish", socket.destroy), socket.end("HTTP/1.1 400 Bad Request\r\n\r\n")),
+    ],
+  ])("a listener that closes the socket with %s", (_name, close) => {
+    test("gets the body of an Upgrade request that arrived with the head", async () => {
+      await using server = createServer();
+      const { promise, resolve, reject } = Promise.withResolvers<string>();
+      server.on("upgrade", (req, socket) => {
+        let body = "";
+        req.on("data", chunk => (body += chunk.toString("latin1")));
+        req.on("end", () => resolve(body));
+        req.on("error", reject);
+        socket.on("error", () => {});
+        close(socket);
+      });
+
+      const client = await connectTo(server);
+      try {
+        client.write(upgradeHead("Content-Length: 4") + "BODY");
+        expect(await promise).toBe("BODY");
+      } finally {
+        client.destroy();
+      }
+    });
+
+    test("gets the body of a request that arrived with the head", async () => {
+      const { promise, resolve, reject } = Promise.withResolvers<string>();
+      await using server = createServer(req => {
+        let body = "";
+        req.on("data", chunk => (body += chunk.toString("latin1")));
+        req.on("end", () => resolve(body));
+        req.on("error", reject);
+        close(req.socket);
+      });
+
+      const client = await connectTo(server);
+      try {
+        client.write("POST / HTTP/1.1\r\nHost: a\r\nContent-Length: 4\r\n\r\nBODY");
+        expect(await promise).toBe("BODY");
+      } finally {
+        client.destroy();
+      }
+    });
+  });
+
   test("a parse error in the body of an accepted Upgrade request emits no 'clientError'", async () => {
     await using server = createServer();
     const clientErrors: string[] = [];
