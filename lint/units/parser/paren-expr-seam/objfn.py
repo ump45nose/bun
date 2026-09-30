@@ -25,7 +25,11 @@ def load(path):
         if cur is None: continue
         m = re.match(r'^\s*([0-9a-f]+):\s+(R_X86_64_\w+)\s+(.*)$', line)
         if m:
-            if fns[cur]: fns[cur][-1][2] = clean(re.sub(r'[-+]0x[0-9a-f]+$', '', m.group(3)))
+            if fns[cur]:
+                rel = clean(re.sub(r'[-+]0x[0-9a-f]+$', '', m.group(3)))
+                rel = re.sub(r'\.llvm\.\d+', '', rel)
+                if re.match(r'^\.(l?rodata|data|bss|text)\b', rel) or 'Lanon.' in rel or rel.startswith(('anon.', '.L')): rel = '<data>'
+                fns[cur][-1][2] = rel
             continue
         m = re.match(r'^\s*([0-9a-f]+):\s+(.*)$', line)
         if m: fns[cur].append([int(m.group(1), 16), m.group(2).strip(), None])
@@ -43,7 +47,7 @@ def load(path):
             if rel is not None:
                 if op.startswith(('call', 'jmp', 'j')): text = op + ' ' + rel
                 else:
-                    data = '<data>' if re.match(r'^(\.L|\.rodata|\.data|\.bss|anon\.|\.Lanon|alloc_|\.text)', rel) or 'anon.' in rel else '<' + rel + '>'
+                    data = rel if rel == '<data>' else '<' + rel + '>'
                     text = re.sub(r'(-?0x[0-9a-f]+|\b\d+)?\(%rip\)', data, text, count=1)
                     text = re.sub(r'\s*<[^<>]*(<[^<>]*>[^<>]*)*\+0x[0-9a-f]+>$', '', text)
                     text = re.sub(r'\$0x0\b', '$' + data, text) if '(%rip)' not in text and data not in text else text

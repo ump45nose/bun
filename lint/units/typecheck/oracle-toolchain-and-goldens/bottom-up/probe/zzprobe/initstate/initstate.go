@@ -187,6 +187,7 @@ func Main() {
 		}, text, core.EnsureScriptKindFromFileName(fileName))
 		p.files = append(p.files, sf)
 	}
+	checker.ProbeRecordOn = true
 	c, _ := checker.NewChecker(p, nil)
 	if aliases {
 		fmt.Print(checker.ProbeAliases(c, p.files))

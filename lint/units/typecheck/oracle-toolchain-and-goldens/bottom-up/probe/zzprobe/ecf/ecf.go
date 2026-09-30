@@ -203,3 +203,6 @@ func Run(args []string) {
 	}
 	fmt.Print("AFTER check\n" + checker.ProbeState(c))
 }
+
+// Main runs the probe with the arguments of the process.
+func Main() { Run(os.Args[1:]) }

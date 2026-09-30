@@ -341,8 +341,8 @@ def after_tests(t, ts_only, others=True):
         t.rep(f, old, new)
 
 # ---- V2: a second instantiation for lint, the callers dispatch ----
-def twin(t, ts_only, fixed):
-    guard = ('Self::IS_TYPESCRIPT_ENABLED && ' if ts_only else '') + LINT
+def twin(t, ts_only, fixed, no_scan=False):
+    guard = ('!SCAN_ONLY && ' if no_scan else '') + ('Self::IS_TYPESCRIPT_ENABLED && ' if ts_only else '') + LINT
     t.rep(MOD, '''    /// This assumes that the open parenthesis has already been parsed by the caller
     pub(crate) fn parse_paren_expr(
         &mut self,
@@ -517,7 +517,7 @@ impl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_O
 ''' % guard)
     for f, old in ((PFX, TSX_CALL_OLD), (PFX, CAST_CALL_OLD), (MOD, ASYNC_CALL_OLD), (MOD, ASYNC_LT_CALL_OLD)):
         indent = old[:len(old) - len(old.lstrip(' '))]
-        g = LINT if (f == PFX or 'force_arrow_fn' in old) else guard
+        g = (('!SCAN_ONLY && ' if no_scan else '') + LINT) if (f == PFX or 'force_arrow_fn' in old) else guard
         lint_call = old.replace('p.parse_paren_expr(', 'p.parse_paren_expr_for_lint(', 1)
         lint_call = ''.join('    ' + l + '\n' for l in lint_call.splitlines())
         t.rep(f, old, indent + 'if ' + g + ' {\n' + lint_call + indent + '}\n' + old)
@@ -618,10 +618,22 @@ def p1_flag_at_callers(t):
     t.rep(PFX, CAST_CALL_OLD, CAST_CALL_OLD.replace('                            ..Default::default()', '                            is_after_question_and_before_colon: flags\n                                == EFlags::AfterQuestionAndBeforeColon,\n                            ..Default::default()'))
     t.rep(MOD, ASYNC_LT_CALL_OLD, ASYNC_LT_CALL_OLD.replace('                                        ..Default::default()', '                                        is_after_question_and_before_colon: flags\n                                            == EFlags::AfterQuestionAndBeforeColon,\n                                        ..Default::default()'))
 
-def p1_body_flag_parameter(t, ts_guard):
+def p1_body_flag_parameter(t, ts_guard, keep_shape=False):
     g = (lambda e: 'if Self::IS_TYPESCRIPT_ENABLED { %s } else { EFlags::None }' % e) if ts_guard else (lambda e: e)
     t.rep(FN, '        args: &\'a mut [G::Arg],\n        data: &mut FnOrArrowDataParse,\n    ) -> Result<E::Arrow, Error> {', '        args: &\'a mut [G::Arg],\n        data: &mut FnOrArrowDataParse,\n        flags: bun_ast::expr::EFlags,\n    ) -> Result<E::Arrow, Error> {')
-    t.rep(FN, '        let expr = match p.parse_expr(Level::Comma) {\n            Ok(e) => e,', '        let mut expr = Expr::EMPTY;\n        let expr = match p.parse_expr_with_flags(Level::Comma, flags, &mut expr) {\n            Ok(()) => expr,')
+    if keep_shape:
+        t.rep(FN, '        let expr = match p.parse_expr(Level::Comma) {\n            Ok(e) => e,', '        let expr = match p.parse_expr_flagged(Level::Comma, flags) {\n            Ok(e) => e,')
+        t.rep(MOD, '''    #[inline]
+    pub(crate) fn parse_expr_with_flags(''', '''    #[inline]
+    pub(crate) fn parse_expr_flagged(&mut self, level: Level, flags: EFlags) -> Result<Expr, Error> {
+        let mut expr = Expr::EMPTY;
+        self.parse_expr_common(level, None, flags, &mut expr)?;
+        Ok(expr)
+    }
+    #[inline]
+    pub(crate) fn parse_expr_with_flags(''')
+    else:
+        t.rep(FN, '        let expr = match p.parse_expr(Level::Comma) {\n            Ok(e) => e,', '        let mut expr = Expr::EMPTY;\n        let expr = match p.parse_expr_with_flags(Level::Comma, flags, &mut expr) {\n            Ok(()) => expr,')
     t.rep(PFX, 'p.parse_arrow_body(args, &mut fn_or_arrow_data);', 'p.parse_arrow_body(args, &mut fn_or_arrow_data, %s);' % g('flags'))
     t.rep(SKIP, 'self.parse_arrow_body(&mut [], &mut data)?;', 'self.parse_arrow_body(&mut [], &mut data, EFlags::AfterQuestionAndBeforeColon)?;')
     t.rep(SKIP, 'use bun_ast::op::Level;\n', 'use bun_ast::expr::EFlags;\nuse bun_ast::op::Level;\n')
@@ -679,6 +691,7 @@ VARIANTS = {
     'v2': lambda t: (stub(t), twin(t, ts_only=False, fixed=False)),
     'v2g': lambda t: (stub(t), twin(t, ts_only=False, fixed=True)),
     'v2gt': lambda t: (stub(t), twin(t, ts_only=True, fixed=True)),
+    'v2gts': lambda t: (stub(t), twin(t, ts_only=True, fixed=True, no_scan=True)),
     # V3
     'v3': lambda t: (stub(t), after_tests(t, ts_only=False), paren_tests(t, ts_only=False, in_function=False)),
     'v3t': lambda t: (stub(t), after_tests(t, ts_only=True), paren_tests(t, ts_only=True, in_function=False)),
@@ -702,6 +715,8 @@ VARIANTS = {
     'p1cu': lambda t: p1_body_flag_parameter(t, ts_guard=False),
     'p1d': lambda t: p1_body_flag_field(t),
     'p1abc': lambda t: (p1_level(t), p1_flag_at_callers(t), p1_body_flag_parameter(t, ts_guard=True)),
+    'p1c2': lambda t: p1_body_flag_parameter(t, ts_guard=True, keep_shape=True),
+    'p1abc2': lambda t: (p1_level(t), p1_flag_at_callers(t), p1_body_flag_parameter(t, ts_guard=True, keep_shape=True)),
 }
 
 if __name__ == '__main__':
