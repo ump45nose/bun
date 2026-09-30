@@ -240,6 +240,21 @@ impl FileBuilder {
         let flags = self.flags(host) | NodeFlags::HAS_JSDOC;
         self.set_flags(host, flags);
     }
+    // Node.Clone for the reparser: a node with the same members, flags and range.
+    pub fn clone_node(&mut self, node: NodeId) -> NodeId {
+        let Some(original) = self.nodes.get(node.0 as usize).copied() else {
+            return NodeId::NIL;
+        };
+        let start = original.data as usize;
+        let slots = self
+            .slots
+            .get(start..start + original.def.info().slots.len())
+            .unwrap_or(&[])
+            .to_vec();
+        let clone = self.alloc_node(original.def, original.kind, original.flags, &slots);
+        self.set_loc(clone, original.loc);
+        clone
+    }
     pub fn mark(&self) -> Mark {
         Mark {
             nodes: self.nodes.len(),

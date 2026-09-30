@@ -8,6 +8,7 @@
 #   TRACEALL=1     also builds <work dir>/tsgoprobe-all: every function of internal/checker records its entry
 #   NOBUILD=1      stops after the toolchain, the modules and the overlay are ready
 #   COVER=1        also builds <work dir>/tsgoprobe.cover with statement counters for checker, binder and evaluator
+#                  (in a copy of the module below <work dir>/covtree: the cover tool does not read a build overlay)
 # results: <work dir>/tsgoprobe, <work dir>/root (the scratch repository root of the `suite` sub-command), <work dir>/env.sh
 # Run it under /workspace/tools/lk: the Go build of the checker uses every core for some minutes.
 set -euo pipefail
@@ -151,8 +152,22 @@ if [ -n "${TRACEALL:-}" ]; then
   build "$W/tsgoprobe-all" "$W/overlay-all.json"
 fi
 if [ -n "${COVER:-}" ]; then
+  # cmd/cover opens the sources by path and knows nothing of the overlay ("open .../zz_probe_core.go: no such file"):
+  # the coverage build is made in a real copy of the module with the overlay files written into it.
+  T=$W/covtree
+  rm -rf "$T" && mkdir -p "$T"
+  (cd "$REF" && tar -cf - --exclude='*_test.go' --exclude=internal/fourslash internal cmd go.mod) | tar -xf - -C "$T"
+  python3 - "$REF" "$T" "$W/overlay.json" <<'PY'
+import json, os, shutil, sys
+ref, tree, ov = sys.argv[1:4]
+for dst, src in json.load(open(ov))["Replace"].items():
+    p = os.path.join(tree, os.path.relpath(dst, ref))
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    shutil.copyfile(src, p)
+PY
   M=github.com/microsoft/typescript-go
-  build "$W/tsgoprobe.cover" "$W/overlay.json" -cover -covermode=set -coverpkg=$M/cmd/tsgoprobe,$M/internal/checker,$M/internal/binder,$M/internal/evaluator
+  (cd "$T" && go build -modfile="$W/go.mod" -cover -covermode=set -coverpkg=$M/cmd/tsgoprobe,$M/internal/checker,$M/internal/binder,$M/internal/evaluator -o "$W/tsgoprobe.cover" ./cmd/tsgoprobe)
+  echo "built $W/tsgoprobe.cover"
 fi
 
 # 5. The scratch repository root of the `suite` sub-command: the harness reads the cases and the reference baselines

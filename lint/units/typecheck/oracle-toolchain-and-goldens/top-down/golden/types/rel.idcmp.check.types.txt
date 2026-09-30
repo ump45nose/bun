@@ -9,17 +9,102 @@ after NewChecker types=85 symbols=6 signatures=4
 check idcmp.ts diagnostics=6
 == counts types=96 symbols=6 signatures=4 files=1
 == types
-T86 Object(0x100000) of=0x200010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[195,209)@idcmp.ts members={"b":$"b"/0x4@PropertySignature[197,207)@idcmp.ts} properties=[$"b"/0x4@PropertySignature[197,207)@idcmp.ts]
-T87 Object(0x100000) of=0x200010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[113,127)@idcmp.ts members={"a":$"a"/0x4@PropertySignature[115,125)@idcmp.ts} properties=[$"a"/0x4@PropertySignature[115,125)@idcmp.ts]
-T88 Object(0x100000) of=0x200010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[144,158)@idcmp.ts members={"a":$"a"/0x4@PropertySignature[146,156)@idcmp.ts} properties=[$"a"/0x4@PropertySignature[146,156)@idcmp.ts]
-T89 Object(0x100000) of=0x200010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[60,74)@idcmp.ts members={"a":$"a"/0x4@PropertySignature[62,72)@idcmp.ts} properties=[$"a"/0x4@PropertySignature[62,72)@idcmp.ts]
-T90 Object(0x100000) of=0x200010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[82,96)@idcmp.ts members={"a":$"a"/0x4@PropertySignature[84,94)@idcmp.ts} properties=[$"a"/0x4@PropertySignature[84,94)@idcmp.ts]
-T91 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T91 regularType=T95
-T92 Object(0x100000) of=0x200002 InterfaceType symbol=$"I1"/0x40@InterfaceDeclaration[0,26)@idcmp.ts members={"x":$"x"/0x4@PropertySignature[14,24)@idcmp.ts} properties=[$"x"/0x4@PropertySignature[14,24)@idcmp.ts] baseTypesResolved=true declaredMembersResolved=true declaredMembers={"x":$"x"/0x4@PropertySignature[14,24)@idcmp.ts}
-T93 Object(0x100000) of=0x6 InterfaceType symbol=$"Promise"/0x40@InterfaceDeclaration[72557,73600)@lib.es5.d.ts target=T93 instantiations=#1[T93] resolvedTypeArguments=[T94] allTypeParameters=[T94,T96] thisType=T96
-T94 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[72648,72649)@lib.es5.d.ts
-T95 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T91 regularType=T95
-T96 TypeParameter(0x80000) TypeParameter symbol=$"Promise"/0x40@InterfaceDeclaration[72557,73600)@lib.es5.d.ts constraint=T93 isThisType=true
+T1 Any(0x1) IntrinsicType intrinsicName="any"
+T2 Any(0x1) of=0x40000 IntrinsicType intrinsicName="any"
+T3 Any(0x1) IntrinsicType intrinsicName="any"
+T4 Any(0x1) IntrinsicType intrinsicName="any"
+T5 Any(0x1) IntrinsicType intrinsicName="error"
+T6 Any(0x1) IntrinsicType intrinsicName="unresolved"
+T7 Any(0x1) of=0x10000 IntrinsicType intrinsicName="any"
+T8 Any(0x1) IntrinsicType intrinsicName="intrinsic"
+T9 Unknown(0x2) IntrinsicType intrinsicName="unknown"
+T10 Undefined(0x4) IntrinsicType intrinsicName="undefined"
+T11 Undefined(0x4) IntrinsicType intrinsicName="undefined"
+T12 Undefined(0x4) IntrinsicType intrinsicName="undefined"
+T13 Null(0x8) IntrinsicType intrinsicName="null"
+T14 String(0x20) IntrinsicType intrinsicName="string"
+T15 Number(0x40) IntrinsicType intrinsicName="number"
+T16 BigInt(0x80) IntrinsicType intrinsicName="bigint"
+T17 BooleanLiteral(0x2000) LiteralType value=false(bool) freshType=T18 regularType=T17
+T18 BooleanLiteral(0x2000) LiteralType value=false(bool) freshType=T18 regularType=T17
+T19 BooleanLiteral(0x2000) LiteralType value=true(bool) freshType=T20 regularType=T19
+T20 BooleanLiteral(0x2000) LiteralType value=true(bool) freshType=T20 regularType=T19
+T21 Boolean|Union(0x8000100) of=0x4008000 UnionType resolvedBaseConstraint=T21 types=[T17,T19]
+T22 ESSymbol(0x200) IntrinsicType intrinsicName="symbol"
+T23 Void(0x10) IntrinsicType intrinsicName="void"
+T24 Never(0x40000) IntrinsicType intrinsicName="never"
+T25 Never(0x40000) of=0x40000 IntrinsicType intrinsicName="never"
+T26 Never(0x40000) IntrinsicType intrinsicName="never"
+T27 Never(0x40000) IntrinsicType intrinsicName="never"
+T28 NonPrimitive(0x20000) IntrinsicType intrinsicName="object"
+T29 Union(0x8000000) of=0x8000 UnionType types=[T14,T15]
+T30 Union(0x8000000) of=0x8000 UnionType types=[T14,T15,T22]
+T31 Union(0x8000000) of=0x8000 UnionType types=[T15,T16]
+T32 TemplateLiteral(0x400000) TemplateLiteralType texts=["",""] types=[T15]
+T33 Union(0x8000000) of=0x8000 UnionType types=[T10,T13,T14,T15,T16,T17,T19]
+T34 Never(0x40000) IntrinsicType intrinsicName="never"
+T35 Object(0x100000) of=0x200010 ObjectType
+T36 Object(0x100000) of=0x200010 ObjectType
+T37 Object(0x100000) of=0x200010 ObjectType
+T38 Object(0x100000) of=0x200010 ObjectType symbol=Y6
+T39 Object(0x100000) of=0x200010 ObjectType
+T40 Union(0x8000000) UnionType types=[T10,T13,T39]
+T41 Object(0x100000) of=0x200010 ObjectType
+T42 Object(0x100000) of=0x240010 ObjectType
+T43 Object(0x100000) of=0x200010 ObjectType
+T44 Object(0x100000) of=0x200010 ObjectType
+T45 Object(0x100000) of=0x200010 ObjectType
+T46 TypeParameter(0x80000) TypeParameter
+T47 TypeParameter(0x80000) TypeParameter constraint=T46
+T48 TypeParameter(0x80000) TypeParameter
+T49 TypeParameter(0x80000) TypeParameter
+T50 TypeParameter(0x80000) TypeParameter constraint=T49
+T51 StringLiteral(0x400) LiteralType value=""(string) regularType=T51
+T52 NumberLiteral(0x800) LiteralType value=0(jsnum.Number) regularType=T52
+T53 BigIntLiteral(0x1000) LiteralType value=0(jsnum.PseudoBigInt) regularType=T53
+T54 StringLiteral(0x400) LiteralType value="bigint"(string) regularType=T54
+T55 StringLiteral(0x400) LiteralType value="boolean"(string) regularType=T55
+T56 StringLiteral(0x400) LiteralType value="function"(string) regularType=T56
+T57 StringLiteral(0x400) LiteralType value="number"(string) regularType=T57
+T58 StringLiteral(0x400) LiteralType value="object"(string) regularType=T58
+T59 StringLiteral(0x400) LiteralType value="string"(string) regularType=T59
+T60 StringLiteral(0x400) LiteralType value="symbol"(string) regularType=T60
+T61 StringLiteral(0x400) LiteralType value="undefined"(string) regularType=T61
+T62 Union(0x8000000) of=0x8000 UnionType types=[T54,T55,T56,T57,T58,T59,T60,T61]
+T63 Object(0x100000) of=0x2 InterfaceType symbol=$"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts
+T64 Object(0x100000) of=0x10 ObjectType symbol=Y5
+T65 Object(0x100000) of=0x200010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[195,209)@idcmp.ts members={"b":$"b"/0x4@PropertySignature[197,207)@idcmp.ts} properties=[$"b"/0x4@PropertySignature[197,207)@idcmp.ts]
+T66 Object(0x100000) of=0x200010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[113,127)@idcmp.ts members={"a":$"a"/0x4@PropertySignature[115,125)@idcmp.ts} properties=[$"a"/0x4@PropertySignature[115,125)@idcmp.ts]
+T67 Object(0x100000) of=0x200010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[144,158)@idcmp.ts members={"a":$"a"/0x4@PropertySignature[146,156)@idcmp.ts} properties=[$"a"/0x4@PropertySignature[146,156)@idcmp.ts]
+T68 Object(0x100000) of=0x200010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[60,74)@idcmp.ts members={"a":$"a"/0x4@PropertySignature[62,72)@idcmp.ts} properties=[$"a"/0x4@PropertySignature[62,72)@idcmp.ts]
+T69 Object(0x100000) of=0x200010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[82,96)@idcmp.ts members={"a":$"a"/0x4@PropertySignature[84,94)@idcmp.ts} properties=[$"a"/0x4@PropertySignature[84,94)@idcmp.ts]
+T70 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T70 regularType=T88
+T71 Object(0x100000) of=0x6 InterfaceType symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T71 instantiations=#3[T71,T94,T96] resolvedTypeArguments=[T84] allTypeParameters=[T84,T89] thisType=T89
+T72 Object(0x100000) of=0x200002 InterfaceType symbol=$"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts members={"valueOf":$"valueOf"/0x2000@MethodSignature[21824,21914)@lib.es5.d.ts} properties=[$"valueOf"/0x2000@MethodSignature[21824,21914)@lib.es5.d.ts] baseTypesResolved=true declaredMembersResolved=true declaredMembers={"valueOf":$"valueOf"/0x2000@MethodSignature[21824,21914)@lib.es5.d.ts}
+T73 Object(0x100000) of=0x2 InterfaceType symbol=$"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts
+T74 Object(0x100000) of=0x2 InterfaceType symbol=$"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts
+T75 Object(0x100000) of=0x200002 InterfaceType symbol=$"I1"/0x40@InterfaceDeclaration[0,26)@idcmp.ts members={"x":$"x"/0x4@PropertySignature[14,24)@idcmp.ts} properties=[$"x"/0x4@PropertySignature[14,24)@idcmp.ts] baseTypesResolved=true declaredMembersResolved=true declaredMembers={"x":$"x"/0x4@PropertySignature[14,24)@idcmp.ts}
+T76 Object(0x100000) of=0x2 InterfaceType symbol=$"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts
+T77 Object(0x100000) of=0x2 InterfaceType symbol=$"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts
+T78 Object(0x100000) of=0x200002 InterfaceType symbol=$"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts members={"constructor":$"constructor"/0x4@PropertySignature[3312,3447)@lib.es5.d.ts "hasOwnProperty":$"hasOwnProperty"/0x2000@MethodSignature[3731,3908)@lib.es5.d.ts "isPrototypeOf":$"isPrototypeOf"/0x2000@MethodSignature[3908,4121)@lib.es5.d.ts "propertyIsEnumerable":$"propertyIsEnumerable"/0x2000@MethodSignature[4121,4290)@lib.es5.d.ts "toLocaleString":$"toLocaleString"/0x2000@MethodSignature[3532,3640)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[3447,3532)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[3640,3731)@lib.es5.d.ts} properties=[$"constructor"/0x4@PropertySignature[3312,3447)@lib.es5.d.ts,$"toString"/0x2000@MethodSignature[3447,3532)@lib.es5.d.ts,$"toLocaleString"/0x2000@MethodSignature[3532,3640)@lib.es5.d.ts,$"valueOf"/0x2000@MethodSignature[3640,3731)@lib.es5.d.ts,$"hasOwnProperty"/0x2000@MethodSignature[3731,3908)@lib.es5.d.ts,$"isPrototypeOf"/0x2000@MethodSignature[3908,4121)@lib.es5.d.ts,$"propertyIsEnumerable"/0x2000@MethodSignature[4121,4290)@lib.es5.d.ts] baseTypesResolved=true declaredMembersResolved=true declaredMembers={"constructor":$"constructor"/0x4@PropertySignature[3312,3447)@lib.es5.d.ts "hasOwnProperty":$"hasOwnProperty"/0x2000@MethodSignature[3731,3908)@lib.es5.d.ts "isPrototypeOf":$"isPrototypeOf"/0x2000@MethodSignature[3908,4121)@lib.es5.d.ts "propertyIsEnumerable":$"propertyIsEnumerable"/0x2000@MethodSignature[4121,4290)@lib.es5.d.ts "toLocaleString":$"toLocaleString"/0x2000@MethodSignature[3532,3640)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[3447,3532)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[3640,3731)@lib.es5.d.ts}
+T79 Object(0x100000) of=0x6 InterfaceType symbol=$"Promise"/0x40@InterfaceDeclaration[72557,73600)@lib.es5.d.ts target=T79 instantiations=#1[T79] resolvedTypeArguments=[T85] allTypeParameters=[T85,T90] thisType=T90
+T80 Object(0x100000) of=0x6 InterfaceType symbol=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts target=T80 instantiations=#2[T80,T95] resolvedTypeArguments=[T83] allTypeParameters=[T83,T91] thisType=T91
+T81 Object(0x100000) of=0x6 InterfaceType symbol=$"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts target=T81 instantiations=#1[T81] allTypeParameters=[T92] thisType=T92
+T82 Object(0x100000) of=0x2 InterfaceType symbol=$"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts
+T83 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts
+T84 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts
+T85 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[72648,72649)@lib.es5.d.ts
+T86 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts
+T87 Object(0x100000) of=0x6 InterfaceType symbol=$"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts target=T87 instantiations=#1[T87] resolvedTypeArguments=[T86] allTypeParameters=[T86,T93] thisType=T93
+T88 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T70 regularType=T88
+T89 TypeParameter(0x80000) TypeParameter symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts constraint=T71 isThisType=true
+T90 TypeParameter(0x80000) TypeParameter symbol=$"Promise"/0x40@InterfaceDeclaration[72557,73600)@lib.es5.d.ts constraint=T79 isThisType=true
+T91 TypeParameter(0x80000) TypeParameter symbol=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts constraint=T80 isThisType=true
+T92 TypeParameter(0x80000) TypeParameter symbol=$"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts constraint=T81 isThisType=true
+T93 TypeParameter(0x80000) TypeParameter symbol=$"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts constraint=T87 isThisType=true
+T94 Object(0x100000) of=0x4 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T71 resolvedTypeArguments=[T1]
+T95 Object(0x100000) of=0x4 TypeReference symbol=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts target=T80 resolvedTypeArguments=[T1]
+T96 Object(0x100000) of=0x40004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T71 resolvedTypeArguments=[T2]
 == signatures
 G1 resolvedMinArgumentCount=-1 resolvedReturnType=T1
 G2 resolvedMinArgumentCount=-1 resolvedReturnType=T5
@@ -37,26 +122,26 @@ L symbolNodeLinks Identifier[164,166)@idcmp.ts resolvedSymbol=$"c1"/0x2@Variable
 L symbolNodeLinks Identifier[170,173)@idcmp.ts resolvedSymbol=$"c2"/0x2@VariableDeclaration[140,158)@idcmp.ts
 L symbolNodeLinks Identifier[189,192)@idcmp.ts resolvedSymbol=$"c1"/0x2@VariableDeclaration[109,127)@idcmp.ts
 L symbolNodeLinks Identifier[243,245)@idcmp.ts resolvedSymbol=$"s0"/0x2@VariableDeclaration[222,233)@idcmp.ts
-L typeNodeLinks AsExpression[189,209)@idcmp.ts resolvedType=T86
+L typeNodeLinks AsExpression[189,209)@idcmp.ts resolvedType=T65
 L typeNodeLinks AsExpression[270,282)@idcmp.ts resolvedType=T14
-L typeNodeLinks TypeLiteral[113,127)@idcmp.ts resolvedType=T87
-L typeNodeLinks TypeLiteral[144,158)@idcmp.ts resolvedType=T88
-L typeNodeLinks TypeLiteral[195,209)@idcmp.ts resolvedType=T86
-L typeNodeLinks TypeLiteral[60,74)@idcmp.ts resolvedType=T89
-L typeNodeLinks TypeLiteral[82,96)@idcmp.ts resolvedType=T90
-L assertionLinks AsExpression[189,209)@idcmp.ts exprType=T87
-L assertionLinks AsExpression[270,282)@idcmp.ts exprType=T91
+L typeNodeLinks TypeLiteral[113,127)@idcmp.ts resolvedType=T66
+L typeNodeLinks TypeLiteral[144,158)@idcmp.ts resolvedType=T67
+L typeNodeLinks TypeLiteral[195,209)@idcmp.ts resolvedType=T65
+L typeNodeLinks TypeLiteral[60,74)@idcmp.ts resolvedType=T68
+L typeNodeLinks TypeLiteral[82,96)@idcmp.ts resolvedType=T69
+L assertionLinks AsExpression[189,209)@idcmp.ts exprType=T66
+L assertionLinks AsExpression[270,282)@idcmp.ts exprType=T70
 L valueSymbolLinks $"a"/0x4@PropertySignature[115,125)@idcmp.ts resolvedType=T15
 L valueSymbolLinks $"a"/0x4@PropertySignature[146,156)@idcmp.ts resolvedType=T14
 L valueSymbolLinks $"a"/0x4@PropertySignature[62,72)@idcmp.ts resolvedType=T15
 L valueSymbolLinks $"a"/0x4@PropertySignature[84,94)@idcmp.ts resolvedType=T14
-L valueSymbolLinks $"as1"/0x2@VariableDeclaration[183,209)@idcmp.ts resolvedType=T86
+L valueSymbolLinks $"as1"/0x2@VariableDeclaration[183,209)@idcmp.ts resolvedType=T65
 L valueSymbolLinks $"as2"/0x2@VariableDeclaration[264,282)@idcmp.ts resolvedType=T14
 L valueSymbolLinks $"b"/0x4@PropertySignature[197,207)@idcmp.ts resolvedType=T15
-L valueSymbolLinks $"c1"/0x2@VariableDeclaration[109,127)@idcmp.ts resolvedType=T87
-L valueSymbolLinks $"c2"/0x2@VariableDeclaration[140,158)@idcmp.ts resolvedType=T88
+L valueSymbolLinks $"c1"/0x2@VariableDeclaration[109,127)@idcmp.ts resolvedType=T66
+L valueSymbolLinks $"c2"/0x2@VariableDeclaration[140,158)@idcmp.ts resolvedType=T67
 L valueSymbolLinks $"s0"/0x2@VariableDeclaration[222,233)@idcmp.ts resolvedType=T14
-L valueSymbolLinks $"v"/0x1@VariableDeclaration[57,74)@idcmp.ts resolvedType=T89
+L valueSymbolLinks $"v"/0x1@VariableDeclaration[57,74)@idcmp.ts resolvedType=T68
 L valueSymbolLinks $"x"/0x4@PropertySignature[14,24)@idcmp.ts resolvedType=T15
 L valueSymbolLinks Y1 resolvedType=T10
 L valueSymbolLinks Y2 resolvedType=T63
@@ -70,24 +155,24 @@ L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[144,158)@idcmp.ts [-,{"a"
 L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[195,209)@idcmp.ts [-,{"b":$"b"/0x4@PropertySignature[197,207)@idcmp.ts}]
 L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[60,74)@idcmp.ts [-,{"a":$"a"/0x4@PropertySignature[62,72)@idcmp.ts}]
 L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[82,96)@idcmp.ts [-,{"a":$"a"/0x4@PropertySignature[84,94)@idcmp.ts}]
-L declaredTypeLinks $"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts declaredType=T65
-L declaredTypeLinks $"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts declaredType=T74
-L declaredTypeLinks $"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts declaredType=T70
-L declaredTypeLinks $"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts declaredType=T69
-L declaredTypeLinks $"I1"/0x40@InterfaceDeclaration[0,26)@idcmp.ts declaredType=T92 interfaceChecked=true indexSignaturesChecked=true typeParametersChecked=true
+L declaredTypeLinks $"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts declaredType=T71
+L declaredTypeLinks $"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts declaredType=T72
+L declaredTypeLinks $"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts declaredType=T73
+L declaredTypeLinks $"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts declaredType=T74
+L declaredTypeLinks $"I1"/0x40@InterfaceDeclaration[0,26)@idcmp.ts declaredType=T75 interfaceChecked=true indexSignaturesChecked=true typeParametersChecked=true
 L declaredTypeLinks $"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts declaredType=T63
-L declaredTypeLinks $"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts declaredType=T71
-L declaredTypeLinks $"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts declaredType=T73
-L declaredTypeLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts declaredType=T68
-L declaredTypeLinks $"Promise"/0x40@InterfaceDeclaration[72557,73600)@lib.es5.d.ts declaredType=T93
-L declaredTypeLinks $"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts declaredType=T79
-L declaredTypeLinks $"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts declaredType=T75
-L declaredTypeLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts declaredType=T72
-L declaredTypeLinks $"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts declaredType=T80
-L declaredTypeLinks $"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts declaredType=T66
-L declaredTypeLinks $"T"/0x40000@TypeParameter[72648,72649)@lib.es5.d.ts declaredType=T94
-L declaredTypeLinks $"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts declaredType=T84
-L declaredTypeLinks $"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts declaredType=T83
+L declaredTypeLinks $"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts declaredType=T76
+L declaredTypeLinks $"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts declaredType=T77
+L declaredTypeLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts declaredType=T78
+L declaredTypeLinks $"Promise"/0x40@InterfaceDeclaration[72557,73600)@lib.es5.d.ts declaredType=T79
+L declaredTypeLinks $"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts declaredType=T80
+L declaredTypeLinks $"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts declaredType=T81
+L declaredTypeLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts declaredType=T82
+L declaredTypeLinks $"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts declaredType=T83
+L declaredTypeLinks $"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts declaredType=T84
+L declaredTypeLinks $"T"/0x40000@TypeParameter[72648,72649)@lib.es5.d.ts declaredType=T85
+L declaredTypeLinks $"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts declaredType=T86
+L declaredTypeLinks $"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts declaredType=T87
 L sourceFileLinks SourceFile[0,284)@idcmp.ts typeChecked=true identifierCheckNodes=[InterfaceDeclaration[0,26)@idcmp.ts,InterfaceDeclaration[26,53)@idcmp.ts]
 == diagnostics
 D idcmp.ts [42,43) TS2717 cat=1 chain=0 related=1

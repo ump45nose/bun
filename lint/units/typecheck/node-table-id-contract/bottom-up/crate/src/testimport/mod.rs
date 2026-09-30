@@ -49,10 +49,10 @@ impl ImportStats {
         let mut key = kind.name().as_bytes().to_vec();
         key.push(b'.');
         key.extend_from_slice(prop);
-        match self.unmapped.iter_mut().find(|entry| entry.0 == key) {
-            Some(entry) => entry.1 += 1,
-            None if self.unmapped.len() < 32 => self.unmapped.push((key, 1)),
-            None => {}
+        if let Some(entry) = self.unmapped.iter_mut().find(|entry| entry.0 == key) {
+            entry.1 += 1;
+        } else if self.unmapped.len() < 32 {
+            self.unmapped.push((key, 1));
         }
     }
 }
@@ -105,6 +105,7 @@ fn takes(go: &str, ts: &[u8]) -> bool {
         || (go == "TokenFlags" && (ts == b"$tokenFlags" || ts == b"numericLiteralFlags"))
         || (go == "Comment" && ts == b"comment")
         || (go == "DefaultType" && ts == b"default")
+        || (go == "PhaseModifier" && ts == b"isTypeOnly")
 }
 
 struct DumpFile<'d> {
@@ -334,6 +335,8 @@ fn import_file(
                                 text_slot(&mut builder, dump, text, end, stats)
                             }
                             (SlotType::Bool, 0) => u32::from(raw != 0),
+                            // TypeScript keeps `import type` as a flag, the port as the kind of the modifier.
+                            (SlotType::Kind, 0) if raw != 0 => Kind::TypeKeyword as u32,
                             (SlotType::Kind, 1) => usize::try_from(raw)
                                 .ok()
                                 .and_then(|k| dump.kinds.get(k))
@@ -462,6 +465,7 @@ pub fn import_dump(
     }
     let kind_of = |name: &Json| match name.bytes() {
         b"EndOfFileToken" => Kind::EndOfFile,
+        b"JSDocTag" => Kind::JSDocUnknownTag,
         other => Kind::from_name(other).unwrap_or(Kind::Unknown),
     };
     let kind_names = root

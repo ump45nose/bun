@@ -72,7 +72,7 @@ fn dump_text(a: &AstContext<'_>, root: NodeId) -> Vec<u8> {
         text.extend_from_slice(line);
         text.push(b'\n');
     };
-    Dump::new(a, false, &mut sink).node("root", root, NodeId::NIL, 0);
+    Dump::new(a, false, &mut sink).tree(root);
     text
 }
 

@@ -5,9 +5,11 @@ use crate::ast::file::{
 };
 use crate::ast::layout::SlotType;
 use crate::ast::open::{Open, count};
+use crate::ast::reader::{Ast, Frozen};
 use crate::tscore::deps::hash_bytes;
 use crate::tscore::golang::Map;
 use crate::tscore::ids::{FlowListId, FlowNodeId, NodeId, OPEN_BIT, SymbolId, SymbolTableId};
+use crate::tscore::stable::Arena;
 use std::sync::atomic::Ordering;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -64,11 +66,32 @@ impl Names<'_> {
 }
 
 impl File {
+    // BindSourceFile: runs `bind` once for this file, whatever the number of programs and threads that ask.
+    pub fn bind_once(&self, ids: &IdAllocator, bind: impl for<'x> FnOnce(Ast<'x>)) -> &Bound {
+        self.bound.get_or_init(|| {
+            let arena = Arena::new();
+            let open = Open::new(&arena, ids.next_serial());
+            let frozen = Frozen::of_binding(self);
+            bind(Ast::new(&frozen, &open));
+            // A file whose ids cannot be given is bound to nothing: every symbol of it reads as nil.
+            self.collect(&open, ids).unwrap_or_default()
+        })
+    }
+
     // `open` is the store of the binder of this file. After this call nothing writes to the file.
     pub fn publish(&self, open: &Open<'_>, ids: &IdAllocator) -> Result<&Bound, PublishError> {
         if self.bound.get().is_some() {
             return Err(PublishError::AlreadyPublished);
         }
+        let bound = self.collect(open, ids)?;
+        if self.bound.set(bound).is_err() {
+            return Err(PublishError::AlreadyPublished);
+        }
+        self.bound.get().ok_or(PublishError::AlreadyPublished)
+    }
+
+    // The objects of the open store as they are kept in the file, with the ids of a new range.
+    fn collect(&self, open: &Open<'_>, ids: &IdAllocator) -> Result<Bound, PublishError> {
         let (
             Ok(nodes),
             Ok(texts),
@@ -249,10 +272,7 @@ impl File {
                 cell.store(fix(value), Ordering::Relaxed);
             }
         }
-        if self.bound.set(bound).is_err() {
-            return Err(PublishError::AlreadyPublished);
-        }
-        self.bound.get().ok_or(PublishError::AlreadyPublished)
+        Ok(bound)
     }
 
     // A file that holds only the nodes of an open store: the nodes that a program makes beside its source files.

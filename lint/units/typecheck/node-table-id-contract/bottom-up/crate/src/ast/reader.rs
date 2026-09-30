@@ -397,6 +397,24 @@ impl<'a> Ast<'a> {
     pub fn exists(self, node: NodeId) -> bool {
         self.def(node) != Def::None
     }
+    // ast.GetSourceFileOfNode: the root of the file that owns the node, else the end of the parent chain.
+    pub fn source_file_of(self, node: NodeId) -> NodeId {
+        if let Some((file, _)) = self.frozen.locate(node.0) {
+            return file.source_file.root;
+        }
+        let mut current = node;
+        // A chain of parents that does not end is cut: the nodes outside the files are the ones of the stores.
+        for _ in 0..self.open.node_count().saturating_add(4096) {
+            if current.is_nil() || self.kind(current) == Kind::SourceFile {
+                return current;
+            }
+            if !current.is_open() && self.frozen.locate(current.0).is_some() {
+                return self.source_file_of(current);
+            }
+            current = self.parent(current);
+        }
+        NodeId::NIL
+    }
 
     // The payload of a node of any definition.
     pub fn data_any(self, node: NodeId) -> Option<(Def, NodeData<'a>)> {

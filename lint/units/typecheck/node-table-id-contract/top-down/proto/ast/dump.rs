@@ -15,7 +15,21 @@ pub struct Dump<'a, 's> {
     pub nodes: u32,
 }
 
-const MAX_DEPTH: usize = 400_000;
+#[derive(Clone, Copy)]
+enum Label {
+    Root,
+    Element,
+    Field(&'static str),
+    JSDoc,
+}
+
+// What is left to print. The printer keeps its own stack: a tree can be deeper than the thread's stack allows.
+#[derive(Clone, Copy)]
+enum Item {
+    Node(Label, NodeId, NodeId, usize),
+    List(&'static str, bool, NodeListId, NodeId, usize),
+    ModifierFlags(&'static str, ModifierListId, usize),
+}
 
 // strconv.QuoteToASCII
 pub fn quote_to_ascii(text: &[u8], out: &mut Vec<u8>) {
@@ -95,7 +109,41 @@ impl<'a, 's> Dump<'a, 's> {
     fn pad(&mut self, indent: usize) {
         self.line.resize(self.line.len() + indent, b' ');
     }
-    fn list(&mut self, label: &str, raw: bool, list: NodeListId, parent: NodeId, indent: usize) {
+    pub fn tree(&mut self, root: NodeId) {
+        let mut stack = vec![Item::Node(Label::Root, root, NodeId::NIL, 0)];
+        let mut next: Vec<Item> = Vec::new();
+        while let Some(item) = stack.pop() {
+            next.clear();
+            match item {
+                Item::Node(label, node, parent, indent) => {
+                    self.node(label, node, parent, indent, &mut next)
+                }
+                Item::List(name, raw, list, parent, indent) => {
+                    self.list(name, raw, list, parent, indent, &mut next)
+                }
+                Item::ModifierFlags(name, list, indent) => {
+                    self.pad(indent);
+                    let _ = write!(
+                        self.line,
+                        ".{}.flags={:#x}",
+                        name,
+                        self.a.list_modifier_flags(list).bits()
+                    );
+                    self.flush();
+                }
+            }
+            stack.extend(next.iter().rev());
+        }
+    }
+    fn list(
+        &mut self,
+        label: &str,
+        raw: bool,
+        list: NodeListId,
+        parent: NodeId,
+        indent: usize,
+        next: &mut Vec<Item>,
+    ) {
         let a = self.a;
         let nodes = a.list_nodes(list);
         let loc = a.list_loc(list);
@@ -110,20 +158,32 @@ impl<'a, 's> Dump<'a, 's> {
             nodes.len()
         );
         self.flush();
-        for child in nodes.iter() {
-            self.node("-", child, parent, indent + 2);
-        }
+        next.extend(
+            nodes
+                .iter()
+                .map(|child| Item::Node(Label::Element, child, parent, indent + 2)),
+        );
     }
-    pub fn node(&mut self, label: &str, node: NodeId, parent: NodeId, indent: usize) {
+    fn node(
+        &mut self,
+        label: Label,
+        node: NodeId,
+        parent: NodeId,
+        indent: usize,
+        next: &mut Vec<Item>,
+    ) {
         let a = self.a;
         self.pad(indent);
-        if node.is_nil() {
-            let _ = write!(self.line, "{label} <nil>");
-            self.flush();
-            return;
+        match label {
+            Label::Root => self.line.extend_from_slice(b"root"),
+            Label::Element => self.line.push(b'-'),
+            Label::JSDoc => self.line.extend_from_slice(b".jsdoc:"),
+            Label::Field(name) => {
+                let _ = write!(self.line, ".{name}:");
+            }
         }
-        if indent > MAX_DEPTH {
-            let _ = write!(self.line, "{label} <too deep>");
+        if node.is_nil() {
+            self.line.extend_from_slice(b" <nil>");
             self.flush();
             return;
         }
@@ -132,8 +192,7 @@ impl<'a, 's> Dump<'a, 's> {
         let loc = node.loc(a);
         let _ = write!(
             self.line,
-            "{} {} [{},{}) f={:#x}",
-            label,
+            " {} [{},{}) f={:#x}",
             kind.string(),
             loc.pos(),
             loc.end(),
@@ -198,41 +257,50 @@ impl<'a, 's> Dump<'a, 's> {
         self.flush();
         if def == Def::SourceFile {
             let file = node.as_source_file(a);
-            self.list("Statements", false, file.statements, node, indent + 2);
-            self.node(".EndOfFileToken:", file.end_of_file_token, node, indent + 2);
+            next.push(Item::List(
+                "Statements",
+                false,
+                file.statements,
+                node,
+                indent + 2,
+            ));
+            next.push(Item::Node(
+                Label::Field("EndOfFileToken"),
+                file.end_of_file_token,
+                node,
+                indent + 2,
+            ));
         }
         for &(name, ty, value) in &fields {
             if value == 0 {
                 continue;
             }
             match ty {
-                SlotType::Node => {
-                    let mut label = String::with_capacity(name.len() + 2);
-                    label.push('.');
-                    label.push_str(name);
-                    label.push(':');
-                    self.node(&label, NodeId(value), node, indent + 2);
+                SlotType::Node => next.push(Item::Node(
+                    Label::Field(name),
+                    NodeId(value),
+                    node,
+                    indent + 2,
+                )),
+                SlotType::NodeList => {
+                    next.push(Item::List(name, false, NodeListId(value), node, indent + 2))
                 }
-                SlotType::NodeList => self.list(name, false, NodeListId(value), node, indent + 2),
-                SlotType::RawNodeList => self.list(name, true, NodeListId(value), node, indent + 2),
+                SlotType::RawNodeList => {
+                    next.push(Item::List(name, true, NodeListId(value), node, indent + 2))
+                }
                 SlotType::ModifierList => {
-                    self.pad(indent + 2);
-                    let _ = write!(
-                        self.line,
-                        ".{}.flags={:#x}",
-                        name,
-                        a.list_modifier_flags(ModifierListId(value)).bits()
-                    );
-                    self.flush();
-                    self.list(name, false, NodeListId(value), node, indent + 2);
+                    next.push(Item::ModifierFlags(name, ModifierListId(value), indent + 2));
+                    next.push(Item::List(name, false, NodeListId(value), node, indent + 2));
                 }
                 _ => {}
             }
         }
         if !self.no_jsdoc && node.flags(a).intersects(NodeFlags::HAS_JSDOC) {
-            for doc in node.jsdoc(a).iter() {
-                self.node(".jsdoc:", doc, node, indent + 2);
-            }
+            next.extend(
+                node.jsdoc(a)
+                    .iter()
+                    .map(|doc| Item::Node(Label::JSDoc, doc, node, indent + 2)),
+            );
         }
     }
 }
@@ -247,7 +315,7 @@ pub fn tree_digest(a: Ast<'_>, root: NodeId, no_jsdoc: bool) -> (u64, u32) {
         }
     };
     let mut dump = Dump::new(a, no_jsdoc, &mut sink);
-    dump.node("root", root, NodeId::NIL, 0);
+    dump.tree(root);
     let nodes = dump.nodes;
     (hash, nodes)
 }

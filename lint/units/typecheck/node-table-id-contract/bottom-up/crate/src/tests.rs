@@ -9,6 +9,7 @@ use crate::ast::kind_generated::{Kind, is_token_kind};
 use crate::ast::layout::{SlotType, VisitTag};
 use crate::ast::open::Open;
 use crate::ast::program::Program;
+use crate::ast::publish::PublishError;
 use crate::ast::reader::{Ast, Frozen, FrozenError};
 use crate::bindprobe::{BindStats, bind_probe, get_symbol_name_for_private_identifier};
 use crate::testimport::{ImportStats, import_dump};
@@ -69,18 +70,14 @@ fn build_min(extra_garbage: bool, ids: &IdAllocator) -> File {
 }
 
 fn bind_and_publish(file: File, ids: &IdAllocator) -> (Arc<File>, BindStats) {
-    let stats = {
-        let arena = Arena::new();
-        let open = Open::new(&arena, ids.next_serial());
-        let frozen = Frozen::of_binding(&file);
-        let a = Ast::new(&frozen, &open);
-        let stats = bind_probe(a, file.source_file.root);
-        assert_eq!(open.faults.first(), None);
-        if let Err(error) = file.publish(&open, ids) {
-            panic!("publish: {error:?}");
-        }
-        stats
-    };
+    let mut stats = BindStats::default();
+    let root = file.source_file.root;
+    file.bind_once(ids, |a| {
+        stats = bind_probe(a, root);
+        assert_eq!(a.open().faults.first(), None);
+    });
+    // A second request does not bind again.
+    file.bind_once(ids, |_| panic!("bound twice"));
     (Arc::new(file), stats)
 }
 
@@ -654,5 +651,92 @@ fn imports_a_dump_of_typescript() {
         &file.source_text()[a.pos(a.name(first)) as usize + 1..a.end(a.name(first)) as usize],
         b"ClassDecorator"
     );
+    assert_eq!(open.faults.first(), None);
+}
+
+// What the binder and the program layer make: the data node of a switch clause flow node, a synthetic import.
+#[test]
+fn published_stores_keep_their_nodes() {
+    let ids = IdAllocator::new();
+    let mut b = FileBuilder::new(b"switch (x) {}\n");
+    let x = b.new_identifier(b"x");
+    let clauses = b.new_node_list(&[]);
+    let case_block = b.new_case_block(clauses);
+    let switch = b.new_switch_statement(x, case_block);
+    let statements = b.new_node_list(&[switch]);
+    let eof = b.new_token(Kind::EndOfFile);
+    let root = b.new_source_file(statements, eof);
+    let file = match b.finish(root, SourceFileData::default(), &ids) {
+        Some(file) => file,
+        None => panic!("no ids left"),
+    };
+    let (file, stats) = bind_and_publish(file, &ids);
+    assert_eq!(stats.flow_data_nodes, 1);
+    assert_eq!(file.bound().map(|bound| bound.node_count()), Some(1));
+    assert_eq!(
+        file.publish(&Open::new(&Arena::new(), 0), &ids).err(),
+        Some(PublishError::AlreadyPublished)
+    );
+
+    // compiler/fileloader.go createSyntheticImport: a string literal in an import declaration whose parent is the file.
+    let arena = Arena::new();
+    let imports = {
+        let none = Frozen::none();
+        let open = Open::new(&arena, 0);
+        let a = Ast::new(&none, &open);
+        let mut factory = Factory::new(a);
+        let specifier = factory.new_string_literal(b"tslib", TokenFlags::NONE);
+        let declaration = factory.new_import_declaration(
+            ModifierListId::NIL,
+            NodeId::NIL,
+            specifier,
+            NodeId::NIL,
+        );
+        a.set_parent(specifier, declaration);
+        a.set_parent(declaration, file.source_file.root);
+        match File::of_open(&open, &ids) {
+            Ok(imports) => Arc::new(imports),
+            Err(error) => panic!("{error:?}"),
+        }
+    };
+    let program = Program::new(vec![Arc::clone(&file), Arc::clone(&imports)]);
+    let frozen = match program.frozen() {
+        Ok(frozen) => frozen,
+        Err(error) => panic!("{error:?}"),
+    };
+    let open = Open::new(&arena, 0);
+    let a = Ast::new(&frozen, &open);
+    let bound_base = file.bound().map_or(0, |bound| bound.base());
+    // The flow node of the clause is the second flow node of the binder after the start node and the one of x.
+    let switch = a.statements(file.source_file.root).at(0usize);
+    assert_eq!(a.kind(switch), Kind::SwitchStatement);
+    let clause_flow = (1..8)
+        .map(|index| a.flow(FlowNodeId(bound_base + index)))
+        .find(|flow| flow.flags.intersects(FlowFlags::SWITCH_CLAUSE));
+    let data_node = clause_flow.map_or(NodeId::NIL, |flow| flow.node);
+    assert_eq!(data_node, NodeId(bound_base + 1));
+    assert_eq!(a.kind(data_node), Kind::Unknown);
+    let data = a.as_flow_switch_clause_data(data_node);
+    assert_eq!(
+        (data.switch_statement, data.clause_start, data.clause_end),
+        (switch, 0, 1)
+    );
+    assert_eq!(a.parent(data_node), NodeId::NIL);
+    // The nodes of the program.
+    let imports_base = imports.bound().map_or(0, |bound| bound.base());
+    let specifier = NodeId(imports_base + 1);
+    let declaration = NodeId(imports_base + 2);
+    assert_eq!(a.text(specifier), b"tslib");
+    assert_eq!(a.parent(specifier), declaration);
+    assert_eq!(a.module_specifier(declaration), specifier);
+    assert_eq!(a.parent(declaration), file.source_file.root);
+    assert_eq!(a.symbol(declaration), SymbolId::NIL);
+    // GetSourceFileOfNode: by the page of a node of a file, by the parents of a node of a store.
+    assert_eq!(
+        a.source_file_of(a.expression(switch)),
+        file.source_file.root
+    );
+    assert_eq!(a.source_file_of(specifier), file.source_file.root);
+    assert_eq!(a.source_file_of(data_node), NodeId::NIL);
     assert_eq!(open.faults.first(), None);
 }

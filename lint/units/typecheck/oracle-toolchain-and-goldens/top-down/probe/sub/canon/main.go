@@ -5,7 +5,8 @@
 // usage: canon < raw dump > canonical dump
 //
 // The numbering, in this order (a record is a T, G or Y line; a mention is a reference outside a `#n[...]` set):
-//  1. the records that NewChecker made keep their numbers (line `after NewChecker types=.. symbols=.. signatures=..`);
+//  1. the records that NewChecker made before it merges the files keep their numbers (the counts of the first `mark`
+//     line); what it makes later already depends on the order of a map (the merged copies of the global symbols);
 //  2. the stage lines, top to bottom: each record mentioned for the first time gets the next number of its kind;
 //  3. drain: the numbered records that were not scanned yet are scanned in number order, all T, then all G, then all
 //     Y, again until nothing is left; scanning a Y record also scans the L lines whose key is that Y, in file order;
@@ -257,18 +258,22 @@ func Main() {
 			diags = append(diags, i)
 		}
 	}
-	// 1. What NewChecker made keeps its numbers.
+	// 1. What the straight-line part of NewChecker made keeps its numbers: the counts of the first mark.
 	for _, i := range head {
 		line := s.lines[i]
-		if strings.HasPrefix(line, "after NewChecker ") {
-			for _, f := range strings.Fields(line)[2:] {
+		if strings.HasPrefix(line, "mark ") {
+			for _, f := range strings.Fields(line) {
 				kv := strings.SplitN(f, "=", 2)
+				kind, ok := map[string]byte{"TypeCount": 'T', "SymbolCount": 'Y', "SignatureCount": 'G'}[kv[0]]
+				if !ok || len(kv) != 2 {
+					continue
+				}
 				n, _ := strconv.Atoi(kv[1])
-				kind := map[string]byte{"types": 'T', "symbols": 'Y', "signatures": 'G'}[kv[0]]
 				for id := 1; id <= n; id++ {
 					s.assign(kind, id)
 				}
 			}
+			break
 		}
 	}
 	// The L lines of a created symbol belong to its record.

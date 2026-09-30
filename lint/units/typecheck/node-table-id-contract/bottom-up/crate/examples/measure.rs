@@ -9,7 +9,7 @@ use bun_typecheck_proto::ast::file::{File, IdAllocator};
 use bun_typecheck_proto::ast::kind_generated::Kind;
 use bun_typecheck_proto::ast::open::Open;
 use bun_typecheck_proto::ast::program::Program;
-use bun_typecheck_proto::ast::reader::{Ast, Frozen};
+use bun_typecheck_proto::ast::reader::Ast;
 use bun_typecheck_proto::bindprobe::{BindStats, bind_probe};
 use bun_typecheck_proto::testimport::{ImportStats, import_dump};
 use bun_typecheck_proto::tscore::ids::NodeId;
@@ -82,23 +82,23 @@ fn main() {
         let mut publish_ns = 0u64;
         let mut open_bytes = 0usize;
         for file in &unbound {
-            let arena = Arena::new();
-            let open = Open::new(&arena, ids.next_serial());
-            let frozen = Frozen::of_binding(file);
-            let a = Ast::new(&frozen, &open);
+            let root = file.source_file.root;
             let started = Instant::now();
-            let s = bind_probe(a, file.source_file.root);
-            bind_ns += started.elapsed().as_nanos() as u64;
-            assert_eq!(open.faults.first(), None);
-            let started = Instant::now();
-            file.publish(&open, &ids).expect("publish");
-            publish_ns += started.elapsed().as_nanos() as u64;
-            open_bytes += arena.allocated_bytes();
-            bind.nodes += s.nodes;
-            bind.symbols += s.symbols;
-            bind.declarations += s.declarations;
-            bind.tables += s.tables;
-            bind.flow_nodes += s.flow_nodes;
+            let mut probe_ns = 0u64;
+            file.bind_once(&ids, |a| {
+                let probe_started = Instant::now();
+                let s = bind_probe(a, root);
+                probe_ns = probe_started.elapsed().as_nanos() as u64;
+                assert_eq!(a.open().faults.first(), None);
+                open_bytes += a.open().arena.allocated_bytes();
+                bind.nodes += s.nodes;
+                bind.symbols += s.symbols;
+                bind.declarations += s.declarations;
+                bind.tables += s.tables;
+                bind.flow_nodes += s.flow_nodes;
+            });
+            bind_ns += probe_ns;
+            publish_ns += (started.elapsed().as_nanos() as u64).saturating_sub(probe_ns);
         }
         let files: Vec<Arc<File>> = unbound.into_iter().map(Arc::new).collect();
         let total_bytes: usize = files.iter().map(|file| file.heap_bytes()).sum();
@@ -147,6 +147,17 @@ fn main() {
             stats.unmapped_attrs,
             String::from_utf8_lossy(&stats.first_unmapped)
         );
+        let names: Vec<String> = stats
+            .unknown_kind_names
+            .iter()
+            .map(|n| String::from_utf8_lossy(n).into_owned())
+            .collect();
+        let lost: Vec<String> = stats
+            .unmapped
+            .iter()
+            .map(|(k, n)| format!("{}={n}", String::from_utf8_lossy(k)))
+            .collect();
+        println!("  kinds of the dump that the port has not: {names:?}; unmapped: {lost:?}");
         println!(
             "  texts in the source {} copied {}",
             stats.source_texts, stats.copied_texts

@@ -6,16 +6,16 @@ mark after special types (line 1376): TypeCount=64 SymbolCount=6 SignatureCount=
 mark end of initializeChecker: TypeCount=64 SymbolCount=6 SignatureCount=4 globals=2 mergedSymbols=0 diagnostics=10
 after NewChecker types=64 symbols=6 signatures=4
 == stage typeof
-typeof VariableDeclaration[12,18)@lib1.ts = T65
+typeof VariableDeclaration[12,18)@lib1.ts = T63
 typeof PropertySignature[40,51)@lib1.ts = T15
-typeof ModuleDeclaration[53,123)@lib1.ts = T66
-typeof VariableDeclaration[88,98)@lib1.ts = T67
-typeof FunctionDeclaration[123,156)@lib1.ts = T68
-typeof VariableDeclaration[107,115)@lib2.ts = T69
-typeof VariableDeclaration[41,54)@lib3.ts = T70
-typeof ModuleDeclaration[0,89)@eq.ts = T71
-typeof ModuleDeclaration[17,87)@eq.ts = T72
-typeof VariableDeclaration[53,62)@eq.ts = T65
+typeof ModuleDeclaration[53,123)@lib1.ts = T64
+typeof VariableDeclaration[88,98)@lib1.ts = T65
+typeof FunctionDeclaration[123,156)@lib1.ts = T66
+typeof VariableDeclaration[107,115)@lib2.ts = T67
+typeof VariableDeclaration[41,54)@lib3.ts = T68
+typeof ModuleDeclaration[0,89)@eq.ts = T69
+typeof ModuleDeclaration[17,87)@eq.ts = T70
+typeof VariableDeclaration[53,62)@eq.ts = T63
 == counts types=76 symbols=6 signatures=4 files=7
 == types
 T1 Any(0x1) IntrinsicType intrinsicName="any"
@@ -80,20 +80,20 @@ T59 StringLiteral(0x400) LiteralType value="string"(string) regularType=T59
 T60 StringLiteral(0x400) LiteralType value="symbol"(string) regularType=T60
 T61 StringLiteral(0x400) LiteralType value="undefined"(string) regularType=T61
 T62 Union(0x8000000) of=0x8000 UnionType types=[T54,T55,T56,T57,T58,T59,T60,T61]
-T63 Object(0x100000) of=0x10 ObjectType symbol=Y5
-T64 Object(0x100000) of=0x200010 ObjectType
-T65 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T65 regularType=T73
-T66 Object(0x100000) of=0x10 ObjectType symbol=$"NS"/0x200@ModuleDeclaration[53,123)@lib1.ts
-T67 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) freshType=T67 regularType=T74
-T68 Object(0x100000) of=0x10 ObjectType symbol=$"default"/0x10@FunctionDeclaration[123,156)@lib1.ts
-T69 NumberLiteral(0x800) LiteralType value=3(jsnum.Number) freshType=T69 regularType=T75
-T70 StringLiteral(0x400) LiteralType value="shadow"(string) freshType=T70 regularType=T76
-T71 Object(0x100000) of=0x10 ObjectType symbol=$"Outer"/0x200@ModuleDeclaration[0,89)@eq.ts
-T72 Object(0x100000) of=0x10 ObjectType symbol=$"Mid"/0x200@ModuleDeclaration[17,87)@eq.ts
-T73 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T65 regularType=T73
-T74 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) freshType=T67 regularType=T74
-T75 NumberLiteral(0x800) LiteralType value=3(jsnum.Number) freshType=T69 regularType=T75
-T76 StringLiteral(0x400) LiteralType value="shadow"(string) freshType=T70 regularType=T76
+T63 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T63 regularType=T71
+T64 Object(0x100000) of=0x10 ObjectType symbol=$"NS"/0x200@ModuleDeclaration[53,123)@lib1.ts
+T65 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) freshType=T65 regularType=T72
+T66 Object(0x100000) of=0x10 ObjectType symbol=$"default"/0x10@FunctionDeclaration[123,156)@lib1.ts
+T67 NumberLiteral(0x800) LiteralType value=3(jsnum.Number) freshType=T67 regularType=T73
+T68 StringLiteral(0x400) LiteralType value="shadow"(string) freshType=T68 regularType=T74
+T69 Object(0x100000) of=0x10 ObjectType symbol=$"Outer"/0x200@ModuleDeclaration[0,89)@eq.ts
+T70 Object(0x100000) of=0x10 ObjectType symbol=$"Mid"/0x200@ModuleDeclaration[17,87)@eq.ts
+T71 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T63 regularType=T71
+T72 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) freshType=T65 regularType=T72
+T73 NumberLiteral(0x800) LiteralType value=3(jsnum.Number) freshType=T67 regularType=T73
+T74 StringLiteral(0x400) LiteralType value="shadow"(string) freshType=T68 regularType=T74
+T75 Object(0x100000) of=0x10 ObjectType symbol=Y5
+T76 Object(0x100000) of=0x200010 ObjectType
 == signatures
 G1 resolvedMinArgumentCount=-1 resolvedReturnType=T1
 G2 resolvedMinArgumentCount=-1 resolvedReturnType=T5
@@ -107,20 +107,20 @@ Y4 Flags=0x2000004 Name="unknown"
 Y5 Flags=0x2000600 CheckFlags=0x8 Name="globalThis" Exports={"globalThis":Y5 "undefined":Y1}
 Y6 Flags=0x2000800 Name="\xfetype"
 == links
-L valueSymbolLinks $"Mid"/0x200@ModuleDeclaration[17,87)@eq.ts resolvedType=T72
-L valueSymbolLinks $"NS"/0x200@ModuleDeclaration[53,123)@lib1.ts resolvedType=T66
-L valueSymbolLinks $"Outer"/0x200@ModuleDeclaration[0,89)@eq.ts resolvedType=T71
-L valueSymbolLinks $"a"/0x2@VariableDeclaration[12,18)@lib1.ts resolvedType=T65
-L valueSymbolLinks $"a"/0x2@VariableDeclaration[41,54)@lib3.ts resolvedType=T70
-L valueSymbolLinks $"default"/0x10@FunctionDeclaration[123,156)@lib1.ts resolvedType=T68
-L valueSymbolLinks $"inner"/0x2@VariableDeclaration[88,98)@lib1.ts resolvedType=T67
-L valueSymbolLinks $"leaf"/0x2@VariableDeclaration[53,62)@eq.ts resolvedType=T65
-L valueSymbolLinks $"own"/0x2@VariableDeclaration[107,115)@lib2.ts resolvedType=T69
+L valueSymbolLinks $"Mid"/0x200@ModuleDeclaration[17,87)@eq.ts resolvedType=T70
+L valueSymbolLinks $"NS"/0x200@ModuleDeclaration[53,123)@lib1.ts resolvedType=T64
+L valueSymbolLinks $"Outer"/0x200@ModuleDeclaration[0,89)@eq.ts resolvedType=T69
+L valueSymbolLinks $"a"/0x2@VariableDeclaration[12,18)@lib1.ts resolvedType=T63
+L valueSymbolLinks $"a"/0x2@VariableDeclaration[41,54)@lib3.ts resolvedType=T68
+L valueSymbolLinks $"default"/0x10@FunctionDeclaration[123,156)@lib1.ts resolvedType=T66
+L valueSymbolLinks $"inner"/0x2@VariableDeclaration[88,98)@lib1.ts resolvedType=T65
+L valueSymbolLinks $"leaf"/0x2@VariableDeclaration[53,62)@eq.ts resolvedType=T63
+L valueSymbolLinks $"own"/0x2@VariableDeclaration[107,115)@lib2.ts resolvedType=T67
 L valueSymbolLinks $"x"/0x4@PropertySignature[40,51)@lib1.ts resolvedType=T15
 L valueSymbolLinks Y1 resolvedType=T10
 L valueSymbolLinks Y2 resolvedType=T35
 L valueSymbolLinks Y4 resolvedType=T5
-L valueSymbolLinks Y5 resolvedType=T63
+L valueSymbolLinks Y5 resolvedType=T75
 == diagnostics
 D.global - [0,0) TS2318 cat=1 chain=0 related=0
 D.global - [0,0) TS2318 cat=1 chain=0 related=0

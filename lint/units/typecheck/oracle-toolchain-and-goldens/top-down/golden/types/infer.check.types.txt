@@ -9,33 +9,118 @@ after NewChecker types=85 symbols=6 signatures=4
 check infer.ts diagnostics=2
 == counts types=115 symbols=15 signatures=4 files=1
 == types
-T86 StringLiteral(0x400) LiteralType value="lit"(string) freshType=T86 regularType=T103
-T87 Conditional(0x4000000) of=0x180000 ConditionalType alias={symbol=$"Two"/0x80000@TypeAliasDeclaration[0,98)@infer.ts typeArguments=[T100]} root={node=ConditionalType[13,97)@infer.ts checkType=T100 extendsType=T97 isDistributive=true inferTypeParameters=[T88,T89,T90,T91] outerTypeParameters=[T100] instantiations=#2[T87,T99] alias={symbol=$"Two"/0x80000@TypeAliasDeclaration[0,98)@infer.ts typeArguments=[T100]}} checkType=T100 extendsType=T97 combinedMapper=Inference{c=&Checker n=&InferenceContext fixing=true}
-T88 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"A"/0x40000@TypeParameter[30,32)@infer.ts resolvedBaseConstraint=T43 constraint=T43 resolvedDefaultType=T43
-T89 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"B"/0x40000@TypeParameter[39,41)@infer.ts resolvedBaseConstraint=T43 constraint=T43 resolvedDefaultType=T43
-T90 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"C"/0x40000@TypeParameter[48,50)@infer.ts resolvedBaseConstraint=T43 constraint=T43 resolvedDefaultType=T43
-T91 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"D"/0x40000@TypeParameter[57,59)@infer.ts resolvedBaseConstraint=T43 constraint=T43 resolvedDefaultType=T43
-T92 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T95 regularType=T92
-T93 StringLiteral(0x400) LiteralType value="x"(string) freshType=T104 regularType=T93
-T94 NumberLiteral(0x800) LiteralType value=0(jsnum.Number) freshType=T94 regularType=T52
-T95 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T95 regularType=T92
-T96 Object(0x100000) of=0x40080004 TypeReference target=T105 resolvedTypeArguments=[T92,T93,T19,T13]
-T97 Object(0x100000) of=0x40180004 TypeReference target=T105 resolvedTypeArguments=[T88,T89,T90,T91]
-T98 Object(0x100000) of=0x380010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[62,89)@infer.ts members={"a":$"a"/0x4@PropertySignature[64,70)@infer.ts "b":$"b"/0x4@PropertySignature[70,76)@infer.ts "c":$"c"/0x4@PropertySignature[76,82)@infer.ts "d":$"d"/0x4@PropertySignature[82,87)@infer.ts} properties=[$"a"/0x4@PropertySignature[64,70)@infer.ts,$"b"/0x4@PropertySignature[70,76)@infer.ts,$"c"/0x4@PropertySignature[76,82)@infer.ts,$"d"/0x4@PropertySignature[82,87)@infer.ts] instantiations=#2[T98,T99]
-T99 Object(0x100000) of=0x280050 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[62,89)@infer.ts members={"a":Y7 "b":Y8 "c":Y9 "d":Y10} properties=[Y7,Y8,Y9,Y10] target=T98 mapper=Array{sources=[T88,T89,T90,T91] targets=[T92,T93,T19,T13]}
-T100 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"T"/0x40000@TypeParameter[9,10)@infer.ts resolvedBaseConstraint=T43 constraint=T43 resolvedDefaultType=T43
-T101 Object(0x100000) of=0x200002 InterfaceType symbol=$"I"/0x40@InterfaceDeclaration[150,238)@infer.ts members={"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[164,186)@infer.ts "lit":$"lit"/0x4@PropertySignature[186,203)@infer.ts "m":$"m"/0x2000@MethodSignature[203,214)@infer.ts "n":$"n"/0x4@PropertySignature[214,225)@infer.ts "o":$"o"/0x4@PropertySignature[225,236)@infer.ts} properties=[$"lit"/0x4@PropertySignature[186,203)@infer.ts,$"m"/0x2000@MethodSignature[203,214)@infer.ts,$"n"/0x4@PropertySignature[214,225)@infer.ts,$"o"/0x4@PropertySignature[225,236)@infer.ts] indexInfos=[{keyType=T14 valueType=T9 declaration=IndexSignature[164,186)@infer.ts}] baseTypesResolved=true declaredMembersResolved=true declaredMembers={"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[164,186)@infer.ts "lit":$"lit"/0x4@PropertySignature[186,203)@infer.ts "m":$"m"/0x2000@MethodSignature[203,214)@infer.ts "n":$"n"/0x4@PropertySignature[214,225)@infer.ts "o":$"o"/0x4@PropertySignature[225,236)@infer.ts} declaredIndexInfos=[{keyType=T14 valueType=T9 declaration=IndexSignature[164,186)@infer.ts}]
-T102 Object(0x100000) of=0x10 ObjectType symbol=$"m"/0x2000@MethodSignature[203,214)@infer.ts
-T103 StringLiteral(0x400) LiteralType value="lit"(string) freshType=T86 regularType=T103
-T104 StringLiteral(0x400) LiteralType value="x"(string) freshType=T104 regularType=T93
-T105 Object(0x100000) of=0xc TupleType target=T105 instantiations=#4[T96,T97,T105,T112] resolvedTypeArguments=[T106,T107,T108,T109] allTypeParameters=[T106,T107,T108,T109,T110] thisType=T110 declaredMembersResolved=true declaredMembers={"0":Y11 "1":Y12 "2":Y13 "3":Y14 "length":Y15} elementInfos=[{flags=0x1},{flags=0x1},{flags=0x1},{flags=0x1}] minLength=4 fixedLength=4 combinedFlags=0x1
+T1 Any(0x1) IntrinsicType intrinsicName="any"
+T2 Any(0x1) of=0x40000 IntrinsicType intrinsicName="any"
+T3 Any(0x1) IntrinsicType intrinsicName="any"
+T4 Any(0x1) IntrinsicType intrinsicName="any"
+T5 Any(0x1) IntrinsicType intrinsicName="error"
+T6 Any(0x1) IntrinsicType intrinsicName="unresolved"
+T7 Any(0x1) of=0x10000 IntrinsicType intrinsicName="any"
+T8 Any(0x1) IntrinsicType intrinsicName="intrinsic"
+T9 Unknown(0x2) IntrinsicType intrinsicName="unknown"
+T10 Undefined(0x4) IntrinsicType intrinsicName="undefined"
+T11 Undefined(0x4) IntrinsicType intrinsicName="undefined"
+T12 Undefined(0x4) IntrinsicType intrinsicName="undefined"
+T13 Null(0x8) IntrinsicType intrinsicName="null"
+T14 String(0x20) IntrinsicType intrinsicName="string"
+T15 Number(0x40) IntrinsicType intrinsicName="number"
+T16 BigInt(0x80) IntrinsicType intrinsicName="bigint"
+T17 BooleanLiteral(0x2000) LiteralType value=false(bool) freshType=T18 regularType=T17
+T18 BooleanLiteral(0x2000) LiteralType value=false(bool) freshType=T18 regularType=T17
+T19 BooleanLiteral(0x2000) LiteralType value=true(bool) freshType=T20 regularType=T19
+T20 BooleanLiteral(0x2000) LiteralType value=true(bool) freshType=T20 regularType=T19
+T21 Boolean|Union(0x8000100) of=0x8000 UnionType types=[T17,T19]
+T22 ESSymbol(0x200) IntrinsicType intrinsicName="symbol"
+T23 Void(0x10) IntrinsicType intrinsicName="void"
+T24 Never(0x40000) IntrinsicType intrinsicName="never"
+T25 Never(0x40000) of=0x40000 IntrinsicType intrinsicName="never"
+T26 Never(0x40000) IntrinsicType intrinsicName="never"
+T27 Never(0x40000) IntrinsicType intrinsicName="never"
+T28 NonPrimitive(0x20000) IntrinsicType intrinsicName="object"
+T29 Union(0x8000000) of=0x8000 UnionType types=[T14,T15]
+T30 Union(0x8000000) of=0x8000 UnionType types=[T14,T15,T22]
+T31 Union(0x8000000) of=0x8000 UnionType types=[T15,T16]
+T32 TemplateLiteral(0x400000) TemplateLiteralType texts=["",""] types=[T15]
+T33 Union(0x8000000) of=0x8000 UnionType types=[T10,T13,T14,T15,T16,T17,T19]
+T34 Never(0x40000) IntrinsicType intrinsicName="never"
+T35 Object(0x100000) of=0x200010 ObjectType
+T36 Object(0x100000) of=0x200010 ObjectType
+T37 Object(0x100000) of=0x200010 ObjectType
+T38 Object(0x100000) of=0x200010 ObjectType symbol=Y6
+T39 Object(0x100000) of=0x200010 ObjectType
+T40 Union(0x8000000) UnionType types=[T10,T13,T39]
+T41 Object(0x100000) of=0x200010 ObjectType
+T42 Object(0x100000) of=0x240010 ObjectType
+T43 Object(0x100000) of=0x200010 ObjectType
+T44 Object(0x100000) of=0x200010 ObjectType
+T45 Object(0x100000) of=0x200010 ObjectType
+T46 TypeParameter(0x80000) TypeParameter
+T47 TypeParameter(0x80000) TypeParameter constraint=T46
+T48 TypeParameter(0x80000) TypeParameter
+T49 TypeParameter(0x80000) TypeParameter
+T50 TypeParameter(0x80000) TypeParameter constraint=T49
+T51 StringLiteral(0x400) LiteralType value=""(string) regularType=T51
+T52 NumberLiteral(0x800) LiteralType value=0(jsnum.Number) freshType=T63 regularType=T52
+T53 BigIntLiteral(0x1000) LiteralType value=0(jsnum.PseudoBigInt) regularType=T53
+T54 StringLiteral(0x400) LiteralType value="bigint"(string) regularType=T54
+T55 StringLiteral(0x400) LiteralType value="boolean"(string) regularType=T55
+T56 StringLiteral(0x400) LiteralType value="function"(string) regularType=T56
+T57 StringLiteral(0x400) LiteralType value="number"(string) regularType=T57
+T58 StringLiteral(0x400) LiteralType value="object"(string) regularType=T58
+T59 StringLiteral(0x400) LiteralType value="string"(string) regularType=T59
+T60 StringLiteral(0x400) LiteralType value="symbol"(string) regularType=T60
+T61 StringLiteral(0x400) LiteralType value="undefined"(string) regularType=T61
+T62 Union(0x8000000) of=0x8000 UnionType types=[T54,T55,T56,T57,T58,T59,T60,T61]
+T63 NumberLiteral(0x800) LiteralType value=0(jsnum.Number) freshType=T63 regularType=T52
+T64 Object(0x100000) of=0x2 InterfaceType symbol=$"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts
+T65 Object(0x100000) of=0x10 ObjectType symbol=Y5
+T66 StringLiteral(0x400) LiteralType value="lit"(string) freshType=T66 regularType=T96
+T67 Conditional(0x4000000) of=0x180000 ConditionalType alias={symbol=$"Two"/0x80000@TypeAliasDeclaration[0,98)@infer.ts typeArguments=[T79]} root={node=ConditionalType[13,97)@infer.ts checkType=T79 extendsType=T76 isDistributive=true inferTypeParameters=[T68,T69,T70,T71] outerTypeParameters=[T79] instantiations=#2[T67,T78] alias={symbol=$"Two"/0x80000@TypeAliasDeclaration[0,98)@infer.ts typeArguments=[T79]}} checkType=T79 extendsType=T76 combinedMapper=Inference{c=&Checker n=&InferenceContext fixing=true}
+T68 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"A"/0x40000@TypeParameter[30,32)@infer.ts resolvedBaseConstraint=T43 constraint=T43 resolvedDefaultType=T43
+T69 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"B"/0x40000@TypeParameter[39,41)@infer.ts resolvedBaseConstraint=T43 constraint=T43 resolvedDefaultType=T43
+T70 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"C"/0x40000@TypeParameter[48,50)@infer.ts resolvedBaseConstraint=T43 constraint=T43 resolvedDefaultType=T43
+T71 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"D"/0x40000@TypeParameter[57,59)@infer.ts resolvedBaseConstraint=T43 constraint=T43 resolvedDefaultType=T43
+T72 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T74 regularType=T72
+T73 StringLiteral(0x400) LiteralType value="x"(string) freshType=T97 regularType=T73
+T74 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T74 regularType=T72
+T75 Object(0x100000) of=0x40080004 TypeReference target=T98 resolvedTypeArguments=[T72,T73,T19,T13]
+T76 Object(0x100000) of=0x40180004 TypeReference target=T98 resolvedTypeArguments=[T68,T69,T70,T71]
+T77 Object(0x100000) of=0x380010 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[62,89)@infer.ts members={"a":$"a"/0x4@PropertySignature[64,70)@infer.ts "b":$"b"/0x4@PropertySignature[70,76)@infer.ts "c":$"c"/0x4@PropertySignature[76,82)@infer.ts "d":$"d"/0x4@PropertySignature[82,87)@infer.ts} properties=[$"a"/0x4@PropertySignature[64,70)@infer.ts,$"b"/0x4@PropertySignature[70,76)@infer.ts,$"c"/0x4@PropertySignature[76,82)@infer.ts,$"d"/0x4@PropertySignature[82,87)@infer.ts] instantiations=#2[T77,T78]
+T78 Object(0x100000) of=0x280050 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[62,89)@infer.ts members={"a":Y7 "b":Y8 "c":Y9 "d":Y10} properties=[Y7,Y8,Y9,Y10] target=T77 mapper=Array{sources=[T68,T69,T70,T71] targets=[T72,T73,T19,T13]}
+T79 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"T"/0x40000@TypeParameter[9,10)@infer.ts resolvedBaseConstraint=T43 constraint=T43 resolvedDefaultType=T43
+T80 Object(0x100000) of=0x200002 InterfaceType symbol=$"I"/0x40@InterfaceDeclaration[150,238)@infer.ts members={"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[164,186)@infer.ts "lit":$"lit"/0x4@PropertySignature[186,203)@infer.ts "m":$"m"/0x2000@MethodSignature[203,214)@infer.ts "n":$"n"/0x4@PropertySignature[214,225)@infer.ts "o":$"o"/0x4@PropertySignature[225,236)@infer.ts} properties=[$"lit"/0x4@PropertySignature[186,203)@infer.ts,$"m"/0x2000@MethodSignature[203,214)@infer.ts,$"n"/0x4@PropertySignature[214,225)@infer.ts,$"o"/0x4@PropertySignature[225,236)@infer.ts] indexInfos=[{keyType=T14 valueType=T9 declaration=IndexSignature[164,186)@infer.ts}] baseTypesResolved=true declaredMembersResolved=true declaredMembers={"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[164,186)@infer.ts "lit":$"lit"/0x4@PropertySignature[186,203)@infer.ts "m":$"m"/0x2000@MethodSignature[203,214)@infer.ts "n":$"n"/0x4@PropertySignature[214,225)@infer.ts "o":$"o"/0x4@PropertySignature[225,236)@infer.ts} declaredIndexInfos=[{keyType=T14 valueType=T9 declaration=IndexSignature[164,186)@infer.ts}]
+T81 Object(0x100000) of=0x10 ObjectType symbol=$"m"/0x2000@MethodSignature[203,214)@infer.ts
+T82 Object(0x100000) of=0x6 InterfaceType symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T82 instantiations=#3[T82,T109,T112] resolvedTypeArguments=[T93] allTypeParameters=[T93,T99] thisType=T99
+T83 Object(0x100000) of=0x2 InterfaceType symbol=$"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts
+T84 Object(0x100000) of=0x2 InterfaceType symbol=$"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts
+T85 Object(0x100000) of=0x2 InterfaceType symbol=$"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts
+T86 Object(0x100000) of=0x2 InterfaceType symbol=$"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts
+T87 Object(0x100000) of=0x200002 InterfaceType symbol=$"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts members={"toExponential":$"toExponential"/0x2000@MethodSignature[22598,22866)@lib.es5.d.ts "toFixed":$"toFixed"/0x2000@MethodSignature[22346,22598)@lib.es5.d.ts "toLocaleString":$"toLocaleString"/0x2000@MethodSignature[220157,220785)@lib.es5.d.ts "toPrecision":$"toPrecision"/0x2000@MethodSignature[22866,23166)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[22117,22346)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[23166,23257)@lib.es5.d.ts} properties=[$"toString"/0x2000@MethodSignature[22117,22346)@lib.es5.d.ts,$"toFixed"/0x2000@MethodSignature[22346,22598)@lib.es5.d.ts,$"toExponential"/0x2000@MethodSignature[22598,22866)@lib.es5.d.ts,$"toPrecision"/0x2000@MethodSignature[22866,23166)@lib.es5.d.ts,$"valueOf"/0x2000@MethodSignature[23166,23257)@lib.es5.d.ts,$"toLocaleString"/0x2000@MethodSignature[220157,220785)@lib.es5.d.ts] baseTypesResolved=true declaredMembersResolved=true declaredMembers={"toExponential":$"toExponential"/0x2000@MethodSignature[22598,22866)@lib.es5.d.ts "toFixed":$"toFixed"/0x2000@MethodSignature[22346,22598)@lib.es5.d.ts "toLocaleString":$"toLocaleString"/0x2000@MethodSignature[220157,220785)@lib.es5.d.ts "toPrecision":$"toPrecision"/0x2000@MethodSignature[22866,23166)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[22117,22346)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[23166,23257)@lib.es5.d.ts}
+T88 Object(0x100000) of=0x200002 InterfaceType symbol=$"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts members={"constructor":$"constructor"/0x4@PropertySignature[3312,3447)@lib.es5.d.ts "hasOwnProperty":$"hasOwnProperty"/0x2000@MethodSignature[3731,3908)@lib.es5.d.ts "isPrototypeOf":$"isPrototypeOf"/0x2000@MethodSignature[3908,4121)@lib.es5.d.ts "propertyIsEnumerable":$"propertyIsEnumerable"/0x2000@MethodSignature[4121,4290)@lib.es5.d.ts "toLocaleString":$"toLocaleString"/0x2000@MethodSignature[3532,3640)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[3447,3532)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[3640,3731)@lib.es5.d.ts} properties=[$"constructor"/0x4@PropertySignature[3312,3447)@lib.es5.d.ts,$"toString"/0x2000@MethodSignature[3447,3532)@lib.es5.d.ts,$"toLocaleString"/0x2000@MethodSignature[3532,3640)@lib.es5.d.ts,$"valueOf"/0x2000@MethodSignature[3640,3731)@lib.es5.d.ts,$"hasOwnProperty"/0x2000@MethodSignature[3731,3908)@lib.es5.d.ts,$"isPrototypeOf"/0x2000@MethodSignature[3908,4121)@lib.es5.d.ts,$"propertyIsEnumerable"/0x2000@MethodSignature[4121,4290)@lib.es5.d.ts] baseTypesResolved=true declaredMembersResolved=true declaredMembers={"constructor":$"constructor"/0x4@PropertySignature[3312,3447)@lib.es5.d.ts "hasOwnProperty":$"hasOwnProperty"/0x2000@MethodSignature[3731,3908)@lib.es5.d.ts "isPrototypeOf":$"isPrototypeOf"/0x2000@MethodSignature[3908,4121)@lib.es5.d.ts "propertyIsEnumerable":$"propertyIsEnumerable"/0x2000@MethodSignature[4121,4290)@lib.es5.d.ts "toLocaleString":$"toLocaleString"/0x2000@MethodSignature[3532,3640)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[3447,3532)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[3640,3731)@lib.es5.d.ts}
+T89 Object(0x100000) of=0x6 InterfaceType symbol=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts target=T89 instantiations=#2[T89,T110] resolvedTypeArguments=[T92] allTypeParameters=[T92,T100] thisType=T100
+T90 Object(0x100000) of=0x6 InterfaceType symbol=$"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts target=T90 instantiations=#1[T90] allTypeParameters=[T101] thisType=T101
+T91 Object(0x100000) of=0x2 InterfaceType symbol=$"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts
+T92 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts
+T93 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts
+T94 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts
+T95 Object(0x100000) of=0x6 InterfaceType symbol=$"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts target=T95 instantiations=#1[T95] resolvedTypeArguments=[T94] allTypeParameters=[T94,T102] thisType=T102
+T96 StringLiteral(0x400) LiteralType value="lit"(string) freshType=T66 regularType=T96
+T97 StringLiteral(0x400) LiteralType value="x"(string) freshType=T97 regularType=T73
+T98 Object(0x100000) of=0xc TupleType target=T98 instantiations=#4[T75,T76,T98,T111] resolvedTypeArguments=[T103,T104,T105,T106] allTypeParameters=[T103,T104,T105,T106,T107] thisType=T107 declaredMembersResolved=true declaredMembers={"0":Y11 "1":Y12 "2":Y13 "3":Y14 "length":Y15} elementInfos=[{flags=0x1},{flags=0x1},{flags=0x1},{flags=0x1}] minLength=4 fixedLength=4 combinedFlags=0x1
+T99 TypeParameter(0x80000) TypeParameter symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts constraint=T82 isThisType=true
+T100 TypeParameter(0x80000) TypeParameter symbol=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts constraint=T89 isThisType=true
+T101 TypeParameter(0x80000) TypeParameter symbol=$"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts constraint=T90 isThisType=true
+T102 TypeParameter(0x80000) TypeParameter symbol=$"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts constraint=T95 isThisType=true
+T103 TypeParameter(0x80000) TypeParameter
+T104 TypeParameter(0x80000) TypeParameter
+T105 TypeParameter(0x80000) TypeParameter
 T106 TypeParameter(0x80000) TypeParameter
-T107 TypeParameter(0x80000) TypeParameter
-T108 TypeParameter(0x80000) TypeParameter
-T109 TypeParameter(0x80000) TypeParameter
-T110 TypeParameter(0x80000) TypeParameter constraint=T105 isThisType=true
-T111 NumberLiteral(0x800) LiteralType value=4(jsnum.Number) regularType=T111
-T112 Object(0x100000) of=0x4 TypeReference target=T105 resolvedTypeArguments=[T9,T9,T9,T9]
+T107 TypeParameter(0x80000) TypeParameter constraint=T98 isThisType=true
+T108 NumberLiteral(0x800) LiteralType value=4(jsnum.Number) regularType=T108
+T109 Object(0x100000) of=0x4 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T82 resolvedTypeArguments=[T1]
+T110 Object(0x100000) of=0x4 TypeReference symbol=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts target=T89 resolvedTypeArguments=[T1]
+T111 Object(0x100000) of=0x4 TypeReference target=T98 resolvedTypeArguments=[T9,T9,T9,T9]
+T112 Object(0x100000) of=0x40004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T82 resolvedTypeArguments=[T2]
 T113 StringLiteral(0x400) LiteralType value="m"(string) regularType=T113
 T114 StringLiteral(0x400) LiteralType value="n"(string) regularType=T114
 T115 StringLiteral(0x400) LiteralType value="o"(string) regularType=T115
@@ -69,84 +154,84 @@ L symbolNodeLinks TypeReference[67,69)@infer.ts resolvedSymbol=$"A"/0x40000@Type
 L symbolNodeLinks TypeReference[73,75)@infer.ts resolvedSymbol=$"B"/0x40000@TypeParameter[39,41)@infer.ts
 L symbolNodeLinks TypeReference[79,81)@infer.ts resolvedSymbol=$"C"/0x40000@TypeParameter[48,50)@infer.ts
 L symbolNodeLinks TypeReference[85,87)@infer.ts resolvedSymbol=$"D"/0x40000@TypeParameter[57,59)@infer.ts
-L typeNodeLinks ComputedPropertyName[186,194)@infer.ts resolvedType=T86
-L typeNodeLinks ConditionalType[13,97)@infer.ts resolvedType=T87
-L typeNodeLinks InferType[25,32)@infer.ts resolvedType=T88
-L typeNodeLinks InferType[33,41)@infer.ts resolvedType=T89
-L typeNodeLinks InferType[42,50)@infer.ts resolvedType=T90
-L typeNodeLinks InferType[51,59)@infer.ts resolvedType=T91
-L typeNodeLinks LiteralType[113,114)@infer.ts resolvedType=T92
-L typeNodeLinks LiteralType[115,119)@infer.ts resolvedType=T93
+L typeNodeLinks ComputedPropertyName[186,194)@infer.ts resolvedType=T66
+L typeNodeLinks ConditionalType[13,97)@infer.ts resolvedType=T67
+L typeNodeLinks InferType[25,32)@infer.ts resolvedType=T68
+L typeNodeLinks InferType[33,41)@infer.ts resolvedType=T69
+L typeNodeLinks InferType[42,50)@infer.ts resolvedType=T70
+L typeNodeLinks InferType[51,59)@infer.ts resolvedType=T71
+L typeNodeLinks LiteralType[113,114)@infer.ts resolvedType=T72
+L typeNodeLinks LiteralType[115,119)@infer.ts resolvedType=T73
 L typeNodeLinks LiteralType[120,125)@infer.ts resolvedType=T19
-L typeNodeLinks NumericLiteral[147,149)@infer.ts resolvedType=T94
-L typeNodeLinks NumericLiteral[251,253)@infer.ts resolvedType=T95
-L typeNodeLinks TupleType[112,132)@infer.ts resolvedType=T96
-L typeNodeLinks TupleType[23,60)@infer.ts resolvedType=T97
-L typeNodeLinks TypeLiteral[62,89)@infer.ts resolvedType=T98 outerTypeParameters=[T88,T89,T90,T91]
-L typeNodeLinks TypeReference[107,133)@infer.ts resolvedType=T99
-L typeNodeLinks TypeReference[13,15)@infer.ts resolvedType=T100
-L typeNodeLinks TypeReference[143,145)@infer.ts resolvedType=T99
-L typeNodeLinks TypeReference[247,249)@infer.ts resolvedType=T101
-L typeNodeLinks TypeReference[67,69)@infer.ts resolvedType=T88
-L typeNodeLinks TypeReference[73,75)@infer.ts resolvedType=T89
-L typeNodeLinks TypeReference[79,81)@infer.ts resolvedType=T90
-L typeNodeLinks TypeReference[85,87)@infer.ts resolvedType=T91
+L typeNodeLinks NumericLiteral[147,149)@infer.ts resolvedType=T63
+L typeNodeLinks NumericLiteral[251,253)@infer.ts resolvedType=T74
+L typeNodeLinks TupleType[112,132)@infer.ts resolvedType=T75
+L typeNodeLinks TupleType[23,60)@infer.ts resolvedType=T76
+L typeNodeLinks TypeLiteral[62,89)@infer.ts resolvedType=T77 outerTypeParameters=[T68,T69,T70,T71]
+L typeNodeLinks TypeReference[107,133)@infer.ts resolvedType=T78
+L typeNodeLinks TypeReference[13,15)@infer.ts resolvedType=T79
+L typeNodeLinks TypeReference[143,145)@infer.ts resolvedType=T78
+L typeNodeLinks TypeReference[247,249)@infer.ts resolvedType=T80
+L typeNodeLinks TypeReference[67,69)@infer.ts resolvedType=T68
+L typeNodeLinks TypeReference[73,75)@infer.ts resolvedType=T69
+L typeNodeLinks TypeReference[79,81)@infer.ts resolvedType=T70
+L typeNodeLinks TypeReference[85,87)@infer.ts resolvedType=T71
 L symbolReferenceLinks $"A"/0x40000@TypeParameter[30,32)@infer.ts referenceKinds=0xc09e8
 L symbolReferenceLinks $"B"/0x40000@TypeParameter[39,41)@infer.ts referenceKinds=0xc09e8
 L symbolReferenceLinks $"C"/0x40000@TypeParameter[48,50)@infer.ts referenceKinds=0xc09e8
 L symbolReferenceLinks $"D"/0x40000@TypeParameter[57,59)@infer.ts referenceKinds=0xc09e8
 L symbolReferenceLinks $"T"/0x40000@TypeParameter[9,10)@infer.ts referenceKinds=0xc09e8
-L valueSymbolLinks $"a"/0x4@PropertySignature[64,70)@infer.ts resolvedType=T88
-L valueSymbolLinks $"b"/0x4@PropertySignature[70,76)@infer.ts resolvedType=T89
-L valueSymbolLinks $"c"/0x4@PropertySignature[76,82)@infer.ts resolvedType=T90
-L valueSymbolLinks $"d"/0x4@PropertySignature[82,87)@infer.ts resolvedType=T91
+L valueSymbolLinks $"a"/0x4@PropertySignature[64,70)@infer.ts resolvedType=T68
+L valueSymbolLinks $"b"/0x4@PropertySignature[70,76)@infer.ts resolvedType=T69
+L valueSymbolLinks $"c"/0x4@PropertySignature[76,82)@infer.ts resolvedType=T70
+L valueSymbolLinks $"d"/0x4@PropertySignature[82,87)@infer.ts resolvedType=T71
 L valueSymbolLinks $"k"/0x1@Parameter[166,175)@infer.ts resolvedType=T14
 L valueSymbolLinks $"lit"/0x4@PropertySignature[186,203)@infer.ts resolvedType=T15
-L valueSymbolLinks $"m"/0x2000@MethodSignature[203,214)@infer.ts resolvedType=T102 functionOrConstructorChecked=true
+L valueSymbolLinks $"m"/0x2000@MethodSignature[203,214)@infer.ts resolvedType=T81 functionOrConstructorChecked=true
 L valueSymbolLinks $"n"/0x4@PropertySignature[214,225)@infer.ts resolvedType=T14
 L valueSymbolLinks $"o"/0x4@PropertySignature[225,236)@infer.ts resolvedType=T21
-L valueSymbolLinks $"r"/0x2@VariableDeclaration[140,149)@infer.ts resolvedType=T99
-L valueSymbolLinks $"s"/0x2@VariableDeclaration[244,253)@infer.ts resolvedType=T101
+L valueSymbolLinks $"r"/0x2@VariableDeclaration[140,149)@infer.ts resolvedType=T78
+L valueSymbolLinks $"s"/0x2@VariableDeclaration[244,253)@infer.ts resolvedType=T80
 L valueSymbolLinks Y1 resolvedType=T10
-L valueSymbolLinks Y10 resolvedType=T13 target=$"d"/0x4@PropertySignature[82,87)@infer.ts mapper=Array{sources=[T88,T89,T90,T91] targets=[T92,T93,T19,T13]}
-L valueSymbolLinks Y11 resolvedType=T106
-L valueSymbolLinks Y12 resolvedType=T107
-L valueSymbolLinks Y13 resolvedType=T108
-L valueSymbolLinks Y14 resolvedType=T109
-L valueSymbolLinks Y15 resolvedType=T111
-L valueSymbolLinks Y2 resolvedType=T63
+L valueSymbolLinks Y10 resolvedType=T13 target=$"d"/0x4@PropertySignature[82,87)@infer.ts mapper=Array{sources=[T68,T69,T70,T71] targets=[T72,T73,T19,T13]}
+L valueSymbolLinks Y11 resolvedType=T103
+L valueSymbolLinks Y12 resolvedType=T104
+L valueSymbolLinks Y13 resolvedType=T105
+L valueSymbolLinks Y14 resolvedType=T106
+L valueSymbolLinks Y15 resolvedType=T108
+L valueSymbolLinks Y2 resolvedType=T64
 L valueSymbolLinks Y4 resolvedType=T5
-L valueSymbolLinks Y5 resolvedType=T64
-L valueSymbolLinks Y7 resolvedType=T92 target=$"a"/0x4@PropertySignature[64,70)@infer.ts mapper=Array{sources=[T88,T89,T90,T91] targets=[T92,T93,T19,T13]}
-L valueSymbolLinks Y8 resolvedType=T93 target=$"b"/0x4@PropertySignature[70,76)@infer.ts mapper=Array{sources=[T88,T89,T90,T91] targets=[T92,T93,T19,T13]}
-L valueSymbolLinks Y9 resolvedType=T19 target=$"c"/0x4@PropertySignature[76,82)@infer.ts mapper=Array{sources=[T88,T89,T90,T91] targets=[T92,T93,T19,T13]}
+L valueSymbolLinks Y5 resolvedType=T65
+L valueSymbolLinks Y7 resolvedType=T72 target=$"a"/0x4@PropertySignature[64,70)@infer.ts mapper=Array{sources=[T68,T69,T70,T71] targets=[T72,T73,T19,T13]}
+L valueSymbolLinks Y8 resolvedType=T73 target=$"b"/0x4@PropertySignature[70,76)@infer.ts mapper=Array{sources=[T68,T69,T70,T71] targets=[T72,T73,T19,T13]}
+L valueSymbolLinks Y9 resolvedType=T19 target=$"c"/0x4@PropertySignature[76,82)@infer.ts mapper=Array{sources=[T68,T69,T70,T71] targets=[T72,T73,T19,T13]}
 L membersAndExportsLinks $"I"/0x40@InterfaceDeclaration[150,238)@infer.ts [-,{"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[164,186)@infer.ts "lit":$"lit"/0x4@PropertySignature[186,203)@infer.ts "m":$"m"/0x2000@MethodSignature[203,214)@infer.ts "n":$"n"/0x4@PropertySignature[214,225)@infer.ts "o":$"o"/0x4@PropertySignature[225,236)@infer.ts}]
 L membersAndExportsLinks $"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts [-,{"toExponential":$"toExponential"/0x2000@MethodSignature[22598,22866)@lib.es5.d.ts "toFixed":$"toFixed"/0x2000@MethodSignature[22346,22598)@lib.es5.d.ts "toLocaleString":$"toLocaleString"/0x2000@MethodSignature[220157,220785)@lib.es5.d.ts "toPrecision":$"toPrecision"/0x2000@MethodSignature[22866,23166)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[22117,22346)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[23166,23257)@lib.es5.d.ts}]
 L membersAndExportsLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts [-,{"constructor":$"constructor"/0x4@PropertySignature[3312,3447)@lib.es5.d.ts "hasOwnProperty":$"hasOwnProperty"/0x2000@MethodSignature[3731,3908)@lib.es5.d.ts "isPrototypeOf":$"isPrototypeOf"/0x2000@MethodSignature[3908,4121)@lib.es5.d.ts "propertyIsEnumerable":$"propertyIsEnumerable"/0x2000@MethodSignature[4121,4290)@lib.es5.d.ts "toLocaleString":$"toLocaleString"/0x2000@MethodSignature[3532,3640)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[3447,3532)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[3640,3731)@lib.es5.d.ts}]
 L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[62,89)@infer.ts [-,{"a":$"a"/0x4@PropertySignature[64,70)@infer.ts "b":$"b"/0x4@PropertySignature[70,76)@infer.ts "c":$"c"/0x4@PropertySignature[76,82)@infer.ts "d":$"d"/0x4@PropertySignature[82,87)@infer.ts}]
-L typeAliasLinks $"R"/0x80000@TypeAliasDeclaration[98,134)@infer.ts declaredType=T99
-L typeAliasLinks $"Two"/0x80000@TypeAliasDeclaration[0,98)@infer.ts declaredType=T87 typeParameters=[T100] instantiations=#2[T87,T99]
-L declaredTypeLinks $"A"/0x40000@TypeParameter[30,32)@infer.ts declaredType=T88
-L declaredTypeLinks $"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts declaredType=T65
-L declaredTypeLinks $"B"/0x40000@TypeParameter[39,41)@infer.ts declaredType=T89
-L declaredTypeLinks $"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts declaredType=T74
-L declaredTypeLinks $"C"/0x40000@TypeParameter[48,50)@infer.ts declaredType=T90
-L declaredTypeLinks $"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts declaredType=T70
-L declaredTypeLinks $"D"/0x40000@TypeParameter[57,59)@infer.ts declaredType=T91
-L declaredTypeLinks $"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts declaredType=T69
-L declaredTypeLinks $"I"/0x40@InterfaceDeclaration[150,238)@infer.ts declaredType=T101 interfaceChecked=true indexSignaturesChecked=true
-L declaredTypeLinks $"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts declaredType=T63
-L declaredTypeLinks $"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts declaredType=T71
-L declaredTypeLinks $"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts declaredType=T73
-L declaredTypeLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts declaredType=T68
-L declaredTypeLinks $"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts declaredType=T79
-L declaredTypeLinks $"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts declaredType=T75
-L declaredTypeLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts declaredType=T72
-L declaredTypeLinks $"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts declaredType=T80
-L declaredTypeLinks $"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts declaredType=T66
-L declaredTypeLinks $"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts declaredType=T84
-L declaredTypeLinks $"T"/0x40000@TypeParameter[9,10)@infer.ts declaredType=T100
-L declaredTypeLinks $"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts declaredType=T83
+L typeAliasLinks $"R"/0x80000@TypeAliasDeclaration[98,134)@infer.ts declaredType=T78
+L typeAliasLinks $"Two"/0x80000@TypeAliasDeclaration[0,98)@infer.ts declaredType=T67 typeParameters=[T79] instantiations=#2[T67,T78]
+L declaredTypeLinks $"A"/0x40000@TypeParameter[30,32)@infer.ts declaredType=T68
+L declaredTypeLinks $"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts declaredType=T82
+L declaredTypeLinks $"B"/0x40000@TypeParameter[39,41)@infer.ts declaredType=T69
+L declaredTypeLinks $"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts declaredType=T83
+L declaredTypeLinks $"C"/0x40000@TypeParameter[48,50)@infer.ts declaredType=T70
+L declaredTypeLinks $"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts declaredType=T84
+L declaredTypeLinks $"D"/0x40000@TypeParameter[57,59)@infer.ts declaredType=T71
+L declaredTypeLinks $"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts declaredType=T85
+L declaredTypeLinks $"I"/0x40@InterfaceDeclaration[150,238)@infer.ts declaredType=T80 interfaceChecked=true indexSignaturesChecked=true
+L declaredTypeLinks $"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts declaredType=T64
+L declaredTypeLinks $"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts declaredType=T86
+L declaredTypeLinks $"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts declaredType=T87
+L declaredTypeLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts declaredType=T88
+L declaredTypeLinks $"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts declaredType=T89
+L declaredTypeLinks $"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts declaredType=T90
+L declaredTypeLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts declaredType=T91
+L declaredTypeLinks $"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts declaredType=T92
+L declaredTypeLinks $"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts declaredType=T93
+L declaredTypeLinks $"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts declaredType=T94
+L declaredTypeLinks $"T"/0x40000@TypeParameter[9,10)@infer.ts declaredType=T79
+L declaredTypeLinks $"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts declaredType=T95
 L sourceFileLinks SourceFile[0,255)@infer.ts typeChecked=true identifierCheckNodes=[InferType[25,32)@infer.ts,InferType[33,41)@infer.ts,InferType[42,50)@infer.ts,InferType[51,59)@infer.ts,TypeAliasDeclaration[0,98)@infer.ts,TypeAliasDeclaration[98,134)@infer.ts,MethodSignature[203,214)@infer.ts,InterfaceDeclaration[150,238)@infer.ts]
 == diagnostics
 D infer.ts [141,142) TS2322 cat=1 chain=0 related=0
