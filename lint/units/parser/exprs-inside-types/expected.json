@@ -8114,7 +8114,7 @@
    "accepts": false,
    "error": "Expected identifier but found \"#b\""
   },
-  "without_lint": "reject (early error of Bun's expression or statement parser)",
+  "without_lint": "accept",
   "lint": "parses"
  },
  {

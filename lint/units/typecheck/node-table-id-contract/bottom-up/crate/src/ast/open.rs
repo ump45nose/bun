@@ -5,7 +5,7 @@ use crate::ast::flags_generated::{CheckFlags, ModifierFlags, NodeFlags, SymbolFl
 use crate::ast::kind_generated::Kind;
 use crate::tscore::golang::{List, Map, OrderedMap, Text};
 use crate::tscore::ids::{NodeId, SymbolId, SymbolTableId};
-use crate::tscore::internal::{Fault, FaultKind, Faults};
+use crate::tscore::internal::Faults;
 use crate::tscore::stable::Arena;
 use crate::tscore::text::TextRange;
 use std::cell::{Cell, RefCell};
@@ -95,9 +95,6 @@ impl<'a> Open<'a> {
     }
     pub fn flow_node_count(&self) -> u32 {
         count(&self.flow_nodes)
-    }
-    pub(crate) fn busy(&self, message: &'static str) {
-        self.faults.record(Fault { kind: FaultKind::StoreBusy, message, detail: 0, id: 0 });
     }
 }
 

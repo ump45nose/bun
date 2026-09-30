@@ -11,7 +11,7 @@ const changed = process.argv[2] ? load(process.argv[2]) : null;
 // parses and the base build rejects is expected to parse in every mode.
 const residue = {
   speculation: ["B35", "B36", "B37", "G17", "G18"],
-  "early error of Bun's expression or statement parser": ["F10", "F18", "F23", "F24", "F30", "I26"],
+  "early error of Bun's expression or statement parser": ["F10", "F18", "F23", "F24", "F30"],
   "not an expression site (modifiers, private names, import type argument, JSDoc forms)": ["D5", "D6", "D8", "D23", "D24", "D25", "D26", "D27", "D28", "D29", "D30", "D31", "G46", "F36", "C33", "H12", "H27", "H28", "G42"],
   "initializer of a property without a type": ["E4"],
 };

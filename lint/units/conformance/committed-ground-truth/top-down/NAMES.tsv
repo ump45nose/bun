@@ -1,7 +1,7 @@
 # Names below test/cli/lint/ that neither the runner of CI nor `bun test` takes for a test, and the one that both must take.
 # The two rules (read at e3566be889; tried with the installed bun 1.4.3 in a scratch directory, see HOWTO.txt):
 #   CI          scripts/runner.node.ts:2459-2494: the base name ends in .js .jsx .ts .tsx with an optional c or m, and contains ".test" or "spec." anywhere, case as written; a file whose directory path matches /node_modules|node.js/ or whose base name starts with "." is hidden (:2496).
-#   bun test    src/runtime/cli/test/Scanner.rs:239-256 and :426: the base name in lower case (:332) has an extension of a JavaScript-like loader, and what is before the extension ends in ".test", "_test", ".spec" or "_spec"; a directory whose name starts with "." or is node_modules is not entered (:338).
+#   bun test    src/runtime/cli/test/Scanner.rs:239-256 and :426: the base name in lower case (:332) has an extension of a JavaScript-like loader, and what is before the extension ends in ".test", "_test", ".spec" or "_spec"; a directory whose name starts with "." or is node_modules is not entered (:339).
 #   So a name is safe when: no ".test" and no "spec." in the base name, and the lower-case stem does not end in _test or _spec.
 #   Helpers that a test spawns: test/CLAUDE.md:98 asks for *-fixture.ts; .gitattributes marks *-fixture* linguist-generated (.gitattributes:36); prettier (package.json:80) formats test/**/*.{test,spec}.* and skips every name with "fixture".
 # taken by: what takes the CURRENT name for a test.
