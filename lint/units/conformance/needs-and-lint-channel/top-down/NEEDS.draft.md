@@ -32,7 +32,7 @@ what the binary needs before an instance can pass END TO END (Bun's own parser, 
 
 Why this one and not the three others:
 
-| | variables added to `src/bun_core/env_var.rs` | processes for n instances | which instance a crash belongs to |
+| | environment variables | processes for n instances | which instance a crash belongs to |
 |---|---|---|---|
 | (a) `BUN_INTERNAL_LINT_COMPILER_OPTIONS`, `_DIAGNOSTICS`, `_ROOT`, and `error TS-1` lines | 3 | n | the one of the process |
 | (b) one request file, `BUN_INTERNAL_LINT_REQUEST` | 1 | 1 per request | the runner has to follow the report file while the process runs |
@@ -42,9 +42,9 @@ Why this one and not the three others:
 - One process per instance is too slow in the build that every unit tests with. Measured now, on a loaded
   machine: the start of one process (`--revision`) has a median of 2.4 ms to 61 ms with the release build and
   of 272 ms to 351 ms with the debug build (the maximum was 5.3 s). 12,788 of the 12,797 run instances load
-  default libraries (9 set `noLib`). The 15 library files of a `target: es2015` program are 2,669,841 bytes:
-  today's parser, which skips the types, needs 6 ms for them in the release build and 284 ms to 311 ms in the
-  debug build. So one process per instance costs at least 0.56 s per instance in a debug build before any
+  default libraries (9 set `noLib`). A `target: es2015` program has 19 library files; the 15 that hold text
+  of any size are 2,669,841 bytes: today's parser, which skips the types, needs 6 ms for them in the release
+  build and 284 ms to 311 ms in the debug build. So one process per instance costs at least 0.56 s per instance in a debug build before any
   check: about two hours of process time for one sweep. The batch form pays the start and the libraries once
   per process.
 - (a) marks a stand-in with `error TS-1`. The reference uses the code -1 itself for an ad hoc message
@@ -94,6 +94,12 @@ Ask. For `bun --lint <files>` with stdout and stderr that are no terminal:
 8. For each name of the stand-in log of the run one line without a file, `error internal-stand-in: <name>`,
    and the exit code 2. For a ported panic or assert one line `error internal-error: <text>`. (typecheck
    gives the data: CH-3.)
+9. Two things in the plan of C1 that cli's research holds
+   (`units/cli/c1-seam-arbitration-topdown/typecheck/lint_command_typecheck.rs`, `check_file`) and that the
+   plain form of C2 must not keep: the empty line between the output of two files, and the two messages
+   without a code. The reference has them as `error TS6053: File '{0}' not found.` and `error TS6054: File
+   '{0}' has an unsupported extension. The only supported extensions are {1}.` A line `error: <text>` has
+   no code, and the runner reads a run with such a line as a failure.
 
 Unlocks. The probe of the default check (T2.4 of `conformance.md`): with it the runner can tell a linter from
 a binary that runs its operand. By itself it lets at most 7 instances pass, all C: the other 12,790 run
@@ -107,12 +113,16 @@ stay empty. With the operand form and without CH-2 the status of an instance tha
 
 ### CH-2. The batch form
 
-To: cli (`lint_command.rs`), and one line in `src/bun_core/env_var.rs`, a file that no unit owns.
+To: cli (`lint_command.rs`).
 
 Ask.
 
-1. The switch. In `pub mod feature_flag` of `src/bun_core/env_var.rs`, beside
-   `BUN_INTERNAL_INTERACTIVE_ASSUME_TTY` (line 295):
+1. The switch: the environment variable `BUN_INTERNAL_LINT_CONFORMANCE`, read where and how the gate of C1.2
+   is read. The plan in cli's research reads the gate in `lint_command.rs` with
+   `bun_core::getenv_z(bun_core::zstr!("BUN_FEATURE_FLAG_EXPERIMENTAL_LINT"))` and the truthiness of the
+   feature flags; the same call with this name changes no file outside cli. If the gate becomes a line of
+   `src/bun_core/env_var.rs` (a file that no unit owns), the switch is one more line in
+   `pub mod feature_flag`, beside `BUN_INTERNAL_INTERACTIVE_ASSUME_TTY` (line 295):
 
        new_feature_flag!(pub BUN_INTERNAL_LINT_CONFORMANCE, "BUN_INTERNAL_LINT_CONFORMANCE", {});
 
@@ -215,6 +225,19 @@ Ask.
    with the names of `internal/bundled/libs`: LB-2.
 5. `noErrorTruncation` is honoured: the harness sets it for every instance.
 
+The shape, with names that are typecheck's to choose:
+
+    pub enum OptionValue<'a> { Bool(bool), Number(f64), String(&'a [u8]), List(&'a [&'a [u8]]) }
+    pub enum OptionSet { Done, UnknownName, WrongValue, NotImplemented }
+    pub fn set_compiler_option(options: &mut CompilerOptions, name: &[u8], value: OptionValue<'_>) -> OptionSet;
+
+    pub struct Chain { pub text: Box<[u8]>, pub next: Vec<Chain> }
+    pub struct Related { pub code: i32, pub text: Box<[u8]>, pub next: Vec<Chain>, pub file: Option<FileId>, pub start: u32, pub length: u32 }
+    pub struct Reported { pub category: Category, pub code: i32, pub text: Box<[u8]>, pub next: Vec<Chain>,
+                          pub file: Option<FileId>, pub start: u32, pub length: u32, pub related: Vec<Related> }
+    pub fn diagnostics_of_harness(program: &Program, capture_suggestions: bool) -> Vec<Reported>;
+    pub fn stand_ins(program: &Program) -> &[&'static str];
+
 Unlocks: as CH-2. Until then: as CH-2.
 
 ### CH-4. K5: the check of the test importer
@@ -235,6 +258,13 @@ Ask.
    diagnostic of the parser or the scanner.
 4. An instance with more than one file needs "already resolved inputs" (`typecheck.md`, out of scope). K5
    says which instances it does not take; the runner gives them the status "unsupported", not "fail".
+5. The check has to run with what a test lane of CI has: the built binary (`bunExe()`), `test/node_modules`
+   (`typescript` 6.0.2 is there) and committed files. typecheck's research probes a test target of its
+   crate that answers requests line by line on stdout
+   (`units/typecheck/end-to-end-k4-k5/rust/tests_program.rs`). No workflow builds or runs a cargo test of a
+   crate under `src/` (`.github/workflows/rust-lints.yml:103-123` runs `cargo test` in `vendor/lolhtml`
+   only), so a list that is made through such a target is not guarded by CI. If K5 answers line by line,
+   its line is the report line of CH-2, so that the runner has one reader.
 
 Unlocks: the growth of the list during this work. With one file and no configuration file: 10,723 run
 instances (E 5,905, C 4,818). Until then: both lists are empty and the sweep reports zero passes.

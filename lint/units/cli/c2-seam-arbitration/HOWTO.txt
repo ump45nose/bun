@@ -1,0 +1,11 @@
+Research artefacts of the C2 seam arbitration (worktree /workspace/wt/cli at e3566be889, nothing applied there).
+bun_ast-msg-code.patch   src/ast/lib.rs: Metadata::Code(u32), Msg::code, Log::add_range_error_with_code, the size assertion, tests.
+forced-arms.patch        the three arms that the new variant forces (two in src/jsc, one in src/runtime/server).
+lint-prototype.patch     src/lint: the diagnostic, its order, both writers, the file table, the conversion from a Log, tests, Cargo.lock.
+ALTERNATIVE-msg-code-field.patch   the fallback: a `code: u32` field on Msg instead of the variant; no arm outside src/ast.
+Apply: cd /workspace/wt/cli && git apply bun_ast-msg-code.patch forced-arms.patch lint-prototype.patch
+Checked in a copy of the workspace: cargo check -p bun_ast -p bun_lint -p bun_jsc -p bun_runtime; cargo clippy -p bun_ast -p bun_lint --no-deps --all-targets;
+cargo fmt --check; MIRIFLAGS=-Zmiri-tree-borrows cargo miri test -p bun_ast --lib msg_code_tests; cargo miri test -p bun_lint --lib.
+probes/order_probe.py <dir of .errors.txt>   order of the oracle baselines against a comparison by text.
+probes/line_map_reference.go                 upstream's line map functions, run with the system Go, for the expected values of the tests.
+logs/shadow-neg1.log, shadow-neg2.log        the compile errors without the arms. logs/shadow-alt.log: the fallback compiles.

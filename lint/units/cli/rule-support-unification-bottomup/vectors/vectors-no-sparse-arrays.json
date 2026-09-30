@@ -3,7 +3,8 @@
 		"code": "var a = [ 1, 2, ]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var a = [,];",
@@ -25,7 +26,8 @@
 				"length": 1,
 				"message": "Unexpected comma in middle of array."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var a = [ 1,, 2];",
@@ -47,7 +49,8 @@
 				"length": 1,
 				"message": "Unexpected comma in middle of array."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "[\r\n\t/* comment */,\n// comment\n ,];",
@@ -83,7 +86,8 @@
 				"length": 1,
 				"message": "Unexpected comma in middle of array."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "[(( [a,] )),,,];",
@@ -119,7 +123,8 @@
 				"length": 1,
 				"message": "Unexpected comma in middle of array."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "[,(( [a,] )),,];",
@@ -155,7 +160,8 @@
 				"length": 1,
 				"message": "Unexpected comma in middle of array."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "[,]",

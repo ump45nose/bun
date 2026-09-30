@@ -2,32 +2,38 @@
  {
   "code": "var {a = {}} = foo;",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var {a, b = {}} = foo;",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var {a = []} = foo;",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "function foo({a = {}}) {}",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "function foo({a = []}) {}",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var [a] = foo",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var {} = foo",
@@ -38,6 +44,15 @@
     "column": 5,
     "endLine": 1,
     "endColumn": 7,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -53,6 +68,15 @@
     "endColumn": 7,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -64,6 +88,15 @@
     "column": 9,
     "endLine": 1,
     "endColumn": 11,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 9,
+    "start": 8,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -79,6 +112,15 @@
     "endColumn": 14,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 12,
+    "start": 11,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -90,6 +132,15 @@
     "column": 9,
     "endLine": 1,
     "endColumn": 11,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 9,
+    "start": 8,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -105,6 +156,15 @@
     "endColumn": 16,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -116,6 +176,15 @@
     "column": 14,
     "endLine": 1,
     "endColumn": 16,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -131,6 +200,15 @@
     "endColumn": 20,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -144,192 +222,238 @@
     "endColumn": 20,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
   "code": "var {a} = b",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({a} = b)",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[a] = b",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({})",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[]",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = {}",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = []",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "f({}, [])",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({} + [])",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({a: {}})",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({a = {}} = b)",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[a = []] = b",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[a = {}] = b",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var [a = []] = b",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "function f(a = {}) {}",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "(a = []) => a",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "for (x of []);",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "for (x in {});",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({[{}]: a} = b)",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[[a]] = b",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = {}.a",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({}).a = 1",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[].a = 1",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[][0] = 1",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({}.a = 1)",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[{}.a] = b",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({a: {}.b} = c)",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[...{}.a] = b",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "for ({}.a of b);",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "for ([].a in b);",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = {} ? 1 : 2",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = [{}]",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = {a: []}",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({}), []",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var [,] = a",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[,] = a",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var {a: [,]} = b",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var {} = foo;",
@@ -340,6 +464,15 @@
     "column": 5,
     "endLine": 1,
     "endColumn": 7,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -355,6 +488,15 @@
     "endColumn": 7,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -366,6 +508,15 @@
     "column": 9,
     "endLine": 1,
     "endColumn": 11,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 9,
+    "start": 8,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -381,6 +532,15 @@
     "endColumn": 14,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 12,
+    "start": 11,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -392,6 +552,15 @@
     "column": 9,
     "endLine": 1,
     "endColumn": 11,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 9,
+    "start": 8,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -407,6 +576,15 @@
     "endColumn": 16,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -418,6 +596,15 @@
     "column": 14,
     "endLine": 1,
     "endColumn": 16,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -433,6 +620,15 @@
     "endColumn": 16,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -444,6 +640,15 @@
     "column": 2,
     "endLine": 1,
     "endColumn": 4,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -459,6 +664,15 @@
     "endColumn": 3,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 1,
+    "start": 0,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -470,6 +684,15 @@
     "column": 6,
     "endLine": 1,
     "endColumn": 8,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -485,6 +708,15 @@
     "endColumn": 8,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -496,6 +728,15 @@
     "column": 2,
     "endLine": 1,
     "endColumn": 4,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -511,6 +752,15 @@
     "endColumn": 4,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -522,6 +772,15 @@
     "column": 5,
     "endLine": 1,
     "endColumn": 7,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -537,6 +796,15 @@
     "endColumn": 7,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -548,6 +816,15 @@
     "column": 6,
     "endLine": 1,
     "endColumn": 8,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -563,6 +840,15 @@
     "endColumn": 4,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -574,6 +860,15 @@
     "column": 2,
     "endLine": 1,
     "endColumn": 4,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -589,6 +884,15 @@
     "endColumn": 8,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -600,6 +904,15 @@
     "column": 6,
     "endLine": 1,
     "endColumn": 8,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -615,6 +928,15 @@
     "endColumn": 8,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -626,6 +948,15 @@
     "column": 6,
     "endLine": 1,
     "endColumn": 8,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -641,6 +972,15 @@
     "endColumn": 8,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -652,6 +992,15 @@
     "column": 10,
     "endLine": 1,
     "endColumn": 12,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -667,6 +1016,15 @@
     "endColumn": 12,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -678,6 +1036,15 @@
     "column": 10,
     "endLine": 1,
     "endColumn": 12,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -693,6 +1060,15 @@
     "endColumn": 9,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 7,
+    "start": 6,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -704,6 +1080,15 @@
     "column": 7,
     "endLine": 1,
     "endColumn": 9,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 7,
+    "start": 6,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -719,6 +1104,15 @@
     "endColumn": 17,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -730,6 +1124,15 @@
     "column": 15,
     "endLine": 1,
     "endColumn": 17,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -745,6 +1148,15 @@
     "endColumn": 4,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -756,6 +1168,15 @@
     "column": 2,
     "endLine": 1,
     "endColumn": 4,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -771,6 +1192,15 @@
     "endColumn": 4,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -782,6 +1212,15 @@
     "column": 8,
     "endLine": 1,
     "endColumn": 10,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 8,
+    "start": 7,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -797,6 +1236,15 @@
     "endColumn": 10,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 8,
+    "start": 7,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -808,6 +1256,15 @@
     "column": 14,
     "endLine": 1,
     "endColumn": 16,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -823,6 +1280,15 @@
     "endColumn": 15,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -834,6 +1300,15 @@
     "column": 9,
     "endLine": 1,
     "endColumn": 11,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 9,
+    "start": 8,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -856,6 +1331,22 @@
     "endColumn": 15,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   },
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -867,6 +1358,15 @@
     "column": 13,
     "endLine": 1,
     "endColumn": 15,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -889,6 +1389,22 @@
     "endColumn": 12,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   },
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -900,6 +1416,15 @@
     "column": 5,
     "endLine": 1,
     "endColumn": 7,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -915,6 +1440,15 @@
     "endColumn": 7,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -926,6 +1460,15 @@
     "column": 14,
     "endLine": 1,
     "endColumn": 16,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -941,6 +1484,15 @@
     "endColumn": 7,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -952,6 +1504,15 @@
     "column": 5,
     "endLine": 1,
     "endColumn": 7,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -967,6 +1528,15 @@
     "endColumn": 14,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 12,
+    "start": 11,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -978,6 +1548,15 @@
     "column": 10,
     "endLine": 1,
     "endColumn": 12,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -993,6 +1572,15 @@
     "endColumn": 5,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 3,
+    "start": 2,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -1004,6 +1592,15 @@
     "column": 10,
     "endLine": 1,
     "endColumn": 12,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -1026,6 +1623,22 @@
     "endColumn": 9,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   },
+   {
+    "line": 1,
+    "column": 7,
+    "start": 6,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1037,6 +1650,15 @@
     "column": 6,
     "endLine": 1,
     "endColumn": 8,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -1052,6 +1674,15 @@
     "endColumn": 6,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 4,
+    "start": 3,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1063,6 +1694,15 @@
     "column": 4,
     "endLine": 1,
     "endColumn": 6,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 4,
+    "start": 3,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -1078,6 +1718,15 @@
     "endColumn": 12,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -1089,6 +1738,15 @@
     "column": 15,
     "endLine": 1,
     "endColumn": 17,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -1104,6 +1762,15 @@
     "endColumn": 17,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1115,6 +1782,15 @@
     "column": 5,
     "endLine": 1,
     "endColumn": 7,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 4,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -1130,6 +1806,15 @@
     "endColumn": 11,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 9,
+    "start": 8,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -1141,6 +1826,15 @@
     "column": 9,
     "endLine": 1,
     "endColumn": 11,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 9,
+    "start": 8,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -1156,6 +1850,15 @@
     "endColumn": 10,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 8,
+    "start": 7,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1167,6 +1870,15 @@
     "column": 6,
     "endLine": 1,
     "endColumn": 8,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -1182,6 +1894,15 @@
     "endColumn": 10,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 8,
+    "start": 7,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1193,6 +1914,15 @@
     "column": 11,
     "endLine": 1,
     "endColumn": 13,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 11,
+    "start": 10,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -1222,6 +1952,29 @@
     "endColumn": 16,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   },
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   },
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1235,6 +1988,15 @@
     "endColumn": 13,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 11,
+    "start": 10,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1246,6 +2008,15 @@
     "column": 14,
     "endLine": 1,
     "endColumn": 16,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -1268,6 +2039,22 @@
     "endColumn": 8,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 1,
+    "start": 0,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   },
+   {
+    "line": 1,
+    "column": 6,
+    "start": 5,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -1288,6 +2075,22 @@
     "endColumn": 14,
     "message": "Unexpected empty array pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 2,
+    "start": 1,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   },
+   {
+    "line": 1,
+    "column": 12,
+    "start": 11,
+    "length": 1,
+    "message": "Unexpected empty array pattern."
+   }
   ]
  },
  {
@@ -1299,6 +2102,15 @@
     "column": 5,
     "endLine": 1,
     "endColumn": 7,
+    "message": "Unexpected empty object pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 5,
+    "start": 5,
+    "length": 1,
     "message": "Unexpected empty object pattern."
    }
   ]
@@ -1314,6 +2126,15 @@
     "endColumn": 10,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 8,
+    "start": 8,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1325,6 +2146,15 @@
     "column": 7,
     "endLine": 1,
     "endColumn": 9,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 7,
+    "start": 8,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -1341,6 +2171,15 @@
     "endColumn": 14,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 12,
+    "start": 11,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1353,6 +2192,15 @@
     "column": 10,
     "endLine": 1,
     "endColumn": 12,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]
@@ -1369,6 +2217,15 @@
     "endColumn": 16,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1383,6 +2240,15 @@
     "endColumn": 21,
     "message": "Unexpected empty object pattern."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 1,
+    "message": "Unexpected empty object pattern."
+   }
   ]
  },
  {
@@ -1395,6 +2261,15 @@
     "column": 24,
     "endLine": 1,
     "endColumn": 26,
+    "message": "Unexpected empty array pattern."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 1,
     "message": "Unexpected empty array pattern."
    }
   ]

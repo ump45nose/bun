@@ -19,3 +19,5 @@ $D no-duplicate-case --show --out vectors/vectors-no-duplicate-case.json cases/u
 $D no-self-assign --show --out vectors/vectors-no-self-assign.json cases/upstream-no-self-assign.json cases/extra-no-self-assign.json $B/vectors-no-self-assign.json $E/self-edge.json $E/self-eslint-tests.json $E/self-static.json
 } > DIFFERENCES.txt 2>&1
 grep -E '^[a-z-]+: [0-9]+ cases' DIFFERENCES.txt
+# Marks the vectors whose code is a case of ESLint's own test of the rule: `"eslintTest": true`.
+for f in vectors/vectors-*.json; do r=${f#vectors/vectors-}; r=${r%.json}; node oracle/extract.cjs $r --all > /tmp/rsu-all-$r.json && node oracle/mark-origin.cjs $f /tmp/rsu-all-$r.json; done

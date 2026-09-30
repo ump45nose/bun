@@ -3,7 +3,8 @@
 		"code": "var test = { debugger: 1 }; test.debugger;",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "if (foo) debugger",
@@ -25,7 +26,8 @@
 				"length": 8,
 				"message": "Unexpected 'debugger' statement."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "debugger",

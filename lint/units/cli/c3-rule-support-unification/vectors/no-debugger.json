@@ -2,7 +2,8 @@
  {
   "code": "var test = { debugger: 1 }; test.debugger;",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "if (foo) debugger",
@@ -15,52 +16,70 @@
     "endColumn": 18,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
   "code": "a.debugger",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({debugger(){}})",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "class A { debugger() {} }",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "\"debugger\";",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "`debugger`",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "// debugger\nx",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "/* debugger */ x",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = /debugger/",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = a.debugger ? 1 : 2",
   "origin": "own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "debugger",
@@ -71,6 +90,15 @@
     "column": 1,
     "endLine": 1,
     "endColumn": 9,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 1,
+    "start": 0,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -84,6 +112,15 @@
     "column": 1,
     "endLine": 1,
     "endColumn": 10,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 1,
+    "start": 0,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -106,6 +143,22 @@
     "endColumn": 32,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 8,
+    "start": 7,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   },
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -117,6 +170,15 @@
     "column": 15,
     "endLine": 1,
     "endColumn": 23,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -132,6 +194,15 @@
     "endColumn": 17,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 9,
+    "start": 8,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -143,6 +214,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 26,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -165,6 +245,22 @@
     "endColumn": 45,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 16,
+    "start": 15,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   },
+   {
+    "line": 1,
+    "column": 36,
+    "start": 35,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -185,6 +281,22 @@
     "endColumn": 49,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   },
+   {
+    "line": 1,
+    "column": 41,
+    "start": 40,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -196,6 +308,15 @@
     "column": 8,
     "endLine": 1,
     "endColumn": 17,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 8,
+    "start": 7,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -211,6 +332,15 @@
     "endColumn": 18,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -224,6 +354,15 @@
     "endColumn": 21,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -235,6 +374,15 @@
     "column": 4,
     "endLine": 1,
     "endColumn": 13,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 4,
+    "start": 3,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -264,6 +412,29 @@
     "endColumn": 59,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 7,
+    "start": 6,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   },
+   {
+    "line": 1,
+    "column": 30,
+    "start": 29,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   },
+   {
+    "line": 1,
+    "column": 51,
+    "start": 50,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -275,6 +446,15 @@
     "column": 3,
     "endLine": 1,
     "endColumn": 11,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 3,
+    "start": 2,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -297,6 +477,22 @@
     "endColumn": 9,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 1,
+    "start": 0,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   },
+   {
+    "line": 2,
+    "column": 1,
+    "start": 9,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -317,6 +513,22 @@
     "endColumn": 18,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 1,
+    "start": 0,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   },
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -328,6 +540,15 @@
     "column": 4,
     "endLine": 1,
     "endColumn": 12,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 4,
+    "start": 4,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -343,6 +564,15 @@
     "endColumn": 15,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 7,
+    "start": 8,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -354,6 +584,15 @@
     "column": 3,
     "endLine": 1,
     "endColumn": 11,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 3,
+    "start": 2,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -369,6 +608,15 @@
     "endColumn": 9,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 2,
+    "column": 1,
+    "start": 2,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -380,6 +628,15 @@
     "column": 30,
     "endLine": 1,
     "endColumn": 38,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 30,
+    "start": 29,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -402,6 +659,22 @@
     "endColumn": 44,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   },
+   {
+    "line": 1,
+    "column": 35,
+    "start": 34,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -413,6 +686,15 @@
     "column": 10,
     "endLine": 1,
     "endColumn": 18,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -428,6 +710,15 @@
     "endColumn": 25,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -439,6 +730,15 @@
     "column": 14,
     "endLine": 1,
     "endColumn": 22,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -454,6 +754,15 @@
     "endColumn": 26,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -465,6 +774,15 @@
     "column": 1,
     "endLine": 1,
     "endColumn": 19,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 1,
+    "start": 0,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -480,6 +798,15 @@
     "endColumn": 2,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 1,
+    "start": 0,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -493,6 +820,15 @@
     "endColumn": 17,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 9,
+    "start": 8,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -504,6 +840,15 @@
     "column": 1,
     "endLine": 2,
     "endColumn": 9,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 2,
+    "column": 1,
+    "start": 20,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -520,6 +865,15 @@
     "endColumn": 30,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -532,6 +886,15 @@
     "column": 28,
     "endLine": 1,
     "endColumn": 36,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 28,
+    "start": 27,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]
@@ -548,6 +911,15 @@
     "endColumn": 28,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
@@ -562,13 +934,23 @@
     "endColumn": 27,
     "message": "Unexpected 'debugger' statement."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   }
   ]
  },
  {
   "code": "x = <a>debugger</a>",
   "origin": "own",
   "jsx": true,
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = <a>{(() => { debugger })()}</a>; debugger",
@@ -587,6 +969,22 @@
     "column": 38,
     "endLine": 1,
     "endColumn": 46,
+    "message": "Unexpected 'debugger' statement."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 8,
+    "message": "Unexpected 'debugger' statement."
+   },
+   {
+    "line": 1,
+    "column": 38,
+    "start": 37,
+    "length": 8,
     "message": "Unexpected 'debugger' statement."
    }
   ]

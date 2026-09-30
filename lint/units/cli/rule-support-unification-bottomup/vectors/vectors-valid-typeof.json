@@ -3,163 +3,190 @@
 		"code": "typeof foo === 'string'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo === 'object'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo === 'function'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo === 'undefined'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo === 'boolean'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo === 'number'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo === 'bigint'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "'string' === typeof foo",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "'object' === typeof foo",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "'function' === typeof foo",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "'undefined' === typeof foo",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "'boolean' === typeof foo",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "'number' === typeof foo",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo === typeof bar",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo === baz",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo !== someType",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof bar != someType",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "someType === typeof bar",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "someType == typeof bar",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo == 'string'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof(foo) === 'string'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof(foo) !== 'string'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof(foo) == 'string'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof(foo) != 'string'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var oddUse = typeof foo + 'thing'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "function f(undefined) { typeof x === undefined }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo === `str${somethingElse}`",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo === 'strnig'",
@@ -181,7 +208,8 @@
 				"length": 8,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "'strnig' === typeof foo",
@@ -203,7 +231,8 @@
 				"length": 8,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "if (typeof bar === 'umdefined') {}",
@@ -225,7 +254,8 @@
 				"length": 11,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo !== 'strnig'",
@@ -247,7 +277,8 @@
 				"length": 8,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "'strnig' !== typeof foo",
@@ -269,7 +300,8 @@
 				"length": 8,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "if (typeof bar !== 'umdefined') {}",
@@ -291,7 +323,8 @@
 				"length": 11,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo != 'strnig'",
@@ -313,7 +346,8 @@
 				"length": 8,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "'strnig' != typeof foo",
@@ -335,7 +369,8 @@
 				"length": 8,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "if (typeof bar != 'umdefined') {}",
@@ -357,7 +392,8 @@
 				"length": 11,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof foo == 'strnig'",
@@ -379,7 +415,8 @@
 				"length": 8,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "'strnig' == typeof foo",
@@ -401,7 +438,8 @@
 				"length": 8,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "if (typeof bar == 'umdefined') {}",
@@ -423,7 +461,8 @@
 				"length": 11,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "if (typeof bar === `umdefined`) {}",
@@ -445,7 +484,8 @@
 				"length": 11,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "if (typeof bar !== undefined) {}",
@@ -467,7 +507,8 @@
 				"length": 9,
 				"message": "Invalid typeof comparison value."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "typeof a === \"string\"",

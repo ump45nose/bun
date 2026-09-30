@@ -3,163 +3,190 @@
 		"code": "x === 0",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "0 === x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x == 0",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "0 == x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x === '0'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "'0' === x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x == '0'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "'0' == x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x === '-0'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "'-0' === x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x == '-0'",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "'-0' == x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x === -1",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "-1 === x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x < 0",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "0 < x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x <= 0",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "0 <= x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x > 0",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "0 > x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x >= 0",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "0 >= x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x != 0",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "0 != x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x !== 0",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "0 !== x",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "Object.is(x, -0)",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "x === -0",
@@ -181,7 +208,8 @@
 				"length": 1,
 				"message": "Do not use the '===' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "-0 === x",
@@ -203,7 +231,8 @@
 				"length": 1,
 				"message": "Do not use the '===' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "x !== -0",
@@ -225,7 +254,8 @@
 				"length": 1,
 				"message": "Do not use the '!==' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "-0 !== x",
@@ -247,7 +277,8 @@
 				"length": 1,
 				"message": "Do not use the '!==' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "x == -0",
@@ -269,7 +300,8 @@
 				"length": 1,
 				"message": "Do not use the '==' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "-0 == x",
@@ -291,7 +323,8 @@
 				"length": 1,
 				"message": "Do not use the '==' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "x != -0",
@@ -313,7 +346,8 @@
 				"length": 1,
 				"message": "Do not use the '!=' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "-0 != x",
@@ -335,7 +369,8 @@
 				"length": 1,
 				"message": "Do not use the '!=' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "x > -0",
@@ -357,7 +392,8 @@
 				"length": 1,
 				"message": "Do not use the '>' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "-0 > x",
@@ -379,7 +415,8 @@
 				"length": 1,
 				"message": "Do not use the '>' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "x >= -0",
@@ -401,7 +438,8 @@
 				"length": 1,
 				"message": "Do not use the '>=' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "-0 >= x",
@@ -423,7 +461,8 @@
 				"length": 1,
 				"message": "Do not use the '>=' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "x < -0",
@@ -445,7 +484,8 @@
 				"length": 1,
 				"message": "Do not use the '<' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "-0 < x",
@@ -467,7 +507,8 @@
 				"length": 1,
 				"message": "Do not use the '<' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "x <= -0",
@@ -489,7 +530,8 @@
 				"length": 1,
 				"message": "Do not use the '<=' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "-0 <= x",
@@ -511,7 +553,8 @@
 				"length": 1,
 				"message": "Do not use the '<=' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "(a + b) === -0",
@@ -533,7 +576,8 @@
 				"length": 1,
 				"message": "Do not use the '===' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "(a, b) === -0",
@@ -555,7 +599,8 @@
 				"length": 1,
 				"message": "Do not use the '===' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "-0 == -0",
@@ -577,7 +622,8 @@
 				"length": 1,
 				"message": "Do not use the '==' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "if (x !== -0) {}",
@@ -599,7 +645,8 @@
 				"length": 1,
 				"message": "Do not use the '!==' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "x === /* keep */ -0",
@@ -621,7 +668,8 @@
 				"length": 1,
 				"message": "Do not use the '===' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "function f(Object) { return x === -0; }",
@@ -643,7 +691,8 @@
 				"length": 1,
 				"message": "Do not use the '===' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "function f(Object) { return x !== -0; }",
@@ -665,7 +714,8 @@
 				"length": 1,
 				"message": "Do not use the '!==' operator to compare against -0."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "-0 === -0",

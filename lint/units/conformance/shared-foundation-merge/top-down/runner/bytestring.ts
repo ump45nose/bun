@@ -65,13 +65,13 @@ export function decodeRune(s: ByteString, i: number, end: number = s.length): [n
   let lo = 0x80;
   let hi = 0xbf;
   if (b0 >= 0xc2 && b0 <= 0xdf) size = 2;
-  else if (b0 === 0xe0) (size = 3), (lo = 0xa0);
+  else if (b0 === 0xe0) ((size = 3), (lo = 0xa0));
   else if (b0 >= 0xe1 && b0 <= 0xec) size = 3;
-  else if (b0 === 0xed) (size = 3), (hi = 0x9f);
+  else if (b0 === 0xed) ((size = 3), (hi = 0x9f));
   else if (b0 >= 0xee && b0 <= 0xef) size = 3;
-  else if (b0 === 0xf0) (size = 4), (lo = 0x90);
+  else if (b0 === 0xf0) ((size = 4), (lo = 0x90));
   else if (b0 >= 0xf1 && b0 <= 0xf3) size = 4;
-  else if (b0 === 0xf4) (size = 4), (hi = 0x8f);
+  else if (b0 === 0xf4) ((size = 4), (hi = 0x8f));
   else return [RuneError, 1];
   if (n < size) return [RuneError, 1];
   const b1 = s.charCodeAt(i + 1);

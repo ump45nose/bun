@@ -3,79 +3,92 @@
 		"code": "a in b",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a in b === false",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "!(a in b)",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "(!a) in b",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a instanceof b",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a instanceof b === false",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "!(a instanceof b)",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "(!a) instanceof b",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "if (! a < b) {}",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "while (! a > b) {}",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "foo = ! a <= b;",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "foo = ! a >= b;",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "! a <= b",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "!a in b",
@@ -97,7 +110,8 @@
 				"length": 1,
 				"message": "Unexpected negating the left operand of 'in' operator."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "(!a in b)",
@@ -119,7 +133,8 @@
 				"length": 1,
 				"message": "Unexpected negating the left operand of 'in' operator."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "!(a) in b",
@@ -141,7 +156,8 @@
 				"length": 1,
 				"message": "Unexpected negating the left operand of 'in' operator."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "!a instanceof b",
@@ -163,7 +179,8 @@
 				"length": 1,
 				"message": "Unexpected negating the left operand of 'instanceof' operator."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "(!a instanceof b)",
@@ -185,7 +202,8 @@
 				"length": 1,
 				"message": "Unexpected negating the left operand of 'instanceof' operator."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "!(a) instanceof b",
@@ -207,7 +225,8 @@
 				"length": 1,
 				"message": "Unexpected negating the left operand of 'instanceof' operator."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "if (!a in b) {}",

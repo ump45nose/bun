@@ -2,142 +2,170 @@
  {
   "code": "var foo = { __proto__: 1, two: 2};",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { foo: 1, bar: 2 };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { '': 1, bar: 2 };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { '': 1, ' ': 2 };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { '': 1, [null]: 2 };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { '': 1, [a]: 2 };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [a]: 1, [a]: 2 };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "+{ get a() { }, set a(b) { } };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { a: b, [a]: b };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { a: b, ...c }",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { get a() {}, set a (value) {} };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { a: 1, b: { a: 2 } };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = ({ null: 1, [/(?<zero>0)/]: 2 })",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var {a, a} = obj",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { 012: 1, 12: 2 };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { 1_0: 1, 1: 2 };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { __proto__: null, ['__proto__']: null };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { ['__proto__']: null, __proto__: null };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { '__proto__': null, ['__proto__']: null };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { ['__proto__']: null, '__proto__': null };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { __proto__: null, __proto__ };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { __proto__, __proto__: null };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { __proto__: null, __proto__() {} };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { __proto__() {}, __proto__: null };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { __proto__: null, get __proto__() {} };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { get __proto__() {}, __proto__: null };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { __proto__: null, set __proto__(value) {} };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { set __proto__(value) {}, __proto__: null };",
   "origin": "eslint-tests",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { a: b, ['a']: b };",
@@ -148,6 +176,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 21,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 3,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -163,6 +200,15 @@
     "endColumn": 18,
     "message": "Duplicate key 'y'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
+    "message": "Duplicate key 'y'."
+   }
   ]
  },
  {
@@ -174,6 +220,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 20,
+    "message": "Duplicate key ''."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 2,
     "message": "Duplicate key ''."
    }
   ]
@@ -189,6 +244,15 @@
     "endColumn": 21,
     "message": "Duplicate key ''."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 2,
+    "message": "Duplicate key ''."
+   }
   ]
  },
  {
@@ -200,6 +264,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 22,
+    "message": "Duplicate key '1'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
     "message": "Duplicate key '1'."
    }
   ]
@@ -215,6 +288,15 @@
     "endColumn": 21,
     "message": "Duplicate key '10'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 2,
+    "message": "Duplicate key '10'."
+   }
   ]
  },
  {
@@ -226,6 +308,15 @@
     "column": 19,
     "endLine": 1,
     "endColumn": 20,
+    "message": "Duplicate key '1'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 1,
     "message": "Duplicate key '1'."
    }
   ]
@@ -241,6 +332,15 @@
     "endColumn": 20,
     "message": "Duplicate key '1'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 1,
+    "message": "Duplicate key '1'."
+   }
   ]
  },
  {
@@ -252,6 +352,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 19,
+    "message": "Duplicate key '1'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 1,
     "message": "Duplicate key '1'."
    }
   ]
@@ -267,6 +376,15 @@
     "endColumn": 21,
     "message": "Duplicate key '10'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 2,
+    "message": "Duplicate key '10'."
+   }
   ]
  },
  {
@@ -278,6 +396,15 @@
     "column": 19,
     "endLine": 1,
     "endColumn": 20,
+    "message": "Duplicate key 'z'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 1,
     "message": "Duplicate key 'z'."
    }
   ]
@@ -293,6 +420,15 @@
     "endColumn": 6,
     "message": "Duplicate key 'bar'."
    }
+  ],
+  "expect": [
+   {
+    "line": 3,
+    "column": 3,
+    "start": 24,
+    "length": 3,
+    "message": "Duplicate key 'bar'."
+   }
   ]
  },
  {
@@ -304,6 +440,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 22,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -319,6 +464,15 @@
     "endColumn": 22,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -330,6 +484,15 @@
     "column": 34,
     "endLine": 1,
     "endColumn": 35,
+    "message": "Duplicate key 'b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 34,
+    "start": 33,
+    "length": 1,
     "message": "Duplicate key 'b'."
    }
   ]
@@ -345,6 +508,15 @@
     "endColumn": 44,
     "message": "Duplicate key '/(?<zero>0)/'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 32,
+    "start": 31,
+    "length": 1,
+    "message": "Duplicate key '/(?<zero>0)/'."
+   }
   ]
  },
  {
@@ -356,6 +528,15 @@
     "column": 33,
     "endLine": 1,
     "endColumn": 44,
+    "message": "Duplicate key '__proto__'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 33,
+    "start": 32,
+    "length": 11,
     "message": "Duplicate key '__proto__'."
    }
   ]
@@ -371,6 +552,15 @@
     "endColumn": 41,
     "message": "Duplicate key '__proto__'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 32,
+    "start": 31,
+    "length": 9,
+    "message": "Duplicate key '__proto__'."
+   }
   ]
  },
  {
@@ -382,6 +572,15 @@
     "column": 32,
     "endLine": 1,
     "endColumn": 41,
+    "message": "Duplicate key '__proto__'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 32,
+    "start": 31,
+    "length": 9,
     "message": "Duplicate key '__proto__'."
    }
   ]
@@ -397,6 +596,15 @@
     "endColumn": 45,
     "message": "Duplicate key '__proto__'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 36,
+    "start": 35,
+    "length": 9,
+    "message": "Duplicate key '__proto__'."
+   }
   ]
  },
  {
@@ -408,6 +616,15 @@
     "column": 36,
     "endLine": 1,
     "endColumn": 45,
+    "message": "Duplicate key '__proto__'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 36,
+    "start": 35,
+    "length": 9,
     "message": "Duplicate key '__proto__'."
    }
   ]
@@ -423,6 +640,15 @@
     "endColumn": 35,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 34,
+    "start": 33,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -434,6 +660,15 @@
     "column": 24,
     "endLine": 1,
     "endColumn": 29,
+    "message": "Duplicate key '/a/gi'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 1,
     "message": "Duplicate key '/a/gi'."
    }
   ]
@@ -449,12 +684,22 @@
     "endColumn": 29,
     "message": "Duplicate key '/a/gi'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 1,
+    "message": "Duplicate key '/a/gi'."
+   }
   ]
  },
  {
   "code": "var x = { '/a/ig': 1, [/a/ig]: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [/a/]: 1, '/a/': 2 };",
@@ -465,6 +710,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 26,
+    "message": "Duplicate key '/a/'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 5,
     "message": "Duplicate key '/a/'."
    }
   ]
@@ -480,6 +734,15 @@
     "endColumn": 30,
     "message": "Duplicate key '/[/]/'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 7,
+    "message": "Duplicate key '/[/]/'."
+   }
   ]
  },
  {
@@ -491,6 +754,15 @@
     "column": 24,
     "endLine": 1,
     "endColumn": 33,
+    "message": "Duplicate key '/a\\/b/'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 9,
     "message": "Duplicate key '/a\\/b/'."
    }
   ]
@@ -506,6 +778,15 @@
     "endColumn": 38,
     "message": "Duplicate key '/a/dgimsy'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 27,
+    "start": 26,
+    "length": 11,
+    "message": "Duplicate key '/a/dgimsy'."
+   }
   ]
  },
  {
@@ -517,6 +798,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 26,
+    "message": "Duplicate key '/é/'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 21,
+    "length": 6,
     "message": "Duplicate key '/é/'."
    }
   ]
@@ -532,6 +822,15 @@
     "endColumn": 22,
     "message": "Duplicate key '1'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 2,
+    "message": "Duplicate key '1'."
+   }
   ]
  },
  {
@@ -543,6 +842,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 22,
+    "message": "Duplicate key '3'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
     "message": "Duplicate key '3'."
    }
   ]
@@ -558,6 +866,15 @@
     "endColumn": 25,
     "message": "Duplicate key '15'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 4,
+    "message": "Duplicate key '15'."
+   }
   ]
  },
  {
@@ -569,6 +886,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 25,
+    "message": "Duplicate key '255'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 4,
     "message": "Duplicate key '255'."
    }
   ]
@@ -584,6 +910,15 @@
     "endColumn": 65,
     "message": "Duplicate key '1208925819614629174706175'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 39,
+    "start": 38,
+    "length": 26,
+    "message": "Duplicate key '1208925819614629174706175'."
+   }
   ]
  },
  {
@@ -595,6 +930,15 @@
     "column": 20,
     "endLine": 1,
     "endColumn": 22,
+    "message": "Duplicate key '10'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 2,
     "message": "Duplicate key '10'."
    }
   ]
@@ -610,6 +954,15 @@
     "endColumn": 19,
     "message": "Duplicate key '0'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 1,
+    "message": "Duplicate key '0'."
+   }
   ]
  },
  {
@@ -621,6 +974,15 @@
     "column": 20,
     "endLine": 1,
     "endColumn": 21,
+    "message": "Duplicate key '0'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 1,
     "message": "Duplicate key '0'."
    }
   ]
@@ -636,12 +998,22 @@
     "endColumn": 26,
     "message": "Duplicate key '255'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 3,
+    "message": "Duplicate key '255'."
+   }
   ]
  },
  {
   "code": "var x = { 9007199254740993n: 1, 9007199254740993: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { 9007199254740992n: 1, 9007199254740993: 2 };",
@@ -652,6 +1024,15 @@
     "column": 33,
     "endLine": 1,
     "endColumn": 49,
+    "message": "Duplicate key '9007199254740992'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 33,
+    "start": 32,
+    "length": 16,
     "message": "Duplicate key '9007199254740992'."
    }
   ]
@@ -667,12 +1048,22 @@
     "endColumn": 27,
     "message": "Duplicate key '1e+21'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 7,
+    "message": "Duplicate key '1e+21'."
+   }
   ]
  },
  {
   "code": "var x = { 0.1: 1, '.1': 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { .1: 1, 0.1: 2 };",
@@ -683,6 +1074,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 21,
+    "message": "Duplicate key '0.1'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 3,
     "message": "Duplicate key '0.1'."
    }
   ]
@@ -698,6 +1098,15 @@
     "endColumn": 19,
     "message": "Duplicate key '1'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 1,
+    "message": "Duplicate key '1'."
+   }
   ]
  },
  {
@@ -709,6 +1118,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 29,
+    "message": "Duplicate key 'Infinity'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 8,
     "message": "Duplicate key 'Infinity'."
    }
   ]
@@ -724,6 +1142,15 @@
     "endColumn": 28,
     "message": "Duplicate key '0.000001'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 4,
+    "message": "Duplicate key '0.000001'."
+   }
   ]
  },
  {
@@ -735,6 +1162,15 @@
     "column": 20,
     "endLine": 1,
     "endColumn": 26,
+    "message": "Duplicate key '1e-7'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 6,
     "message": "Duplicate key '1e-7'."
    }
   ]
@@ -750,6 +1186,15 @@
     "endColumn": 31,
     "message": "Duplicate key '1e-7'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 25,
+    "start": 24,
+    "length": 6,
+    "message": "Duplicate key '1e-7'."
+   }
   ]
  },
  {
@@ -761,6 +1206,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 25,
+    "message": "Duplicate key '1000'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 4,
     "message": "Duplicate key '1000'."
    }
   ]
@@ -776,6 +1230,15 @@
     "endColumn": 19,
     "message": "Duplicate key '8'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 1,
+    "message": "Duplicate key '8'."
+   }
   ]
  },
  {
@@ -787,6 +1250,15 @@
     "column": 46,
     "endLine": 1,
     "endColumn": 70,
+    "message": "Duplicate key '1.2345678901234568e+29'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 46,
+    "start": 45,
+    "length": 24,
     "message": "Duplicate key '1.2345678901234568e+29'."
    }
   ]
@@ -802,6 +1274,15 @@
     "endColumn": 30,
     "message": "Duplicate key '5e-324'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 8,
+    "message": "Duplicate key '5e-324'."
+   }
   ]
  },
  {
@@ -815,22 +1296,34 @@
     "endColumn": 49,
     "message": "Duplicate key '72057594037927940'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 32,
+    "start": 31,
+    "length": 17,
+    "message": "Duplicate key '72057594037927940'."
+   }
   ]
  },
  {
   "code": "var x = { 1.0: 1, '1.0': 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [0]: 1, [-0]: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { 0: 1, [+0]: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { true: 1, [true]: 2 };",
@@ -841,6 +1334,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 25,
+    "message": "Duplicate key 'true'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 4,
     "message": "Duplicate key 'true'."
    }
   ]
@@ -856,6 +1358,15 @@
     "endColumn": 30,
     "message": "Duplicate key 'false'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 7,
+    "message": "Duplicate key 'false'."
+   }
   ]
  },
  {
@@ -869,22 +1380,34 @@
     "endColumn": 26,
     "message": "Duplicate key 'null'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 4,
+    "message": "Duplicate key 'null'."
+   }
   ]
  },
  {
   "code": "var x = { [undefined]: 1, undefined: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [NaN]: 1, NaN: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [Infinity]: 1, Infinity: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { é: 1, 'é': 2 };",
@@ -895,6 +1418,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 20,
+    "message": "Duplicate key 'é'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 17,
+    "length": 4,
     "message": "Duplicate key 'é'."
    }
   ]
@@ -910,6 +1442,15 @@
     "endColumn": 25,
     "message": "Duplicate key 'é'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 2,
+    "message": "Duplicate key 'é'."
+   }
   ]
  },
  {
@@ -921,6 +1462,15 @@
     "column": 22,
     "endLine": 1,
     "endColumn": 23,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -936,12 +1486,22 @@
     "endColumn": 27,
     "message": "Duplicate key 'ab'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 25,
+    "start": 24,
+    "length": 2,
+    "message": "Duplicate key 'ab'."
+   }
   ]
  },
  {
   "code": "var x = { '\\uD800': 1, '\\uD801': 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { '\\uD800': 1, '\\uD800': 2 };",
@@ -954,12 +1514,22 @@
     "endColumn": 32,
     "message": "Duplicate key '\ud800'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 8,
+    "message": "Duplicate key '�'."
+   }
   ]
  },
  {
   "code": "var x = { '\\uD800': 1, '\\uFFFD': 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { '\\uD83D\\uDE00': 1, '😀': 2 };",
@@ -970,6 +1540,15 @@
     "column": 30,
     "endLine": 1,
     "endColumn": 34,
+    "message": "Duplicate key '😀'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 30,
+    "start": 29,
+    "length": 6,
     "message": "Duplicate key '😀'."
    }
   ]
@@ -985,6 +1564,15 @@
     "endColumn": 32,
     "message": "Duplicate key '𠮷'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 19,
+    "length": 14,
+    "message": "Duplicate key '𠮷'."
+   }
   ]
  },
  {
@@ -996,6 +1584,15 @@
     "column": 22,
     "endLine": 1,
     "endColumn": 23,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1011,6 +1608,15 @@
     "endColumn": 10,
     "message": "Duplicate key 'ab'."
    }
+  ],
+  "expect": [
+   {
+    "line": 2,
+    "column": 8,
+    "start": 21,
+    "length": 2,
+    "message": "Duplicate key 'ab'."
+   }
   ]
  },
  {
@@ -1022,6 +1628,15 @@
     "column": 23,
     "endLine": 1,
     "endColumn": 24,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1044,6 +1659,22 @@
     "endColumn": 31,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   },
+   {
+    "line": 1,
+    "column": 30,
+    "start": 29,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1064,6 +1695,22 @@
     "endColumn": 24,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1075,6 +1722,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 19,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1090,37 +1746,52 @@
     "endColumn": 12,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 11,
+    "start": 10,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
   "code": "var x = { a: 1, b: { a: 2, b: 3 } };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ a, a } = obj);",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ a: b, a: c } = obj);",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[{ a, a }] = arr;",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ x: { a, a } } = obj);",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ x: [{ a, a }] } = obj);",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ a = { b: 1, b: 2 } } = obj);",
@@ -1131,6 +1802,15 @@
     "column": 16,
     "endLine": 1,
     "endColumn": 17,
+    "message": "Duplicate key 'b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 16,
+    "start": 15,
+    "length": 1,
     "message": "Duplicate key 'b'."
    }
   ]
@@ -1146,6 +1826,15 @@
     "endColumn": 20,
     "message": "Duplicate key 'c'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 1,
+    "message": "Duplicate key 'c'."
+   }
   ]
  },
  {
@@ -1157,6 +1846,15 @@
     "column": 26,
     "endLine": 1,
     "endColumn": 27,
+    "message": "Duplicate key 'c'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 26,
+    "start": 25,
+    "length": 1,
     "message": "Duplicate key 'c'."
    }
   ]
@@ -1172,6 +1870,15 @@
     "endColumn": 14,
     "message": "Duplicate key 'k'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 1,
+    "message": "Duplicate key 'k'."
+   }
   ]
  },
  {
@@ -1183,6 +1890,15 @@
     "column": 15,
     "endLine": 1,
     "endColumn": 16,
+    "message": "Duplicate key 'b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
     "message": "Duplicate key 'b'."
    }
   ]
@@ -1198,17 +1914,28 @@
     "endColumn": 11,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
   "code": "for ({ a, a } of xs);",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "for ({ a, a } in xs);",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "for ({ a, a }.b of xs);",
@@ -1221,22 +1948,34 @@
     "endColumn": 12,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 11,
+    "start": 10,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
   "code": "for (var { a, a } of xs);",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[...{ a, a }] = arr;",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[...[{ a, a }]] = arr;",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[[{ a, a }] = [{ b: 1, b: 2 }]] = arr;",
@@ -1249,12 +1988,22 @@
     "endColumn": 25,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
   "code": "x = { a: { b, b } = obj };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = y = { a: 1, a: 2 };",
@@ -1265,6 +2014,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 18,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1280,22 +2038,34 @@
     "endColumn": 22,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
   "code": "(({ a: b, a: c }) => {});",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "(function ({ a: b, a: c }) {});",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var { a: b, a: c } = obj;",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var { a: b = { d: 1, d: 2 }, a: c } = obj;",
@@ -1306,6 +2076,15 @@
     "column": 22,
     "endLine": 1,
     "endColumn": 23,
+    "message": "Duplicate key 'd'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 1,
     "message": "Duplicate key 'd'."
    }
   ]
@@ -1321,12 +2100,22 @@
     "endColumn": 21,
     "message": "Duplicate key 'd'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 1,
+    "message": "Duplicate key 'd'."
+   }
   ]
  },
  {
   "code": "try {} catch ({ a: b, a: c }) {}",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ a: [{ b, b }] = [{ c: 1, c: 2 }] } = obj);",
@@ -1339,12 +2128,22 @@
     "endColumn": 30,
     "message": "Duplicate key 'c'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 29,
+    "start": 28,
+    "length": 1,
+    "message": "Duplicate key 'c'."
+   }
   ]
  },
  {
   "code": "({ a: (b), a: (c) } = obj);",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ a: { b: 1, b: 2 }[0] } = obj);",
@@ -1355,6 +2154,15 @@
     "column": 15,
     "endLine": 1,
     "endColumn": 16,
+    "message": "Duplicate key 'b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
     "message": "Duplicate key 'b'."
    }
   ]
@@ -1370,6 +2178,15 @@
     "endColumn": 18,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
@@ -1381,6 +2198,15 @@
     "column": 19,
     "endLine": 1,
     "endColumn": 20,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1396,6 +2222,15 @@
     "endColumn": 28,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 27,
+    "start": 26,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1409,6 +2244,15 @@
     "endColumn": 29,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 28,
+    "start": 27,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1420,6 +2264,15 @@
     "column": 36,
     "endLine": 1,
     "endColumn": 37,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 36,
+    "start": 35,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1442,6 +2295,22 @@
     "endColumn": 34,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 33,
+    "start": 32,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1453,6 +2322,15 @@
     "column": 23,
     "endLine": 1,
     "endColumn": 24,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1468,6 +2346,15 @@
     "endColumn": 27,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 26,
+    "start": 25,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1481,6 +2368,15 @@
     "endColumn": 41,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 40,
+    "start": 39,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1492,6 +2388,15 @@
     "column": 40,
     "endLine": 1,
     "endColumn": 41,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 40,
+    "start": 39,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1514,6 +2419,22 @@
     "endColumn": 53,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 40,
+    "start": 39,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 52,
+    "start": 51,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1525,6 +2446,15 @@
     "column": 32,
     "endLine": 1,
     "endColumn": 33,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 32,
+    "start": 31,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1540,6 +2470,15 @@
     "endColumn": 34,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 31,
+    "start": 30,
+    "length": 3,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1551,6 +2490,15 @@
     "column": 27,
     "endLine": 1,
     "endColumn": 30,
+    "message": "Duplicate key '1'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 27,
+    "start": 26,
+    "length": 3,
     "message": "Duplicate key '1'."
    }
   ]
@@ -1566,6 +2514,15 @@
     "endColumn": 15,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1577,6 +2534,15 @@
     "column": 14,
     "endLine": 1,
     "endColumn": 15,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1592,6 +2558,15 @@
     "endColumn": 18,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1603,6 +2578,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 19,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -1618,6 +2602,15 @@
     "endColumn": 22,
     "message": "Duplicate key 'get'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 3,
+    "message": "Duplicate key 'get'."
+   }
   ]
  },
  {
@@ -1629,6 +2622,15 @@
     "column": 19,
     "endLine": 1,
     "endColumn": 22,
+    "message": "Duplicate key 'set'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 3,
     "message": "Duplicate key 'set'."
    }
   ]
@@ -1644,6 +2646,15 @@
     "endColumn": 28,
     "message": "Duplicate key 'static'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 6,
+    "message": "Duplicate key 'static'."
+   }
   ]
  },
  {
@@ -1655,6 +2666,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 26,
+    "message": "Duplicate key 'async'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 5,
     "message": "Duplicate key 'async'."
    }
   ]
@@ -1670,6 +2690,15 @@
     "endColumn": 32,
     "message": "Duplicate key 'get'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 29,
+    "start": 28,
+    "length": 3,
+    "message": "Duplicate key 'get'."
+   }
   ]
  },
  {
@@ -1681,6 +2710,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 23,
+    "message": "Duplicate key 'async'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 5,
     "message": "Duplicate key 'async'."
    }
   ]
@@ -1696,6 +2734,15 @@
     "endColumn": 20,
     "message": "Duplicate key 'if'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 2,
+    "message": "Duplicate key 'if'."
+   }
   ]
  },
  {
@@ -1707,6 +2754,15 @@
     "column": 27,
     "endLine": 1,
     "endColumn": 40,
+    "message": "Duplicate key 'constructor'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 27,
+    "start": 26,
+    "length": 13,
     "message": "Duplicate key 'constructor'."
    }
   ]
@@ -1722,6 +2778,15 @@
     "endColumn": 34,
     "message": "Duplicate key 'prototype'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 25,
+    "start": 24,
+    "length": 9,
+    "message": "Duplicate key 'prototype'."
+   }
   ]
  },
  {
@@ -1735,17 +2800,28 @@
     "endColumn": 22,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
   "code": "var x = { [`a${b}`]: 1, a: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [tag`a`]: 1, a: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [`a\\u0062`]: 1, ab: 2 };",
@@ -1756,6 +2832,15 @@
     "column": 27,
     "endLine": 1,
     "endColumn": 29,
+    "message": "Duplicate key 'ab'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 27,
+    "start": 26,
+    "length": 2,
     "message": "Duplicate key 'ab'."
    }
   ]
@@ -1771,6 +2856,15 @@
     "endColumn": 15,
     "message": "Duplicate key 'a\nb'."
    }
+  ],
+  "expect": [
+   {
+    "line": 2,
+    "column": 9,
+    "start": 22,
+    "length": 6,
+    "message": "Duplicate key 'a\nb'."
+   }
   ]
  },
  {
@@ -1782,6 +2876,15 @@
     "column": 9,
     "endLine": 2,
     "endColumn": 15,
+    "message": "Duplicate key 'a\nb'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 2,
+    "column": 9,
+    "start": 23,
+    "length": 6,
     "message": "Duplicate key 'a\nb'."
    }
   ]
@@ -1797,6 +2900,15 @@
     "endColumn": 22,
     "message": "Duplicate key '$'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
+    "message": "Duplicate key '$'."
+   }
   ]
  },
  {
@@ -1808,6 +2920,15 @@
     "column": 25,
     "endLine": 1,
     "endColumn": 31,
+    "message": "Duplicate key '${a}'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 25,
+    "start": 24,
+    "length": 6,
     "message": "Duplicate key '${a}'."
    }
   ]
@@ -1823,6 +2944,15 @@
     "endColumn": 24,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -1836,52 +2966,70 @@
     "endColumn": 30,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 29,
+    "start": 28,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
   "code": "var x = { [(0, 'a')]: 1, a: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { ['a' + '']: 1, a: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [a]: 1, a: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [a.b]: 1, [a.b]: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [1 + 1]: 1, 2: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [!0]: 1, true: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [void 0]: 1, undefined: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [this]: 1, [this]: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { [[]]: 1, '': 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { __proto__, __proto__ };",
@@ -1892,6 +3040,15 @@
     "column": 22,
     "endLine": 1,
     "endColumn": 31,
+    "message": "Duplicate key '__proto__'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 9,
     "message": "Duplicate key '__proto__'."
    }
   ]
@@ -1907,6 +3064,15 @@
     "endColumn": 36,
     "message": "Duplicate key '__proto__'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 27,
+    "start": 26,
+    "length": 9,
+    "message": "Duplicate key '__proto__'."
+   }
   ]
  },
  {
@@ -1920,12 +3086,22 @@
     "endColumn": 44,
     "message": "Duplicate key '__proto__'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 35,
+    "start": 34,
+    "length": 9,
+    "message": "Duplicate key '__proto__'."
+   }
   ]
  },
  {
   "code": "var x = { get __proto__() {}, set __proto__(v) {} };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { __proto__, __proto__() {} };",
@@ -1936,6 +3112,15 @@
     "column": 22,
     "endLine": 1,
     "endColumn": 31,
+    "message": "Duplicate key '__proto__'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 9,
     "message": "Duplicate key '__proto__'."
    }
   ]
@@ -1951,12 +3136,22 @@
     "endColumn": 41,
     "message": "Duplicate key '__proto__'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 30,
+    "start": 29,
+    "length": 11,
+    "message": "Duplicate key '__proto__'."
+   }
   ]
  },
  {
   "code": "var x = { \\u005f_proto__: 1, ['__proto__']: 2 };",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { __proto__: 1, ['__proto__']: 2, __proto__() {} };",
@@ -1969,12 +3164,22 @@
     "endColumn": 52,
     "message": "Duplicate key '__proto__'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 43,
+    "start": 42,
+    "length": 9,
+    "message": "Duplicate key '__proto__'."
+   }
   ]
  },
  {
   "code": "({ __proto__: a, __proto__: b } = obj);",
   "origin": "dupe-probe-extra",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "var x = { '': 1, \"\": 2 };",
@@ -1985,6 +3190,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 20,
+    "message": "Duplicate key ''."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 2,
     "message": "Duplicate key ''."
    }
   ]
@@ -2000,6 +3214,15 @@
     "endColumn": 22,
     "message": "Duplicate key ' '."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 3,
+    "message": "Duplicate key ' '."
+   }
   ]
  },
  {
@@ -2011,6 +3234,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 26,
+    "message": "Duplicate key 'a b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 5,
     "message": "Duplicate key 'a b'."
    }
   ]
@@ -2047,6 +3279,36 @@
     "endColumn": 47,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 3,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 27,
+    "start": 26,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 34,
+    "start": 33,
+    "length": 3,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 44,
+    "start": 43,
+    "length": 3,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2058,6 +3320,15 @@
     "column": 11,
     "endLine": 4,
     "endColumn": 12,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 4,
+    "column": 11,
+    "start": 29,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2073,6 +3344,15 @@
     "endColumn": 5,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 3,
+    "column": 2,
+    "start": 18,
+    "length": 3,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2084,6 +3364,15 @@
     "column": 24,
     "endLine": 1,
     "endColumn": 25,
+    "message": "Duplicate key 'b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 25,
+    "length": 1,
     "message": "Duplicate key 'b'."
    }
   ]
@@ -2099,6 +3388,15 @@
     "endColumn": 27,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 26,
+    "start": 27,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
@@ -2110,6 +3408,15 @@
     "column": 19,
     "endLine": 1,
     "endColumn": 22,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 3,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2125,6 +3432,15 @@
     "endColumn": 28,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 25,
+    "start": 24,
+    "length": 3,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2136,6 +3452,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 21,
+    "message": "Duplicate key '1'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 3,
     "message": "Duplicate key '1'."
    }
   ]
@@ -2151,6 +3476,15 @@
     "endColumn": 21,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 3,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2162,6 +3496,15 @@
     "column": 22,
     "endLine": 1,
     "endColumn": 25,
+    "message": "Duplicate key '/a/'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 1,
     "message": "Duplicate key '/a/'."
    }
   ]
@@ -2177,6 +3520,15 @@
     "endColumn": 20,
     "message": "Duplicate key '1'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 2,
+    "message": "Duplicate key '1'."
+   }
   ]
  },
  {
@@ -2188,6 +3540,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 21,
+    "message": "Duplicate key '1'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 4,
     "message": "Duplicate key '1'."
    }
   ]
@@ -2203,6 +3564,15 @@
     "endColumn": 25,
     "message": "Duplicate key 'null'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 4,
+    "message": "Duplicate key 'null'."
+   }
   ]
  },
  {
@@ -2214,6 +3584,15 @@
     "column": 23,
     "endLine": 1,
     "endColumn": 27,
+    "message": "Duplicate key 'true'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 4,
     "message": "Duplicate key 'true'."
    }
   ]
@@ -2229,6 +3608,15 @@
     "endColumn": 29,
     "message": "Duplicate key 'false'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 5,
+    "message": "Duplicate key 'false'."
+   }
   ]
  },
  {
@@ -2240,6 +3628,15 @@
     "column": 20,
     "endLine": 1,
     "endColumn": 25,
+    "message": "Duplicate key '1000'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 5,
     "message": "Duplicate key '1000'."
    }
   ]
@@ -2255,6 +3652,15 @@
     "endColumn": 23,
     "message": "Duplicate key '1000'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 3,
+    "message": "Duplicate key '1000'."
+   }
   ]
  },
  {
@@ -2266,6 +3672,15 @@
     "column": 20,
     "endLine": 1,
     "endColumn": 26,
+    "message": "Duplicate key '1000'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 6,
     "message": "Duplicate key '1000'."
    }
   ]
@@ -2281,6 +3696,15 @@
     "endColumn": 21,
     "message": "Duplicate key '0.5'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 2,
+    "message": "Duplicate key '0.5'."
+   }
   ]
  },
  {
@@ -2292,6 +3716,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 23,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 6,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2307,6 +3740,15 @@
     "endColumn": 25,
     "message": "Duplicate key 'ab'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 7,
+    "message": "Duplicate key 'ab'."
+   }
   ]
  },
  {
@@ -2318,6 +3760,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 20,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 3,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2333,6 +3784,15 @@
     "endColumn": 33,
     "message": "Duplicate key 'a\"b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 28,
+    "start": 27,
+    "length": 5,
+    "message": "Duplicate key 'a\"b'."
+   }
   ]
  },
  {
@@ -2344,6 +3804,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 21,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 3,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2359,6 +3828,15 @@
     "endColumn": 23,
     "message": "Duplicate key '$'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 3,
+    "message": "Duplicate key '$'."
+   }
   ]
  },
  {
@@ -2370,6 +3848,15 @@
     "column": 23,
     "endLine": 1,
     "endColumn": 24,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2385,6 +3872,15 @@
     "endColumn": 25,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2396,6 +3892,15 @@
     "column": 18,
     "endLine": 1,
     "endColumn": 19,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2418,6 +3923,22 @@
     "endColumn": 30,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 29,
+    "start": 28,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2429,6 +3950,15 @@
     "column": 3,
     "endLine": 3,
     "endColumn": 4,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 3,
+    "column": 3,
+    "start": 31,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2444,6 +3974,15 @@
     "endColumn": 4,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 3,
+    "column": 3,
+    "start": 22,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2455,6 +3994,15 @@
     "column": 72,
     "endLine": 1,
     "endColumn": 73,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 72,
+    "start": 71,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2477,6 +4025,22 @@
     "endColumn": 55,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 43,
+    "start": 42,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   },
+   {
+    "line": 1,
+    "column": 54,
+    "start": 53,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2488,6 +4052,15 @@
     "column": 29,
     "endLine": 1,
     "endColumn": 30,
+    "message": "Duplicate key 'b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 29,
+    "start": 28,
+    "length": 1,
     "message": "Duplicate key 'b'."
    }
   ]
@@ -2503,6 +4076,15 @@
     "endColumn": 23,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2514,6 +4096,15 @@
     "column": 20,
     "endLine": 1,
     "endColumn": 21,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2529,6 +4120,15 @@
     "endColumn": 20,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2540,6 +4140,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 18,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2555,6 +4164,15 @@
     "endColumn": 14,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2566,6 +4184,15 @@
     "column": 14,
     "endLine": 1,
     "endColumn": 15,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2581,6 +4208,15 @@
     "endColumn": 16,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2592,6 +4228,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 18,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2607,6 +4252,15 @@
     "endColumn": 16,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2618,6 +4272,15 @@
     "column": 26,
     "endLine": 1,
     "endColumn": 27,
+    "message": "Duplicate key 'b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 26,
+    "start": 25,
+    "length": 1,
     "message": "Duplicate key 'b'."
    }
   ]
@@ -2633,6 +4296,15 @@
     "endColumn": 26,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 25,
+    "start": 24,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
@@ -2644,6 +4316,15 @@
     "column": 30,
     "endLine": 1,
     "endColumn": 31,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 30,
+    "start": 29,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2659,6 +4340,15 @@
     "endColumn": 32,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 31,
+    "start": 30,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2670,6 +4360,15 @@
     "column": 22,
     "endLine": 1,
     "endColumn": 23,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2685,6 +4384,15 @@
     "endColumn": 21,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
@@ -2696,6 +4404,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 22,
+    "message": "Duplicate key 'b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
     "message": "Duplicate key 'b'."
    }
   ]
@@ -2711,6 +4428,15 @@
     "endColumn": 24,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 23,
+    "start": 22,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
@@ -2722,6 +4448,15 @@
     "column": 24,
     "endLine": 1,
     "endColumn": 25,
+    "message": "Duplicate key 'c'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 1,
     "message": "Duplicate key 'c'."
    }
   ]
@@ -2737,17 +4472,28 @@
     "endColumn": 18,
     "message": "Duplicate key 'c'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
+    "message": "Duplicate key 'c'."
+   }
   ]
  },
  {
   "code": "[a, ...[b, { c, c }]] = arr;",
   "origin": "dupe-probe-extra2",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "for ([{ a, a }] of xs);",
   "origin": "dupe-probe-extra2",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "for ({ x: [{ a, a }] = [{ b: 1, b: 2 }] } of xs);",
@@ -2758,6 +4504,15 @@
     "column": 33,
     "endLine": 1,
     "endColumn": 34,
+    "message": "Duplicate key 'b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 33,
+    "start": 32,
+    "length": 1,
     "message": "Duplicate key 'b'."
    }
   ]
@@ -2773,6 +4528,15 @@
     "endColumn": 23,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2784,6 +4548,15 @@
     "column": 22,
     "endLine": 1,
     "endColumn": 23,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 22,
+    "start": 21,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2799,6 +4572,15 @@
     "endColumn": 19,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2812,122 +4594,154 @@
     "endColumn": 16,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
   "code": "({a, a} = obj);",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[{a, a}] = list;",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "for ({a, a} of list);",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "for ({a, a} in obj);",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({a: {b, b}} = obj);",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({a = 1, a = 2} = obj);",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({a: x = 1, a: y = 2} = obj);",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "[...{a, a}] = list;",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ \"\\uD800\": 1, \"\\uD801\": 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ \"\\uD800\": 1, \"\\uFFFD\": 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ é: 1, e: 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ a: 1, ...{ a: 2 } });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ [-1]: 1, \"-1\": 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ [`a${b}`]: 1, [`a${b}`]: 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ [tag`a`]: 1, [tag`a`]: 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ 1.0: 1, \"1.0\": 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ [undefined]: 1, undefined: 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ [void 0]: 1, undefined: 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ [NaN]: 1, NaN: 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ [\"a\" + \"\"]: 1, a: 2 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ a: 1, b: { a: 2 }, c: [{ a: 3 }] });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ get a() {}, set a(v) {} });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ set a(v) {}, get a() {} });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ a: 1, a: 2 });",
@@ -2938,6 +4752,15 @@
     "column": 10,
     "endLine": 1,
     "endColumn": 11,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -2960,6 +4783,22 @@
     "endColumn": 17,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 16,
+    "start": 15,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2971,6 +4810,15 @@
     "column": 10,
     "endLine": 1,
     "endColumn": 13,
+    "message": "Duplicate key 'é'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 10,
+    "length": 4,
     "message": "Duplicate key 'é'."
    }
   ]
@@ -2986,6 +4834,15 @@
     "endColumn": 18,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -2997,6 +4854,15 @@
     "column": 15,
     "endLine": 1,
     "endColumn": 16,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -3012,6 +4878,15 @@
     "endColumn": 16,
     "message": "Duplicate key '1000'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 12,
+    "start": 11,
+    "length": 4,
+    "message": "Duplicate key '1000'."
+   }
   ]
  },
  {
@@ -3023,6 +4898,15 @@
     "column": 13,
     "endLine": 1,
     "endColumn": 14,
+    "message": "Duplicate key '1'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 1,
     "message": "Duplicate key '1'."
    }
   ]
@@ -3038,6 +4922,15 @@
     "endColumn": 18,
     "message": "Duplicate key '16'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 4,
+    "message": "Duplicate key '16'."
+   }
   ]
  },
  {
@@ -3049,6 +4942,15 @@
     "column": 15,
     "endLine": 1,
     "endColumn": 17,
+    "message": "Duplicate key '5'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 2,
     "message": "Duplicate key '5'."
    }
   ]
@@ -3064,6 +4966,15 @@
     "endColumn": 15,
     "message": "Duplicate key '10'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 2,
+    "message": "Duplicate key '10'."
+   }
   ]
  },
  {
@@ -3075,6 +4986,15 @@
     "column": 15,
     "endLine": 1,
     "endColumn": 19,
+    "message": "Duplicate key 'null'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 4,
     "message": "Duplicate key 'null'."
    }
   ]
@@ -3090,6 +5010,15 @@
     "endColumn": 19,
     "message": "Duplicate key 'true'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 4,
+    "message": "Duplicate key 'true'."
+   }
   ]
  },
  {
@@ -3101,6 +5030,15 @@
     "column": 16,
     "endLine": 1,
     "endColumn": 23,
+    "message": "Duplicate key 'false'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 16,
+    "start": 15,
+    "length": 7,
     "message": "Duplicate key 'false'."
    }
   ]
@@ -3116,6 +5054,15 @@
     "endColumn": 22,
     "message": "Duplicate key '/a/gi'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
+    "message": "Duplicate key '/a/gi'."
+   }
   ]
  },
  {
@@ -3127,6 +5074,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 26,
+    "message": "Duplicate key '/a\\/b/'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 9,
     "message": "Duplicate key '/a\\/b/'."
    }
   ]
@@ -3142,6 +5098,15 @@
     "endColumn": 13,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 12,
+    "start": 11,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -3153,6 +5118,15 @@
     "column": 7,
     "endLine": 1,
     "endColumn": 8,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 7,
+    "start": 6,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -3168,6 +5142,15 @@
     "endColumn": 8,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 7,
+    "start": 6,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -3179,6 +5162,15 @@
     "column": 19,
     "endLine": 1,
     "endColumn": 20,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -3194,6 +5186,15 @@
     "endColumn": 21,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -3205,6 +5206,15 @@
     "column": 21,
     "endLine": 1,
     "endColumn": 22,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 21,
+    "start": 20,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -3220,6 +5230,15 @@
     "endColumn": 17,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 16,
+    "start": 15,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -3231,6 +5250,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 18,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -3246,6 +5274,15 @@
     "endColumn": 30,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 29,
+    "start": 28,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -3257,6 +5294,15 @@
     "column": 33,
     "endLine": 1,
     "endColumn": 34,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 33,
+    "start": 32,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -3272,6 +5318,15 @@
     "endColumn": 16,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 15,
+    "start": 14,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
@@ -3283,6 +5338,15 @@
     "column": 19,
     "endLine": 1,
     "endColumn": 20,
+    "message": "Duplicate key 'b'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 1,
     "message": "Duplicate key 'b'."
    }
   ]
@@ -3298,6 +5362,15 @@
     "endColumn": 14,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
@@ -3311,6 +5384,15 @@
     "endColumn": 14,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -3322,6 +5404,15 @@
     "column": 10,
     "endLine": 1,
     "endColumn": 11,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -3344,6 +5435,22 @@
     "endColumn": 28,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 11,
+    "start": 10,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 27,
+    "start": 26,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
@@ -3355,6 +5462,15 @@
     "column": 13,
     "endLine": 1,
     "endColumn": 17,
+    "message": "Duplicate key '😀'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 14,
+    "length": 6,
     "message": "Duplicate key '😀'."
    }
   ]
@@ -3370,6 +5486,15 @@
     "endColumn": 7,
     "message": "Duplicate key '😀'."
    }
+  ],
+  "expect": [
+   {
+    "line": 2,
+    "column": 3,
+    "start": 16,
+    "length": 6,
+    "message": "Duplicate key '😀'."
+   }
   ]
  },
  {
@@ -3381,6 +5506,15 @@
     "column": 2,
     "endLine": 3,
     "endColumn": 7,
+    "message": "Duplicate key 'key'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 3,
+    "column": 2,
+    "start": 20,
+    "length": 5,
     "message": "Duplicate key 'key'."
    }
   ]
@@ -3396,6 +5530,15 @@
     "endColumn": 16,
     "message": "Duplicate key '0.5'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 11,
+    "start": 10,
+    "length": 5,
+    "message": "Duplicate key '0.5'."
+   }
   ]
  },
  {
@@ -3407,6 +5550,15 @@
     "column": 13,
     "endLine": 1,
     "endColumn": 20,
+    "message": "Duplicate key '1e+21'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 13,
+    "start": 12,
+    "length": 7,
     "message": "Duplicate key '1e+21'."
    }
   ]
@@ -3422,6 +5574,15 @@
     "endColumn": 22,
     "message": "Duplicate key 'Infinity'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 8,
+    "message": "Duplicate key 'Infinity'."
+   }
   ]
  },
  {
@@ -3433,6 +5594,15 @@
     "column": 25,
     "endLine": 1,
     "endColumn": 41,
+    "message": "Duplicate key '9007199254740992'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 25,
+    "start": 24,
+    "length": 16,
     "message": "Duplicate key '9007199254740992'."
    }
   ]
@@ -3448,6 +5618,15 @@
     "endColumn": 15,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 14,
+    "start": 13,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -3459,6 +5638,15 @@
     "column": 16,
     "endLine": 1,
     "endColumn": 17,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 16,
+    "start": 15,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -3474,6 +5662,15 @@
     "endColumn": 15,
     "message": "Duplicate key 'a\nb'."
    }
+  ],
+  "expect": [
+   {
+    "line": 2,
+    "column": 9,
+    "start": 15,
+    "length": 6,
+    "message": "Duplicate key 'a\nb'."
+   }
   ]
  },
  {
@@ -3487,12 +5684,22 @@
     "endColumn": 10,
     "message": "Duplicate key 'ab'."
    }
+  ],
+  "expect": [
+   {
+    "line": 2,
+    "column": 8,
+    "start": 14,
+    "length": 2,
+    "message": "Duplicate key 'ab'."
+   }
   ]
  },
  {
   "code": "({ __proto__: null, __proto__ });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ __proto__() {}, __proto__ });",
@@ -3503,6 +5710,15 @@
     "column": 20,
     "endLine": 1,
     "endColumn": 29,
+    "message": "Duplicate key '__proto__'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 9,
     "message": "Duplicate key '__proto__'."
    }
   ]
@@ -3518,6 +5734,15 @@
     "endColumn": 52,
     "message": "Duplicate key '__proto__'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 43,
+    "start": 42,
+    "length": 9,
+    "message": "Duplicate key '__proto__'."
+   }
   ]
  },
  {
@@ -3529,6 +5754,15 @@
     "column": 37,
     "endLine": 1,
     "endColumn": 48,
+    "message": "Duplicate key '__proto__'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 37,
+    "start": 36,
+    "length": 11,
     "message": "Duplicate key '__proto__'."
    }
   ]
@@ -3558,6 +5792,29 @@
     "endColumn": 32,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 3,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 3,
+    "message": "Duplicate key 'a'."
+   },
+   {
+    "line": 1,
+    "column": 29,
+    "start": 28,
+    "length": 3,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
@@ -3571,12 +5828,22 @@
     "endColumn": 31,
     "message": "Duplicate key 'constructor'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 20,
+    "start": 19,
+    "length": 11,
+    "message": "Duplicate key 'constructor'."
+   }
   ]
  },
  {
   "code": "({ hasOwnProperty: 1, toString: 2, valueOf: 3 });",
   "origin": "rdm-keys-own",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "({ toString: 1, toString: 2 });",
@@ -3587,6 +5854,15 @@
     "column": 17,
     "endLine": 1,
     "endColumn": 25,
+    "message": "Duplicate key 'toString'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 17,
+    "start": 16,
+    "length": 8,
     "message": "Duplicate key 'toString'."
    }
   ]
@@ -3609,6 +5885,22 @@
     "endColumn": 20,
     "message": "Duplicate key '0'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 10,
+    "start": 9,
+    "length": 3,
+    "message": "Duplicate key '0'."
+   },
+   {
+    "line": 1,
+    "column": 18,
+    "start": 17,
+    "length": 2,
+    "message": "Duplicate key '0'."
+   }
   ]
  },
  {
@@ -3620,6 +5912,15 @@
     "column": 44,
     "endLine": 1,
     "endColumn": 84,
+    "message": "Duplicate key '340282366920938463463374607431768211455'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 44,
+    "start": 43,
+    "length": 40,
     "message": "Duplicate key '340282366920938463463374607431768211455'."
    }
   ]
@@ -3635,17 +5936,28 @@
     "endColumn": 85,
     "message": "Duplicate key '340282366920938463463374607431768211456'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 45,
+    "start": 44,
+    "length": 40,
+    "message": "Duplicate key '340282366920938463463374607431768211456'."
+   }
   ]
  },
  {
   "code": "({ 012: 1, 12: 2 });",
   "origin": "rdm-show",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = { \\u0061: 1, b: 2 };",
   "origin": "rdm-show",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = { \\u{61}bc: 1, \"d\\u0065\": 2, é: 3, \"é\": 4, '\\xe9': 5 };",
@@ -3665,17 +5977,35 @@
     "endColumn": 54,
     "message": "Duplicate key 'é'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 40,
+    "start": 40,
+    "length": 4,
+    "message": "Duplicate key 'é'."
+   },
+   {
+    "line": 1,
+    "column": 48,
+    "start": 49,
+    "length": 6,
+    "message": "Duplicate key 'é'."
+   }
   ]
  },
  {
   "code": "x = { 0x10n: 1, 1_0n: 2, 0b11n: 3, 0O7n: 4 };",
   "origin": "rdm-show",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "x = { [/a\\/b/gi]: 1 };",
   "origin": "rdm-show",
-  "eslint": []
+  "eslint": [],
+  "expect": []
  },
  {
   "code": "\"use strict\"; ({ a: 1, a: 2 });",
@@ -3686,6 +6016,15 @@
     "column": 24,
     "endLine": 1,
     "endColumn": 25,
+    "message": "Duplicate key 'a'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 24,
+    "start": 23,
+    "length": 1,
     "message": "Duplicate key 'a'."
    }
   ]
@@ -3701,6 +6040,15 @@
     "endColumn": 12,
     "message": "Duplicate key '8'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 11,
+    "start": 10,
+    "length": 1,
+    "message": "Duplicate key '8'."
+   }
   ]
  },
  {
@@ -3712,6 +6060,15 @@
     "column": 11,
     "endLine": 1,
     "endColumn": 12,
+    "message": "Duplicate key '1'."
+   }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 11,
+    "start": 10,
+    "length": 1,
     "message": "Duplicate key '1'."
    }
   ]
@@ -3728,6 +6085,15 @@
     "endColumn": 35,
     "message": "Duplicate key 'b'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 34,
+    "start": 33,
+    "length": 1,
+    "message": "Duplicate key 'b'."
+   }
   ]
  },
  {
@@ -3742,12 +6108,22 @@
     "endColumn": 20,
     "message": "Duplicate key 'a'."
    }
+  ],
+  "expect": [
+   {
+    "line": 1,
+    "column": 19,
+    "start": 18,
+    "length": 1,
+    "message": "Duplicate key 'a'."
+   }
   ]
  },
  {
   "code": "x = <div a=\"1\" a=\"2\" />;",
   "origin": "rdm-show",
   "jsx": true,
-  "eslint": []
+  "eslint": [],
+  "expect": []
  }
 ]

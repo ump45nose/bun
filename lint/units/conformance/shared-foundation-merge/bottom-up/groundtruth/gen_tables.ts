@@ -1,4 +1,4 @@
-// Prints the two case tables of runner/gostrings.ts from the output of the ground-truth program.
+// Prints the two case tables of runner/gostrings.ts from the output of the ground-truth program; prettier gives them the form of the file.
 // usage: bun gen_tables.ts <vectors.jsonl>
 import { readFileSync } from "node:fs";
 
@@ -71,7 +71,7 @@ function literal(name: string, runs: number[]): string {
     row += cell;
   }
   rows.push(row);
-  return `const ${name}: readonly number[] = [\n  // prettier-ignore\n${rows.join("\n")}\n];`;
+  return `const ${name}: readonly number[] = [\n${rows.join("\n")}\n];`;
 }
 
 if (import.meta.main) {

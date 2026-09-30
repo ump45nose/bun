@@ -3,169 +3,197 @@
 		"code": "var foo = { __proto__: 1, two: 2};",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { foo: 1, bar: 2 };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { '': 1, bar: 2 };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { '': 1, ' ': 2 };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { '': 1, [null]: 2 };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { '': 1, [a]: 2 };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { [a]: 1, [a]: 2 };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "+{ get a() { }, set a(b) { } };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { a: b, [a]: b };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { a: b, ...c }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { get a() {}, set a (value) {} };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { a: 1, b: { a: 2 } };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = ({ null: 1, [/(?<zero>0)/]: 2 })",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var {a, a} = obj",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { 012: 1, 12: 2 };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { 1_0: 1, 1: 2 };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { __proto__: null, ['__proto__']: null };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { ['__proto__']: null, __proto__: null };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { '__proto__': null, ['__proto__']: null };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { ['__proto__']: null, '__proto__': null };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { __proto__: null, __proto__ };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { __proto__, __proto__: null };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { __proto__: null, __proto__() {} };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { __proto__() {}, __proto__: null };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { __proto__: null, get __proto__() {} };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { get __proto__() {}, __proto__: null };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { __proto__: null, set __proto__(value) {} };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { set __proto__(value) {}, __proto__: null };",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { a: b, ['a']: b };",
@@ -187,7 +215,8 @@
 				"length": 3,
 				"message": "Duplicate key 'a'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { y: 1, y: 2 };",
@@ -209,7 +238,8 @@
 				"length": 1,
 				"message": "Duplicate key 'y'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { '': 1, '': 2 };",
@@ -231,7 +261,8 @@
 				"length": 2,
 				"message": "Duplicate key ''."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { '': 1, [``]: 2 };",
@@ -253,7 +284,8 @@
 				"length": 2,
 				"message": "Duplicate key ''."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var foo = { 0x1: 1, 1: 2};",
@@ -275,7 +307,8 @@
 				"length": 1,
 				"message": "Duplicate key '1'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { 012: 1, 10: 2 };",
@@ -297,7 +330,8 @@
 				"length": 2,
 				"message": "Duplicate key '10'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { 0b1: 1, 1: 2 };",
@@ -319,7 +353,8 @@
 				"length": 1,
 				"message": "Duplicate key '1'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { 0o1: 1, 1: 2 };",
@@ -341,7 +376,8 @@
 				"length": 1,
 				"message": "Duplicate key '1'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { 1n: 1, 1: 2 };",
@@ -363,7 +399,8 @@
 				"length": 1,
 				"message": "Duplicate key '1'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { 1_0: 1, 10: 2 };",
@@ -385,7 +422,8 @@
 				"length": 2,
 				"message": "Duplicate key '10'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { \"z\": 1, z: 2 };",
@@ -407,7 +445,8 @@
 				"length": 1,
 				"message": "Duplicate key 'z'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var foo = {\n  bar: 1,\n  bar: 1,\n}",
@@ -429,7 +468,8 @@
 				"length": 3,
 				"message": "Duplicate key 'bar'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { a: 1, get a() {} };",
@@ -451,7 +491,8 @@
 				"length": 1,
 				"message": "Duplicate key 'a'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { a: 1, set a(value) {} };",
@@ -473,7 +514,8 @@
 				"length": 1,
 				"message": "Duplicate key 'a'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { a: 1, b: { a: 2 }, get b() {} };",
@@ -495,7 +537,8 @@
 				"length": 1,
 				"message": "Duplicate key 'b'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = ({ '/(?<zero>0)/': 1, [/(?<zero>0)/]: 2 })",
@@ -517,7 +560,8 @@
 				"length": 12,
 				"message": "Duplicate key '/(?<zero>0)/'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { ['__proto__']: null, ['__proto__']: null };",
@@ -539,7 +583,8 @@
 				"length": 11,
 				"message": "Duplicate key '__proto__'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { ['__proto__']: null, __proto__ };",
@@ -561,7 +606,8 @@
 				"length": 9,
 				"message": "Duplicate key '__proto__'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { ['__proto__']: null, __proto__() {} };",
@@ -583,7 +629,8 @@
 				"length": 9,
 				"message": "Duplicate key '__proto__'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { ['__proto__']: null, get __proto__() {} };",
@@ -605,7 +652,8 @@
 				"length": 9,
 				"message": "Duplicate key '__proto__'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { ['__proto__']: null, set __proto__(value) {} };",
@@ -627,7 +675,8 @@
 				"length": 9,
 				"message": "Duplicate key '__proto__'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "var x = { __proto__: null, a: 5, a: 6 };",
@@ -649,7 +698,8 @@
 				"length": 1,
 				"message": "Duplicate key 'a'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({a:1, a:2})",

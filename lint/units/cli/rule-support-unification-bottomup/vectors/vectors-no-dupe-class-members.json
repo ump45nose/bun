@@ -3,175 +3,204 @@
 		"code": "class A { foo() {} bar() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { static foo() {} foo() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { get foo() {} set foo(value) {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { static foo() {} get foo() {} set foo(value) {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { foo() { } } class B { foo() { } }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [foo]() {} foo() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { 'foo'() {} 'bar'() {} baz() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { *'foo'() {} *'bar'() {} *baz() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { get 'foo'() {} get 'bar'() {} get baz() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { 1() {} 2() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { ['foo']() {} ['bar']() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [`foo`]() {} [`bar`]() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [12]() {} [123]() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [1.0]() {} ['1.0']() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [0x1]() {} [`0x1`]() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [null]() {} ['']() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { get ['foo']() {} set ['foo'](value) {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { ['foo']() {} static ['foo']() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { ['constructor']() {} constructor() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { 'constructor'() {} [`constructor`]() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { constructor() {} get [`constructor`]() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { 'constructor'() {} set ['constructor'](value) {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { ['foo' + '']() {} ['foo']() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [`foo${''}`]() {} [`foo`]() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [-1]() {} ['-1']() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [foo]() {} [foo]() {} }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { foo; static foo; }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { foo; #foo; }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { '#foo'; #foo; }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { foo() {} foo() {} }",
@@ -193,7 +222,8 @@
 				"length": 3,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "!class A { foo() {} foo() {} };",
@@ -215,7 +245,8 @@
 				"length": 3,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { 'foo'() {} 'foo'() {} }",
@@ -237,7 +268,8 @@
 				"length": 5,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { 10() {} 1e1() {} }",
@@ -259,7 +291,8 @@
 				"length": 3,
 				"message": "Duplicate name '10'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { ['foo']() {} ['foo']() {} }",
@@ -281,7 +314,8 @@
 				"length": 5,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { static ['foo']() {} static foo() {} }",
@@ -303,7 +337,8 @@
 				"length": 3,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { set 'foo'(value) {} set ['foo'](val) {} }",
@@ -325,7 +360,8 @@
 				"length": 5,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { ''() {} ['']() {} }",
@@ -347,7 +383,8 @@
 				"length": 2,
 				"message": "Duplicate name ''."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [`foo`]() {} [`foo`]() {} }",
@@ -369,7 +406,8 @@
 				"length": 5,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { static get [`foo`]() {} static get ['foo']() {} }",
@@ -391,7 +429,8 @@
 				"length": 5,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { foo() {} [`foo`]() {} }",
@@ -413,7 +452,8 @@
 				"length": 5,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { get [`foo`]() {} 'foo'() {} }",
@@ -435,7 +475,8 @@
 				"length": 5,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { static 'foo'() {} static [`foo`]() {} }",
@@ -457,7 +498,8 @@
 				"length": 5,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { ['constructor']() {} ['constructor']() {} }",
@@ -479,7 +521,8 @@
 				"length": 13,
 				"message": "Duplicate name 'constructor'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { static [`constructor`]() {} static constructor() {} }",
@@ -501,7 +544,8 @@
 				"length": 11,
 				"message": "Duplicate name 'constructor'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { static constructor() {} static 'constructor'() {} }",
@@ -523,7 +567,8 @@
 				"length": 13,
 				"message": "Duplicate name 'constructor'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [123]() {} [123]() {} }",
@@ -545,7 +590,8 @@
 				"length": 3,
 				"message": "Duplicate name '123'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [0x10]() {} 16() {} }",
@@ -567,7 +613,8 @@
 				"length": 2,
 				"message": "Duplicate name '16'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [100]() {} [1e2]() {} }",
@@ -589,7 +636,8 @@
 				"length": 3,
 				"message": "Duplicate name '100'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [123.00]() {} [`123`]() {} }",
@@ -611,7 +659,8 @@
 				"length": 5,
 				"message": "Duplicate name '123'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { static '65'() {} static [0o101]() {} }",
@@ -633,7 +682,8 @@
 				"length": 5,
 				"message": "Duplicate name '65'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [123n]() {} 123() {} }",
@@ -655,7 +705,8 @@
 				"length": 3,
 				"message": "Duplicate name '123'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { [null]() {} 'null'() {} }",
@@ -677,7 +728,8 @@
 				"length": 6,
 				"message": "Duplicate name 'null'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { foo() {} foo() {} foo() {} }",
@@ -713,7 +765,8 @@
 				"length": 3,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { static foo() {} static foo() {} }",
@@ -735,7 +788,8 @@
 				"length": 3,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { foo() {} get foo() {} }",
@@ -757,7 +811,8 @@
 				"length": 3,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { set foo(value) {} foo() {} }",
@@ -779,7 +834,8 @@
 				"length": 3,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { foo; foo; }",
@@ -801,7 +857,8 @@
 				"length": 3,
 				"message": "Duplicate name 'foo'."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class A { a(){} a(){} }",

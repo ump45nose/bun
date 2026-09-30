@@ -42,11 +42,15 @@ Why (d), from the code:
   exit code 0 / 2 / 1 (cli.md C1.3)           yes                yes                no: 0 with errors      yes
   programs per process                        1                  1                  up to 256              1
   variables to declare                        3                  1                  1                      2
-  mechanism exists in the tree                partly             no                 no                     yes
+  the same mechanism is in the tree           the out file       no                 the switch only        yes
 
 - The mechanism of (d) exists: a variable that names a file which the binary writes for a test
   (BUN_BYTECODE_DIGEST_OUT, BUN_BYTECODE_ORDER_NAMES_OUT, BUN_BYTECODE_ORDER_OUT: src/bun_core/env_var.rs:45-50,
-  read at src/jsc/BytecodeOrderRecorder.rs:67, used by test/bundler/bun-build-compile.test.ts:257).
+  read at src/jsc/BytecodeOrderRecorder.rs:67, used by test/bundler/bun-build-compile.test.ts:257). For (c) the
+  tree has boolean switches for tests (BUN_INTERNAL_INTERACTIVE_ASSUME_TTY, env_var.rs:295), and no operand that
+  changes its meaning and no protocol on stdout.
+- It matches how the cli research plans its own tests: every case a file, all given as operands of one
+  `bun --lint`, stderr piped in the plain format (units/cli/rules-comparisons/spec-rules.txt, TESTS).
 - The two halves have different owners and different dates. The report needs only what cli.md C2.1 already gives
   a diagnostic (file, start, length, category, code, text, chain, related information): cli can grant it alone.
   The options need the CompilerOptions of typecheck. With (d) each half is granted and detected by itself.
@@ -64,24 +68,29 @@ Why (d), from the code:
   to write for each instance. If the maintainers want one variable, the payloads of CH-2 and CH-3 move into the
   request file unchanged.
 
-What (d) costs, measured:
-- One process for each instance. `--revision` on this machine (16 threads, load average above 600), wall time
-  for each instance: release 64 ms with 1 process at a time, 40 ms with 8, 24 ms with 16. Debug build: 270 ms
-  with 1, 57 ms with 8. (td, lighter load: median 2.4 ms to 61 ms release, 272 ms to 351 ms debug.)
+What (d) costs, measured. This is its weak side and the reason why the top-down draft chooses (c):
+- One process for each instance. Wall time for each instance of 200 (release) and 64 (debug) runs of
+  `--revision` on this machine, 16 threads, load average above 600: release 64 ms with 1 process at a time,
+  40 ms with 8, 24 ms with 16; debug 270 ms with 1, 57 ms with 8 and with 16. On a lighter machine the earlier
+  passes measured 12 ms for a release start, and (td) medians of 2.4 ms to 61 ms release, 272 ms to 351 ms debug.
 - The default libraries are read again by each process. Today's parser, which drops the types, reads the 102
   library files that are no worker or script host library (2,984,246 bytes) in 10 ms in the release build; (td)
   the 15 files of a `target: es2015` program take 6 ms release and 284 ms to 311 ms debug. Binding and the start
   of the checker cannot be measured yet.
-- So a full sweep pays about 12,797 x (start + libraries) before any check: with 8 processes at a time about 1 to
-  5 minutes in a release build and about 20 minutes in a debug build. A sweep belongs to a release build.
-- conformance.test.ts (budget 10 s in a release build): with 8 processes at a time the floor allows about 1,600
-  to 5,000 listed instances. In the debug and ASAN lanes the floor is about 0.07 s of wall time for each listed
-  instance, so above a few hundred listed instances the test file has to run a fixed sample there.
-- The batch form (c) removes the process start, and the libraries only if the checker crate shares parsed and
-  bound library files between programs of one process. It can be added later without a change to the payloads:
-  D of CH-2 and compilerOptions of CH-3 are the shapes of the (c) draft.
-Differs: the top-down draft chooses (c) for the cost of one process per instance in a debug build ("two hours for
-one sweep": that is with one process at a time).
+- A full sweep pays 12,797 starts and library loads before any check: on this loaded machine 5 to 9 minutes with
+  a release build and 8 to 16 processes at a time, and 20 minutes or more with a debug build. With (c) it pays
+  about 50 starts. A sweep belongs to a release build in both forms: the check itself is 10 to 100 times slower
+  in a debug build with ASAN.
+- conformance.test.ts (budget 10 s in a release build): 10 s hold about 250 starts with 8 at a time on this
+  loaded machine, and about 5,000 with the 12 ms start of a machine that is not loaded. In the debug and ASAN
+  lanes a listed instance costs at least 57 ms of wall time plus the libraries. So a list of the default check
+  above a few hundred names needs a fixed sample in those lanes. That list is empty until the binary checks.
+- (c) removes the starts. It removes the library loads only if the checker crate shares parsed and bound library
+  files between the programs of one process, which nobody has asked of typecheck. It can be added later without
+  a change to the payloads: D of CH-2 and compilerOptions of CH-3 are the shapes of the (c) draft.
+Differs: the top-down draft chooses (c) ("about two hours for one sweep" in a debug build: that is with one
+process at a time). What would decide for (c): a list of the default check with thousands of names that has to
+run in full in the debug lanes, together with shared libraries in the checker crate.
 
 CH-1. The operand form: what cli.md C2 leaves open
 To: cli (src/runtime/cli/lint_command.rs, src/lint/).
@@ -114,8 +123,9 @@ Ask. For `bun --lint <files>` when stdout and stderr are no terminal:
     broken on purpose; none has a bunfig.toml, a jsconfig.json or a .env file.
 Unlocks: the probe of the default check (one file that would leave a mark if it ran, one file with a syntax
 error). Alone it lets no instance be listed: see "Until then" of CH-2.
-Until then: the probe refuses the binary and no instance is handed to it. Measured: the installed release binary
-and the debug builds at e3566be88 run the operand of `bun --lint x.ts`.
+Until then: the probe refuses the binary and no instance is handed to it. Measured again for this draft: with
+BUN_FEATURE_FLAG_EXPERIMENTAL_LINT=1 the release binary (1.4.3-canary.1+367d939d9) and the debug build of the cli
+worktree (1.4.3-debug+e3566be88) both run the operand of `bun --lint probe.ts`: the mark is written, exit code 0.
 
 CH-2. The report file
 To: cli. One line in src/bun_core/env_var.rs if the declared style is wanted: that file has no owner (RP-5).
@@ -200,8 +210,9 @@ Ask.
     (internal/testutil/harnessutil/harnessutil.go:662-666, again after the emit at :677-689), then
     compiler.SortAndDeduplicateDiagnostics (internal/compiler/program.go:1597-1634). The command line collects
     program and global diagnostics only without a syntactic one (program.go:1970) and semantic ones only
-    without any of those (:1979). 288 to 293 E
-    baselines hold a code that only the parser reports together with a code that it never reports.
+    without any of those (:1979). 288 to 293 E baselines hold a code that only the parser reports together
+    with a code that it never reports. The options are applied as given and none is added: a run that is told
+    noEmit reports less (the earlier pass saw TS2441, TS5055 and TS5056 go).
     With BUN_INTERNAL_LINT_REPORT set the report holds the harness's set; stderr may hold less.
  4. typecheck: per run, the stand-in log (names, each once, order of the first reach) and the internal log.
     The scratch of the typecheck research has both: Checker.stand_ins: StandInLog with snapshot() ->

@@ -1,5 +1,14 @@
 // The unit of positions: text of the utf8 model is a ByteString (typescript-go), text of the utf16 model a plain string (TypeScript).
-import { byteStringToUtf8, decodeRune, fromByteString, replaceNonWhitespace, runeCount, toByteString, trimRightSpace, utf8ToByteString } from "./bytestring";
+import {
+  byteStringToUtf8,
+  decodeRune,
+  fromByteString,
+  replaceNonWhitespace,
+  runeCount,
+  toByteString,
+  trimRightSpace,
+  utf8ToByteString,
+} from "./bytestring";
 import { computeECMALineStarts, utf16Len } from "./core";
 
 export interface TextModel {

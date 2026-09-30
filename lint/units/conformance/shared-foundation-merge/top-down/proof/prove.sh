@@ -17,7 +17,11 @@ python3 "$TOP/groundtruth/build.py" "$REF" "$W/gt"
 "$W/gt/gt" vectors "$W/govec.jsonl"
 bun "$TOP/groundtruth/gen_tables.ts" "$W/gotab.txt" "$W/unicode_tables.ts"
 cmp "$W/unicode_tables.ts" "$TOP/runner/unicode_tables.ts" && echo "runner/unicode_tables.ts is what the tables of this toolchain give"
-bun "$HERE/verify_foundation.ts" "$W/gotab.txt" "$W/govec.jsonl"
+zcat "$TOP/vectors/gotab.txt.gz" | cmp - "$W/gotab.txt" && zcat "$TOP/vectors/govec.jsonl.gz" | cmp - "$W/govec.jsonl" && echo "the stored tables and vectors are what this toolchain gives"
+bun "$TOP/groundtruth/make_test_vectors.ts" "$W/govec.jsonl" "$W/govec-test.jsonl" 40 > /dev/null
+zcat "$TOP/vectors/govec-test.jsonl.gz" | cmp - "$W/govec-test.jsonl" && echo "the stored vectors of the fast test are every 40th row of them"
+bun "$HERE/verify_foundation.ts" "$W/gotab.txt" "$W/govec.jsonl" | tail -12
+bun "$HERE/foundation_test_cost.ts" "$TOP/vectors/govec-test.jsonl.gz"
 bun "$HERE/comment_runs.ts" "$TOP"/runner/*.ts | tail -1
 
 python3 "$NOTES/error-baseline-format/groundtruth/build.py" "$REF" "$W/ebf-gt"

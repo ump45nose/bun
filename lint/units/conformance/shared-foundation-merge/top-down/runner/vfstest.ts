@@ -1,6 +1,12 @@
 // Port of the read paths of internal/vfs/vfstest/vfstest.go behind iovfs/iofs.go and internal/internal.go of microsoft/typescript-go at 89d5d5b.
 import { compareStringsCaseSensitive } from "./stringutil";
-import { getCanonicalFileName, getRootLength, isRootedDiskPath, normalizePath, removeTrailingDirectorySeparator } from "./tspath";
+import {
+  getCanonicalFileName,
+  getRootLength,
+  isRootedDiskPath,
+  normalizePath,
+  removeTrailingDirectorySeparator,
+} from "./tspath";
 
 export type MemEntry =
   | { kind: "file"; data: Uint8Array; realpath: string }
@@ -49,12 +55,16 @@ export class MemFs {
   readonly symlinks = new Map<string, string>();
   posix = false;
 
-  constructor(input: Map<string, MemInput>, readonly useCaseSensitiveFileNames: boolean) {
+  constructor(
+    input: Map<string, MemInput>,
+    readonly useCaseSensitiveFileNames: boolean,
+  ) {
     let posix = false;
     let windows = false;
     const checkPath = (p: string) => {
       if (!isRootedDiskPath(p)) throw new MemFsPanic(`non-rooted path ${JSON.stringify(p)}`);
-      if (removeTrailingDirectorySeparator(normalizePath(p)) !== p) throw new MemFsPanic(`non-normalized path ${JSON.stringify(p)}`);
+      if (removeTrailingDirectorySeparator(normalizePath(p)) !== p)
+        throw new MemFsPanic(`non-normalized path ${JSON.stringify(p)}`);
       if (p.startsWith("/")) posix = true;
       else windows = true;
     };
@@ -78,7 +88,9 @@ export class MemFs {
       const other = canonicalPaths.get(canonical);
       if (other !== undefined) {
         const [x, y] = [path, other].sort(compareStringsCaseSensitive);
-        throw new MemFsPanic(`duplicate path: ${JSON.stringify(x)} and ${JSON.stringify(y)} have the same canonical path`);
+        throw new MemFsPanic(
+          `duplicate path: ${JSON.stringify(x)} and ${JSON.stringify(y)} have the same canonical path`,
+        );
       }
       canonicalPaths.set(canonical, path);
     }
@@ -87,9 +99,16 @@ export class MemFs {
       const dir = dirName(p);
       if (dir !== "") {
         const err = this.mkdirAll(dir);
-        if (err !== undefined) throw new MemFsPanic(`failed to create intermediate directories for ${JSON.stringify(p)}: ${err}`);
+        if (err !== undefined)
+          throw new MemFsPanic(`failed to create intermediate directories for ${JSON.stringify(p)}: ${err}`);
       }
-      this.setEntry(p, this.canonical(p), file.kind === "file" ? { kind: "file", data: file.data, realpath: p } : { kind: "symlink", target: file.target, realpath: p });
+      this.setEntry(
+        p,
+        this.canonical(p),
+        file.kind === "file"
+          ? { kind: "file", data: file.data, realpath: p }
+          : { kind: "symlink", target: file.target, realpath: p },
+      );
     }
   }
 
@@ -104,7 +123,11 @@ export class MemFs {
   }
 
   // vfstest.go:262; the Go map walk over symlinks has no fixed order, here it is insertion order
-  getFollowingSymlinks(p: string, from = "", depth = 0): { entry: MemEntry | undefined; path: string; broken: boolean } {
+  getFollowingSymlinks(
+    p: string,
+    from = "",
+    depth = 0,
+  ): { entry: MemEntry | undefined; path: string; broken: boolean } {
     if (depth > 64) return { entry: undefined, path: p, broken: true };
     const file = this.m.get(p);
     if (file !== undefined && file.kind !== "symlink") return { entry: file, path: p, broken: false };

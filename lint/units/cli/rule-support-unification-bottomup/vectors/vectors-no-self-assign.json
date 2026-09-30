@@ -3,223 +3,260 @@
 		"code": "var a = a",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a = b",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a += a",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a = +a",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a = [a]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a &= a",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a |= a",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "let a = a",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "const a = a",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "[a] = a",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "[a = 1] = [a]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "[a, b] = [b, a]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "[a,, b] = [, b, a]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "[x, a] = [...x, a]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "[...a] = [...a, 1]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "[a, ...b] = [0, ...b, 1]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "[a, b] = {a, b}",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "({a} = a)",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "({a = 1} = {a})",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "({a: b} = {a})",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "({a} = {a: b})",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "({a} = {a() {}})",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "({a} = {[a]: a})",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "({[a]: b} = {[a]: b})",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "({'foo': a, 1: a} = {'bar': a, 2: a})",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "({a, ...b} = {a, ...b})",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a.b = a.c",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a.b = c.b",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a.b = a[b]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a[b] = a.b",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a.b().c = a.b().c",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "b().c = b().c",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a.null = a[/(?<zero>0)/]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a[b + 1] = a[b + 1]",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "this.x = this.y",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class C { #field; foo() { this['#field'] = this.#field; } }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "class C { #field; foo() { this.#field = this['#field']; } }",
 		"sourceType": "script",
 		"eslint": [],
-		"expect": []
+		"expect": [],
+		"eslintTest": true
 	},
 	{
 		"code": "a = a",
@@ -241,7 +278,8 @@
 				"length": 1,
 				"message": "'a' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "[a] = [a]",
@@ -263,7 +301,8 @@
 				"length": 1,
 				"message": "'a' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "[a, b] = [a, b]",
@@ -299,7 +338,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "[a, b] = [a, c]",
@@ -321,7 +361,8 @@
 				"length": 1,
 				"message": "'a' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "[a, b] = [, b]",
@@ -343,7 +384,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "[a, ...b] = [a, ...b]",
@@ -379,7 +421,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "[[a], {b}] = [[a], {b}]",
@@ -415,7 +458,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({a} = {a})",
@@ -437,7 +481,8 @@
 				"length": 1,
 				"message": "'a' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({a: b} = {a: b})",
@@ -459,7 +504,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({'a': b} = {'a': b})",
@@ -481,7 +527,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({a: b} = {'a': b})",
@@ -503,7 +550,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({'a': b} = {a: b})",
@@ -525,7 +573,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({1: b} = {1: b})",
@@ -547,7 +596,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({1: b} = {'1': b})",
@@ -569,7 +619,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({'1': b} = {1: b})",
@@ -591,7 +642,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({['a']: b} = {a: b})",
@@ -613,7 +665,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({'a': b} = {[`a`]: b})",
@@ -635,7 +688,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({1: b} = {[1]: b})",
@@ -657,7 +711,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({a, b} = {a, b})",
@@ -693,7 +748,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({a, b} = {b, a})",
@@ -729,7 +785,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({a, b} = {c, a})",
@@ -751,7 +808,8 @@
 				"length": 1,
 				"message": "'a' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({a: {b}, c: [d]} = {a: {b}, c: [d]})",
@@ -787,7 +845,8 @@
 				"length": 1,
 				"message": "'d' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "({a, b} = {a, ...x, b})",
@@ -809,7 +868,8 @@
 				"length": 1,
 				"message": "'b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a.b = a.b",
@@ -831,7 +891,8 @@
 				"length": 1,
 				"message": "'a.b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a.b.c = a.b.c",
@@ -853,7 +914,8 @@
 				"length": 1,
 				"message": "'a.b.c' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a[b] = a[b]",
@@ -875,7 +937,8 @@
 				"length": 1,
 				"message": "'a[b]' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a['b'] = a['b']",
@@ -897,7 +960,8 @@
 				"length": 1,
 				"message": "'a['b']' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a[\n    'b'\n] = a[\n    'b'\n]",
@@ -919,7 +983,8 @@
 				"length": 1,
 				"message": "'a['b']' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "this.x = this.x",
@@ -941,7 +1006,8 @@
 				"length": 4,
 				"message": "'this.x' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a['/(?<zero>0)/'] = a[/(?<zero>0)/]",
@@ -963,7 +1029,8 @@
 				"length": 1,
 				"message": "'a[/(?<zero>0)/]' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "(a?.b).c = (a?.b).c",
@@ -985,7 +1052,8 @@
 				"length": 1,
 				"message": "'(a?.b).c' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a.b = a?.b",
@@ -1007,7 +1075,8 @@
 				"length": 1,
 				"message": "'a?.b' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class C { #field; foo() { this.#field = this.#field; } }",
@@ -1029,7 +1098,8 @@
 				"length": 4,
 				"message": "'this.#field' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "class C { #field; foo() { [this.#field] = [this.#field]; } }",
@@ -1051,7 +1121,8 @@
 				"length": 4,
 				"message": "'this.#field' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a &&= a",
@@ -1073,7 +1144,8 @@
 				"length": 1,
 				"message": "'a' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a ||= a",
@@ -1095,7 +1167,8 @@
 				"length": 1,
 				"message": "'a' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a ??= a",
@@ -1117,7 +1190,8 @@
 				"length": 1,
 				"message": "'a' is assigned to itself."
 			}
-		]
+		],
+		"eslintTest": true
 	},
 	{
 		"code": "a = a\n",
