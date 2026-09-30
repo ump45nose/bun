@@ -197,7 +197,10 @@ impl<'p, 'a> Context<'p, 'a> {
     /// The offset after the name, or the private name, that starts at `at`.
     pub(crate) fn name_end(&self, at: Loc) -> Option<u32> {
         let len = u32::try_from(self.source.range_of_identifier(at).len).ok()?;
-        (len > 0).then_some(u32::try_from(at.start).ok()?.checked_add(len)?)
+        if len == 0 {
+            return None;
+        }
+        u32::try_from(at.start).ok()?.checked_add(len)
     }
 
     /// The length of the token that starts at `at`: the length of every report. 0 when the text there does not read.

@@ -2,8 +2,14 @@ NEEDS of the unit "conformance": draft of the bottom-up pass (read from the code
 =================================================================================
 
 Nothing below is granted, and nothing was implemented on the side of another unit.
-State on 2026-09-29: the four unit worktrees are at e3566be889 and clean, src/lint and src/typecheck hold one
-doc line each, no unit has an API.md, a NEEDS.md or a LOG.md. No binary on the machine has `--lint`.
+State on 2026-09-30, 01:00 UTC (checked twice, the second time line by line against the code): the four unit
+worktrees are at e3566be889 and clean, src/lint and src/typecheck hold one doc line each, no unit has an API.md,
+a NEEDS.md or a LOG.md. No binary on the machine has `--lint`.
+What the other units hold today is research only, in their notes: cli has a prototype of the diagnostic, its
+order and the plain writer (units/cli/c2-seam-arbitration/lint-prototype.patch) and of lint_command.rs
+(units/cli/c1-seam-arbitration-topdown/typecheck/lint_command_typecheck.rs); typecheck has the programs of all
+12,797 run instances as the reference built them (units/typecheck/drivers-k4-k5/bottom-up/data/manifest.jsonl.gz).
+Neither reads a variable of section 1 and neither writes JSON.
 
 The ids are the ones of the top-down draft (needs-and-lint-channel/top-down/NEEDS.draft.md): CH, RP, LB, LC, VN,
 CK, CI. They replace N1 to N6 of the earlier findings. Where this draft says something else than the top-down
@@ -42,13 +48,23 @@ Why (d), from the code:
   exit code 0 / 2 / 1 (cli.md C1.3)           yes                yes                no: 0 with errors      yes
   programs per process                        1                  1                  up to 256              1
   variables to declare                        3                  1                  1                      2
-  the same mechanism is in the tree           the out file       no                 the switch only        yes
+  the same mechanism is in the tree           the out file       no                 the switch only        the out file
 
+- conformance.md T2.4 fixes the default check: "the unit files as operands" and "the plain format ... from
+  stderr". (a), (b) and (d) add to that one spawn. (c) is a second check beside it, with another operand, another
+  stream and other exit codes, and only that second check could ever list an instance.
+- The limit of time. One process for one instance ends with the `timeout` and `killSignal` of Bun.spawn. The
+  prototype of (c) has to arm a timer again after each line of the report
+  (check-contract-default-spawn/top-down/manifest.ts:186 and :215-216, setTimeout), in code that the test file
+  runs, where COMMON.md rule 8 and CLAUDE.md ask for no setTimeout.
 - The mechanism of (d) exists: a variable that names a file which the binary writes for a test
   (BUN_BYTECODE_DIGEST_OUT, BUN_BYTECODE_ORDER_NAMES_OUT, BUN_BYTECODE_ORDER_OUT: src/bun_core/env_var.rs:45-50,
   read at src/jsc/BytecodeOrderRecorder.rs:67, used by test/bundler/bun-build-compile.test.ts:257). For (c) the
   tree has boolean switches for tests (BUN_INTERNAL_INTERACTIVE_ASSUME_TTY, env_var.rs:295), and no operand that
   changes its meaning and no protocol on stdout.
+  One half of (d) has no model: no string variable of env_var.rs holds JSON (they hold paths, addresses, names
+  and option strings). If the owners do not want JSON in a variable, the value of BUN_INTERNAL_LINT_OPTIONS is
+  the path of a file with the same object; nothing else of CH-3 changes.
 - It matches how the cli research plans its own tests: every case a file, all given as operands of one
   `bun --lint`, stderr piped in the plain format (units/cli/rules-comparisons/spec-rules.txt, TESTS).
 - The two halves have different owners and different dates. The report needs only what cli.md C2.1 already gives

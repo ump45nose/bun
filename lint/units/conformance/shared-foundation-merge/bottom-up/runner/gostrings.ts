@@ -3,15 +3,6 @@
 // A Go string seen as its bytes: every char code is one byte of the UTF-8 text, so an index is a Go offset.
 export type ByteString = string;
 
-// Go's regexp syntax in the syntax of JavaScript: \s, \S, \w, \d, the dot, (?m)^ and (?m)$.
-export const RE2_SPACE = "[\\t\\n\\f\\r ]";
-export const RE2_NOT_SPACE = "[^\\t\\n\\f\\r ]";
-export const RE2_WORD = "[0-9A-Za-z_]";
-export const RE2_DIGIT = "[0-9]";
-export const RE2_DOT = "[^\\n]";
-export const RE2_LINE_START = "(?<![^\\n])";
-export const RE2_LINE_END = "(?![^\\n])";
-
 export const RuneError = 0xfffd;
 const RuneSelf = 0x80;
 const UTFMax = 4;
@@ -163,15 +154,19 @@ export function trimFunc(s: string, f: (r: number) => boolean): string {
   return cps.slice(start, end).join("");
 }
 
-export function trimPrefix(s: string, prefix: string): string {
-  return s.startsWith(prefix) ? s.slice(prefix.length) : s;
-}
-
 export function trimSuffix(s: string, suffix: string): string {
   return s.endsWith(suffix) ? s.slice(0, s.length - suffix.length) : s;
 }
 
-// regexp `\S` ReplaceAllString(s, " ") of a byte string: every rune that is not one of RE2_SPACE becomes one space.
+// strconv.Atoi: an optional sign and decimal digits in the range of a 64-bit int; undefined stands for the error.
+export function atoi(s: string): number | undefined {
+  if (!/^[+-]?[0-9]+$/.test(s)) return undefined;
+  const n = BigInt(s);
+  if (n < -(2n ** 63n) || n > 2n ** 63n - 1n) return undefined;
+  return Number(n);
+}
+
+// regexp `\S` ReplaceAllString(s, " ") of a byte string: Go's \s is [\t\n\f\r ], every other rune becomes one space.
 export function replaceNonWhitespace(s: ByteString): ByteString {
   let out = "";
   for (let i = 0; i < s.length; ) {
