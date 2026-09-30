@@ -393,8 +393,8 @@ impl<'a> Ast<'a> {
         }
     }
 
-    // The children in the order of ForEachChild.
-    pub fn children(self, node: NodeId) -> Children<'a> {
+    // Node.IterChildren: the children in the order of ForEachChild.
+    pub fn iter_children(self, node: NodeId) -> Children<'a> {
         let (layout, slots): (&'static [ChildSlot], &'a [u32]) = match self.data_any(node) {
             Some((def, data)) => {
                 let info = def.info();
@@ -409,7 +409,7 @@ impl<'a> Ast<'a> {
     }
     // Node.ForEachChild: stops at the first child for which `visit` returns true.
     pub fn for_each_child(self, node: NodeId, visit: &mut dyn FnMut(NodeId) -> bool) -> bool {
-        for child in self.children(node) {
+        for child in self.iter_children(node) {
             if visit(child) {
                 return true;
             }

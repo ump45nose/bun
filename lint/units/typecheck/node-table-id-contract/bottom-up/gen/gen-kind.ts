@@ -10,14 +10,14 @@ export function generateKind(): { text: string; count: number } {
   names.forEach((n, i) => out.push(i === 0 ? `    #[default]\n    ${n},` : `    ${n},`));
   out.push("}", "");
   out.push(`pub const KIND_COUNT: usize = ${names.length - 1};`, "");
-  out.push(`static KINDS: [Kind; ${names.length}] = [`);
+  out.push("#[rustfmt::skip]", `static KINDS: [Kind; ${names.length}] = [`);
   for (const n of names) out.push(`    Kind::${n},`);
   out.push("];", "");
-  out.push(`static KIND_NAMES: [&str; ${names.length}] = [`);
+  out.push("#[rustfmt::skip]", `static KIND_NAMES: [&str; ${names.length}] = [`);
   for (const n of names) out.push(`    "${n}",`);
   out.push("];", "");
   const sorted = names.map((n, i) => [n, i] as const).sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
-  out.push(`static KINDS_BY_NAME: [(&str, Kind); ${names.length}] = [`);
+  out.push("#[rustfmt::skip]", `static KINDS_BY_NAME: [(&str, Kind); ${names.length}] = [`);
   for (const [n] of sorted) out.push(`    ("${n}", Kind::${n}),`);
   out.push("];", "");
   out.push("impl Kind {");

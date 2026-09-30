@@ -1,4 +1,4 @@
-// Prototype of the script that writes the two reference files after a sync: reference.json and fixtures/instances.tsv.
+// Prototype of the script that writes the two reference files after a sync: reference_counts.json and fixtures/instances.tsv.
 // It runs under bun, reads the committed corpus through the runner and, when a clone is given, checks the lists
 // against the baseline directories of typescript-go with git plumbing. No Go, no network, nothing written into a clone.
 // usage: bun gen_reference.ts <assembled runner set> <directory that holds corpus/ and UPSTREAM> <output directory> [<typescript-go clone>]
@@ -14,6 +14,7 @@ const S = await import(runner + "stringutil.ts");
 const B = await import(runner + "baseline.ts");
 const H = await import(runner + "harnessutil.ts");
 const X = await import(runner + "expectations.ts");
+const R2 = await import(runner + "compiler_runner.ts");
 const sha256 = (s: string | Uint8Array) => createHash("sha256").update(s).digest("hex");
 
 const upstream = readFileSync(home + "/UPSTREAM", "utf8");
@@ -141,8 +142,9 @@ function tableDigests(): Record<string, string> {
 const reasons = tally(r => (r.status === "skipped" ? r.reason.replace(/^(unsupported (?:baseUrl|outFile)) .*/, "$1") : undefined));
 const reference = {
   upstream: commits,
-  cases: { files: e.files, droppedByName: e.droppedBySkippedTests.length },
+  cases: { files: e.files, droppedByName: e.droppedBySkippedTests.length, emitNotCompared: [...R2.skippedEmitTests.keys()].length },
   instances: {
+    sha256: sha256(instances),
     all: rows.length,
     run: count(r => r.status === "run"),
     skipped: count(r => r.status === "skipped"),
@@ -173,12 +175,12 @@ const reference = {
   },
   options: { declared: H.optionsDeclarations.length, varying: H.getCompilerVaryByMap().size },
   go: { unicode: "15.0.0", tables: tableDigests() },
-  suiteRun: { "typescript-go": commits["typescript-go"], subtests: goSubtests.split("\n").length - 1, sha256: sha256(goSubtests), skipReasonsSha256: sha256(goSkipReasons) },
+  suiteRun: { "typescript-go": commits["typescript-go"], go: "go1.26.8", subtests: goSubtests.split("\n").length - 1, sha256: sha256(goSubtests), skipReasonsSha256: sha256(goSkipReasons) },
 };
 mkdirSync(out + "/fixtures", { recursive: true });
-writeFileSync(out + "/reference.json", JSON.stringify(reference, null, 2) + "\n");
+writeFileSync(out + "/reference_counts.json", JSON.stringify(reference, null, 2) + "\n");
 writeFileSync(out + "/fixtures/instances.tsv", instances);
-console.log(`reference.json ${Buffer.byteLength(JSON.stringify(reference, null, 2)) + 1} bytes, fixtures/instances.tsv ${Buffer.byteLength(instances)} bytes, ${rows.length} lines`);
+console.log(`reference_counts.json ${Buffer.byteLength(JSON.stringify(reference, null, 2)) + 1} bytes, fixtures/instances.tsv ${Buffer.byteLength(instances)} bytes, ${rows.length} lines`);
 
 // The check that needs no Go: what the baseline directories of typescript-go say about the lists.
 if (clone !== undefined) {

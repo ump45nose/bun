@@ -217,5217 +217,206 @@ pub enum Def {
 
 pub const DEF_COUNT: usize = 195;
 
+#[rustfmt::skip]
 static DEF_INFOS: [DefInfo; DEF_COUNT] = [
-    DefInfo {
-        name: "None",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "Token",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "Identifier",
-        slots: &[SlotInfo {
-            name: "Text",
-            ty: SlotType::Text,
-        }],
-        children: &[],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "PrivateIdentifier",
-        slots: &[SlotInfo {
-            name: "Text",
-            ty: SlotType::Text,
-        }],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "QualifiedName",
-        slots: &[
-            SlotInfo {
-                name: "Left",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Right",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ComputedPropertyName",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "Decorator",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "EmptyStatement",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "IfStatement",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ThenStatement",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ElseStatement",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::EmbeddedStatement,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::EmbeddedStatement,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "DoStatement",
-        slots: &[
-            SlotInfo {
-                name: "Statement",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::IterationBody,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "WhileStatement",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Statement",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::IterationBody,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ForStatement",
-        slots: &[
-            SlotInfo {
-                name: "Initializer",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Condition",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Incrementor",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Statement",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::IterationBody,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ForInOrOfStatement",
-        slots: &[
-            SlotInfo {
-                name: "AwaitModifier",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Initializer",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Statement",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::IterationBody,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "BreakStatement",
-        slots: &[SlotInfo {
-            name: "Label",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ContinueStatement",
-        slots: &[SlotInfo {
-            name: "Label",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ReturnStatement",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "WithStatement",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Statement",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::EmbeddedStatement,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "SwitchStatement",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "CaseBlock",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "CaseBlock",
-        slots: &[SlotInfo {
-            name: "Clauses",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "CaseOrDefaultClause",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Statements",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FALLTHROUGH_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ThrowStatement",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "TryStatement",
-        slots: &[
-            SlotInfo {
-                name: "TryBlock",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "CatchClause",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FinallyBlock",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "CatchClause",
-        slots: &[
-            SlotInfo {
-                name: "VariableDeclaration",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Block",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "DebuggerStatement",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "LabeledStatement",
-        slots: &[
-            SlotInfo {
-                name: "Label",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Statement",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::EmbeddedStatement,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ExpressionStatement",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "Block",
-        slots: &[
-            SlotInfo {
-                name: "Statements",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "MultiLine",
-                ty: SlotType::Bool,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "VariableStatement",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "DeclarationList",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "VariableDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ExclamationToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Initializer",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL,
-    },
-    DefInfo {
-        name: "VariableDeclarationList",
-        slots: &[SlotInfo {
-            name: "Declarations",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "BindingPattern",
-        slots: &[SlotInfo {
-            name: "Elements",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ParameterDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "DotDotDotToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "QuestionToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Initializer",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "BindingElement",
-        slots: &[
-            SlotInfo {
-                name: "DotDotDotToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "PropertyName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Initializer",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "MissingDeclaration",
-        slots: &[SlotInfo {
-            name: "modifiers",
-            ty: SlotType::ModifierList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Modifiers,
-        }],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "FunctionDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "AsteriskToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Body",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Parameters,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 6,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 7,
-                visit: VisitTag::FunctionBody,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL
-            | LATE_LOCAL_SYMBOL
-            | LATE_LOCALS
-            | LATE_NEXT_CONTAINER
-            | LATE_FLOW_NODE
-            | LATE_END_FLOW_NODE
-            | LATE_RETURN_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ClassDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "HeritageClauses",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Members",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ClassExpression",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "HeritageClauses",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Members",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "HeritageClause",
-        slots: &[
-            SlotInfo {
-                name: "Token",
-                ty: SlotType::Kind,
-            },
-            SlotInfo {
-                name: "Types",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 1,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "InterfaceDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "HeritageClauses",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Members",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "TypeAliasDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "EnumMember",
-        slots: &[
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Initializer",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "PostfixToken",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "EnumDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Members",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ModuleBlock",
-        slots: &[SlotInfo {
-            name: "Statements",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "NotEmittedStatement",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "NotEmittedTypeElement",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ImportDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "ImportClause",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ModuleSpecifier",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Attributes",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ExternalModuleReference",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "NamespaceImport",
-        slots: &[SlotInfo {
-            name: "name",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL,
-    },
-    DefInfo {
-        name: "NamedImports",
-        slots: &[SlotInfo {
-            name: "Elements",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ExportAssignment",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "IsExportEquals",
-                ty: SlotType::Bool,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "NamespaceExportDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "NamespaceExport",
-        slots: &[SlotInfo {
-            name: "name",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "NamedExports",
-        slots: &[SlotInfo {
-            name: "Elements",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ExportSpecifier",
-        slots: &[
-            SlotInfo {
-                name: "IsTypeOnly",
-                ty: SlotType::Bool,
-            },
-            SlotInfo {
-                name: "PropertyName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL,
-    },
-    DefInfo {
-        name: "CallSignatureDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "ConstructSignatureDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "ConstructorDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Body",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "AsteriskToken",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Parameters,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::FunctionBody,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL
-            | LATE_LOCALS
-            | LATE_NEXT_CONTAINER
-            | LATE_END_FLOW_NODE
-            | LATE_RETURN_FLOW_NODE,
-    },
-    DefInfo {
-        name: "GetAccessorDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Body",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "PostfixToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "AsteriskToken",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Parameters,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 6,
-                visit: VisitTag::FunctionBody,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE,
-    },
-    DefInfo {
-        name: "SetAccessorDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Body",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "PostfixToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "AsteriskToken",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Parameters,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 6,
-                visit: VisitTag::FunctionBody,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE,
-    },
-    DefInfo {
-        name: "IndexSignatureDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "MethodSignatureDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "PostfixToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "MethodDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "AsteriskToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "PostfixToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Body",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Parameters,
-            },
-            ChildSlot {
-                slot: 6,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 7,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 8,
-                visit: VisitTag::FunctionBody,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE,
-    },
-    DefInfo {
-        name: "PropertySignatureDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "PostfixToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Initializer",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "PropertyDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "PostfixToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Initializer",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "SemicolonClassElement",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "ClassStaticBlockDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "Body",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_RETURN_FLOW_NODE,
-    },
-    DefInfo {
-        name: "OmittedExpression",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "KeywordExpression",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "StringLiteral",
-        slots: &[
-            SlotInfo {
-                name: "Text",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "TokenFlags",
-                ty: SlotType::TokenFlags,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "NumericLiteral",
-        slots: &[
-            SlotInfo {
-                name: "Text",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "TokenFlags",
-                ty: SlotType::TokenFlags,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "BigIntLiteral",
-        slots: &[
-            SlotInfo {
-                name: "Text",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "TokenFlags",
-                ty: SlotType::TokenFlags,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "RegularExpressionLiteral",
-        slots: &[
-            SlotInfo {
-                name: "Text",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "TokenFlags",
-                ty: SlotType::TokenFlags,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "NoSubstitutionTemplateLiteral",
-        slots: &[
-            SlotInfo {
-                name: "Text",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "TemplateFlags",
-                ty: SlotType::TokenFlags,
-            },
-            SlotInfo {
-                name: "TokenFlags",
-                ty: SlotType::TokenFlags,
-            },
-            SlotInfo {
-                name: "RawText",
-                ty: SlotType::Text,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "BinaryExpression",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "Left",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "OperatorToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Right",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "PrefixUnaryExpression",
-        slots: &[
-            SlotInfo {
-                name: "Operator",
-                ty: SlotType::Kind,
-            },
-            SlotInfo {
-                name: "Operand",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 1,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "PostfixUnaryExpression",
-        slots: &[
-            SlotInfo {
-                name: "Operand",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Operator",
-                ty: SlotType::Kind,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "YieldExpression",
-        slots: &[
-            SlotInfo {
-                name: "AsteriskToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ArrowFunction",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "EqualsGreaterThanToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Body",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "AsteriskToken",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Parameters,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 6,
-                visit: VisitTag::FunctionBody,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE,
-    },
-    DefInfo {
-        name: "FunctionExpression",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "AsteriskToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Body",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Parameters,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 6,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 7,
-                visit: VisitTag::FunctionBody,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL
-            | LATE_LOCALS
-            | LATE_NEXT_CONTAINER
-            | LATE_FLOW_NODE
-            | LATE_END_FLOW_NODE
-            | LATE_RETURN_FLOW_NODE,
-    },
-    DefInfo {
-        name: "AsExpression",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "SatisfiesExpression",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ConditionalExpression",
-        slots: &[
-            SlotInfo {
-                name: "Condition",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "QuestionToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "WhenTrue",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ColonToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "WhenFalse",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "PropertyAccessExpression",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "QuestionDotToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ElementAccessExpression",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "QuestionDotToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ArgumentExpression",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "CallExpression",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "QuestionDotToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeArguments",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Arguments",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "NewExpression",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeArguments",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Arguments",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "MetaProperty",
-        slots: &[
-            SlotInfo {
-                name: "KeywordToken",
-                ty: SlotType::Kind,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 1,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "NonNullExpression",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "SpreadElement",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TemplateExpression",
-        slots: &[
-            SlotInfo {
-                name: "Head",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TemplateSpans",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TemplateSpan",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Literal",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TaggedTemplateExpression",
-        slots: &[
-            SlotInfo {
-                name: "Tag",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "QuestionDotToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeArguments",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Template",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ParenthesizedExpression",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ArrayLiteralExpression",
-        slots: &[
-            SlotInfo {
-                name: "Elements",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "MultiLine",
-                ty: SlotType::Bool,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ObjectLiteralExpression",
-        slots: &[
-            SlotInfo {
-                name: "Properties",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "MultiLine",
-                ty: SlotType::Bool,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "SpreadAssignment",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "PropertyAssignment",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "PostfixToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Initializer",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "ShorthandPropertyAssignment",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "PostfixToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "EqualsToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ObjectAssignmentInitializer",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "DeleteExpression",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TypeOfExpression",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "VoidExpression",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "AwaitExpression",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TypeAssertion",
-        slots: &[
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "KeywordTypeNode",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "UnionTypeNode",
-        slots: &[SlotInfo {
-            name: "Types",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "IntersectionTypeNode",
-        slots: &[SlotInfo {
-            name: "Types",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ConditionalTypeNode",
-        slots: &[
-            SlotInfo {
-                name: "CheckType",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ExtendsType",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TrueType",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FalseType",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "TypeOperatorNode",
-        slots: &[
-            SlotInfo {
-                name: "Operator",
-                ty: SlotType::Kind,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 1,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "InferTypeNode",
-        slots: &[SlotInfo {
-            name: "TypeParameter",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ArrayTypeNode",
-        slots: &[SlotInfo {
-            name: "ElementType",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "IndexedAccessTypeNode",
-        slots: &[
-            SlotInfo {
-                name: "ObjectType",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "IndexType",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TypeReferenceNode",
-        slots: &[
-            SlotInfo {
-                name: "TypeName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeArguments",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ExpressionWithTypeArguments",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeArguments",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "LiteralTypeNode",
-        slots: &[SlotInfo {
-            name: "Literal",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ThisTypeNode",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TypePredicateNode",
-        slots: &[
-            SlotInfo {
-                name: "AssertsModifier",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ParameterName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ImportAttribute",
-        slots: &[
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Value",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ImportAttributes",
-        slots: &[
-            SlotInfo {
-                name: "Token",
-                ty: SlotType::Kind,
-            },
-            SlotInfo {
-                name: "Attributes",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "MultiLine",
-                ty: SlotType::Bool,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 1,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TypeQueryNode",
-        slots: &[
-            SlotInfo {
-                name: "ExprName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeArguments",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "MappedTypeNode",
-        slots: &[
-            SlotInfo {
-                name: "ReadonlyToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameter",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "NameType",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "QuestionToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Members",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "TypeLiteralNode",
-        slots: &[SlotInfo {
-            name: "Members",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "TupleTypeNode",
-        slots: &[SlotInfo {
-            name: "Elements",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "NamedTupleMember",
-        slots: &[
-            SlotInfo {
-                name: "DotDotDotToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "QuestionToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "OptionalTypeNode",
-        slots: &[SlotInfo {
-            name: "Type",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "RestTypeNode",
-        slots: &[SlotInfo {
-            name: "Type",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ParenthesizedTypeNode",
-        slots: &[SlotInfo {
-            name: "Type",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "FunctionTypeNode",
-        slots: &[
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "ConstructorTypeNode",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "TemplateHead",
-        slots: &[
-            SlotInfo {
-                name: "Text",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "RawText",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "TemplateFlags",
-                ty: SlotType::TokenFlags,
-            },
-            SlotInfo {
-                name: "TokenFlags",
-                ty: SlotType::TokenFlags,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TemplateMiddle",
-        slots: &[
-            SlotInfo {
-                name: "Text",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "RawText",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "TemplateFlags",
-                ty: SlotType::TokenFlags,
-            },
-            SlotInfo {
-                name: "TokenFlags",
-                ty: SlotType::TokenFlags,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TemplateTail",
-        slots: &[
-            SlotInfo {
-                name: "Text",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "RawText",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "TemplateFlags",
-                ty: SlotType::TokenFlags,
-            },
-            SlotInfo {
-                name: "TokenFlags",
-                ty: SlotType::TokenFlags,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TemplateLiteralTypeNode",
-        slots: &[
-            SlotInfo {
-                name: "Head",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TemplateSpans",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TemplateLiteralTypeSpan",
-        slots: &[
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Literal",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "SyntheticExpression",
-        slots: &[
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::TypeId,
-            },
-            SlotInfo {
-                name: "IsSpread",
-                ty: SlotType::Bool,
-            },
-            SlotInfo {
-                name: "TupleNameSource",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 2,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "PartiallyEmittedExpression",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxElement",
-        slots: &[
-            SlotInfo {
-                name: "OpeningElement",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Children",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "ClosingElement",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxAttributes",
-        slots: &[SlotInfo {
-            name: "Properties",
-            ty: SlotType::NodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Nodes,
-        }],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "JsxNamespacedName",
-        slots: &[
-            SlotInfo {
-                name: "Namespace",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxOpeningElement",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeArguments",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Attributes",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxSelfClosingElement",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeArguments",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Attributes",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxFragment",
-        slots: &[
-            SlotInfo {
-                name: "OpeningFragment",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Children",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "ClosingFragment",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxOpeningFragment",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxClosingFragment",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxAttribute",
-        slots: &[
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Initializer",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "JsxSpreadAttribute",
-        slots: &[SlotInfo {
-            name: "Expression",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxClosingElement",
-        slots: &[SlotInfo {
-            name: "TagName",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxExpression",
-        slots: &[
-            SlotInfo {
-                name: "DotDotDotToken",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JsxText",
-        slots: &[
-            SlotInfo {
-                name: "Text",
-                ty: SlotType::Text,
-            },
-            SlotInfo {
-                name: "ContainsOnlyTriviaWhiteSpaces",
-                ty: SlotType::Bool,
-            },
-            SlotInfo {
-                name: "TokenFlags",
-                ty: SlotType::TokenFlags,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "SyntaxList",
-        slots: &[SlotInfo {
-            name: "Children",
-            ty: SlotType::RawNodeList,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::RawNodes,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDoc",
-        slots: &[
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Tags",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocTypeExpression",
-        slots: &[SlotInfo {
-            name: "Type",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocNonNullableType",
-        slots: &[SlotInfo {
-            name: "Type",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocNullableType",
-        slots: &[SlotInfo {
-            name: "Type",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocAllType",
-        slots: &[],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocVariadicType",
-        slots: &[SlotInfo {
-            name: "Type",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocOptionalType",
-        slots: &[SlotInfo {
-            name: "Type",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocTypeTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeExpression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocUnknownTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocTemplateTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Constraint",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocReturnTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeExpression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocPublicTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocPrivateTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocProtectedTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocReadonlyTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocOverrideTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocDeprecatedTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocSeeTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "NameExpression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocImplementsTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ClassName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocAugmentsTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ClassName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocSatisfiesTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeExpression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocThrowsTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeExpression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocThisTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeExpression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocImportTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ImportClause",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ModuleSpecifier",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Attributes",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocCallbackTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeExpression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocOverloadTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeExpression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocTypedefTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeExpression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocSignature",
-        slots: &[
-            SlotInfo {
-                name: "TypeParameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Parameters",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "Type",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "FullSignature",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Nodes,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "JSDocNameReference",
-        slots: &[SlotInfo {
-            name: "name",
-            ty: SlotType::Node,
-        }],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "SourceFile",
-        slots: &[
-            SlotInfo {
-                name: "Statements",
-                ty: SlotType::NodeList,
-            },
-            SlotInfo {
-                name: "EndOfFileToken",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::TopLevelStatements,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER,
-    },
-    DefInfo {
-        name: "ModuleDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "Keyword",
-                ty: SlotType::Kind,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Body",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "AsteriskToken",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL
-            | LATE_LOCAL_SYMBOL
-            | LATE_LOCALS
-            | LATE_NEXT_CONTAINER
-            | LATE_FLOW_NODE
-            | LATE_END_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ImportEqualsDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "IsTypeOnly",
-                ty: SlotType::Bool,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ModuleReference",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ExportDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "IsTypeOnly",
-                ty: SlotType::Bool,
-            },
-            SlotInfo {
-                name: "ExportClause",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ModuleSpecifier",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Attributes",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_FLOW_NODE,
-    },
-    DefInfo {
-        name: "ImportTypeNode",
-        slots: &[
-            SlotInfo {
-                name: "IsTypeOf",
-                ty: SlotType::Bool,
-            },
-            SlotInfo {
-                name: "Argument",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Attributes",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Qualifier",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "TypeArguments",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "ImportClause",
-        slots: &[
-            SlotInfo {
-                name: "PhaseModifier",
-                ty: SlotType::Kind,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "NamedBindings",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL,
-    },
-    DefInfo {
-        name: "ImportSpecifier",
-        slots: &[
-            SlotInfo {
-                name: "IsTypeOnly",
-                ty: SlotType::Bool,
-            },
-            SlotInfo {
-                name: "PropertyName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL | LATE_LOCAL_SYMBOL,
-    },
-    DefInfo {
-        name: "JSDocText",
-        slots: &[SlotInfo {
-            name: "text",
-            ty: SlotType::Text,
-        }],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocLink",
-        slots: &[
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "text",
-                ty: SlotType::Text,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocLinkPlain",
-        slots: &[
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "text",
-                ty: SlotType::Text,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocLinkCode",
-        slots: &[
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "text",
-                ty: SlotType::Text,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::Node,
-        }],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "TypeParameterDeclaration",
-        slots: &[
-            SlotInfo {
-                name: "modifiers",
-                ty: SlotType::ModifierList,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Constraint",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "DefaultType",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Modifiers,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 2,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 4,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "SyntheticReferenceExpression",
-        slots: &[
-            SlotInfo {
-                name: "Expression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ThisArg",
-                ty: SlotType::Node,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-        ],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "JSDocTypeLiteral",
-        slots: &[
-            SlotInfo {
-                name: "JSDocPropertyTags",
-                ty: SlotType::RawNodeList,
-            },
-            SlotInfo {
-                name: "IsArrayType",
-                ty: SlotType::Bool,
-            },
-        ],
-        children: &[ChildSlot {
-            slot: 0,
-            visit: VisitTag::RawNodes,
-        }],
-        children_alt: &[],
-        late: LATE_SYMBOL,
-    },
-    DefInfo {
-        name: "JSDocParameterOrPropertyTag",
-        slots: &[
-            SlotInfo {
-                name: "TagName",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "name",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "IsBracketed",
-                ty: SlotType::Bool,
-            },
-            SlotInfo {
-                name: "TypeExpression",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "IsNameFirst",
-                ty: SlotType::Bool,
-            },
-            SlotInfo {
-                name: "Comment",
-                ty: SlotType::NodeList,
-            },
-        ],
-        children: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        children_alt: &[
-            ChildSlot {
-                slot: 0,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 1,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 3,
-                visit: VisitTag::Node,
-            },
-            ChildSlot {
-                slot: 5,
-                visit: VisitTag::Nodes,
-            },
-        ],
-        late: 0,
-    },
-    DefInfo {
-        name: "FlowSwitchClauseData",
-        slots: &[
-            SlotInfo {
-                name: "SwitchStatement",
-                ty: SlotType::Node,
-            },
-            SlotInfo {
-                name: "ClauseStart",
-                ty: SlotType::Int,
-            },
-            SlotInfo {
-                name: "ClauseEnd",
-                ty: SlotType::Int,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
-    DefInfo {
-        name: "FlowReduceLabelData",
-        slots: &[
-            SlotInfo {
-                name: "Target",
-                ty: SlotType::FlowNode,
-            },
-            SlotInfo {
-                name: "Antecedents",
-                ty: SlotType::FlowList,
-            },
-        ],
-        children: &[],
-        children_alt: &[],
-        late: 0,
-    },
+    DefInfo { name: "None", slots: &[], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "Token", slots: &[], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "Identifier", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }], children: &[], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "PrivateIdentifier", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "QualifiedName", slots: &[SlotInfo { name: "Left", ty: SlotType::Node }, SlotInfo { name: "Right", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "ComputedPropertyName", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "Decorator", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "EmptyStatement", slots: &[], children: &[], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "IfStatement", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "ThenStatement", ty: SlotType::Node }, SlotInfo { name: "ElseStatement", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::EmbeddedStatement }, ChildSlot { slot: 2, visit: VisitTag::EmbeddedStatement }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "DoStatement", slots: &[SlotInfo { name: "Statement", ty: SlotType::Node }, SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::IterationBody }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "WhileStatement", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "Statement", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::IterationBody }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "ForStatement", slots: &[SlotInfo { name: "Initializer", ty: SlotType::Node }, SlotInfo { name: "Condition", ty: SlotType::Node }, SlotInfo { name: "Incrementor", ty: SlotType::Node }, SlotInfo { name: "Statement", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::IterationBody }], children_alt: &[], late: LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE },
+    DefInfo { name: "ForInOrOfStatement", slots: &[SlotInfo { name: "AwaitModifier", ty: SlotType::Node }, SlotInfo { name: "Initializer", ty: SlotType::Node }, SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "Statement", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::IterationBody }], children_alt: &[], late: LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE },
+    DefInfo { name: "BreakStatement", slots: &[SlotInfo { name: "Label", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "ContinueStatement", slots: &[SlotInfo { name: "Label", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "ReturnStatement", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "WithStatement", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "Statement", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::EmbeddedStatement }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "SwitchStatement", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "CaseBlock", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "CaseBlock", slots: &[SlotInfo { name: "Clauses", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "CaseOrDefaultClause", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "Statements", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_FALLTHROUGH_FLOW_NODE },
+    DefInfo { name: "ThrowStatement", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "TryStatement", slots: &[SlotInfo { name: "TryBlock", ty: SlotType::Node }, SlotInfo { name: "CatchClause", ty: SlotType::Node }, SlotInfo { name: "FinallyBlock", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "CatchClause", slots: &[SlotInfo { name: "VariableDeclaration", ty: SlotType::Node }, SlotInfo { name: "Block", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "DebuggerStatement", slots: &[], children: &[], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "LabeledStatement", slots: &[SlotInfo { name: "Label", ty: SlotType::Node }, SlotInfo { name: "Statement", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::EmbeddedStatement }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "ExpressionStatement", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "Block", slots: &[SlotInfo { name: "Statements", ty: SlotType::NodeList }, SlotInfo { name: "MultiLine", ty: SlotType::Bool }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE },
+    DefInfo { name: "VariableStatement", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "DeclarationList", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "VariableDeclaration", slots: &[SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "ExclamationToken", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "Initializer", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL },
+    DefInfo { name: "VariableDeclarationList", slots: &[SlotInfo { name: "Declarations", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "BindingPattern", slots: &[SlotInfo { name: "Elements", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "ParameterDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "DotDotDotToken", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "QuestionToken", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "Initializer", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }, ChildSlot { slot: 5, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "BindingElement", slots: &[SlotInfo { name: "DotDotDotToken", ty: SlotType::Node }, SlotInfo { name: "PropertyName", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "Initializer", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_FLOW_NODE },
+    DefInfo { name: "MissingDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }], children_alt: &[], late: LATE_SYMBOL | LATE_FLOW_NODE },
+    DefInfo { name: "FunctionDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "AsteriskToken", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }, SlotInfo { name: "Body", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Nodes }, ChildSlot { slot: 4, visit: VisitTag::Parameters }, ChildSlot { slot: 5, visit: VisitTag::Node }, ChildSlot { slot: 6, visit: VisitTag::Node }, ChildSlot { slot: 7, visit: VisitTag::FunctionBody }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE | LATE_RETURN_FLOW_NODE },
+    DefInfo { name: "ClassDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "HeritageClauses", ty: SlotType::NodeList }, SlotInfo { name: "Members", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }, ChildSlot { slot: 3, visit: VisitTag::Nodes }, ChildSlot { slot: 4, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE },
+    DefInfo { name: "ClassExpression", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "HeritageClauses", ty: SlotType::NodeList }, SlotInfo { name: "Members", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }, ChildSlot { slot: 3, visit: VisitTag::Nodes }, ChildSlot { slot: 4, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "HeritageClause", slots: &[SlotInfo { name: "Token", ty: SlotType::Kind }, SlotInfo { name: "Types", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "InterfaceDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "HeritageClauses", ty: SlotType::NodeList }, SlotInfo { name: "Members", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }, ChildSlot { slot: 3, visit: VisitTag::Nodes }, ChildSlot { slot: 4, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_FLOW_NODE },
+    DefInfo { name: "TypeAliasDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE },
+    DefInfo { name: "EnumMember", slots: &[SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "Initializer", ty: SlotType::Node }, SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "PostfixToken", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "EnumDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "Members", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_FLOW_NODE },
+    DefInfo { name: "ModuleBlock", slots: &[SlotInfo { name: "Statements", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "NotEmittedStatement", slots: &[], children: &[], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "NotEmittedTypeElement", slots: &[], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "ImportDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "ImportClause", ty: SlotType::Node }, SlotInfo { name: "ModuleSpecifier", ty: SlotType::Node }, SlotInfo { name: "Attributes", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_FLOW_NODE },
+    DefInfo { name: "ExternalModuleReference", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "NamespaceImport", slots: &[SlotInfo { name: "name", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL },
+    DefInfo { name: "NamedImports", slots: &[SlotInfo { name: "Elements", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "ExportAssignment", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "IsExportEquals", ty: SlotType::Bool }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_FLOW_NODE },
+    DefInfo { name: "NamespaceExportDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_FLOW_NODE },
+    DefInfo { name: "NamespaceExport", slots: &[SlotInfo { name: "name", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "NamedExports", slots: &[SlotInfo { name: "Elements", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "ExportSpecifier", slots: &[SlotInfo { name: "IsTypeOnly", ty: SlotType::Bool }, SlotInfo { name: "PropertyName", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }], children: &[ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL },
+    DefInfo { name: "CallSignatureDeclaration", slots: &[SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "ConstructSignatureDeclaration", slots: &[SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "ConstructorDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }, SlotInfo { name: "Body", ty: SlotType::Node }, SlotInfo { name: "AsteriskToken", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Parameters }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }, ChildSlot { slot: 5, visit: VisitTag::FunctionBody }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_END_FLOW_NODE | LATE_RETURN_FLOW_NODE },
+    DefInfo { name: "GetAccessorDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }, SlotInfo { name: "Body", ty: SlotType::Node }, SlotInfo { name: "PostfixToken", ty: SlotType::Node }, SlotInfo { name: "AsteriskToken", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }, ChildSlot { slot: 3, visit: VisitTag::Parameters }, ChildSlot { slot: 4, visit: VisitTag::Node }, ChildSlot { slot: 5, visit: VisitTag::Node }, ChildSlot { slot: 6, visit: VisitTag::FunctionBody }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE },
+    DefInfo { name: "SetAccessorDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }, SlotInfo { name: "Body", ty: SlotType::Node }, SlotInfo { name: "PostfixToken", ty: SlotType::Node }, SlotInfo { name: "AsteriskToken", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }, ChildSlot { slot: 3, visit: VisitTag::Parameters }, ChildSlot { slot: 4, visit: VisitTag::Node }, ChildSlot { slot: 5, visit: VisitTag::Node }, ChildSlot { slot: 6, visit: VisitTag::FunctionBody }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE },
+    DefInfo { name: "IndexSignatureDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "FullSignature", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "MethodSignatureDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "PostfixToken", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Nodes }, ChildSlot { slot: 4, visit: VisitTag::Nodes }, ChildSlot { slot: 5, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "MethodDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "AsteriskToken", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "PostfixToken", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }, SlotInfo { name: "Body", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Nodes }, ChildSlot { slot: 5, visit: VisitTag::Parameters }, ChildSlot { slot: 6, visit: VisitTag::Node }, ChildSlot { slot: 7, visit: VisitTag::Node }, ChildSlot { slot: 8, visit: VisitTag::FunctionBody }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE },
+    DefInfo { name: "PropertySignatureDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "PostfixToken", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "Initializer", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "PropertyDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "PostfixToken", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "Initializer", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "SemicolonClassElement", slots: &[], children: &[], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "ClassStaticBlockDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "Body", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_RETURN_FLOW_NODE },
+    DefInfo { name: "OmittedExpression", slots: &[], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "KeywordExpression", slots: &[], children: &[], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "StringLiteral", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }, SlotInfo { name: "TokenFlags", ty: SlotType::TokenFlags }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "NumericLiteral", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }, SlotInfo { name: "TokenFlags", ty: SlotType::TokenFlags }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "BigIntLiteral", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }, SlotInfo { name: "TokenFlags", ty: SlotType::TokenFlags }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "RegularExpressionLiteral", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }, SlotInfo { name: "TokenFlags", ty: SlotType::TokenFlags }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "NoSubstitutionTemplateLiteral", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }, SlotInfo { name: "TemplateFlags", ty: SlotType::TokenFlags }, SlotInfo { name: "TokenFlags", ty: SlotType::TokenFlags }, SlotInfo { name: "RawText", ty: SlotType::Text }], children: &[], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "BinaryExpression", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "Left", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "OperatorToken", ty: SlotType::Node }, SlotInfo { name: "Right", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "PrefixUnaryExpression", slots: &[SlotInfo { name: "Operator", ty: SlotType::Kind }, SlotInfo { name: "Operand", ty: SlotType::Node }], children: &[ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "PostfixUnaryExpression", slots: &[SlotInfo { name: "Operand", ty: SlotType::Node }, SlotInfo { name: "Operator", ty: SlotType::Kind }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "YieldExpression", slots: &[SlotInfo { name: "AsteriskToken", ty: SlotType::Node }, SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "ArrowFunction", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }, SlotInfo { name: "EqualsGreaterThanToken", ty: SlotType::Node }, SlotInfo { name: "Body", ty: SlotType::Node }, SlotInfo { name: "AsteriskToken", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Parameters }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }, ChildSlot { slot: 5, visit: VisitTag::Node }, ChildSlot { slot: 6, visit: VisitTag::FunctionBody }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE },
+    DefInfo { name: "FunctionExpression", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "AsteriskToken", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }, SlotInfo { name: "Body", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Nodes }, ChildSlot { slot: 4, visit: VisitTag::Parameters }, ChildSlot { slot: 5, visit: VisitTag::Node }, ChildSlot { slot: 6, visit: VisitTag::Node }, ChildSlot { slot: 7, visit: VisitTag::FunctionBody }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE | LATE_RETURN_FLOW_NODE },
+    DefInfo { name: "AsExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "SatisfiesExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "ConditionalExpression", slots: &[SlotInfo { name: "Condition", ty: SlotType::Node }, SlotInfo { name: "QuestionToken", ty: SlotType::Node }, SlotInfo { name: "WhenTrue", ty: SlotType::Node }, SlotInfo { name: "ColonToken", ty: SlotType::Node }, SlotInfo { name: "WhenFalse", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "PropertyAccessExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "QuestionDotToken", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "ElementAccessExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "QuestionDotToken", ty: SlotType::Node }, SlotInfo { name: "ArgumentExpression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "CallExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "QuestionDotToken", ty: SlotType::Node }, SlotInfo { name: "TypeArguments", ty: SlotType::NodeList }, SlotInfo { name: "Arguments", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }, ChildSlot { slot: 3, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "NewExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "TypeArguments", ty: SlotType::NodeList }, SlotInfo { name: "Arguments", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "MetaProperty", slots: &[SlotInfo { name: "KeywordToken", ty: SlotType::Kind }, SlotInfo { name: "name", ty: SlotType::Node }], children: &[ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_FLOW_NODE },
+    DefInfo { name: "NonNullExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "SpreadElement", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "TemplateExpression", slots: &[SlotInfo { name: "Head", ty: SlotType::Node }, SlotInfo { name: "TemplateSpans", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "TemplateSpan", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "Literal", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "TaggedTemplateExpression", slots: &[SlotInfo { name: "Tag", ty: SlotType::Node }, SlotInfo { name: "QuestionDotToken", ty: SlotType::Node }, SlotInfo { name: "TypeArguments", ty: SlotType::NodeList }, SlotInfo { name: "Template", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "ParenthesizedExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "ArrayLiteralExpression", slots: &[SlotInfo { name: "Elements", ty: SlotType::NodeList }, SlotInfo { name: "MultiLine", ty: SlotType::Bool }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "ObjectLiteralExpression", slots: &[SlotInfo { name: "Properties", ty: SlotType::NodeList }, SlotInfo { name: "MultiLine", ty: SlotType::Bool }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "SpreadAssignment", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "PropertyAssignment", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "PostfixToken", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "Initializer", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "ShorthandPropertyAssignment", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "PostfixToken", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "EqualsToken", ty: SlotType::Node }, SlotInfo { name: "ObjectAssignmentInitializer", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }, ChildSlot { slot: 5, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "DeleteExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "TypeOfExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "VoidExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "AwaitExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "TypeAssertion", slots: &[SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "KeywordTypeNode", slots: &[], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "UnionTypeNode", slots: &[SlotInfo { name: "Types", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "IntersectionTypeNode", slots: &[SlotInfo { name: "Types", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "ConditionalTypeNode", slots: &[SlotInfo { name: "CheckType", ty: SlotType::Node }, SlotInfo { name: "ExtendsType", ty: SlotType::Node }, SlotInfo { name: "TrueType", ty: SlotType::Node }, SlotInfo { name: "FalseType", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "TypeOperatorNode", slots: &[SlotInfo { name: "Operator", ty: SlotType::Kind }, SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "InferTypeNode", slots: &[SlotInfo { name: "TypeParameter", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "ArrayTypeNode", slots: &[SlotInfo { name: "ElementType", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "IndexedAccessTypeNode", slots: &[SlotInfo { name: "ObjectType", ty: SlotType::Node }, SlotInfo { name: "IndexType", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "TypeReferenceNode", slots: &[SlotInfo { name: "TypeName", ty: SlotType::Node }, SlotInfo { name: "TypeArguments", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "ExpressionWithTypeArguments", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "TypeArguments", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "LiteralTypeNode", slots: &[SlotInfo { name: "Literal", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "ThisTypeNode", slots: &[], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "TypePredicateNode", slots: &[SlotInfo { name: "AssertsModifier", ty: SlotType::Node }, SlotInfo { name: "ParameterName", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "ImportAttribute", slots: &[SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "Value", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "ImportAttributes", slots: &[SlotInfo { name: "Token", ty: SlotType::Kind }, SlotInfo { name: "Attributes", ty: SlotType::NodeList }, SlotInfo { name: "MultiLine", ty: SlotType::Bool }], children: &[ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "TypeQueryNode", slots: &[SlotInfo { name: "ExprName", ty: SlotType::Node }, SlotInfo { name: "TypeArguments", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "MappedTypeNode", slots: &[SlotInfo { name: "ReadonlyToken", ty: SlotType::Node }, SlotInfo { name: "TypeParameter", ty: SlotType::Node }, SlotInfo { name: "NameType", ty: SlotType::Node }, SlotInfo { name: "QuestionToken", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "Members", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }, ChildSlot { slot: 5, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "TypeLiteralNode", slots: &[SlotInfo { name: "Members", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "TupleTypeNode", slots: &[SlotInfo { name: "Elements", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "NamedTupleMember", slots: &[SlotInfo { name: "DotDotDotToken", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "QuestionToken", ty: SlotType::Node }, SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "OptionalTypeNode", slots: &[SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "RestTypeNode", slots: &[SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "ParenthesizedTypeNode", slots: &[SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "FunctionTypeNode", slots: &[SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "FullSignature", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "ConstructorTypeNode", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Nodes }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "TemplateHead", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }, SlotInfo { name: "RawText", ty: SlotType::Text }, SlotInfo { name: "TemplateFlags", ty: SlotType::TokenFlags }, SlotInfo { name: "TokenFlags", ty: SlotType::TokenFlags }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "TemplateMiddle", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }, SlotInfo { name: "RawText", ty: SlotType::Text }, SlotInfo { name: "TemplateFlags", ty: SlotType::TokenFlags }, SlotInfo { name: "TokenFlags", ty: SlotType::TokenFlags }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "TemplateTail", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }, SlotInfo { name: "RawText", ty: SlotType::Text }, SlotInfo { name: "TemplateFlags", ty: SlotType::TokenFlags }, SlotInfo { name: "TokenFlags", ty: SlotType::TokenFlags }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "TemplateLiteralTypeNode", slots: &[SlotInfo { name: "Head", ty: SlotType::Node }, SlotInfo { name: "TemplateSpans", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "TemplateLiteralTypeSpan", slots: &[SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "Literal", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "SyntheticExpression", slots: &[SlotInfo { name: "Type", ty: SlotType::TypeId }, SlotInfo { name: "IsSpread", ty: SlotType::Bool }, SlotInfo { name: "TupleNameSource", ty: SlotType::Node }], children: &[ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "PartiallyEmittedExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxElement", slots: &[SlotInfo { name: "OpeningElement", ty: SlotType::Node }, SlotInfo { name: "Children", ty: SlotType::NodeList }, SlotInfo { name: "ClosingElement", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxAttributes", slots: &[SlotInfo { name: "Properties", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "JsxNamespacedName", slots: &[SlotInfo { name: "Namespace", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxOpeningElement", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "TypeArguments", ty: SlotType::NodeList }, SlotInfo { name: "Attributes", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxSelfClosingElement", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "TypeArguments", ty: SlotType::NodeList }, SlotInfo { name: "Attributes", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxFragment", slots: &[SlotInfo { name: "OpeningFragment", ty: SlotType::Node }, SlotInfo { name: "Children", ty: SlotType::NodeList }, SlotInfo { name: "ClosingFragment", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxOpeningFragment", slots: &[], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxClosingFragment", slots: &[], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxAttribute", slots: &[SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "Initializer", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "JsxSpreadAttribute", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxClosingElement", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxExpression", slots: &[SlotInfo { name: "DotDotDotToken", ty: SlotType::Node }, SlotInfo { name: "Expression", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JsxText", slots: &[SlotInfo { name: "Text", ty: SlotType::Text }, SlotInfo { name: "ContainsOnlyTriviaWhiteSpaces", ty: SlotType::Bool }, SlotInfo { name: "TokenFlags", ty: SlotType::TokenFlags }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "SyntaxList", slots: &[SlotInfo { name: "Children", ty: SlotType::RawNodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::RawNodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDoc", slots: &[SlotInfo { name: "Comment", ty: SlotType::NodeList }, SlotInfo { name: "Tags", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocTypeExpression", slots: &[SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocNonNullableType", slots: &[SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocNullableType", slots: &[SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocAllType", slots: &[], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocVariadicType", slots: &[SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocOptionalType", slots: &[SlotInfo { name: "Type", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocTypeTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "TypeExpression", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocUnknownTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocTemplateTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "Constraint", ty: SlotType::Node }, SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }, ChildSlot { slot: 3, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocReturnTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "TypeExpression", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocPublicTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocPrivateTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocProtectedTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocReadonlyTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocOverrideTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocDeprecatedTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocSeeTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "NameExpression", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocImplementsTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "ClassName", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocAugmentsTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "ClassName", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocSatisfiesTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "TypeExpression", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocThrowsTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "TypeExpression", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocThisTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "TypeExpression", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocImportTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "ImportClause", ty: SlotType::Node }, SlotInfo { name: "ModuleSpecifier", ty: SlotType::Node }, SlotInfo { name: "Attributes", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocCallbackTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "TypeExpression", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocOverloadTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "TypeExpression", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocTypedefTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "TypeExpression", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocSignature", slots: &[SlotInfo { name: "TypeParameters", ty: SlotType::NodeList }, SlotInfo { name: "Parameters", ty: SlotType::NodeList }, SlotInfo { name: "Type", ty: SlotType::Node }, SlotInfo { name: "FullSignature", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Nodes }, ChildSlot { slot: 1, visit: VisitTag::Nodes }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "JSDocNameReference", slots: &[SlotInfo { name: "name", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "SourceFile", slots: &[SlotInfo { name: "Statements", ty: SlotType::NodeList }, SlotInfo { name: "EndOfFileToken", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::TopLevelStatements }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER },
+    DefInfo { name: "ModuleDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "Keyword", ty: SlotType::Kind }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "Body", ty: SlotType::Node }, SlotInfo { name: "AsteriskToken", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_LOCALS | LATE_NEXT_CONTAINER | LATE_FLOW_NODE | LATE_END_FLOW_NODE },
+    DefInfo { name: "ImportEqualsDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "IsTypeOnly", ty: SlotType::Bool }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "ModuleReference", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL | LATE_FLOW_NODE },
+    DefInfo { name: "ExportDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "IsTypeOnly", ty: SlotType::Bool }, SlotInfo { name: "ExportClause", ty: SlotType::Node }, SlotInfo { name: "ModuleSpecifier", ty: SlotType::Node }, SlotInfo { name: "Attributes", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_FLOW_NODE },
+    DefInfo { name: "ImportTypeNode", slots: &[SlotInfo { name: "IsTypeOf", ty: SlotType::Bool }, SlotInfo { name: "Argument", ty: SlotType::Node }, SlotInfo { name: "Attributes", ty: SlotType::Node }, SlotInfo { name: "Qualifier", ty: SlotType::Node }, SlotInfo { name: "TypeArguments", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Nodes }], children_alt: &[], late: 0 },
+    DefInfo { name: "ImportClause", slots: &[SlotInfo { name: "PhaseModifier", ty: SlotType::Kind }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "NamedBindings", ty: SlotType::Node }], children: &[ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL },
+    DefInfo { name: "ImportSpecifier", slots: &[SlotInfo { name: "IsTypeOnly", ty: SlotType::Bool }, SlotInfo { name: "PropertyName", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }], children: &[ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL | LATE_LOCAL_SYMBOL },
+    DefInfo { name: "JSDocText", slots: &[SlotInfo { name: "text", ty: SlotType::Text }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocLink", slots: &[SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "text", ty: SlotType::Text }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocLinkPlain", slots: &[SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "text", ty: SlotType::Text }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocLinkCode", slots: &[SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "text", ty: SlotType::Text }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "TypeParameterDeclaration", slots: &[SlotInfo { name: "modifiers", ty: SlotType::ModifierList }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "Constraint", ty: SlotType::Node }, SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "DefaultType", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Modifiers }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 2, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 4, visit: VisitTag::Node }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "SyntheticReferenceExpression", slots: &[SlotInfo { name: "Expression", ty: SlotType::Node }, SlotInfo { name: "ThisArg", ty: SlotType::Node }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }], children_alt: &[], late: 0 },
+    DefInfo { name: "JSDocTypeLiteral", slots: &[SlotInfo { name: "JSDocPropertyTags", ty: SlotType::RawNodeList }, SlotInfo { name: "IsArrayType", ty: SlotType::Bool }], children: &[ChildSlot { slot: 0, visit: VisitTag::RawNodes }], children_alt: &[], late: LATE_SYMBOL },
+    DefInfo { name: "JSDocParameterOrPropertyTag", slots: &[SlotInfo { name: "TagName", ty: SlotType::Node }, SlotInfo { name: "name", ty: SlotType::Node }, SlotInfo { name: "IsBracketed", ty: SlotType::Bool }, SlotInfo { name: "TypeExpression", ty: SlotType::Node }, SlotInfo { name: "IsNameFirst", ty: SlotType::Bool }, SlotInfo { name: "Comment", ty: SlotType::NodeList }], children: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 5, visit: VisitTag::Nodes }], children_alt: &[ChildSlot { slot: 0, visit: VisitTag::Node }, ChildSlot { slot: 1, visit: VisitTag::Node }, ChildSlot { slot: 3, visit: VisitTag::Node }, ChildSlot { slot: 5, visit: VisitTag::Nodes }], late: 0 },
+    DefInfo { name: "FlowSwitchClauseData", slots: &[SlotInfo { name: "SwitchStatement", ty: SlotType::Node }, SlotInfo { name: "ClauseStart", ty: SlotType::Int }, SlotInfo { name: "ClauseEnd", ty: SlotType::Int }], children: &[], children_alt: &[], late: 0 },
+    DefInfo { name: "FlowReduceLabelData", slots: &[SlotInfo { name: "Target", ty: SlotType::FlowNode }, SlotInfo { name: "Antecedents", ty: SlotType::FlowList }], children: &[], children_alt: &[], late: 0 },
 ];
 
+#[rustfmt::skip]
 static DEFS: [Def; DEF_COUNT] = [
     Def::None,
     Def::Token,
@@ -5626,6 +615,7 @@ static DEFS: [Def; DEF_COUNT] = [
     Def::FlowReduceLabelData,
 ];
 
+#[rustfmt::skip]
 static KIND_DEFS: [(Def, Def); KIND_COUNT + 1] = [
     (Def::Token, Def::None),
     (Def::Token, Def::None),
@@ -5997,30 +987,402 @@ impl Def {
     }
 }
 
+#[rustfmt::skip]
 static NAME_SLOT: [u8; DEF_COUNT] = [
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 2, 2, 255, 2, 1, 1, 255, 1, 1, 0, 1,
-    255, 255, 255, 255, 255, 0, 255, 255, 1, 0, 255, 2, 255, 255, 255, 1, 1, 255, 1, 2, 1, 1, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 2, 255, 255, 255, 2, 255, 255,
-    255, 1, 255, 255, 255, 255, 255, 255, 255, 255, 255, 1, 1, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 255, 1, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 1, 255, 255, 255, 255, 255, 0, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 2, 255, 2, 255, 0, 255, 2, 2, 255, 255, 1, 2, 255,
-    0, 0, 0, 1, 255, 255, 1, 255, 255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    0,
+    255,
+    255,
+    2,
+    2,
+    255,
+    2,
+    1,
+    1,
+    255,
+    1,
+    1,
+    0,
+    1,
+    255,
+    255,
+    255,
+    255,
+    255,
+    0,
+    255,
+    255,
+    1,
+    0,
+    255,
+    2,
+    255,
+    255,
+    255,
+    1,
+    1,
+    255,
+    1,
+    2,
+    1,
+    1,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    2,
+    255,
+    255,
+    255,
+    2,
+    255,
+    255,
+    255,
+    1,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    1,
+    1,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    0,
+    255,
+    255,
+    255,
+    255,
+    255,
+    1,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    1,
+    255,
+    255,
+    255,
+    255,
+    255,
+    0,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    2,
+    255,
+    2,
+    255,
+    0,
+    255,
+    2,
+    2,
+    255,
+    255,
+    1,
+    2,
+    255,
+    0,
+    0,
+    0,
+    1,
+    255,
+    255,
+    1,
+    255,
+    255,
 ];
 
+#[rustfmt::skip]
 static MODIFIERS_SLOT: [u8; DEF_COUNT] = [
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 0, 0, 0, 0, 255, 0, 0, 2, 0,
-    255, 255, 255, 0, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 255, 0,
-    255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 3, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 255, 255,
-    255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    0,
+    255,
+    255,
+    255,
+    0,
+    255,
+    0,
+    0,
+    0,
+    0,
+    255,
+    0,
+    0,
+    2,
+    0,
+    255,
+    255,
+    255,
+    0,
+    255,
+    255,
+    255,
+    0,
+    0,
+    255,
+    255,
+    255,
+    255,
+    255,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    255,
+    0,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    0,
+    255,
+    255,
+    255,
+    0,
+    0,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    0,
+    0,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    3,
+    0,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    0,
+    0,
+    0,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    0,
+    255,
+    255,
+    255,
+    255,
+    255,
 ];
 
 #[derive(Clone, Copy, Default, Debug)]
@@ -8460,6 +3822,7 @@ pub struct FunctionLikeBase {
     pub full_signature: NodeId,
 }
 
+#[rustfmt::skip]
 static FUNCTION_LIKE_BASE_SLOTS: [[u8; 4]; DEF_COUNT] = [
     [255; 4],
     [255; 4],
@@ -8667,6 +4030,7 @@ pub struct ClassLikeBase {
     pub members: NodeListId,
 }
 
+#[rustfmt::skip]
 static CLASS_LIKE_BASE_SLOTS: [[u8; 5]; DEF_COUNT] = [
     [255; 5],
     [255; 5],
@@ -8871,6 +4235,7 @@ pub struct BodyBase {
     pub body: NodeId,
 }
 
+#[rustfmt::skip]
 static BODY_BASE_SLOTS: [[u8; 2]; DEF_COUNT] = [
     [255; 2],
     [255; 2],
@@ -9075,6 +4440,7 @@ pub struct LiteralLikeNodeBase<'a> {
     pub token_flags: TokenFlags,
 }
 
+#[rustfmt::skip]
 static LITERAL_LIKE_NODE_BASE_SLOTS: [[u8; 2]; DEF_COUNT] = [
     [255; 2],
     [255; 2],
@@ -9281,6 +4647,7 @@ pub struct TemplateLiteralLikeNodeBase<'a> {
     pub template_flags: TokenFlags,
 }
 
+#[rustfmt::skip]
 static TEMPLATE_LITERAL_LIKE_NODE_BASE_SLOTS: [[u8; 4]; DEF_COUNT] = [
     [255; 4],
     [255; 4],
@@ -12642,7 +8009,7 @@ pub trait NodeFactory: NodeSink {
         self.alloc_node(
             Def::PropertyAccessExpression,
             Kind::PropertyAccessExpression,
-            (flags & NodeFlags::OPTIONAL_CHAIN),
+            flags & NodeFlags::OPTIONAL_CHAIN,
             &[expression.0, question_dot_token.0, name.0],
         )
     }
@@ -12656,7 +8023,7 @@ pub trait NodeFactory: NodeSink {
         self.alloc_node(
             Def::ElementAccessExpression,
             Kind::ElementAccessExpression,
-            (flags & NodeFlags::OPTIONAL_CHAIN),
+            flags & NodeFlags::OPTIONAL_CHAIN,
             &[expression.0, question_dot_token.0, argument_expression.0],
         )
     }
@@ -12671,7 +8038,7 @@ pub trait NodeFactory: NodeSink {
         self.alloc_node(
             Def::CallExpression,
             Kind::CallExpression,
-            (flags & NodeFlags::OPTIONAL_CHAIN),
+            flags & NodeFlags::OPTIONAL_CHAIN,
             &[
                 expression.0,
                 question_dot_token.0,
@@ -12705,7 +8072,7 @@ pub trait NodeFactory: NodeSink {
         self.alloc_node(
             Def::NonNullExpression,
             Kind::NonNullExpression,
-            (flags & NodeFlags::OPTIONAL_CHAIN),
+            flags & NodeFlags::OPTIONAL_CHAIN,
             &[expression.0],
         )
     }
@@ -12744,7 +8111,7 @@ pub trait NodeFactory: NodeSink {
         self.alloc_node(
             Def::TaggedTemplateExpression,
             Kind::TaggedTemplateExpression,
-            (flags & NodeFlags::OPTIONAL_CHAIN),
+            flags & NodeFlags::OPTIONAL_CHAIN,
             &[tag.0, question_dot_token.0, type_arguments.0, template.0],
         )
     }

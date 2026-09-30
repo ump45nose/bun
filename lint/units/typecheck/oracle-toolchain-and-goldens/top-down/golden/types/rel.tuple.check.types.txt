@@ -1,0 +1,661 @@
+types-dump v1
+mark after inline part of NewChecker (line 1117): TypeCount=62 SymbolCount=6 SignatureCount=4 globals=1 mergedSymbols=0 diagnostics=0
+mark start of initializeChecker: TypeCount=62 SymbolCount=6 SignatureCount=4 globals=1 mergedSymbols=0 diagnostics=0
+mark after global merge and global augmentations (line 1349): TypeCount=62 SymbolCount=6 SignatureCount=4 globals=127 mergedSymbols=0 diagnostics=0
+mark after special types (line 1376): TypeCount=85 SymbolCount=6 SignatureCount=4 globals=128 mergedSymbols=0 diagnostics=0
+mark end of initializeChecker: TypeCount=85 SymbolCount=6 SignatureCount=4 globals=128 mergedSymbols=0 diagnostics=0
+after NewChecker types=85 symbols=6 signatures=4
+== stage check
+check tuple.ts diagnostics=9
+== counts types=161 symbols=250 signatures=4 files=1
+== types
+T86 TypeParameter(0x80000) of=0x180000 TypeParameter
+T87 TypeParameter(0x80000) of=0x180000 TypeParameter
+T88 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) regularType=T88
+T89 Object(0x100000) of=0xc TupleType target=T89 instantiations=#2[T89,T91] resolvedTypeArguments=[T86,T87] allTypeParameters=[T86,T87,T90] thisType=T90 baseTypesResolved=true declaredMembersResolved=true resolvedBaseTypes=[T117] declaredMembers={"0":Y7 "1":Y8 "length":Y9} elementInfos=[{flags=0x1},{flags=0x1}] minLength=2 fixedLength=2 combinedFlags=0x1
+T90 TypeParameter(0x80000) TypeParameter constraint=T89 isThisType=true
+T91 Object(0x100000) of=0x40200004 TypeReference members={"0":Y21 "1":Y22 "concat":Y34 "every":Y28 "filter":Y44 "forEach":Y43 "indexOf":Y27 "join":Y35 "lastIndexOf":Y37 "length":Y9 "map":Y39 "pop":Y30 "push":Y25 "reduce":Y33 "reduceRight":Y29 "reverse":Y26 "shift":Y36 "slice":Y41 "some":Y38 "sort":Y31 "splice":Y42 "toLocaleString":Y24 "toString":Y40 "unshift":Y32} properties=[Y40,Y24,Y30,Y25,Y34,Y35,Y26,Y36,Y41,Y31,Y42,Y32,Y27,Y37,Y28,Y38,Y43,Y39,Y44,Y33,Y29,Y21,Y22,Y9] indexInfos=[{keyType=T15 valueType=T29 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T89 resolvedTypeArguments=[T15,T14]
+T92 TypeParameter(0x80000) of=0x180000 TypeParameter
+T93 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) regularType=T93
+T94 Object(0x100000) of=0xc TupleType target=T94 instantiations=#2[T94,T96] resolvedTypeArguments=[T92] allTypeParameters=[T92,T95] thisType=T95 baseTypesResolved=true declaredMembersResolved=true resolvedBaseTypes=[T120] declaredMembers={"0":Y10 "length":Y11} elementInfos=[{flags=0x1}] minLength=1 fixedLength=1 combinedFlags=0x1
+T95 TypeParameter(0x80000) TypeParameter constraint=T94 isThisType=true
+T96 Object(0x100000) of=0x40200004 TypeReference members={"0":Y45 "concat":Y57 "every":Y51 "filter":Y67 "forEach":Y66 "indexOf":Y50 "join":Y58 "lastIndexOf":Y60 "length":Y11 "map":Y62 "pop":Y53 "push":Y48 "reduce":Y56 "reduceRight":Y52 "reverse":Y49 "shift":Y59 "slice":Y64 "some":Y61 "sort":Y54 "splice":Y65 "toLocaleString":Y47 "toString":Y63 "unshift":Y55} properties=[Y63,Y47,Y53,Y48,Y57,Y58,Y49,Y59,Y64,Y54,Y65,Y55,Y50,Y60,Y51,Y61,Y66,Y62,Y67,Y56,Y52,Y45,Y11] indexInfos=[{keyType=T15 valueType=T15 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T94 resolvedTypeArguments=[T15]
+T97 TypeParameter(0x80000) of=0x180000 TypeParameter
+T98 TypeParameter(0x80000) of=0x180000 TypeParameter
+T99 TypeParameter(0x80000) of=0x180000 TypeParameter
+T100 NumberLiteral(0x800) LiteralType value=3(jsnum.Number) regularType=T100
+T101 Object(0x100000) of=0xc TupleType target=T101 instantiations=#2[T101,T103] resolvedTypeArguments=[T97,T98,T99] allTypeParameters=[T97,T98,T99,T102] thisType=T102 baseTypesResolved=true declaredMembersResolved=true resolvedBaseTypes=[T123] declaredMembers={"0":Y12 "1":Y13 "2":Y14 "length":Y15} elementInfos=[{flags=0x1},{flags=0x1},{flags=0x1}] minLength=3 fixedLength=3 combinedFlags=0x1
+T102 TypeParameter(0x80000) TypeParameter constraint=T101 isThisType=true
+T103 Object(0x100000) of=0x40200004 TypeReference members={"0":Y68 "1":Y69 "2":Y70 "concat":Y81 "every":Y75 "filter":Y91 "forEach":Y90 "indexOf":Y74 "join":Y82 "lastIndexOf":Y84 "length":Y15 "map":Y86 "pop":Y77 "push":Y72 "reduce":Y80 "reduceRight":Y76 "reverse":Y73 "shift":Y83 "slice":Y88 "some":Y85 "sort":Y78 "splice":Y89 "toLocaleString":Y71 "toString":Y87 "unshift":Y79} properties=[Y87,Y71,Y77,Y72,Y81,Y82,Y73,Y83,Y88,Y78,Y89,Y79,Y74,Y84,Y75,Y85,Y90,Y86,Y91,Y80,Y76,Y68,Y69,Y70,Y15] indexInfos=[{keyType=T15 valueType=T124 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T101 resolvedTypeArguments=[T15,T14,T21]
+T104 TypeParameter(0x80000) of=0x180000 TypeParameter
+T105 TypeParameter(0x80000) of=0x180000 TypeParameter
+T106 Object(0x100000) of=0xc TupleType target=T106 instantiations=#2[T106,T108] resolvedTypeArguments=[T104,T105] allTypeParameters=[T104,T105,T107] thisType=T107 baseTypesResolved=true declaredMembersResolved=true resolvedBaseTypes=[T128] declaredMembers={"0":Y16 "1":Y17 "length":Y18} elementInfos=[{flags=0x1},{flags=0x1}] minLength=2 fixedLength=2 combinedFlags=0x1 readonly=true
+T107 TypeParameter(0x80000) TypeParameter constraint=T106 isThisType=true
+T108 Object(0x100000) of=0x40200004 TypeReference members={"0":Y93 "1":Y94 "concat":Y97 "every":Y108 "filter":Y102 "forEach":Y98 "indexOf":Y106 "join":Y101 "lastIndexOf":Y107 "length":Y18 "map":Y95 "reduce":Y99 "reduceRight":Y100 "slice":Y105 "some":Y109 "toLocaleString":Y104 "toString":Y103} properties=[Y103,Y104,Y97,Y101,Y105,Y106,Y107,Y108,Y109,Y98,Y95,Y102,Y99,Y100,Y93,Y94,Y18] indexInfos=[{keyType=T15 valueType=T29 isReadonly=true declaration=IndexSignature[57894,57926)@lib.es5.d.ts}] target=T106 resolvedTypeArguments=[T15,T14]
+T109 TypeParameter(0x80000) of=0x180000 TypeParameter
+T110 TypeParameter(0x80000) of=0x180000 TypeParameter
+T111 Object(0x100000) of=0xc TupleType target=T111 instantiations=#2[T111,T113] resolvedTypeArguments=[T109,T110] allTypeParameters=[T109,T110,T112] thisType=T112 baseTypesResolved=true declaredMembersResolved=true resolvedBaseTypes=[T132] declaredMembers={"0":Y19 "length":Y20} elementInfos=[{flags=0x1},{flags=0x4}] minLength=1 fixedLength=1 combinedFlags=0x5
+T112 TypeParameter(0x80000) TypeParameter constraint=T111 isThisType=true
+T113 Object(0x100000) of=0x40200004 TypeReference members={"0":Y110 "concat":Y124 "every":Y118 "filter":Y112 "forEach":Y111 "indexOf":Y117 "join":Y125 "lastIndexOf":Y127 "length":Y20 "map":Y129 "pop":Y120 "push":Y115 "reduce":Y123 "reduceRight":Y119 "reverse":Y116 "shift":Y126 "slice":Y131 "some":Y128 "sort":Y121 "splice":Y132 "toLocaleString":Y114 "toString":Y130 "unshift":Y122} properties=[Y130,Y114,Y120,Y115,Y124,Y125,Y116,Y126,Y131,Y121,Y132,Y122,Y117,Y127,Y118,Y128,Y111,Y129,Y112,Y123,Y119,Y110,Y20] indexInfos=[{keyType=T15 valueType=T29 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T111 resolvedTypeArguments=[T15,T14]
+T114 Object(0x100000) of=0x48200004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts members={"concat":Y140 "every":Y134 "filter":Y150 "forEach":Y149 "indexOf":Y133 "join":Y141 "lastIndexOf":Y143 "length":Y151 "map":Y145 "pop":Y136 "push":Y153 "reduce":Y139 "reduceRight":Y135 "reverse":Y154 "shift":Y142 "slice":Y147 "some":Y144 "sort":Y137 "splice":Y148 "toLocaleString":Y152 "toString":Y146 "unshift":Y138} properties=[Y151,Y146,Y152,Y136,Y153,Y140,Y141,Y154,Y142,Y147,Y137,Y148,Y138,Y133,Y143,Y134,Y144,Y149,Y145,Y150,Y139,Y135] indexInfos=[{keyType=T15 valueType=T15 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T65 resolvedTypeArguments=[T15]
+T115 Object(0x100000) of=0x48200004 TypeReference symbol=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts members={"concat":Y158 "every":Y169 "filter":Y163 "forEach":Y159 "indexOf":Y167 "join":Y162 "lastIndexOf":Y168 "length":Y157 "map":Y156 "reduce":Y160 "reduceRight":Y161 "slice":Y166 "some":Y155 "toLocaleString":Y165 "toString":Y164} properties=[Y157,Y164,Y165,Y158,Y162,Y166,Y167,Y168,Y169,Y155,Y159,Y156,Y163,Y160,Y161] indexInfos=[{keyType=T15 valueType=T15 isReadonly=true declaration=IndexSignature[57894,57926)@lib.es5.d.ts}] target=T79 resolvedTypeArguments=[T15]
+T116 Union(0x8000000) of=0x180000 UnionType types=[T86,T87]
+T117 Object(0x100000) of=0x180004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T65 resolvedTypeArguments=[T116]
+T118 Object(0x100000) of=0x4 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T65 resolvedTypeArguments=[T29]
+T119 Object(0x100000) of=0x200004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts members={"concat":Y34 "every":Y28 "filter":Y44 "forEach":Y43 "indexOf":Y27 "join":Y35 "lastIndexOf":Y37 "length":Y23 "map":Y39 "pop":Y30 "push":Y25 "reduce":Y33 "reduceRight":Y29 "reverse":Y26 "shift":Y36 "slice":Y41 "some":Y38 "sort":Y31 "splice":Y42 "toLocaleString":Y24 "toString":Y40 "unshift":Y32} properties=[Y23,Y40,Y24,Y30,Y25,Y34,Y35,Y26,Y36,Y41,Y31,Y42,Y32,Y27,Y37,Y28,Y38,Y43,Y39,Y44,Y33,Y29] indexInfos=[{keyType=T15 valueType=T29 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T65 resolvedTypeArguments=[T29,T91]
+T120 Object(0x100000) of=0x180004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T65 resolvedTypeArguments=[T92]
+T121 Object(0x100000) of=0x200004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts members={"concat":Y57 "every":Y51 "filter":Y67 "forEach":Y66 "indexOf":Y50 "join":Y58 "lastIndexOf":Y60 "length":Y46 "map":Y62 "pop":Y53 "push":Y48 "reduce":Y56 "reduceRight":Y52 "reverse":Y49 "shift":Y59 "slice":Y64 "some":Y61 "sort":Y54 "splice":Y65 "toLocaleString":Y47 "toString":Y63 "unshift":Y55} properties=[Y46,Y63,Y47,Y53,Y48,Y57,Y58,Y49,Y59,Y64,Y54,Y65,Y55,Y50,Y60,Y51,Y61,Y66,Y62,Y67,Y56,Y52] indexInfos=[{keyType=T15 valueType=T15 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T65 resolvedTypeArguments=[T15,T96]
+T122 Union(0x8000000) of=0x180000 UnionType types=[T97,T98,T99]
+T123 Object(0x100000) of=0x180004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T65 resolvedTypeArguments=[T122]
+T124 Union(0x8000000) of=0x8000 UnionType types=[T14,T15,T17,T19]
+T125 Object(0x100000) of=0x4 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T65 resolvedTypeArguments=[T124]
+T126 Object(0x100000) of=0x200004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts members={"concat":Y81 "every":Y75 "filter":Y91 "forEach":Y90 "indexOf":Y74 "join":Y82 "lastIndexOf":Y84 "length":Y92 "map":Y86 "pop":Y77 "push":Y72 "reduce":Y80 "reduceRight":Y76 "reverse":Y73 "shift":Y83 "slice":Y88 "some":Y85 "sort":Y78 "splice":Y89 "toLocaleString":Y71 "toString":Y87 "unshift":Y79} properties=[Y92,Y87,Y71,Y77,Y72,Y81,Y82,Y73,Y83,Y88,Y78,Y89,Y79,Y74,Y84,Y75,Y85,Y90,Y86,Y91,Y80,Y76] indexInfos=[{keyType=T15 valueType=T124 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T65 resolvedTypeArguments=[T124,T103]
+T127 Union(0x8000000) of=0x180000 UnionType types=[T104,T105]
+T128 Object(0x100000) of=0x180004 TypeReference symbol=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts target=T79 resolvedTypeArguments=[T127]
+T129 Object(0x100000) of=0x4 TypeReference symbol=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts target=T79 resolvedTypeArguments=[T29]
+T130 Object(0x100000) of=0x200004 TypeReference symbol=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts members={"concat":Y97 "every":Y108 "filter":Y102 "forEach":Y98 "indexOf":Y106 "join":Y101 "lastIndexOf":Y107 "length":Y96 "map":Y95 "reduce":Y99 "reduceRight":Y100 "slice":Y105 "some":Y109 "toLocaleString":Y104 "toString":Y103} properties=[Y96,Y103,Y104,Y97,Y101,Y105,Y106,Y107,Y108,Y109,Y98,Y95,Y102,Y99,Y100] indexInfos=[{keyType=T15 valueType=T29 isReadonly=true declaration=IndexSignature[57894,57926)@lib.es5.d.ts}] target=T79 resolvedTypeArguments=[T29,T108]
+T131 Union(0x8000000) of=0x180000 UnionType types=[T109,T110]
+T132 Object(0x100000) of=0x180004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T65 resolvedTypeArguments=[T131]
+T133 Object(0x100000) of=0x200004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts members={"concat":Y124 "every":Y118 "filter":Y112 "forEach":Y111 "indexOf":Y117 "join":Y125 "lastIndexOf":Y127 "length":Y113 "map":Y129 "pop":Y120 "push":Y115 "reduce":Y123 "reduceRight":Y119 "reverse":Y116 "shift":Y126 "slice":Y131 "some":Y128 "sort":Y121 "splice":Y132 "toLocaleString":Y114 "toString":Y130 "unshift":Y122} properties=[Y113,Y130,Y114,Y120,Y115,Y124,Y125,Y116,Y126,Y131,Y121,Y132,Y122,Y117,Y127,Y118,Y128,Y111,Y129,Y112,Y123,Y119] indexInfos=[{keyType=T15 valueType=T29 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T65 resolvedTypeArguments=[T29,T113]
+T134 TypeParameter(0x80000) of=0x180000 TypeParameter
+T135 TypeParameter(0x80000) of=0x180000 TypeParameter
+T136 Object(0x100000) of=0xc TupleType target=T136 instantiations=#2[T136,T138] resolvedTypeArguments=[T134,T135] allTypeParameters=[T134,T135,T137] thisType=T137 baseTypesResolved=true declaredMembersResolved=true resolvedBaseTypes=[T145] declaredMembers={"0":Y170 "1":Y171 "length":Y172} elementInfos=[{flags=0x1 labeledDeclaration=NamedTupleMember[335,344)@tuple.ts},{flags=0x1 labeledDeclaration=NamedTupleMember[345,355)@tuple.ts}] minLength=2 fixedLength=2 combinedFlags=0x1
+T137 TypeParameter(0x80000) TypeParameter constraint=T136 isThisType=true
+T138 Object(0x100000) of=0x40200004 TypeReference members={"0":Y177 "1":Y176 "concat":Y197 "every":Y191 "filter":Y185 "forEach":Y184 "indexOf":Y190 "join":Y198 "lastIndexOf":Y178 "length":Y172 "map":Y180 "pop":Y193 "push":Y188 "reduce":Y196 "reduceRight":Y192 "reverse":Y189 "shift":Y199 "slice":Y182 "some":Y179 "sort":Y194 "splice":Y183 "toLocaleString":Y187 "toString":Y181 "unshift":Y195} properties=[Y181,Y187,Y193,Y188,Y197,Y198,Y189,Y199,Y182,Y194,Y183,Y195,Y190,Y178,Y191,Y179,Y184,Y180,Y185,Y196,Y192,Y177,Y176,Y172] indexInfos=[{keyType=T15 valueType=T29 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T136 resolvedTypeArguments=[T14,T15]
+T139 TypeParameter(0x80000) of=0x180000 TypeParameter
+T140 TypeParameter(0x80000) of=0x180000 TypeParameter
+T141 Object(0x100000) of=0xc TupleType target=T141 instantiations=#2[T141,T143] resolvedTypeArguments=[T139,T140] allTypeParameters=[T139,T140,T142] thisType=T142 baseTypesResolved=true declaredMembersResolved=true resolvedBaseTypes=[T148] declaredMembers={"0":Y173 "1":Y174 "length":Y175} elementInfos=[{flags=0x1 labeledDeclaration=NamedTupleMember[375,384)@tuple.ts},{flags=0x1 labeledDeclaration=NamedTupleMember[385,395)@tuple.ts}] minLength=2 fixedLength=2 combinedFlags=0x1
+T142 TypeParameter(0x80000) TypeParameter constraint=T141 isThisType=true
+T143 Object(0x100000) of=0x40200004 TypeReference members={"0":Y200 "1":Y201 "concat":Y218 "every":Y212 "filter":Y206 "forEach":Y205 "indexOf":Y211 "join":Y219 "lastIndexOf":Y221 "length":Y175 "map":Y223 "pop":Y214 "push":Y209 "reduce":Y217 "reduceRight":Y213 "reverse":Y210 "shift":Y220 "slice":Y203 "some":Y222 "sort":Y215 "splice":Y204 "toLocaleString":Y208 "toString":Y202 "unshift":Y216} properties=[Y202,Y208,Y214,Y209,Y218,Y219,Y210,Y220,Y203,Y215,Y204,Y216,Y211,Y221,Y212,Y222,Y205,Y223,Y206,Y217,Y213,Y200,Y201,Y175] indexInfos=[{keyType=T15 valueType=T29 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T141 resolvedTypeArguments=[T15,T14]
+T144 Union(0x8000000) of=0x180000 UnionType types=[T134,T135]
+T145 Object(0x100000) of=0x180004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T65 resolvedTypeArguments=[T144]
+T146 Object(0x100000) of=0x200004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts members={"concat":Y197 "every":Y191 "filter":Y185 "forEach":Y184 "indexOf":Y190 "join":Y198 "lastIndexOf":Y178 "length":Y186 "map":Y180 "pop":Y193 "push":Y188 "reduce":Y196 "reduceRight":Y192 "reverse":Y189 "shift":Y199 "slice":Y182 "some":Y179 "sort":Y194 "splice":Y183 "toLocaleString":Y187 "toString":Y181 "unshift":Y195} properties=[Y186,Y181,Y187,Y193,Y188,Y197,Y198,Y189,Y199,Y182,Y194,Y183,Y195,Y190,Y178,Y191,Y179,Y184,Y180,Y185,Y196,Y192] indexInfos=[{keyType=T15 valueType=T29 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T65 resolvedTypeArguments=[T29,T138]
+T147 Union(0x8000000) of=0x180000 UnionType types=[T139,T140]
+T148 Object(0x100000) of=0x180004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T65 resolvedTypeArguments=[T147]
+T149 Object(0x100000) of=0x200004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts members={"concat":Y218 "every":Y212 "filter":Y206 "forEach":Y205 "indexOf":Y211 "join":Y219 "lastIndexOf":Y221 "length":Y207 "map":Y223 "pop":Y214 "push":Y209 "reduce":Y217 "reduceRight":Y213 "reverse":Y210 "shift":Y220 "slice":Y203 "some":Y222 "sort":Y215 "splice":Y204 "toLocaleString":Y208 "toString":Y202 "unshift":Y216} properties=[Y207,Y202,Y208,Y214,Y209,Y218,Y219,Y210,Y220,Y203,Y215,Y204,Y216,Y211,Y221,Y212,Y222,Y205,Y223,Y206,Y217,Y213] indexInfos=[{keyType=T15 valueType=T29 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T65 resolvedTypeArguments=[T29,T143]
+T150 TypeParameter(0x80000) of=0x180000 TypeParameter
+T151 TypeParameter(0x80000) of=0x180000 TypeParameter
+T152 Union(0x8000000) of=0x88000 UnionType types=[T93,T88]
+T153 Object(0x100000) of=0xc TupleType target=T153 instantiations=#2[T153,T156] resolvedTypeArguments=[T150,T151] allTypeParameters=[T150,T151,T154] thisType=T154 baseTypesResolved=true declaredMembersResolved=true resolvedBaseTypes=[T158] declaredMembers={"0":Y224 "1":Y225 "length":Y226} elementInfos=[{flags=0x1},{flags=0x2}] minLength=1 fixedLength=2 combinedFlags=0x3
+T154 TypeParameter(0x80000) TypeParameter constraint=T153 isThisType=true
+T155 Union(0x8000000) of=0x8000 UnionType types=[T10,T14]
+T156 Object(0x100000) of=0x40200004 TypeReference members={"0":Y227 "1":Y228 "concat":Y232 "every":Y248 "filter":Y242 "forEach":Y241 "indexOf":Y247 "join":Y233 "lastIndexOf":Y235 "length":Y226 "map":Y237 "pop":Y250 "push":Y245 "reduce":Y231 "reduceRight":Y249 "reverse":Y246 "shift":Y234 "slice":Y239 "some":Y236 "sort":Y229 "splice":Y240 "toLocaleString":Y244 "toString":Y238 "unshift":Y230} properties=[Y238,Y244,Y250,Y245,Y232,Y233,Y246,Y234,Y239,Y229,Y240,Y230,Y247,Y235,Y248,Y236,Y241,Y237,Y242,Y231,Y249,Y227,Y228,Y226] indexInfos=[{keyType=T15 valueType=T159 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T153 resolvedTypeArguments=[T15,T155]
+T157 Union(0x8000000) of=0x180000 UnionType types=[T150,T151]
+T158 Object(0x100000) of=0x180004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T65 resolvedTypeArguments=[T157]
+T159 Union(0x8000000) of=0x4008000 UnionType types=[T10,T14,T15]
+T160 Object(0x100000) of=0x4 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts target=T65 resolvedTypeArguments=[T159]
+T161 Object(0x100000) of=0x200004 TypeReference symbol=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts members={"concat":Y232 "every":Y248 "filter":Y242 "forEach":Y241 "indexOf":Y247 "join":Y233 "lastIndexOf":Y235 "length":Y243 "map":Y237 "pop":Y250 "push":Y245 "reduce":Y231 "reduceRight":Y249 "reverse":Y246 "shift":Y234 "slice":Y239 "some":Y236 "sort":Y229 "splice":Y240 "toLocaleString":Y244 "toString":Y238 "unshift":Y230} properties=[Y243,Y238,Y244,Y250,Y245,Y232,Y233,Y246,Y234,Y239,Y229,Y240,Y230,Y247,Y235,Y248,Y236,Y241,Y237,Y242,Y231,Y249] indexInfos=[{keyType=T15 valueType=T159 declaration=IndexSignature[71193,71216)@lib.es5.d.ts}] target=T65 resolvedTypeArguments=[T159,T156]
+== signatures
+G1 resolvedMinArgumentCount=-1 resolvedReturnType=T1
+G2 resolvedMinArgumentCount=-1 resolvedReturnType=T5
+G3 resolvedMinArgumentCount=-1 resolvedReturnType=T1
+G4 resolvedMinArgumentCount=-1 resolvedReturnType=T25
+== symbols
+Y1 Flags=0x2000004 Name="undefined"
+Y2 Flags=0x2000004 Name="arguments"
+Y3 Flags=0x2000004 Name="require"
+Y4 Flags=0x2000004 Name="unknown"
+Y5 Flags=0x2000600 CheckFlags=0x8 Name="globalThis" Exports={"Array":$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts "ArrayBuffer":$"ArrayBuffer"/0x41@InterfaceDeclaration[77061,77600)@lib.es5.d.ts "ArrayBufferConstructor":$"ArrayBufferConstructor"/0x40@InterfaceDeclaration[77835,78005)@lib.es5.d.ts "ArrayBufferLike":$"ArrayBufferLike"/0x80000@TypeAliasDeclaration[77769,77835)@lib.es5.d.ts "ArrayBufferTypes":$"ArrayBufferTypes"/0x40@InterfaceDeclaration[77600,77769)@lib.es5.d.ts "ArrayBufferView":$"ArrayBufferView"/0x40@InterfaceDeclaration[78055,78449)@lib.es5.d.ts "ArrayConstructor":$"ArrayConstructor"/0x40@InterfaceDeclaration[71219,71540)@lib.es5.d.ts "ArrayLike":$"ArrayLike"/0x40@InterfaceDeclaration[74323,74444)@lib.es5.d.ts "Awaited":$"Awaited"/0x80000@TypeAliasDeclaration[73600,74323)@lib.es5.d.ts "Boolean":$"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts "BooleanConstructor":$"BooleanConstructor"/0x40@InterfaceDeclaration[21917,22051)@lib.es5.d.ts "CallableFunction":$"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts "Capitalize":$"Capitalize"/0x80000@TypeAliasDeclaration[76451,76575)@lib.es5.d.ts "ConcatArray":$"ConcatArray"/0x40@InterfaceDeclaration[57929,58108)@lib.es5.d.ts "ConstructorParameters":$"ConstructorParameters"/0x80000@TypeAliasDeclaration[75671,75889)@lib.es5.d.ts "DataView":$"DataView"/0x41@InterfaceDeclaration[78449,84926)@lib.es5.d.ts "DataViewConstructor":$"DataViewConstructor"/0x40@InterfaceDeclaration[84926,85184)@lib.es5.d.ts "Date":$"Date"/0x41@InterfaceDeclaration[29583,37645)@lib.es5.d.ts "DateConstructor":$"DateConstructor"/0x40@InterfaceDeclaration[37645,40109)@lib.es5.d.ts "Error":$"Error"/0x41@InterfaceDeclaration[44366,44452)@lib.es5.d.ts "ErrorConstructor":$"ErrorConstructor"/0x40@InterfaceDeclaration[44452,44587)@lib.es5.d.ts "EvalError":$"EvalError"/0x41@InterfaceDeclaration[44627,44669)@lib.es5.d.ts "EvalErrorConstructor":$"EvalErrorConstructor"/0x40@InterfaceDeclaration[44669,44845)@lib.es5.d.ts "Exclude":$"Exclude"/0x80000@TypeAliasDeclaration[75038,75153)@lib.es5.d.ts "Extract":$"Extract"/0x80000@TypeAliasDeclaration[75153,75268)@lib.es5.d.ts "Float32Array":$"Float32Array"/0x41@InterfaceDeclaration[184942,197644)@lib.es5.d.ts "Float32ArrayConstructor":$"Float32ArrayConstructor"/0x40@InterfaceDeclaration[197644,199141)@lib.es5.d.ts "Float64Array":$"Float64Array"/0x41@InterfaceDeclaration[199193,211895)@lib.es5.d.ts "Float64ArrayConstructor":$"Float64ArrayConstructor"/0x40@InterfaceDeclaration[211895,213392)@lib.es5.d.ts "Function":$"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts "FunctionConstructor":$"FunctionConstructor"/0x40@InterfaceDeclaration[10750,11011)@lib.es5.d.ts "IArguments":$"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts "ImportAssertions":$"ImportAssertions"/0x40@InterfaceDeclaration[25122,25297)@lib.es5.d.ts "ImportAttributes":$"ImportAttributes"/0x40@InterfaceDeclaration[25297,25454)@lib.es5.d.ts "ImportCallOptions":$"ImportCallOptions"/0x40@InterfaceDeclaration[24819,25122)@lib.es5.d.ts "ImportMeta":$"ImportMeta"/0x40@InterfaceDeclaration[24617,24819)@lib.es5.d.ts "Infinity":$"Infinity"/0x1@VariableDeclaration[203,220)@lib.es5.d.ts "InstanceType":$"InstanceType"/0x80000@TypeAliasDeclaration[76046,76243)@lib.es5.d.ts "Int16Array":$"Int16Array"/0x41@InterfaceDeclaration[128012,140709)@lib.es5.d.ts "Int16ArrayConstructor":$"Int16ArrayConstructor"/0x40@InterfaceDeclaration[140709,142186)@lib.es5.d.ts "Int32Array":$"Int32Array"/0x41@InterfaceDeclaration[156478,169175)@lib.es5.d.ts "Int32ArrayConstructor":$"Int32ArrayConstructor"/0x40@InterfaceDeclaration[169175,170652)@lib.es5.d.ts "Int8Array":$"Int8Array"/0x41@InterfaceDeclaration[85228,97913)@lib.es5.d.ts "Int8ArrayConstructor":$"Int8ArrayConstructor"/0x40@InterfaceDeclaration[97913,99380)@lib.es5.d.ts "Intl":$"Intl"/0x200@ModuleDeclaration[213444,219275)@lib.es5.d.ts "JSON":$"JSON"/0x41@InterfaceDeclaration[46272,48035)@lib.es5.d.ts "Lowercase":$"Lowercase"/0x80000@TypeAliasDeclaration[76347,76451)@lib.es5.d.ts "Math":$"Math"/0x41@InterfaceDeclaration[25454,29469)@lib.es5.d.ts "NaN":$"NaN"/0x1@VariableDeclaration[177,189)@lib.es5.d.ts "NewableFunction":$"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts "NoInfer":$"NoInfer"/0x80000@TypeAliasDeclaration[76701,76786)@lib.es5.d.ts "NonNullable":$"NonNullable"/0x80000@TypeAliasDeclaration[75421,75502)@lib.es5.d.ts "Number":$"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts "NumberConstructor":$"NumberConstructor"/0x40@InterfaceDeclaration[23260,24354)@lib.es5.d.ts "Object":$"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts "ObjectConstructor":$"ObjectConstructor"/0x40@InterfaceDeclaration[4293,9173)@lib.es5.d.ts "Omit":$"Omit"/0x80000@TypeAliasDeclaration[75268,75421)@lib.es5.d.ts "OmitThisParameter":$"OmitThisParameter"/0x80000@TypeAliasDeclaration[11287,11491)@lib.es5.d.ts "Parameters":$"Parameters"/0x80000@TypeAliasDeclaration[75502,75671)@lib.es5.d.ts "Partial":$"Partial"/0x80000@TypeAliasDeclaration[74444,74547)@lib.es5.d.ts "Pick":$"Pick"/0x80000@TypeAliasDeclaration[74764,74905)@lib.es5.d.ts "Promise":$"Promise"/0x40@InterfaceDeclaration[72557,73600)@lib.es5.d.ts "PromiseConstructorLike":$"PromiseConstructorLike"/0x80000@TypeAliasDeclaration[71773,71939)@lib.es5.d.ts "PromiseLike":$"PromiseLike"/0x40@InterfaceDeclaration[71939,72557)@lib.es5.d.ts "PropertyDescriptor":$"PropertyDescriptor"/0x40@InterfaceDeclaration[3026,3205)@lib.es5.d.ts "PropertyDescriptorMap":$"PropertyDescriptorMap"/0x40@InterfaceDeclaration[3205,3290)@lib.es5.d.ts "PropertyKey":$"PropertyKey"/0x80000@TypeAliasDeclaration[2970,3026)@lib.es5.d.ts "RangeError":$"RangeError"/0x41@InterfaceDeclaration[44893,44936)@lib.es5.d.ts "RangeErrorConstructor":$"RangeErrorConstructor"/0x40@InterfaceDeclaration[44936,45116)@lib.es5.d.ts "Readonly":$"Readonly"/0x80000@TypeAliasDeclaration[74652,74764)@lib.es5.d.ts "ReadonlyArray":$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts "Record":$"Record"/0x80000@TypeAliasDeclaration[74905,75038)@lib.es5.d.ts "ReferenceError":$"ReferenceError"/0x41@InterfaceDeclaration[45166,45213)@lib.es5.d.ts "ReferenceErrorConstructor":$"ReferenceErrorConstructor"/0x40@InterfaceDeclaration[45213,45409)@lib.es5.d.ts "RegExp":$"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts "RegExpConstructor":$"RegExpConstructor"/0x40@InterfaceDeclaration[42363,44324)@lib.es5.d.ts "RegExpExecArray":$"RegExpExecArray"/0x40@InterfaceDeclaration[40526,40902)@lib.es5.d.ts "RegExpMatchArray":$"RegExpMatchArray"/0x40@InterfaceDeclaration[40147,40526)@lib.es5.d.ts "Required":$"Required"/0x80000@TypeAliasDeclaration[74547,74652)@lib.es5.d.ts "ReturnType":$"ReturnType"/0x80000@TypeAliasDeclaration[75889,76046)@lib.es5.d.ts "String":$"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts "StringConstructor":$"StringConstructor"/0x40@InterfaceDeclaration[21457,21633)@lib.es5.d.ts "Symbol":$"Symbol"/0x40@InterfaceDeclaration[2771,2970)@lib.es5.d.ts "SyntaxError":$"SyntaxError"/0x41@InterfaceDeclaration[45467,45511)@lib.es5.d.ts "SyntaxErrorConstructor":$"SyntaxErrorConstructor"/0x40@InterfaceDeclaration[45511,45695)@lib.es5.d.ts "TemplateStringsArray":$"TemplateStringsArray"/0x40@InterfaceDeclaration[24510,24617)@lib.es5.d.ts "ThisParameterType":$"ThisParameterType"/0x80000@TypeAliasDeclaration[11057,11287)@lib.es5.d.ts "ThisType":$"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts "TypeError":$"TypeError"/0x41@InterfaceDeclaration[45747,45789)@lib.es5.d.ts "TypeErrorConstructor":$"TypeErrorConstructor"/0x40@InterfaceDeclaration[45789,45965)@lib.es5.d.ts "TypedPropertyDescriptor":$"TypedPropertyDescriptor"/0x40@InterfaceDeclaration[71580,71773)@lib.es5.d.ts "URIError":$"URIError"/0x41@InterfaceDeclaration[46013,46054)@lib.es5.d.ts "URIErrorConstructor":$"URIErrorConstructor"/0x40@InterfaceDeclaration[46054,46226)@lib.es5.d.ts "Uint16Array":$"Uint16Array"/0x41@InterfaceDeclaration[142234,154941)@lib.es5.d.ts "Uint16ArrayConstructor":$"Uint16ArrayConstructor"/0x40@InterfaceDeclaration[154941,156428)@lib.es5.d.ts "Uint32Array":$"Uint32Array"/0x41@InterfaceDeclaration[170700,183405)@lib.es5.d.ts "Uint32ArrayConstructor":$"Uint32ArrayConstructor"/0x40@InterfaceDeclaration[183405,184892)@lib.es5.d.ts "Uint8Array":$"Uint8Array"/0x41@InterfaceDeclaration[99426,112126)@lib.es5.d.ts "Uint8ArrayConstructor":$"Uint8ArrayConstructor"/0x40@InterfaceDeclaration[112126,113603)@lib.es5.d.ts "Uint8ClampedArray":$"Uint8ClampedArray"/0x41@InterfaceDeclaration[113651,126403)@lib.es5.d.ts "Uint8ClampedArrayConstructor":$"Uint8ClampedArrayConstructor"/0x40@InterfaceDeclaration[126403,127950)@lib.es5.d.ts "Uncapitalize":$"Uncapitalize"/0x80000@TypeAliasDeclaration[76575,76701)@lib.es5.d.ts "Uppercase":$"Uppercase"/0x80000@TypeAliasDeclaration[76243,76347)@lib.es5.d.ts "WeakKey":$"WeakKey"/0x80000@TypeAliasDeclaration[77009,77061)@lib.es5.d.ts "WeakKeyTypes":$"WeakKeyTypes"/0x40@InterfaceDeclaration[76862,77009)@lib.es5.d.ts "a1":$"a1"/0x2@VariableDeclaration[196,209)@tuple.ts "decodeURI":$"decodeURI"/0x10@FunctionDeclaration[1324,1532)@lib.es5.d.ts "decodeURIComponent":$"decodeURIComponent"/0x10@FunctionDeclaration[1532,1792)@lib.es5.d.ts "encodeURI":$"encodeURI"/0x10@FunctionDeclaration[1792,1979)@lib.es5.d.ts "encodeURIComponent":$"encodeURIComponent"/0x10@FunctionDeclaration[1979,2238)@lib.es5.d.ts "escape":$"escape"/0x10@FunctionDeclaration[2238,2499)@lib.es5.d.ts "eval":$"eval"/0x10@FunctionDeclaration[221,385)@lib.es5.d.ts "globalThis":Y5 "isFinite":$"isFinite"/0x10@FunctionDeclaration[1170,1324)@lib.es5.d.ts "isNaN":$"isNaN"/0x10@FunctionDeclaration[972,1170)@lib.es5.d.ts "parseFloat":$"parseFloat"/0x10@FunctionDeclaration[790,972)@lib.es5.d.ts "parseInt":$"parseInt"/0x10@FunctionDeclaration[385,790)@lib.es5.d.ts "ra":$"ra"/0x2@VariableDeclaration[222,244)@tuple.ts "t1":$"t1"/0x2@VariableDeclaration[11,32)@tuple.ts "t2":$"t2"/0x2@VariableDeclaration[45,58)@tuple.ts "t3":$"t3"/0x2@VariableDeclaration[71,101)@tuple.ts "t4":$"t4"/0x2@VariableDeclaration[114,144)@tuple.ts "t5":$"t5"/0x2@VariableDeclaration[157,183)@tuple.ts "t6":$"t6"/0x2@VariableDeclaration[329,356)@tuple.ts "t7":$"t7"/0x2@VariableDeclaration[369,396)@tuple.ts "t8":$"t8"/0x2@VariableDeclaration[418,440)@tuple.ts "undefined":Y1 "unescape":$"unescape"/0x10@FunctionDeclaration[2499,2771)@lib.es5.d.ts}
+Y6 Flags=0x2000800 Name="\xfetype"
+Y7 Flags=0x2000004 Name="0"
+Y8 Flags=0x2000004 Name="1"
+Y9 Flags=0x2000004 Name="length"
+Y10 Flags=0x2000004 Name="0"
+Y11 Flags=0x2000004 Name="length"
+Y12 Flags=0x2000004 Name="0"
+Y13 Flags=0x2000004 Name="1"
+Y14 Flags=0x2000004 Name="2"
+Y15 Flags=0x2000004 Name="length"
+Y16 Flags=0x2000004 CheckFlags=0x8 Name="0"
+Y17 Flags=0x2000004 CheckFlags=0x8 Name="1"
+Y18 Flags=0x2000004 CheckFlags=0x8 Name="length"
+Y19 Flags=0x2000004 Name="0"
+Y20 Flags=0x2000004 Name="length"
+Y21 Flags=0x2000004 CheckFlags=0x1 Name="0"
+Y22 Flags=0x2000004 CheckFlags=0x1 Name="1"
+Y23 Flags=0x2000004 CheckFlags=0x1 Name="length" Declarations=[PropertySignature[58132,58282)@lib.es5.d.ts] ValueDeclaration=PropertySignature[58132,58282)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y24 Flags=0x2002000 CheckFlags=0x1 Name="toLocaleString" Declarations=[MethodSignature[58378,58553)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58378,58553)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y25 Flags=0x2002000 CheckFlags=0x1 Name="push" Declarations=[MethodSignature[58745,58946)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58745,58946)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y26 Flags=0x2002000 CheckFlags=0x1 Name="reverse" Declarations=[MethodSignature[59813,59985)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59813,59985)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y27 Flags=0x2002000 CheckFlags=0x1 Name="indexOf" Declarations=[MethodSignature[63109,63478)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63109,63478)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y28 Flags=0x2002000 CheckFlags=0x1 Name="every" Declarations=[MethodSignature[63888,64548)@lib.es5.d.ts,MethodSignature[64548,65188)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63888,64548)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y29 Flags=0x2002000 CheckFlags=0x1 Name="reduceRight" Declarations=[MethodSignature[69533,70290)@lib.es5.d.ts,MethodSignature[70290,70416)@lib.es5.d.ts,MethodSignature[70416,71193)@lib.es5.d.ts] ValueDeclaration=MethodSignature[69533,70290)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y30 Flags=0x2002000 CheckFlags=0x1 Name="pop" Declarations=[MethodSignature[58553,58745)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58553,58745)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y31 Flags=0x2002000 CheckFlags=0x1 Name="sort" Declarations=[MethodSignature[60826,61401)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60826,61401)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y32 Flags=0x2002000 CheckFlags=0x1 Name="unshift" Declarations=[MethodSignature[62891,63109)@lib.es5.d.ts] ValueDeclaration=MethodSignature[62891,63109)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y33 Flags=0x2002000 CheckFlags=0x1 Name="reduce" Declarations=[MethodSignature[67940,68666)@lib.es5.d.ts,MethodSignature[68666,68787)@lib.es5.d.ts,MethodSignature[68787,69533)@lib.es5.d.ts] ValueDeclaration=MethodSignature[67940,68666)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y34 Flags=0x2002000 CheckFlags=0x1 Name="concat" Declarations=[MethodSignature[58946,59210)@lib.es5.d.ts,MethodSignature[59210,59480)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58946,59210)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y35 Flags=0x2002000 CheckFlags=0x1 Name="join" Declarations=[MethodSignature[59480,59813)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59480,59813)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y36 Flags=0x2002000 CheckFlags=0x1 Name="shift" Declarations=[MethodSignature[59985,60180)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59985,60180)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y37 Flags=0x2002000 CheckFlags=0x1 Name="lastIndexOf" Declarations=[MethodSignature[63478,63888)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63478,63888)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y38 Flags=0x2002000 CheckFlags=0x1 Name="some" Declarations=[MethodSignature[65188,65843)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65188,65843)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y39 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[66331,66872)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66331,66872)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y40 Flags=0x2002000 CheckFlags=0x1 Name="toString" Declarations=[MethodSignature[58282,58378)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58282,58378)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y41 Flags=0x2002000 CheckFlags=0x1 Name="slice" Declarations=[MethodSignature[60180,60826)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60180,60826)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y42 Flags=0x2002000 CheckFlags=0x1 Name="splice" Declarations=[MethodSignature[61401,62146)@lib.es5.d.ts,MethodSignature[62146,62891)@lib.es5.d.ts] ValueDeclaration=MethodSignature[61401,62146)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y43 Flags=0x2002000 CheckFlags=0x1 Name="forEach" Declarations=[MethodSignature[65843,66331)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65843,66331)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y44 Flags=0x2002000 CheckFlags=0x1 Name="filter" Declarations=[MethodSignature[66872,67414)@lib.es5.d.ts,MethodSignature[67414,67940)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66872,67414)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y45 Flags=0x2000004 CheckFlags=0x1 Name="0"
+Y46 Flags=0x2000004 CheckFlags=0x1 Name="length" Declarations=[PropertySignature[58132,58282)@lib.es5.d.ts] ValueDeclaration=PropertySignature[58132,58282)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y47 Flags=0x2002000 CheckFlags=0x1 Name="toLocaleString" Declarations=[MethodSignature[58378,58553)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58378,58553)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y48 Flags=0x2002000 CheckFlags=0x1 Name="push" Declarations=[MethodSignature[58745,58946)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58745,58946)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y49 Flags=0x2002000 CheckFlags=0x1 Name="reverse" Declarations=[MethodSignature[59813,59985)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59813,59985)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y50 Flags=0x2002000 CheckFlags=0x1 Name="indexOf" Declarations=[MethodSignature[63109,63478)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63109,63478)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y51 Flags=0x2002000 CheckFlags=0x1 Name="every" Declarations=[MethodSignature[63888,64548)@lib.es5.d.ts,MethodSignature[64548,65188)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63888,64548)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y52 Flags=0x2002000 CheckFlags=0x1 Name="reduceRight" Declarations=[MethodSignature[69533,70290)@lib.es5.d.ts,MethodSignature[70290,70416)@lib.es5.d.ts,MethodSignature[70416,71193)@lib.es5.d.ts] ValueDeclaration=MethodSignature[69533,70290)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y53 Flags=0x2002000 CheckFlags=0x1 Name="pop" Declarations=[MethodSignature[58553,58745)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58553,58745)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y54 Flags=0x2002000 CheckFlags=0x1 Name="sort" Declarations=[MethodSignature[60826,61401)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60826,61401)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y55 Flags=0x2002000 CheckFlags=0x1 Name="unshift" Declarations=[MethodSignature[62891,63109)@lib.es5.d.ts] ValueDeclaration=MethodSignature[62891,63109)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y56 Flags=0x2002000 CheckFlags=0x1 Name="reduce" Declarations=[MethodSignature[67940,68666)@lib.es5.d.ts,MethodSignature[68666,68787)@lib.es5.d.ts,MethodSignature[68787,69533)@lib.es5.d.ts] ValueDeclaration=MethodSignature[67940,68666)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y57 Flags=0x2002000 CheckFlags=0x1 Name="concat" Declarations=[MethodSignature[58946,59210)@lib.es5.d.ts,MethodSignature[59210,59480)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58946,59210)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y58 Flags=0x2002000 CheckFlags=0x1 Name="join" Declarations=[MethodSignature[59480,59813)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59480,59813)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y59 Flags=0x2002000 CheckFlags=0x1 Name="shift" Declarations=[MethodSignature[59985,60180)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59985,60180)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y60 Flags=0x2002000 CheckFlags=0x1 Name="lastIndexOf" Declarations=[MethodSignature[63478,63888)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63478,63888)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y61 Flags=0x2002000 CheckFlags=0x1 Name="some" Declarations=[MethodSignature[65188,65843)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65188,65843)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y62 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[66331,66872)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66331,66872)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y63 Flags=0x2002000 CheckFlags=0x1 Name="toString" Declarations=[MethodSignature[58282,58378)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58282,58378)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y64 Flags=0x2002000 CheckFlags=0x1 Name="slice" Declarations=[MethodSignature[60180,60826)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60180,60826)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y65 Flags=0x2002000 CheckFlags=0x1 Name="splice" Declarations=[MethodSignature[61401,62146)@lib.es5.d.ts,MethodSignature[62146,62891)@lib.es5.d.ts] ValueDeclaration=MethodSignature[61401,62146)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y66 Flags=0x2002000 CheckFlags=0x1 Name="forEach" Declarations=[MethodSignature[65843,66331)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65843,66331)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y67 Flags=0x2002000 CheckFlags=0x1 Name="filter" Declarations=[MethodSignature[66872,67414)@lib.es5.d.ts,MethodSignature[67414,67940)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66872,67414)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y68 Flags=0x2000004 CheckFlags=0x1 Name="0"
+Y69 Flags=0x2000004 CheckFlags=0x1 Name="1"
+Y70 Flags=0x2000004 CheckFlags=0x1 Name="2"
+Y71 Flags=0x2002000 CheckFlags=0x1 Name="toLocaleString" Declarations=[MethodSignature[58378,58553)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58378,58553)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y72 Flags=0x2002000 CheckFlags=0x1 Name="push" Declarations=[MethodSignature[58745,58946)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58745,58946)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y73 Flags=0x2002000 CheckFlags=0x1 Name="reverse" Declarations=[MethodSignature[59813,59985)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59813,59985)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y74 Flags=0x2002000 CheckFlags=0x1 Name="indexOf" Declarations=[MethodSignature[63109,63478)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63109,63478)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y75 Flags=0x2002000 CheckFlags=0x1 Name="every" Declarations=[MethodSignature[63888,64548)@lib.es5.d.ts,MethodSignature[64548,65188)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63888,64548)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y76 Flags=0x2002000 CheckFlags=0x1 Name="reduceRight" Declarations=[MethodSignature[69533,70290)@lib.es5.d.ts,MethodSignature[70290,70416)@lib.es5.d.ts,MethodSignature[70416,71193)@lib.es5.d.ts] ValueDeclaration=MethodSignature[69533,70290)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y77 Flags=0x2002000 CheckFlags=0x1 Name="pop" Declarations=[MethodSignature[58553,58745)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58553,58745)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y78 Flags=0x2002000 CheckFlags=0x1 Name="sort" Declarations=[MethodSignature[60826,61401)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60826,61401)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y79 Flags=0x2002000 CheckFlags=0x1 Name="unshift" Declarations=[MethodSignature[62891,63109)@lib.es5.d.ts] ValueDeclaration=MethodSignature[62891,63109)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y80 Flags=0x2002000 CheckFlags=0x1 Name="reduce" Declarations=[MethodSignature[67940,68666)@lib.es5.d.ts,MethodSignature[68666,68787)@lib.es5.d.ts,MethodSignature[68787,69533)@lib.es5.d.ts] ValueDeclaration=MethodSignature[67940,68666)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y81 Flags=0x2002000 CheckFlags=0x1 Name="concat" Declarations=[MethodSignature[58946,59210)@lib.es5.d.ts,MethodSignature[59210,59480)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58946,59210)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y82 Flags=0x2002000 CheckFlags=0x1 Name="join" Declarations=[MethodSignature[59480,59813)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59480,59813)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y83 Flags=0x2002000 CheckFlags=0x1 Name="shift" Declarations=[MethodSignature[59985,60180)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59985,60180)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y84 Flags=0x2002000 CheckFlags=0x1 Name="lastIndexOf" Declarations=[MethodSignature[63478,63888)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63478,63888)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y85 Flags=0x2002000 CheckFlags=0x1 Name="some" Declarations=[MethodSignature[65188,65843)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65188,65843)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y86 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[66331,66872)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66331,66872)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y87 Flags=0x2002000 CheckFlags=0x1 Name="toString" Declarations=[MethodSignature[58282,58378)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58282,58378)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y88 Flags=0x2002000 CheckFlags=0x1 Name="slice" Declarations=[MethodSignature[60180,60826)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60180,60826)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y89 Flags=0x2002000 CheckFlags=0x1 Name="splice" Declarations=[MethodSignature[61401,62146)@lib.es5.d.ts,MethodSignature[62146,62891)@lib.es5.d.ts] ValueDeclaration=MethodSignature[61401,62146)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y90 Flags=0x2002000 CheckFlags=0x1 Name="forEach" Declarations=[MethodSignature[65843,66331)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65843,66331)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y91 Flags=0x2002000 CheckFlags=0x1 Name="filter" Declarations=[MethodSignature[66872,67414)@lib.es5.d.ts,MethodSignature[67414,67940)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66872,67414)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y92 Flags=0x2000004 CheckFlags=0x1 Name="length" Declarations=[PropertySignature[58132,58282)@lib.es5.d.ts] ValueDeclaration=PropertySignature[58132,58282)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y93 Flags=0x2000004 CheckFlags=0x9 Name="0"
+Y94 Flags=0x2000004 CheckFlags=0x9 Name="1"
+Y95 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[52951,53501)@lib.es5.d.ts] ValueDeclaration=MethodSignature[52951,53501)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y96 Flags=0x2000004 CheckFlags=0x1 Name="length" Declarations=[PropertySignature[48361,48521)@lib.es5.d.ts] ValueDeclaration=PropertySignature[48361,48521)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y97 Flags=0x2002000 CheckFlags=0x1 Name="concat" Declarations=[MethodSignature[48792,48960)@lib.es5.d.ts,MethodSignature[48960,49134)@lib.es5.d.ts] ValueDeclaration=MethodSignature[48792,48960)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y98 Flags=0x2002000 CheckFlags=0x1 Name="forEach" Declarations=[MethodSignature[52454,52951)@lib.es5.d.ts] ValueDeclaration=MethodSignature[52454,52951)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y99 Flags=0x2002000 CheckFlags=0x1 Name="reduce" Declarations=[MethodSignature[54587,55322)@lib.es5.d.ts,MethodSignature[55322,55452)@lib.es5.d.ts,MethodSignature[55452,56207)@lib.es5.d.ts] ValueDeclaration=MethodSignature[54587,55322)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y100 Flags=0x2002000 CheckFlags=0x1 Name="reduceRight" Declarations=[MethodSignature[56207,56973)@lib.es5.d.ts,MethodSignature[56973,57108)@lib.es5.d.ts,MethodSignature[57108,57894)@lib.es5.d.ts] ValueDeclaration=MethodSignature[56207,56973)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y101 Flags=0x2002000 CheckFlags=0x1 Name="join" Declarations=[MethodSignature[49134,49451)@lib.es5.d.ts] ValueDeclaration=MethodSignature[49134,49451)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y102 Flags=0x2002000 CheckFlags=0x1 Name="filter" Declarations=[MethodSignature[53501,54052)@lib.es5.d.ts,MethodSignature[54052,54587)@lib.es5.d.ts] ValueDeclaration=MethodSignature[53501,54052)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y103 Flags=0x2002000 CheckFlags=0x1 Name="toString" Declarations=[MethodSignature[48521,48617)@lib.es5.d.ts] ValueDeclaration=MethodSignature[48521,48617)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y104 Flags=0x2002000 CheckFlags=0x1 Name="toLocaleString" Declarations=[MethodSignature[48617,48792)@lib.es5.d.ts] ValueDeclaration=MethodSignature[48617,48792)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y105 Flags=0x2002000 CheckFlags=0x1 Name="slice" Declarations=[MethodSignature[49451,49748)@lib.es5.d.ts] ValueDeclaration=MethodSignature[49451,49748)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y106 Flags=0x2002000 CheckFlags=0x1 Name="indexOf" Declarations=[MethodSignature[49748,50089)@lib.es5.d.ts] ValueDeclaration=MethodSignature[49748,50089)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y107 Flags=0x2002000 CheckFlags=0x1 Name="lastIndexOf" Declarations=[MethodSignature[50089,50463)@lib.es5.d.ts] ValueDeclaration=MethodSignature[50089,50463)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y108 Flags=0x2002000 CheckFlags=0x1 Name="every" Declarations=[MethodSignature[50463,51141)@lib.es5.d.ts,MethodSignature[51141,51790)@lib.es5.d.ts] ValueDeclaration=MethodSignature[50463,51141)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y109 Flags=0x2002000 CheckFlags=0x1 Name="some" Declarations=[MethodSignature[51790,52454)@lib.es5.d.ts] ValueDeclaration=MethodSignature[51790,52454)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y110 Flags=0x2000004 CheckFlags=0x1 Name="0"
+Y111 Flags=0x2002000 CheckFlags=0x1 Name="forEach" Declarations=[MethodSignature[65843,66331)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65843,66331)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y112 Flags=0x2002000 CheckFlags=0x1 Name="filter" Declarations=[MethodSignature[66872,67414)@lib.es5.d.ts,MethodSignature[67414,67940)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66872,67414)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y113 Flags=0x2000004 CheckFlags=0x1 Name="length" Declarations=[PropertySignature[58132,58282)@lib.es5.d.ts] ValueDeclaration=PropertySignature[58132,58282)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y114 Flags=0x2002000 CheckFlags=0x1 Name="toLocaleString" Declarations=[MethodSignature[58378,58553)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58378,58553)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y115 Flags=0x2002000 CheckFlags=0x1 Name="push" Declarations=[MethodSignature[58745,58946)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58745,58946)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y116 Flags=0x2002000 CheckFlags=0x1 Name="reverse" Declarations=[MethodSignature[59813,59985)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59813,59985)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y117 Flags=0x2002000 CheckFlags=0x1 Name="indexOf" Declarations=[MethodSignature[63109,63478)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63109,63478)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y118 Flags=0x2002000 CheckFlags=0x1 Name="every" Declarations=[MethodSignature[63888,64548)@lib.es5.d.ts,MethodSignature[64548,65188)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63888,64548)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y119 Flags=0x2002000 CheckFlags=0x1 Name="reduceRight" Declarations=[MethodSignature[69533,70290)@lib.es5.d.ts,MethodSignature[70290,70416)@lib.es5.d.ts,MethodSignature[70416,71193)@lib.es5.d.ts] ValueDeclaration=MethodSignature[69533,70290)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y120 Flags=0x2002000 CheckFlags=0x1 Name="pop" Declarations=[MethodSignature[58553,58745)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58553,58745)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y121 Flags=0x2002000 CheckFlags=0x1 Name="sort" Declarations=[MethodSignature[60826,61401)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60826,61401)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y122 Flags=0x2002000 CheckFlags=0x1 Name="unshift" Declarations=[MethodSignature[62891,63109)@lib.es5.d.ts] ValueDeclaration=MethodSignature[62891,63109)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y123 Flags=0x2002000 CheckFlags=0x1 Name="reduce" Declarations=[MethodSignature[67940,68666)@lib.es5.d.ts,MethodSignature[68666,68787)@lib.es5.d.ts,MethodSignature[68787,69533)@lib.es5.d.ts] ValueDeclaration=MethodSignature[67940,68666)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y124 Flags=0x2002000 CheckFlags=0x1 Name="concat" Declarations=[MethodSignature[58946,59210)@lib.es5.d.ts,MethodSignature[59210,59480)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58946,59210)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y125 Flags=0x2002000 CheckFlags=0x1 Name="join" Declarations=[MethodSignature[59480,59813)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59480,59813)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y126 Flags=0x2002000 CheckFlags=0x1 Name="shift" Declarations=[MethodSignature[59985,60180)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59985,60180)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y127 Flags=0x2002000 CheckFlags=0x1 Name="lastIndexOf" Declarations=[MethodSignature[63478,63888)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63478,63888)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y128 Flags=0x2002000 CheckFlags=0x1 Name="some" Declarations=[MethodSignature[65188,65843)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65188,65843)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y129 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[66331,66872)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66331,66872)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y130 Flags=0x2002000 CheckFlags=0x1 Name="toString" Declarations=[MethodSignature[58282,58378)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58282,58378)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y131 Flags=0x2002000 CheckFlags=0x1 Name="slice" Declarations=[MethodSignature[60180,60826)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60180,60826)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y132 Flags=0x2002000 CheckFlags=0x1 Name="splice" Declarations=[MethodSignature[61401,62146)@lib.es5.d.ts,MethodSignature[62146,62891)@lib.es5.d.ts] ValueDeclaration=MethodSignature[61401,62146)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y133 Flags=0x2002000 CheckFlags=0x1 Name="indexOf" Declarations=[MethodSignature[63109,63478)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63109,63478)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y134 Flags=0x2002000 CheckFlags=0x1 Name="every" Declarations=[MethodSignature[63888,64548)@lib.es5.d.ts,MethodSignature[64548,65188)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63888,64548)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y135 Flags=0x2002000 CheckFlags=0x1 Name="reduceRight" Declarations=[MethodSignature[69533,70290)@lib.es5.d.ts,MethodSignature[70290,70416)@lib.es5.d.ts,MethodSignature[70416,71193)@lib.es5.d.ts] ValueDeclaration=MethodSignature[69533,70290)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y136 Flags=0x2002000 CheckFlags=0x1 Name="pop" Declarations=[MethodSignature[58553,58745)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58553,58745)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y137 Flags=0x2002000 CheckFlags=0x1 Name="sort" Declarations=[MethodSignature[60826,61401)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60826,61401)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y138 Flags=0x2002000 CheckFlags=0x1 Name="unshift" Declarations=[MethodSignature[62891,63109)@lib.es5.d.ts] ValueDeclaration=MethodSignature[62891,63109)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y139 Flags=0x2002000 CheckFlags=0x1 Name="reduce" Declarations=[MethodSignature[67940,68666)@lib.es5.d.ts,MethodSignature[68666,68787)@lib.es5.d.ts,MethodSignature[68787,69533)@lib.es5.d.ts] ValueDeclaration=MethodSignature[67940,68666)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y140 Flags=0x2002000 CheckFlags=0x1 Name="concat" Declarations=[MethodSignature[58946,59210)@lib.es5.d.ts,MethodSignature[59210,59480)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58946,59210)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y141 Flags=0x2002000 CheckFlags=0x1 Name="join" Declarations=[MethodSignature[59480,59813)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59480,59813)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y142 Flags=0x2002000 CheckFlags=0x1 Name="shift" Declarations=[MethodSignature[59985,60180)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59985,60180)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y143 Flags=0x2002000 CheckFlags=0x1 Name="lastIndexOf" Declarations=[MethodSignature[63478,63888)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63478,63888)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y144 Flags=0x2002000 CheckFlags=0x1 Name="some" Declarations=[MethodSignature[65188,65843)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65188,65843)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y145 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[66331,66872)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66331,66872)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y146 Flags=0x2002000 CheckFlags=0x1 Name="toString" Declarations=[MethodSignature[58282,58378)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58282,58378)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y147 Flags=0x2002000 CheckFlags=0x1 Name="slice" Declarations=[MethodSignature[60180,60826)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60180,60826)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y148 Flags=0x2002000 CheckFlags=0x1 Name="splice" Declarations=[MethodSignature[61401,62146)@lib.es5.d.ts,MethodSignature[62146,62891)@lib.es5.d.ts] ValueDeclaration=MethodSignature[61401,62146)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y149 Flags=0x2002000 CheckFlags=0x1 Name="forEach" Declarations=[MethodSignature[65843,66331)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65843,66331)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y150 Flags=0x2002000 CheckFlags=0x1 Name="filter" Declarations=[MethodSignature[66872,67414)@lib.es5.d.ts,MethodSignature[67414,67940)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66872,67414)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y151 Flags=0x2000004 CheckFlags=0x1 Name="length" Declarations=[PropertySignature[58132,58282)@lib.es5.d.ts] ValueDeclaration=PropertySignature[58132,58282)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y152 Flags=0x2002000 CheckFlags=0x1 Name="toLocaleString" Declarations=[MethodSignature[58378,58553)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58378,58553)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y153 Flags=0x2002000 CheckFlags=0x1 Name="push" Declarations=[MethodSignature[58745,58946)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58745,58946)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y154 Flags=0x2002000 CheckFlags=0x1 Name="reverse" Declarations=[MethodSignature[59813,59985)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59813,59985)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y155 Flags=0x2002000 CheckFlags=0x1 Name="some" Declarations=[MethodSignature[51790,52454)@lib.es5.d.ts] ValueDeclaration=MethodSignature[51790,52454)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y156 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[52951,53501)@lib.es5.d.ts] ValueDeclaration=MethodSignature[52951,53501)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y157 Flags=0x2000004 CheckFlags=0x1 Name="length" Declarations=[PropertySignature[48361,48521)@lib.es5.d.ts] ValueDeclaration=PropertySignature[48361,48521)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y158 Flags=0x2002000 CheckFlags=0x1 Name="concat" Declarations=[MethodSignature[48792,48960)@lib.es5.d.ts,MethodSignature[48960,49134)@lib.es5.d.ts] ValueDeclaration=MethodSignature[48792,48960)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y159 Flags=0x2002000 CheckFlags=0x1 Name="forEach" Declarations=[MethodSignature[52454,52951)@lib.es5.d.ts] ValueDeclaration=MethodSignature[52454,52951)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y160 Flags=0x2002000 CheckFlags=0x1 Name="reduce" Declarations=[MethodSignature[54587,55322)@lib.es5.d.ts,MethodSignature[55322,55452)@lib.es5.d.ts,MethodSignature[55452,56207)@lib.es5.d.ts] ValueDeclaration=MethodSignature[54587,55322)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y161 Flags=0x2002000 CheckFlags=0x1 Name="reduceRight" Declarations=[MethodSignature[56207,56973)@lib.es5.d.ts,MethodSignature[56973,57108)@lib.es5.d.ts,MethodSignature[57108,57894)@lib.es5.d.ts] ValueDeclaration=MethodSignature[56207,56973)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y162 Flags=0x2002000 CheckFlags=0x1 Name="join" Declarations=[MethodSignature[49134,49451)@lib.es5.d.ts] ValueDeclaration=MethodSignature[49134,49451)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y163 Flags=0x2002000 CheckFlags=0x1 Name="filter" Declarations=[MethodSignature[53501,54052)@lib.es5.d.ts,MethodSignature[54052,54587)@lib.es5.d.ts] ValueDeclaration=MethodSignature[53501,54052)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y164 Flags=0x2002000 CheckFlags=0x1 Name="toString" Declarations=[MethodSignature[48521,48617)@lib.es5.d.ts] ValueDeclaration=MethodSignature[48521,48617)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y165 Flags=0x2002000 CheckFlags=0x1 Name="toLocaleString" Declarations=[MethodSignature[48617,48792)@lib.es5.d.ts] ValueDeclaration=MethodSignature[48617,48792)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y166 Flags=0x2002000 CheckFlags=0x1 Name="slice" Declarations=[MethodSignature[49451,49748)@lib.es5.d.ts] ValueDeclaration=MethodSignature[49451,49748)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y167 Flags=0x2002000 CheckFlags=0x1 Name="indexOf" Declarations=[MethodSignature[49748,50089)@lib.es5.d.ts] ValueDeclaration=MethodSignature[49748,50089)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y168 Flags=0x2002000 CheckFlags=0x1 Name="lastIndexOf" Declarations=[MethodSignature[50089,50463)@lib.es5.d.ts] ValueDeclaration=MethodSignature[50089,50463)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y169 Flags=0x2002000 CheckFlags=0x1 Name="every" Declarations=[MethodSignature[50463,51141)@lib.es5.d.ts,MethodSignature[51141,51790)@lib.es5.d.ts] ValueDeclaration=MethodSignature[50463,51141)@lib.es5.d.ts Parent=$"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts
+Y170 Flags=0x2000004 Name="0"
+Y171 Flags=0x2000004 Name="1"
+Y172 Flags=0x2000004 Name="length"
+Y173 Flags=0x2000004 Name="0"
+Y174 Flags=0x2000004 Name="1"
+Y175 Flags=0x2000004 Name="length"
+Y176 Flags=0x2000004 CheckFlags=0x1 Name="1"
+Y177 Flags=0x2000004 CheckFlags=0x1 Name="0"
+Y178 Flags=0x2002000 CheckFlags=0x1 Name="lastIndexOf" Declarations=[MethodSignature[63478,63888)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63478,63888)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y179 Flags=0x2002000 CheckFlags=0x1 Name="some" Declarations=[MethodSignature[65188,65843)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65188,65843)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y180 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[66331,66872)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66331,66872)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y181 Flags=0x2002000 CheckFlags=0x1 Name="toString" Declarations=[MethodSignature[58282,58378)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58282,58378)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y182 Flags=0x2002000 CheckFlags=0x1 Name="slice" Declarations=[MethodSignature[60180,60826)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60180,60826)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y183 Flags=0x2002000 CheckFlags=0x1 Name="splice" Declarations=[MethodSignature[61401,62146)@lib.es5.d.ts,MethodSignature[62146,62891)@lib.es5.d.ts] ValueDeclaration=MethodSignature[61401,62146)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y184 Flags=0x2002000 CheckFlags=0x1 Name="forEach" Declarations=[MethodSignature[65843,66331)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65843,66331)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y185 Flags=0x2002000 CheckFlags=0x1 Name="filter" Declarations=[MethodSignature[66872,67414)@lib.es5.d.ts,MethodSignature[67414,67940)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66872,67414)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y186 Flags=0x2000004 CheckFlags=0x1 Name="length" Declarations=[PropertySignature[58132,58282)@lib.es5.d.ts] ValueDeclaration=PropertySignature[58132,58282)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y187 Flags=0x2002000 CheckFlags=0x1 Name="toLocaleString" Declarations=[MethodSignature[58378,58553)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58378,58553)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y188 Flags=0x2002000 CheckFlags=0x1 Name="push" Declarations=[MethodSignature[58745,58946)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58745,58946)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y189 Flags=0x2002000 CheckFlags=0x1 Name="reverse" Declarations=[MethodSignature[59813,59985)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59813,59985)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y190 Flags=0x2002000 CheckFlags=0x1 Name="indexOf" Declarations=[MethodSignature[63109,63478)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63109,63478)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y191 Flags=0x2002000 CheckFlags=0x1 Name="every" Declarations=[MethodSignature[63888,64548)@lib.es5.d.ts,MethodSignature[64548,65188)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63888,64548)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y192 Flags=0x2002000 CheckFlags=0x1 Name="reduceRight" Declarations=[MethodSignature[69533,70290)@lib.es5.d.ts,MethodSignature[70290,70416)@lib.es5.d.ts,MethodSignature[70416,71193)@lib.es5.d.ts] ValueDeclaration=MethodSignature[69533,70290)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y193 Flags=0x2002000 CheckFlags=0x1 Name="pop" Declarations=[MethodSignature[58553,58745)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58553,58745)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y194 Flags=0x2002000 CheckFlags=0x1 Name="sort" Declarations=[MethodSignature[60826,61401)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60826,61401)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y195 Flags=0x2002000 CheckFlags=0x1 Name="unshift" Declarations=[MethodSignature[62891,63109)@lib.es5.d.ts] ValueDeclaration=MethodSignature[62891,63109)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y196 Flags=0x2002000 CheckFlags=0x1 Name="reduce" Declarations=[MethodSignature[67940,68666)@lib.es5.d.ts,MethodSignature[68666,68787)@lib.es5.d.ts,MethodSignature[68787,69533)@lib.es5.d.ts] ValueDeclaration=MethodSignature[67940,68666)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y197 Flags=0x2002000 CheckFlags=0x1 Name="concat" Declarations=[MethodSignature[58946,59210)@lib.es5.d.ts,MethodSignature[59210,59480)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58946,59210)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y198 Flags=0x2002000 CheckFlags=0x1 Name="join" Declarations=[MethodSignature[59480,59813)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59480,59813)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y199 Flags=0x2002000 CheckFlags=0x1 Name="shift" Declarations=[MethodSignature[59985,60180)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59985,60180)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y200 Flags=0x2000004 CheckFlags=0x1 Name="0"
+Y201 Flags=0x2000004 CheckFlags=0x1 Name="1"
+Y202 Flags=0x2002000 CheckFlags=0x1 Name="toString" Declarations=[MethodSignature[58282,58378)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58282,58378)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y203 Flags=0x2002000 CheckFlags=0x1 Name="slice" Declarations=[MethodSignature[60180,60826)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60180,60826)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y204 Flags=0x2002000 CheckFlags=0x1 Name="splice" Declarations=[MethodSignature[61401,62146)@lib.es5.d.ts,MethodSignature[62146,62891)@lib.es5.d.ts] ValueDeclaration=MethodSignature[61401,62146)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y205 Flags=0x2002000 CheckFlags=0x1 Name="forEach" Declarations=[MethodSignature[65843,66331)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65843,66331)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y206 Flags=0x2002000 CheckFlags=0x1 Name="filter" Declarations=[MethodSignature[66872,67414)@lib.es5.d.ts,MethodSignature[67414,67940)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66872,67414)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y207 Flags=0x2000004 CheckFlags=0x1 Name="length" Declarations=[PropertySignature[58132,58282)@lib.es5.d.ts] ValueDeclaration=PropertySignature[58132,58282)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y208 Flags=0x2002000 CheckFlags=0x1 Name="toLocaleString" Declarations=[MethodSignature[58378,58553)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58378,58553)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y209 Flags=0x2002000 CheckFlags=0x1 Name="push" Declarations=[MethodSignature[58745,58946)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58745,58946)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y210 Flags=0x2002000 CheckFlags=0x1 Name="reverse" Declarations=[MethodSignature[59813,59985)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59813,59985)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y211 Flags=0x2002000 CheckFlags=0x1 Name="indexOf" Declarations=[MethodSignature[63109,63478)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63109,63478)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y212 Flags=0x2002000 CheckFlags=0x1 Name="every" Declarations=[MethodSignature[63888,64548)@lib.es5.d.ts,MethodSignature[64548,65188)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63888,64548)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y213 Flags=0x2002000 CheckFlags=0x1 Name="reduceRight" Declarations=[MethodSignature[69533,70290)@lib.es5.d.ts,MethodSignature[70290,70416)@lib.es5.d.ts,MethodSignature[70416,71193)@lib.es5.d.ts] ValueDeclaration=MethodSignature[69533,70290)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y214 Flags=0x2002000 CheckFlags=0x1 Name="pop" Declarations=[MethodSignature[58553,58745)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58553,58745)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y215 Flags=0x2002000 CheckFlags=0x1 Name="sort" Declarations=[MethodSignature[60826,61401)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60826,61401)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y216 Flags=0x2002000 CheckFlags=0x1 Name="unshift" Declarations=[MethodSignature[62891,63109)@lib.es5.d.ts] ValueDeclaration=MethodSignature[62891,63109)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y217 Flags=0x2002000 CheckFlags=0x1 Name="reduce" Declarations=[MethodSignature[67940,68666)@lib.es5.d.ts,MethodSignature[68666,68787)@lib.es5.d.ts,MethodSignature[68787,69533)@lib.es5.d.ts] ValueDeclaration=MethodSignature[67940,68666)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y218 Flags=0x2002000 CheckFlags=0x1 Name="concat" Declarations=[MethodSignature[58946,59210)@lib.es5.d.ts,MethodSignature[59210,59480)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58946,59210)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y219 Flags=0x2002000 CheckFlags=0x1 Name="join" Declarations=[MethodSignature[59480,59813)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59480,59813)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y220 Flags=0x2002000 CheckFlags=0x1 Name="shift" Declarations=[MethodSignature[59985,60180)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59985,60180)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y221 Flags=0x2002000 CheckFlags=0x1 Name="lastIndexOf" Declarations=[MethodSignature[63478,63888)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63478,63888)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y222 Flags=0x2002000 CheckFlags=0x1 Name="some" Declarations=[MethodSignature[65188,65843)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65188,65843)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y223 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[66331,66872)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66331,66872)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y224 Flags=0x2000004 Name="0"
+Y225 Flags=0x3000004 Name="1"
+Y226 Flags=0x2000004 Name="length"
+Y227 Flags=0x2000004 CheckFlags=0x1 Name="0"
+Y228 Flags=0x3000004 CheckFlags=0x1 Name="1"
+Y229 Flags=0x2002000 CheckFlags=0x1 Name="sort" Declarations=[MethodSignature[60826,61401)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60826,61401)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y230 Flags=0x2002000 CheckFlags=0x1 Name="unshift" Declarations=[MethodSignature[62891,63109)@lib.es5.d.ts] ValueDeclaration=MethodSignature[62891,63109)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y231 Flags=0x2002000 CheckFlags=0x1 Name="reduce" Declarations=[MethodSignature[67940,68666)@lib.es5.d.ts,MethodSignature[68666,68787)@lib.es5.d.ts,MethodSignature[68787,69533)@lib.es5.d.ts] ValueDeclaration=MethodSignature[67940,68666)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y232 Flags=0x2002000 CheckFlags=0x1 Name="concat" Declarations=[MethodSignature[58946,59210)@lib.es5.d.ts,MethodSignature[59210,59480)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58946,59210)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y233 Flags=0x2002000 CheckFlags=0x1 Name="join" Declarations=[MethodSignature[59480,59813)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59480,59813)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y234 Flags=0x2002000 CheckFlags=0x1 Name="shift" Declarations=[MethodSignature[59985,60180)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59985,60180)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y235 Flags=0x2002000 CheckFlags=0x1 Name="lastIndexOf" Declarations=[MethodSignature[63478,63888)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63478,63888)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y236 Flags=0x2002000 CheckFlags=0x1 Name="some" Declarations=[MethodSignature[65188,65843)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65188,65843)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y237 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[66331,66872)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66331,66872)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y238 Flags=0x2002000 CheckFlags=0x1 Name="toString" Declarations=[MethodSignature[58282,58378)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58282,58378)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y239 Flags=0x2002000 CheckFlags=0x1 Name="slice" Declarations=[MethodSignature[60180,60826)@lib.es5.d.ts] ValueDeclaration=MethodSignature[60180,60826)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y240 Flags=0x2002000 CheckFlags=0x1 Name="splice" Declarations=[MethodSignature[61401,62146)@lib.es5.d.ts,MethodSignature[62146,62891)@lib.es5.d.ts] ValueDeclaration=MethodSignature[61401,62146)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y241 Flags=0x2002000 CheckFlags=0x1 Name="forEach" Declarations=[MethodSignature[65843,66331)@lib.es5.d.ts] ValueDeclaration=MethodSignature[65843,66331)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y242 Flags=0x2002000 CheckFlags=0x1 Name="filter" Declarations=[MethodSignature[66872,67414)@lib.es5.d.ts,MethodSignature[67414,67940)@lib.es5.d.ts] ValueDeclaration=MethodSignature[66872,67414)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y243 Flags=0x2000004 CheckFlags=0x1 Name="length" Declarations=[PropertySignature[58132,58282)@lib.es5.d.ts] ValueDeclaration=PropertySignature[58132,58282)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y244 Flags=0x2002000 CheckFlags=0x1 Name="toLocaleString" Declarations=[MethodSignature[58378,58553)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58378,58553)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y245 Flags=0x2002000 CheckFlags=0x1 Name="push" Declarations=[MethodSignature[58745,58946)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58745,58946)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y246 Flags=0x2002000 CheckFlags=0x1 Name="reverse" Declarations=[MethodSignature[59813,59985)@lib.es5.d.ts] ValueDeclaration=MethodSignature[59813,59985)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y247 Flags=0x2002000 CheckFlags=0x1 Name="indexOf" Declarations=[MethodSignature[63109,63478)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63109,63478)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y248 Flags=0x2002000 CheckFlags=0x1 Name="every" Declarations=[MethodSignature[63888,64548)@lib.es5.d.ts,MethodSignature[64548,65188)@lib.es5.d.ts] ValueDeclaration=MethodSignature[63888,64548)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y249 Flags=0x2002000 CheckFlags=0x1 Name="reduceRight" Declarations=[MethodSignature[69533,70290)@lib.es5.d.ts,MethodSignature[70290,70416)@lib.es5.d.ts,MethodSignature[70416,71193)@lib.es5.d.ts] ValueDeclaration=MethodSignature[69533,70290)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+Y250 Flags=0x2002000 CheckFlags=0x1 Name="pop" Declarations=[MethodSignature[58553,58745)@lib.es5.d.ts] ValueDeclaration=MethodSignature[58553,58745)@lib.es5.d.ts Parent=$"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts
+== links
+L symbolNodeLinks Identifier[245,248)@tuple.ts resolvedSymbol=$"t1"/0x2@VariableDeclaration[11,32)@tuple.ts
+L symbolNodeLinks Identifier[250,253)@tuple.ts resolvedSymbol=$"t2"/0x2@VariableDeclaration[45,58)@tuple.ts
+L symbolNodeLinks Identifier[254,257)@tuple.ts resolvedSymbol=$"t1"/0x2@VariableDeclaration[11,32)@tuple.ts
+L symbolNodeLinks Identifier[259,262)@tuple.ts resolvedSymbol=$"t3"/0x2@VariableDeclaration[71,101)@tuple.ts
+L symbolNodeLinks Identifier[263,266)@tuple.ts resolvedSymbol=$"t1"/0x2@VariableDeclaration[11,32)@tuple.ts
+L symbolNodeLinks Identifier[268,271)@tuple.ts resolvedSymbol=$"t4"/0x2@VariableDeclaration[114,144)@tuple.ts
+L symbolNodeLinks Identifier[272,275)@tuple.ts resolvedSymbol=$"t1"/0x2@VariableDeclaration[11,32)@tuple.ts
+L symbolNodeLinks Identifier[277,280)@tuple.ts resolvedSymbol=$"t5"/0x2@VariableDeclaration[157,183)@tuple.ts
+L symbolNodeLinks Identifier[281,284)@tuple.ts resolvedSymbol=$"t5"/0x2@VariableDeclaration[157,183)@tuple.ts
+L symbolNodeLinks Identifier[286,289)@tuple.ts resolvedSymbol=$"t1"/0x2@VariableDeclaration[11,32)@tuple.ts
+L symbolNodeLinks Identifier[290,293)@tuple.ts resolvedSymbol=$"t1"/0x2@VariableDeclaration[11,32)@tuple.ts
+L symbolNodeLinks Identifier[295,298)@tuple.ts resolvedSymbol=$"a1"/0x2@VariableDeclaration[196,209)@tuple.ts
+L symbolNodeLinks Identifier[299,302)@tuple.ts resolvedSymbol=$"a1"/0x2@VariableDeclaration[196,209)@tuple.ts
+L symbolNodeLinks Identifier[304,307)@tuple.ts resolvedSymbol=$"t1"/0x2@VariableDeclaration[11,32)@tuple.ts
+L symbolNodeLinks Identifier[308,311)@tuple.ts resolvedSymbol=$"a1"/0x2@VariableDeclaration[196,209)@tuple.ts
+L symbolNodeLinks Identifier[313,316)@tuple.ts resolvedSymbol=$"ra"/0x2@VariableDeclaration[222,244)@tuple.ts
+L symbolNodeLinks Identifier[397,400)@tuple.ts resolvedSymbol=$"t6"/0x2@VariableDeclaration[329,356)@tuple.ts
+L symbolNodeLinks Identifier[402,405)@tuple.ts resolvedSymbol=$"t7"/0x2@VariableDeclaration[369,396)@tuple.ts
+L symbolNodeLinks Identifier[441,444)@tuple.ts resolvedSymbol=$"t1"/0x2@VariableDeclaration[11,32)@tuple.ts
+L symbolNodeLinks Identifier[446,449)@tuple.ts resolvedSymbol=$"t8"/0x2@VariableDeclaration[418,440)@tuple.ts
+L symbolNodeLinks Identifier[450,453)@tuple.ts resolvedSymbol=$"t8"/0x2@VariableDeclaration[418,440)@tuple.ts
+L symbolNodeLinks Identifier[455,458)@tuple.ts resolvedSymbol=$"t1"/0x2@VariableDeclaration[11,32)@tuple.ts
+L symbolNodeLinks TypeReference[57923,57925)@lib.es5.d.ts resolvedSymbol=$"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts
+L symbolNodeLinks TypeReference[71213,71215)@lib.es5.d.ts resolvedSymbol=$"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts
+L typeNodeLinks ArrayType[200,209)@tuple.ts resolvedType=T114
+L typeNodeLinks ArrayType[235,244)@tuple.ts resolvedType=T115
+L typeNodeLinks NamedTupleMember[335,344)@tuple.ts resolvedType=T14
+L typeNodeLinks NamedTupleMember[345,355)@tuple.ts resolvedType=T15
+L typeNodeLinks NamedTupleMember[375,384)@tuple.ts resolvedType=T15
+L typeNodeLinks NamedTupleMember[385,395)@tuple.ts resolvedType=T14
+L typeNodeLinks TupleType[127,144)@tuple.ts resolvedType=T108
+L typeNodeLinks TupleType[15,32)@tuple.ts resolvedType=T91
+L typeNodeLinks TupleType[161,183)@tuple.ts resolvedType=T113
+L typeNodeLinks TupleType[333,356)@tuple.ts resolvedType=T138
+L typeNodeLinks TupleType[373,396)@tuple.ts resolvedType=T143
+L typeNodeLinks TupleType[422,440)@tuple.ts resolvedType=T156
+L typeNodeLinks TupleType[49,58)@tuple.ts resolvedType=T96
+L typeNodeLinks TupleType[75,101)@tuple.ts resolvedType=T103
+L typeNodeLinks TypeOperator[118,144)@tuple.ts resolvedType=T108
+L typeNodeLinks TypeOperator[226,244)@tuple.ts resolvedType=T115
+L typeNodeLinks TypeReference[57923,57925)@lib.es5.d.ts resolvedType=T80
+L typeNodeLinks TypeReference[71213,71215)@lib.es5.d.ts resolvedType=T66
+L symbolReferenceLinks $"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts referenceKinds=0xc09e8
+L symbolReferenceLinks $"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts referenceKinds=0xc09e8
+L valueSymbolLinks $"a1"/0x2@VariableDeclaration[196,209)@tuple.ts resolvedType=T114
+L valueSymbolLinks $"ra"/0x2@VariableDeclaration[222,244)@tuple.ts resolvedType=T115
+L valueSymbolLinks $"t1"/0x2@VariableDeclaration[11,32)@tuple.ts resolvedType=T91
+L valueSymbolLinks $"t2"/0x2@VariableDeclaration[45,58)@tuple.ts resolvedType=T96
+L valueSymbolLinks $"t3"/0x2@VariableDeclaration[71,101)@tuple.ts resolvedType=T103
+L valueSymbolLinks $"t4"/0x2@VariableDeclaration[114,144)@tuple.ts resolvedType=T108
+L valueSymbolLinks $"t5"/0x2@VariableDeclaration[157,183)@tuple.ts resolvedType=T113
+L valueSymbolLinks $"t6"/0x2@VariableDeclaration[329,356)@tuple.ts resolvedType=T138
+L valueSymbolLinks $"t7"/0x2@VariableDeclaration[369,396)@tuple.ts resolvedType=T143
+L valueSymbolLinks $"t8"/0x2@VariableDeclaration[418,440)@tuple.ts resolvedType=T156
+L valueSymbolLinks Y1 resolvedType=T10
+L valueSymbolLinks Y10 resolvedType=T92
+L valueSymbolLinks Y100 target=$"reduceRight"/0x2000@MethodSignature[56207,56973)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y101 target=$"join"/0x2000@MethodSignature[49134,49451)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y102 target=$"filter"/0x2000@MethodSignature[53501,54052)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y103 target=$"toString"/0x2000@MethodSignature[48521,48617)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y104 target=$"toLocaleString"/0x2000@MethodSignature[48617,48792)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y105 target=$"slice"/0x2000@MethodSignature[49451,49748)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y106 target=$"indexOf"/0x2000@MethodSignature[49748,50089)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y107 target=$"lastIndexOf"/0x2000@MethodSignature[50089,50463)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y108 target=$"every"/0x2000@MethodSignature[50463,51141)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y109 target=$"some"/0x2000@MethodSignature[51790,52454)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y11 resolvedType=T93
+L valueSymbolLinks Y110 target=Y19 mapper=Array{sources=[T109,T110,T112] targets=[T15,T14,T113]}
+L valueSymbolLinks Y111 target=$"forEach"/0x2000@MethodSignature[65843,66331)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y112 target=$"filter"/0x2000@MethodSignature[66872,67414)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y113 target=$"length"/0x4@PropertySignature[58132,58282)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y114 target=$"toLocaleString"/0x2000@MethodSignature[58378,58553)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y115 target=$"push"/0x2000@MethodSignature[58745,58946)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y116 target=$"reverse"/0x2000@MethodSignature[59813,59985)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y117 target=$"indexOf"/0x2000@MethodSignature[63109,63478)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y118 target=$"every"/0x2000@MethodSignature[63888,64548)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y119 target=$"reduceRight"/0x2000@MethodSignature[69533,70290)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y12 resolvedType=T97
+L valueSymbolLinks Y120 target=$"pop"/0x2000@MethodSignature[58553,58745)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y121 target=$"sort"/0x2000@MethodSignature[60826,61401)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y122 target=$"unshift"/0x2000@MethodSignature[62891,63109)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y123 target=$"reduce"/0x2000@MethodSignature[67940,68666)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y124 target=$"concat"/0x2000@MethodSignature[58946,59210)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y125 target=$"join"/0x2000@MethodSignature[59480,59813)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y126 target=$"shift"/0x2000@MethodSignature[59985,60180)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y127 target=$"lastIndexOf"/0x2000@MethodSignature[63478,63888)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y128 target=$"some"/0x2000@MethodSignature[65188,65843)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y129 target=$"map"/0x2000@MethodSignature[66331,66872)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y13 resolvedType=T98
+L valueSymbolLinks Y130 target=$"toString"/0x2000@MethodSignature[58282,58378)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y131 target=$"slice"/0x2000@MethodSignature[60180,60826)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y132 target=$"splice"/0x2000@MethodSignature[61401,62146)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T113]}
+L valueSymbolLinks Y133 target=$"indexOf"/0x2000@MethodSignature[63109,63478)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y134 target=$"every"/0x2000@MethodSignature[63888,64548)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y135 target=$"reduceRight"/0x2000@MethodSignature[69533,70290)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y136 target=$"pop"/0x2000@MethodSignature[58553,58745)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y137 target=$"sort"/0x2000@MethodSignature[60826,61401)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y138 target=$"unshift"/0x2000@MethodSignature[62891,63109)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y139 target=$"reduce"/0x2000@MethodSignature[67940,68666)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y14 resolvedType=T99
+L valueSymbolLinks Y140 target=$"concat"/0x2000@MethodSignature[58946,59210)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y141 target=$"join"/0x2000@MethodSignature[59480,59813)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y142 target=$"shift"/0x2000@MethodSignature[59985,60180)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y143 target=$"lastIndexOf"/0x2000@MethodSignature[63478,63888)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y144 target=$"some"/0x2000@MethodSignature[65188,65843)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y145 target=$"map"/0x2000@MethodSignature[66331,66872)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y146 target=$"toString"/0x2000@MethodSignature[58282,58378)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y147 target=$"slice"/0x2000@MethodSignature[60180,60826)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y148 target=$"splice"/0x2000@MethodSignature[61401,62146)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y149 target=$"forEach"/0x2000@MethodSignature[65843,66331)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y15 resolvedType=T100
+L valueSymbolLinks Y150 target=$"filter"/0x2000@MethodSignature[66872,67414)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y151 target=$"length"/0x4@PropertySignature[58132,58282)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y152 target=$"toLocaleString"/0x2000@MethodSignature[58378,58553)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y153 target=$"push"/0x2000@MethodSignature[58745,58946)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y154 target=$"reverse"/0x2000@MethodSignature[59813,59985)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T114]}
+L valueSymbolLinks Y155 target=$"some"/0x2000@MethodSignature[51790,52454)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y156 target=$"map"/0x2000@MethodSignature[52951,53501)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y157 target=$"length"/0x4@PropertySignature[48361,48521)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y158 target=$"concat"/0x2000@MethodSignature[48792,48960)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y159 target=$"forEach"/0x2000@MethodSignature[52454,52951)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y16 resolvedType=T104
+L valueSymbolLinks Y160 target=$"reduce"/0x2000@MethodSignature[54587,55322)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y161 target=$"reduceRight"/0x2000@MethodSignature[56207,56973)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y162 target=$"join"/0x2000@MethodSignature[49134,49451)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y163 target=$"filter"/0x2000@MethodSignature[53501,54052)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y164 target=$"toString"/0x2000@MethodSignature[48521,48617)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y165 target=$"toLocaleString"/0x2000@MethodSignature[48617,48792)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y166 target=$"slice"/0x2000@MethodSignature[49451,49748)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y167 target=$"indexOf"/0x2000@MethodSignature[49748,50089)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y168 target=$"lastIndexOf"/0x2000@MethodSignature[50089,50463)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y169 target=$"every"/0x2000@MethodSignature[50463,51141)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T15,T115]}
+L valueSymbolLinks Y17 resolvedType=T105
+L valueSymbolLinks Y170 resolvedType=T134
+L valueSymbolLinks Y171 resolvedType=T135
+L valueSymbolLinks Y172 resolvedType=T88
+L valueSymbolLinks Y173 resolvedType=T139
+L valueSymbolLinks Y174 resolvedType=T140
+L valueSymbolLinks Y175 resolvedType=T88
+L valueSymbolLinks Y176 target=Y171 mapper=Array{sources=[T134,T135,T137] targets=[T14,T15,T138]}
+L valueSymbolLinks Y177 target=Y170 mapper=Array{sources=[T134,T135,T137] targets=[T14,T15,T138]}
+L valueSymbolLinks Y178 target=$"lastIndexOf"/0x2000@MethodSignature[63478,63888)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y179 target=$"some"/0x2000@MethodSignature[65188,65843)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y18 resolvedType=T88
+L valueSymbolLinks Y180 target=$"map"/0x2000@MethodSignature[66331,66872)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y181 target=$"toString"/0x2000@MethodSignature[58282,58378)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y182 target=$"slice"/0x2000@MethodSignature[60180,60826)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y183 target=$"splice"/0x2000@MethodSignature[61401,62146)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y184 target=$"forEach"/0x2000@MethodSignature[65843,66331)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y185 target=$"filter"/0x2000@MethodSignature[66872,67414)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y186 target=$"length"/0x4@PropertySignature[58132,58282)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y187 target=$"toLocaleString"/0x2000@MethodSignature[58378,58553)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y188 target=$"push"/0x2000@MethodSignature[58745,58946)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y189 target=$"reverse"/0x2000@MethodSignature[59813,59985)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y19 resolvedType=T109
+L valueSymbolLinks Y190 target=$"indexOf"/0x2000@MethodSignature[63109,63478)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y191 target=$"every"/0x2000@MethodSignature[63888,64548)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y192 target=$"reduceRight"/0x2000@MethodSignature[69533,70290)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y193 target=$"pop"/0x2000@MethodSignature[58553,58745)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y194 target=$"sort"/0x2000@MethodSignature[60826,61401)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y195 target=$"unshift"/0x2000@MethodSignature[62891,63109)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y196 target=$"reduce"/0x2000@MethodSignature[67940,68666)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y197 target=$"concat"/0x2000@MethodSignature[58946,59210)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y198 target=$"join"/0x2000@MethodSignature[59480,59813)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y199 target=$"shift"/0x2000@MethodSignature[59985,60180)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T138]}
+L valueSymbolLinks Y2 resolvedType=T63
+L valueSymbolLinks Y20 resolvedType=T15
+L valueSymbolLinks Y200 target=Y173 mapper=Array{sources=[T139,T140,T142] targets=[T15,T14,T143]}
+L valueSymbolLinks Y201 target=Y174 mapper=Array{sources=[T139,T140,T142] targets=[T15,T14,T143]}
+L valueSymbolLinks Y202 target=$"toString"/0x2000@MethodSignature[58282,58378)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y203 target=$"slice"/0x2000@MethodSignature[60180,60826)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y204 target=$"splice"/0x2000@MethodSignature[61401,62146)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y205 target=$"forEach"/0x2000@MethodSignature[65843,66331)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y206 target=$"filter"/0x2000@MethodSignature[66872,67414)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y207 target=$"length"/0x4@PropertySignature[58132,58282)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y208 target=$"toLocaleString"/0x2000@MethodSignature[58378,58553)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y209 target=$"push"/0x2000@MethodSignature[58745,58946)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y21 target=Y7 mapper=Array{sources=[T86,T87,T90] targets=[T15,T14,T91]}
+L valueSymbolLinks Y210 target=$"reverse"/0x2000@MethodSignature[59813,59985)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y211 target=$"indexOf"/0x2000@MethodSignature[63109,63478)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y212 target=$"every"/0x2000@MethodSignature[63888,64548)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y213 target=$"reduceRight"/0x2000@MethodSignature[69533,70290)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y214 target=$"pop"/0x2000@MethodSignature[58553,58745)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y215 target=$"sort"/0x2000@MethodSignature[60826,61401)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y216 target=$"unshift"/0x2000@MethodSignature[62891,63109)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y217 target=$"reduce"/0x2000@MethodSignature[67940,68666)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y218 target=$"concat"/0x2000@MethodSignature[58946,59210)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y219 target=$"join"/0x2000@MethodSignature[59480,59813)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y22 target=Y8 mapper=Array{sources=[T86,T87,T90] targets=[T15,T14,T91]}
+L valueSymbolLinks Y220 target=$"shift"/0x2000@MethodSignature[59985,60180)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y221 target=$"lastIndexOf"/0x2000@MethodSignature[63478,63888)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y222 target=$"some"/0x2000@MethodSignature[65188,65843)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y223 target=$"map"/0x2000@MethodSignature[66331,66872)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T143]}
+L valueSymbolLinks Y224 resolvedType=T150
+L valueSymbolLinks Y225 resolvedType=T151
+L valueSymbolLinks Y226 resolvedType=T152
+L valueSymbolLinks Y227 target=Y224 mapper=Array{sources=[T150,T151,T154] targets=[T15,T155,T156]}
+L valueSymbolLinks Y228 target=Y225 mapper=Array{sources=[T150,T151,T154] targets=[T15,T155,T156]}
+L valueSymbolLinks Y229 target=$"sort"/0x2000@MethodSignature[60826,61401)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y23 target=$"length"/0x4@PropertySignature[58132,58282)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y230 target=$"unshift"/0x2000@MethodSignature[62891,63109)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y231 target=$"reduce"/0x2000@MethodSignature[67940,68666)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y232 target=$"concat"/0x2000@MethodSignature[58946,59210)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y233 target=$"join"/0x2000@MethodSignature[59480,59813)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y234 target=$"shift"/0x2000@MethodSignature[59985,60180)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y235 target=$"lastIndexOf"/0x2000@MethodSignature[63478,63888)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y236 target=$"some"/0x2000@MethodSignature[65188,65843)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y237 target=$"map"/0x2000@MethodSignature[66331,66872)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y238 target=$"toString"/0x2000@MethodSignature[58282,58378)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y239 target=$"slice"/0x2000@MethodSignature[60180,60826)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y24 target=$"toLocaleString"/0x2000@MethodSignature[58378,58553)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y240 target=$"splice"/0x2000@MethodSignature[61401,62146)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y241 target=$"forEach"/0x2000@MethodSignature[65843,66331)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y242 target=$"filter"/0x2000@MethodSignature[66872,67414)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y243 target=$"length"/0x4@PropertySignature[58132,58282)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y244 target=$"toLocaleString"/0x2000@MethodSignature[58378,58553)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y245 target=$"push"/0x2000@MethodSignature[58745,58946)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y246 target=$"reverse"/0x2000@MethodSignature[59813,59985)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y247 target=$"indexOf"/0x2000@MethodSignature[63109,63478)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y248 target=$"every"/0x2000@MethodSignature[63888,64548)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y249 target=$"reduceRight"/0x2000@MethodSignature[69533,70290)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y25 target=$"push"/0x2000@MethodSignature[58745,58946)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y250 target=$"pop"/0x2000@MethodSignature[58553,58745)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T159,T156]}
+L valueSymbolLinks Y26 target=$"reverse"/0x2000@MethodSignature[59813,59985)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y27 target=$"indexOf"/0x2000@MethodSignature[63109,63478)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y28 target=$"every"/0x2000@MethodSignature[63888,64548)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y29 target=$"reduceRight"/0x2000@MethodSignature[69533,70290)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y30 target=$"pop"/0x2000@MethodSignature[58553,58745)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y31 target=$"sort"/0x2000@MethodSignature[60826,61401)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y32 target=$"unshift"/0x2000@MethodSignature[62891,63109)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y33 target=$"reduce"/0x2000@MethodSignature[67940,68666)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y34 target=$"concat"/0x2000@MethodSignature[58946,59210)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y35 target=$"join"/0x2000@MethodSignature[59480,59813)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y36 target=$"shift"/0x2000@MethodSignature[59985,60180)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y37 target=$"lastIndexOf"/0x2000@MethodSignature[63478,63888)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y38 target=$"some"/0x2000@MethodSignature[65188,65843)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y39 target=$"map"/0x2000@MethodSignature[66331,66872)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y4 resolvedType=T5
+L valueSymbolLinks Y40 target=$"toString"/0x2000@MethodSignature[58282,58378)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y41 target=$"slice"/0x2000@MethodSignature[60180,60826)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y42 target=$"splice"/0x2000@MethodSignature[61401,62146)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y43 target=$"forEach"/0x2000@MethodSignature[65843,66331)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y44 target=$"filter"/0x2000@MethodSignature[66872,67414)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T29,T91]}
+L valueSymbolLinks Y45 target=Y10 mapper=Array{sources=[T92,T95] targets=[T15,T96]}
+L valueSymbolLinks Y46 target=$"length"/0x4@PropertySignature[58132,58282)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y47 target=$"toLocaleString"/0x2000@MethodSignature[58378,58553)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y48 target=$"push"/0x2000@MethodSignature[58745,58946)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y49 target=$"reverse"/0x2000@MethodSignature[59813,59985)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y5 resolvedType=T64
+L valueSymbolLinks Y50 target=$"indexOf"/0x2000@MethodSignature[63109,63478)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y51 target=$"every"/0x2000@MethodSignature[63888,64548)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y52 target=$"reduceRight"/0x2000@MethodSignature[69533,70290)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y53 target=$"pop"/0x2000@MethodSignature[58553,58745)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y54 target=$"sort"/0x2000@MethodSignature[60826,61401)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y55 target=$"unshift"/0x2000@MethodSignature[62891,63109)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y56 target=$"reduce"/0x2000@MethodSignature[67940,68666)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y57 target=$"concat"/0x2000@MethodSignature[58946,59210)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y58 target=$"join"/0x2000@MethodSignature[59480,59813)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y59 target=$"shift"/0x2000@MethodSignature[59985,60180)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y60 target=$"lastIndexOf"/0x2000@MethodSignature[63478,63888)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y61 target=$"some"/0x2000@MethodSignature[65188,65843)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y62 target=$"map"/0x2000@MethodSignature[66331,66872)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y63 target=$"toString"/0x2000@MethodSignature[58282,58378)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y64 target=$"slice"/0x2000@MethodSignature[60180,60826)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y65 target=$"splice"/0x2000@MethodSignature[61401,62146)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y66 target=$"forEach"/0x2000@MethodSignature[65843,66331)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y67 target=$"filter"/0x2000@MethodSignature[66872,67414)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T15,T96]}
+L valueSymbolLinks Y68 target=Y12 mapper=Array{sources=[T97,T98,T99,T102] targets=[T15,T14,T21,T103]}
+L valueSymbolLinks Y69 target=Y13 mapper=Array{sources=[T97,T98,T99,T102] targets=[T15,T14,T21,T103]}
+L valueSymbolLinks Y7 resolvedType=T86
+L valueSymbolLinks Y70 target=Y14 mapper=Array{sources=[T97,T98,T99,T102] targets=[T15,T14,T21,T103]}
+L valueSymbolLinks Y71 target=$"toLocaleString"/0x2000@MethodSignature[58378,58553)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y72 target=$"push"/0x2000@MethodSignature[58745,58946)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y73 target=$"reverse"/0x2000@MethodSignature[59813,59985)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y74 target=$"indexOf"/0x2000@MethodSignature[63109,63478)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y75 target=$"every"/0x2000@MethodSignature[63888,64548)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y76 target=$"reduceRight"/0x2000@MethodSignature[69533,70290)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y77 target=$"pop"/0x2000@MethodSignature[58553,58745)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y78 target=$"sort"/0x2000@MethodSignature[60826,61401)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y79 target=$"unshift"/0x2000@MethodSignature[62891,63109)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y8 resolvedType=T87
+L valueSymbolLinks Y80 target=$"reduce"/0x2000@MethodSignature[67940,68666)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y81 target=$"concat"/0x2000@MethodSignature[58946,59210)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y82 target=$"join"/0x2000@MethodSignature[59480,59813)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y83 target=$"shift"/0x2000@MethodSignature[59985,60180)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y84 target=$"lastIndexOf"/0x2000@MethodSignature[63478,63888)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y85 target=$"some"/0x2000@MethodSignature[65188,65843)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y86 target=$"map"/0x2000@MethodSignature[66331,66872)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y87 target=$"toString"/0x2000@MethodSignature[58282,58378)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y88 target=$"slice"/0x2000@MethodSignature[60180,60826)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y89 target=$"splice"/0x2000@MethodSignature[61401,62146)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y9 resolvedType=T88
+L valueSymbolLinks Y90 target=$"forEach"/0x2000@MethodSignature[65843,66331)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y91 target=$"filter"/0x2000@MethodSignature[66872,67414)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y92 target=$"length"/0x4@PropertySignature[58132,58282)@lib.es5.d.ts mapper=Array{sources=[T66,T67] targets=[T124,T103]}
+L valueSymbolLinks Y93 target=Y16 mapper=Array{sources=[T104,T105,T107] targets=[T15,T14,T108]}
+L valueSymbolLinks Y94 target=Y17 mapper=Array{sources=[T104,T105,T107] targets=[T15,T14,T108]}
+L valueSymbolLinks Y95 target=$"map"/0x2000@MethodSignature[52951,53501)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y96 target=$"length"/0x4@PropertySignature[48361,48521)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y97 target=$"concat"/0x2000@MethodSignature[48792,48960)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y98 target=$"forEach"/0x2000@MethodSignature[52454,52951)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+L valueSymbolLinks Y99 target=$"reduce"/0x2000@MethodSignature[54587,55322)@lib.es5.d.ts mapper=Array{sources=[T80,T81] targets=[T29,T108]}
+panic: reflect: NumField of non-struct type checker.MembersAndExportsLinks
+
+goroutine 1 [running]:
+reflect.(*rtype).NumField(0xef4d50a6d40?)
+	/tmp/oracle-td/go/src/reflect/type.go:814 +0x59
+github.com/microsoft/typescript-go/cmd/oracle/types.(*dumper).fields(0xef4d4f8fdb0, {0x12045a0?, 0xef4d4b39640?, 0x140be53?})
+	/workspace/ref/typescript-go/cmd/oracle/types/main.go:159 +0x10b
+github.com/microsoft/typescript-go/cmd/oracle/types.(*dumper).links(0xef4d4f8fdb0)
+	/workspace/ref/typescript-go/cmd/oracle/types/main.go:646 +0xb05
+github.com/microsoft/typescript-go/cmd/oracle/types.Main()
+	/workspace/ref/typescript-go/cmd/oracle/types/main.go:841 +0x11c7
+main.init.func2()
+	/workspace/ref/typescript-go/cmd/oracle/main.go:43 +0x16
+main.main()
+	/workspace/ref/typescript-go/cmd/oracle/main.go:89 +0x246

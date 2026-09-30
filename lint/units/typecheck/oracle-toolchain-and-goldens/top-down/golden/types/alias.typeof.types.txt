@@ -1,0 +1,134 @@
+types-dump v1
+mark after inline part of NewChecker (line 1117): TypeCount=62 SymbolCount=6 SignatureCount=4 globals=1 mergedSymbols=0 diagnostics=0
+mark start of initializeChecker: TypeCount=62 SymbolCount=6 SignatureCount=4 globals=1 mergedSymbols=0 diagnostics=0
+mark after global merge and global augmentations (line 1349): TypeCount=62 SymbolCount=6 SignatureCount=4 globals=1 mergedSymbols=0 diagnostics=0
+mark after special types (line 1376): TypeCount=64 SymbolCount=6 SignatureCount=4 globals=2 mergedSymbols=0 diagnostics=10
+mark end of initializeChecker: TypeCount=64 SymbolCount=6 SignatureCount=4 globals=2 mergedSymbols=0 diagnostics=10
+after NewChecker types=64 symbols=6 signatures=4
+== stage typeof
+typeof VariableDeclaration[12,18)@lib1.ts = T66
+typeof PropertySignature[40,51)@lib1.ts = T15
+typeof ModuleDeclaration[53,123)@lib1.ts = T67
+typeof VariableDeclaration[88,98)@lib1.ts = T69
+typeof FunctionDeclaration[123,156)@lib1.ts = T70
+typeof VariableDeclaration[107,115)@lib2.ts = T72
+typeof VariableDeclaration[41,54)@lib3.ts = T74
+typeof ModuleDeclaration[0,89)@eq.ts = T75
+typeof ModuleDeclaration[17,87)@eq.ts = T76
+typeof VariableDeclaration[53,62)@eq.ts = T66
+== counts types=76 symbols=6 signatures=4 files=7
+== types
+T1 Any(0x1) IntrinsicType intrinsicName="any"
+T2 Any(0x1) of=0x40000 IntrinsicType intrinsicName="any"
+T3 Any(0x1) IntrinsicType intrinsicName="any"
+T4 Any(0x1) IntrinsicType intrinsicName="any"
+T5 Any(0x1) IntrinsicType intrinsicName="error"
+T6 Any(0x1) IntrinsicType intrinsicName="unresolved"
+T7 Any(0x1) of=0x10000 IntrinsicType intrinsicName="any"
+T8 Any(0x1) IntrinsicType intrinsicName="intrinsic"
+T9 Unknown(0x2) IntrinsicType intrinsicName="unknown"
+T10 Undefined(0x4) IntrinsicType intrinsicName="undefined"
+T11 Undefined(0x4) IntrinsicType intrinsicName="undefined"
+T12 Undefined(0x4) IntrinsicType intrinsicName="undefined"
+T13 Null(0x8) IntrinsicType intrinsicName="null"
+T14 String(0x20) IntrinsicType intrinsicName="string"
+T15 Number(0x40) IntrinsicType intrinsicName="number"
+T16 BigInt(0x80) IntrinsicType intrinsicName="bigint"
+T17 BooleanLiteral(0x2000) LiteralType value=false(bool) freshType=T18 regularType=T17
+T18 BooleanLiteral(0x2000) LiteralType value=false(bool) freshType=T18 regularType=T17
+T19 BooleanLiteral(0x2000) LiteralType value=true(bool) freshType=T20 regularType=T19
+T20 BooleanLiteral(0x2000) LiteralType value=true(bool) freshType=T20 regularType=T19
+T21 Boolean|Union(0x8000100) of=0x8000 UnionType types=[T17,T19]
+T22 ESSymbol(0x200) IntrinsicType intrinsicName="symbol"
+T23 Void(0x10) IntrinsicType intrinsicName="void"
+T24 Never(0x40000) IntrinsicType intrinsicName="never"
+T25 Never(0x40000) of=0x40000 IntrinsicType intrinsicName="never"
+T26 Never(0x40000) IntrinsicType intrinsicName="never"
+T27 Never(0x40000) IntrinsicType intrinsicName="never"
+T28 NonPrimitive(0x20000) IntrinsicType intrinsicName="object"
+T29 Union(0x8000000) of=0x8000 UnionType types=[T14,T15]
+T30 Union(0x8000000) of=0x8000 UnionType types=[T14,T15,T22]
+T31 Union(0x8000000) of=0x8000 UnionType types=[T15,T16]
+T32 TemplateLiteral(0x400000) TemplateLiteralType texts=["",""] types=[T15]
+T33 Union(0x8000000) of=0x8000 UnionType types=[T10,T13,T14,T15,T16,T17,T19]
+T34 Never(0x40000) IntrinsicType intrinsicName="never"
+T35 Object(0x100000) of=0x200010 ObjectType
+T36 Object(0x100000) of=0x200010 ObjectType
+T37 Object(0x100000) of=0x200010 ObjectType
+T38 Object(0x100000) of=0x200010 ObjectType symbol=Y6
+T39 Object(0x100000) of=0x200010 ObjectType
+T40 Union(0x8000000) UnionType types=[T10,T13,T39]
+T41 Object(0x100000) of=0x200010 ObjectType
+T42 Object(0x100000) of=0x240010 ObjectType
+T43 Object(0x100000) of=0x200010 ObjectType
+T44 Object(0x100000) of=0x200010 ObjectType
+T45 Object(0x100000) of=0x200010 ObjectType
+T46 TypeParameter(0x80000) TypeParameter
+T47 TypeParameter(0x80000) TypeParameter constraint=T46
+T48 TypeParameter(0x80000) TypeParameter
+T49 TypeParameter(0x80000) TypeParameter
+T50 TypeParameter(0x80000) TypeParameter constraint=T49
+T51 StringLiteral(0x400) LiteralType value=""(string) regularType=T51
+T52 NumberLiteral(0x800) LiteralType value=0(jsnum.Number) regularType=T52
+T53 BigIntLiteral(0x1000) LiteralType value=0(jsnum.PseudoBigInt) regularType=T53
+T54 StringLiteral(0x400) LiteralType value="bigint"(string) regularType=T54
+T55 StringLiteral(0x400) LiteralType value="boolean"(string) regularType=T55
+T56 StringLiteral(0x400) LiteralType value="function"(string) regularType=T56
+T57 StringLiteral(0x400) LiteralType value="number"(string) regularType=T57
+T58 StringLiteral(0x400) LiteralType value="object"(string) regularType=T58
+T59 StringLiteral(0x400) LiteralType value="string"(string) regularType=T59
+T60 StringLiteral(0x400) LiteralType value="symbol"(string) regularType=T60
+T61 StringLiteral(0x400) LiteralType value="undefined"(string) regularType=T61
+T62 Union(0x8000000) of=0x8000 UnionType types=[T54,T55,T56,T57,T58,T59,T60,T61]
+T63 Object(0x100000) of=0x10 ObjectType symbol=Y5
+T64 Object(0x100000) of=0x200010 ObjectType
+T65 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T66 regularType=T65
+T66 NumberLiteral(0x800) LiteralType value=1(jsnum.Number) freshType=T66 regularType=T65
+T67 Object(0x100000) of=0x10 ObjectType symbol=$"NS"/0x200@ModuleDeclaration[53,123)@lib1.ts
+T68 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) freshType=T69 regularType=T68
+T69 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) freshType=T69 regularType=T68
+T70 Object(0x100000) of=0x10 ObjectType symbol=$"default"/0x10@FunctionDeclaration[123,156)@lib1.ts
+T71 NumberLiteral(0x800) LiteralType value=3(jsnum.Number) freshType=T72 regularType=T71
+T72 NumberLiteral(0x800) LiteralType value=3(jsnum.Number) freshType=T72 regularType=T71
+T73 StringLiteral(0x400) LiteralType value="shadow"(string) freshType=T74 regularType=T73
+T74 StringLiteral(0x400) LiteralType value="shadow"(string) freshType=T74 regularType=T73
+T75 Object(0x100000) of=0x10 ObjectType symbol=$"Outer"/0x200@ModuleDeclaration[0,89)@eq.ts
+T76 Object(0x100000) of=0x10 ObjectType symbol=$"Mid"/0x200@ModuleDeclaration[17,87)@eq.ts
+== signatures
+G1 resolvedMinArgumentCount=-1 resolvedReturnType=T1
+G2 resolvedMinArgumentCount=-1 resolvedReturnType=T5
+G3 resolvedMinArgumentCount=-1 resolvedReturnType=T1
+G4 resolvedMinArgumentCount=-1 resolvedReturnType=T25
+== symbols
+Y1 Flags=0x2000004 Name="undefined"
+Y2 Flags=0x2000004 Name="arguments"
+Y3 Flags=0x2000004 Name="require"
+Y4 Flags=0x2000004 Name="unknown"
+Y5 Flags=0x2000600 CheckFlags=0x8 Name="globalThis" Exports={"globalThis":Y5 "undefined":Y1}
+Y6 Flags=0x2000800 Name="\xfetype"
+== links
+L valueSymbolLinks $"Mid"/0x200@ModuleDeclaration[17,87)@eq.ts resolvedType=T76
+L valueSymbolLinks $"NS"/0x200@ModuleDeclaration[53,123)@lib1.ts resolvedType=T67
+L valueSymbolLinks $"Outer"/0x200@ModuleDeclaration[0,89)@eq.ts resolvedType=T75
+L valueSymbolLinks $"a"/0x2@VariableDeclaration[12,18)@lib1.ts resolvedType=T66
+L valueSymbolLinks $"a"/0x2@VariableDeclaration[41,54)@lib3.ts resolvedType=T74
+L valueSymbolLinks $"default"/0x10@FunctionDeclaration[123,156)@lib1.ts resolvedType=T70
+L valueSymbolLinks $"inner"/0x2@VariableDeclaration[88,98)@lib1.ts resolvedType=T69
+L valueSymbolLinks $"leaf"/0x2@VariableDeclaration[53,62)@eq.ts resolvedType=T66
+L valueSymbolLinks $"own"/0x2@VariableDeclaration[107,115)@lib2.ts resolvedType=T72
+L valueSymbolLinks $"x"/0x4@PropertySignature[40,51)@lib1.ts resolvedType=T15
+L valueSymbolLinks Y1 resolvedType=T10
+L valueSymbolLinks Y2 resolvedType=T35
+L valueSymbolLinks Y4 resolvedType=T5
+L valueSymbolLinks Y5 resolvedType=T63
+== diagnostics
+D.global - [0,0) TS2318 cat=1 chain=0 related=0
+D.global - [0,0) TS2318 cat=1 chain=0 related=0
+D.global - [0,0) TS2318 cat=1 chain=0 related=0
+D.global - [0,0) TS2318 cat=1 chain=0 related=0
+D.global - [0,0) TS2318 cat=1 chain=0 related=0
+D.global - [0,0) TS2318 cat=1 chain=0 related=0
+D.global - [0,0) TS2318 cat=1 chain=0 related=0
+D.global - [0,0) TS2318 cat=1 chain=0 related=0
+D.global - [0,0) TS2318 cat=1 chain=0 related=0
+D.global - [0,0) TS2318 cat=1 chain=0 related=0

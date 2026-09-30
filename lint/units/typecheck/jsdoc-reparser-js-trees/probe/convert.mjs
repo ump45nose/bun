@@ -487,6 +487,12 @@ export function importDump(bundle, index = 0, opts = {}) {
   const root = postprocess(convert(inflate(bundle, d), { isJS, textBytes: Buffer.from(d.text, "utf8"), text: d.text }), d);
   root.isJS = isJS;
   setParents(root);
-  if (isJS && !opts.noReparse) reparse(root);
+  if (isJS && !opts.noReparse) {
+    const before = root.externalModuleIndicator;
+    reparse(root);
+    // The indicator is computed after the reparsed statements are in the list: an exported overload signature counts, an @import tag does not.
+    root.externalModuleIndicator = externalModuleIndicator(root, { isDeclarationFile: d.isDeclarationFile, force: d.force, jsx: d.jsx });
+    if (before !== root.externalModuleIndicator) hit(before ? "module-indicator-moved-by-reparse" : "module-indicator-made-by-reparse");
+  }
   return root;
 }

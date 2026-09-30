@@ -59,7 +59,8 @@ function slotValue(p: Param, textVars: Map<string, string>): string {
 function flagsExpr(d: Def): string {
   const flags = d.params.filter(p => p.kind === "flags");
   if (flags.length === 0) return "NodeFlags::NONE";
-  return flags.map(p => (p.bitmask ? `(${p.rust} & ${flagConst(p.bitmask, "NodeFlags")})` : p.rust)).join(" | ");
+  const terms = flags.map(p => (p.bitmask ? `${p.rust} & ${flagConst(p.bitmask, "NodeFlags")}` : p.rust));
+  return terms.length === 1 ? terms[0] : terms.map(t => `(${t})`).join(" | ");
 }
 
 function paramList(params: Param[]): string {
@@ -185,7 +186,7 @@ export function generateAst(): { text: string; stats: Record<string, number> } {
   out.push("#[repr(u8)]", "#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Default)]", "pub enum Def {", "    #[default]", "    None,");
   for (const d of defs) out.push(`    ${d.name},`);
   out.push("}", "", `pub const DEF_COUNT: usize = ${defs.length + 1};`, "");
-  out.push(`static DEF_INFOS: [DefInfo; DEF_COUNT] = [`);
+  out.push("#[rustfmt::skip]", `static DEF_INFOS: [DefInfo; DEF_COUNT] = [`);
   out.push('    DefInfo { name: "None", slots: &[], children: &[], children_alt: &[], late: 0 },');
   for (const d of defs) {
     const slots = d.slots.map(f => `SlotInfo { name: "${f.goName}", ty: SlotType::${f.slot} }`).join(", ");
@@ -205,13 +206,13 @@ export function generateAst(): { text: string; stats: Record<string, number> } {
     out.push(`    DefInfo { name: "${d.name}", slots: &[${slots}], children: &[${primary}], children_alt: &[${alt}], late: ${late} },`);
   }
   out.push("];", "");
-  out.push(`static DEFS: [Def; DEF_COUNT] = [`, "    Def::None,", ...defs.map(d => `    Def::${d.name},`), "];", "");
+  out.push("#[rustfmt::skip]", `static DEFS: [Def; DEF_COUNT] = [`, "    Def::None,", ...defs.map(d => `    Def::${d.name},`), "];", "");
 
   // The definition that a kind belongs to: the one that is not Token first, Token second when the kind is a token kind too.
   const kindNames = api.kindElements().filter(e => e.name).map(e => e.name!);
   const byKind = new Map<string, string[]>();
   for (const d of defs) for (const k of d.kinds) byKind.set(k, [...(byKind.get(k) ?? []), d.name]);
-  out.push(`static KIND_DEFS: [(Def, Def); KIND_COUNT + 1] = [`);
+  out.push("#[rustfmt::skip]", `static KIND_DEFS: [(Def, Def); KIND_COUNT + 1] = [`);
   let ambiguous = 0;
   for (const k of kindNames) {
     const list = byKind.get(k) ?? [];
@@ -240,7 +241,7 @@ export function generateAst(): { text: string; stats: Record<string, number> } {
 
   // Name() and Modifiers() of nodeData.
   const slotTable = (name: string, goName: string) => {
-    out.push(`static ${name}: [u8; DEF_COUNT] = [`, "    255,");
+    out.push("#[rustfmt::skip]", `static ${name}: [u8; DEF_COUNT] = [`, "    255,");
     for (const d of defs) {
       const f = d.slots.find(s => s.goName === goName);
       out.push(`    ${f ? f.index : 255},`);
@@ -267,7 +268,7 @@ export function generateAst(): { text: string; stats: Record<string, number> } {
     out.push("#[derive(Clone, Copy, Default, Debug)]", `pub struct ${base.key}${hasText ? "<'a>" : ""} {`);
     for (const f of fields) out.push(`    pub ${f.rust}: ${RUST_TYPE[f.slot!]},`);
     out.push("}", "");
-    out.push(`static ${upperSnake(acc.base)}_SLOTS: [[u8; ${fields.length}]; DEF_COUNT] = [`, `    [255; ${fields.length}],`);
+    out.push("#[rustfmt::skip]", `static ${upperSnake(acc.base)}_SLOTS: [[u8; ${fields.length}]; DEF_COUNT] = [`, `    [255; ${fields.length}],`);
     for (const d of defs) {
       if (!d.bases.includes(acc.base)) {
         out.push(`    [255; ${fields.length}],`);

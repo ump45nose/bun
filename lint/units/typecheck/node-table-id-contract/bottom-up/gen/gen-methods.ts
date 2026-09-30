@@ -22,7 +22,7 @@ const ELSEWHERE: Record<string, string> = {
   AsNode: "none: a NodeId is the node",
   Pos: "Ast::pos (ast/reader.rs)",
   End: "Ast::end (ast/reader.rs)",
-  IterChildren: "Ast::children (ast/reader.rs)",
+  IterChildren: "Ast::iter_children (ast/reader.rs)",
   Clone: "Factory::clone_node (ast/factory.rs)",
   VisitEachChild: "DefInfo::children with VisitTag and Factory::update_node; the NodeVisitor itself is ported with ast/visitor.go",
   Name: "Ast::name (ast_generated.rs, table NAME_SLOT)",

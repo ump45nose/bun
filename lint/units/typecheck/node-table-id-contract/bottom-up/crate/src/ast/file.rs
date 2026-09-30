@@ -159,7 +159,7 @@ impl IdAllocator {
     // A base for `span` ids, or None when the id space below the open bit is used up.
     pub fn alloc(&self, span: u32) -> Option<u32> {
         self.next
-            .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |next| {
+            .try_update(Ordering::Relaxed, Ordering::Relaxed, |next| {
                 next.checked_add(span).filter(|end| *end <= OPEN_BIT)
             })
             .ok()

@@ -360,6 +360,7 @@ pub enum Kind {
 
 pub const KIND_COUNT: usize = 351;
 
+#[rustfmt::skip]
 static KINDS: [Kind; 352] = [
     Kind::Unknown,
     Kind::EndOfFile,
@@ -715,6 +716,7 @@ static KINDS: [Kind; 352] = [
     Kind::Count,
 ];
 
+#[rustfmt::skip]
 static KIND_NAMES: [&str; 352] = [
     "Unknown",
     "EndOfFile",
@@ -1070,13 +1072,11 @@ static KIND_NAMES: [&str; 352] = [
     "Count",
 ];
 
+#[rustfmt::skip]
 static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("AbstractKeyword", Kind::AbstractKeyword),
     ("AccessorKeyword", Kind::AccessorKeyword),
-    (
-        "AmpersandAmpersandEqualsToken",
-        Kind::AmpersandAmpersandEqualsToken,
-    ),
+    ("AmpersandAmpersandEqualsToken", Kind::AmpersandAmpersandEqualsToken),
     ("AmpersandAmpersandToken", Kind::AmpersandAmpersandToken),
     ("AmpersandEqualsToken", Kind::AmpersandEqualsToken),
     ("AmpersandToken", Kind::AmpersandToken),
@@ -1089,10 +1089,7 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("AsKeyword", Kind::AsKeyword),
     ("AssertKeyword", Kind::AssertKeyword),
     ("AssertsKeyword", Kind::AssertsKeyword),
-    (
-        "AsteriskAsteriskEqualsToken",
-        Kind::AsteriskAsteriskEqualsToken,
-    ),
+    ("AsteriskAsteriskEqualsToken", Kind::AsteriskAsteriskEqualsToken),
     ("AsteriskAsteriskToken", Kind::AsteriskAsteriskToken),
     ("AsteriskEqualsToken", Kind::AsteriskEqualsToken),
     ("AsteriskToken", Kind::AsteriskToken),
@@ -1125,10 +1122,7 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("ClassDeclaration", Kind::ClassDeclaration),
     ("ClassExpression", Kind::ClassExpression),
     ("ClassKeyword", Kind::ClassKeyword),
-    (
-        "ClassStaticBlockDeclaration",
-        Kind::ClassStaticBlockDeclaration,
-    ),
+    ("ClassStaticBlockDeclaration", Kind::ClassStaticBlockDeclaration),
     ("CloseBraceToken", Kind::CloseBraceToken),
     ("CloseBracketToken", Kind::CloseBracketToken),
     ("CloseParenToken", Kind::CloseParenToken),
@@ -1170,10 +1164,7 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("EqualsEqualsToken", Kind::EqualsEqualsToken),
     ("EqualsGreaterThanToken", Kind::EqualsGreaterThanToken),
     ("EqualsToken", Kind::EqualsToken),
-    (
-        "ExclamationEqualsEqualsToken",
-        Kind::ExclamationEqualsEqualsToken,
-    ),
+    ("ExclamationEqualsEqualsToken", Kind::ExclamationEqualsEqualsToken),
     ("ExclamationEqualsToken", Kind::ExclamationEqualsToken),
     ("ExclamationToken", Kind::ExclamationToken),
     ("ExportAssignment", Kind::ExportAssignment),
@@ -1181,10 +1172,7 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("ExportKeyword", Kind::ExportKeyword),
     ("ExportSpecifier", Kind::ExportSpecifier),
     ("ExpressionStatement", Kind::ExpressionStatement),
-    (
-        "ExpressionWithTypeArguments",
-        Kind::ExpressionWithTypeArguments,
-    ),
+    ("ExpressionWithTypeArguments", Kind::ExpressionWithTypeArguments),
     ("ExtendsKeyword", Kind::ExtendsKeyword),
     ("ExternalModuleReference", Kind::ExternalModuleReference),
     ("FalseKeyword", Kind::FalseKeyword),
@@ -1202,22 +1190,10 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("GetKeyword", Kind::GetKeyword),
     ("GlobalKeyword", Kind::GlobalKeyword),
     ("GreaterThanEqualsToken", Kind::GreaterThanEqualsToken),
-    (
-        "GreaterThanGreaterThanEqualsToken",
-        Kind::GreaterThanGreaterThanEqualsToken,
-    ),
-    (
-        "GreaterThanGreaterThanGreaterThanEqualsToken",
-        Kind::GreaterThanGreaterThanGreaterThanEqualsToken,
-    ),
-    (
-        "GreaterThanGreaterThanGreaterThanToken",
-        Kind::GreaterThanGreaterThanGreaterThanToken,
-    ),
-    (
-        "GreaterThanGreaterThanToken",
-        Kind::GreaterThanGreaterThanToken,
-    ),
+    ("GreaterThanGreaterThanEqualsToken", Kind::GreaterThanGreaterThanEqualsToken),
+    ("GreaterThanGreaterThanGreaterThanEqualsToken", Kind::GreaterThanGreaterThanGreaterThanEqualsToken),
+    ("GreaterThanGreaterThanGreaterThanToken", Kind::GreaterThanGreaterThanGreaterThanToken),
+    ("GreaterThanGreaterThanToken", Kind::GreaterThanGreaterThanToken),
     ("GreaterThanToken", Kind::GreaterThanToken),
     ("HashToken", Kind::HashToken),
     ("HeritageClause", Kind::HeritageClause),
@@ -1301,10 +1277,7 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("KeyOfKeyword", Kind::KeyOfKeyword),
     ("LabeledStatement", Kind::LabeledStatement),
     ("LessThanEqualsToken", Kind::LessThanEqualsToken),
-    (
-        "LessThanLessThanEqualsToken",
-        Kind::LessThanLessThanEqualsToken,
-    ),
+    ("LessThanLessThanEqualsToken", Kind::LessThanLessThanEqualsToken),
     ("LessThanLessThanToken", Kind::LessThanLessThanToken),
     ("LessThanSlashToken", Kind::LessThanSlashToken),
     ("LessThanToken", Kind::LessThanToken),
@@ -1326,20 +1299,14 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("NamedImports", Kind::NamedImports),
     ("NamedTupleMember", Kind::NamedTupleMember),
     ("NamespaceExport", Kind::NamespaceExport),
-    (
-        "NamespaceExportDeclaration",
-        Kind::NamespaceExportDeclaration,
-    ),
+    ("NamespaceExportDeclaration", Kind::NamespaceExportDeclaration),
     ("NamespaceImport", Kind::NamespaceImport),
     ("NamespaceKeyword", Kind::NamespaceKeyword),
     ("NeverKeyword", Kind::NeverKeyword),
     ("NewExpression", Kind::NewExpression),
     ("NewKeyword", Kind::NewKeyword),
     ("NewLineTrivia", Kind::NewLineTrivia),
-    (
-        "NoSubstitutionTemplateLiteral",
-        Kind::NoSubstitutionTemplateLiteral,
-    ),
+    ("NoSubstitutionTemplateLiteral", Kind::NoSubstitutionTemplateLiteral),
     ("NonNullExpression", Kind::NonNullExpression),
     ("NonTextFileMarkerTrivia", Kind::NonTextFileMarkerTrivia),
     ("NotEmittedStatement", Kind::NotEmittedStatement),
@@ -1362,10 +1329,7 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("Parameter", Kind::Parameter),
     ("ParenthesizedExpression", Kind::ParenthesizedExpression),
     ("ParenthesizedType", Kind::ParenthesizedType),
-    (
-        "PartiallyEmittedExpression",
-        Kind::PartiallyEmittedExpression,
-    ),
+    ("PartiallyEmittedExpression", Kind::PartiallyEmittedExpression),
     ("PercentEqualsToken", Kind::PercentEqualsToken),
     ("PercentToken", Kind::PercentToken),
     ("PlusEqualsToken", Kind::PlusEqualsToken),
@@ -1383,10 +1347,7 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("PublicKeyword", Kind::PublicKeyword),
     ("QualifiedName", Kind::QualifiedName),
     ("QuestionDotToken", Kind::QuestionDotToken),
-    (
-        "QuestionQuestionEqualsToken",
-        Kind::QuestionQuestionEqualsToken,
-    ),
+    ("QuestionQuestionEqualsToken", Kind::QuestionQuestionEqualsToken),
     ("QuestionQuestionToken", Kind::QuestionQuestionToken),
     ("QuestionToken", Kind::QuestionToken),
     ("ReadonlyKeyword", Kind::ReadonlyKeyword),
@@ -1401,10 +1362,7 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("SemicolonToken", Kind::SemicolonToken),
     ("SetAccessor", Kind::SetAccessor),
     ("SetKeyword", Kind::SetKeyword),
-    (
-        "ShorthandPropertyAssignment",
-        Kind::ShorthandPropertyAssignment,
-    ),
+    ("ShorthandPropertyAssignment", Kind::ShorthandPropertyAssignment),
     ("SingleLineCommentTrivia", Kind::SingleLineCommentTrivia),
     ("SlashEqualsToken", Kind::SlashEqualsToken),
     ("SlashToken", Kind::SlashToken),
@@ -1420,10 +1378,7 @@ static KINDS_BY_NAME: [(&str, Kind); 352] = [
     ("SymbolKeyword", Kind::SymbolKeyword),
     ("SyntaxList", Kind::SyntaxList),
     ("SyntheticExpression", Kind::SyntheticExpression),
-    (
-        "SyntheticReferenceExpression",
-        Kind::SyntheticReferenceExpression,
-    ),
+    ("SyntheticReferenceExpression", Kind::SyntheticReferenceExpression),
     ("TaggedTemplateExpression", Kind::TaggedTemplateExpression),
     ("TemplateExpression", Kind::TemplateExpression),
     ("TemplateHead", Kind::TemplateHead),

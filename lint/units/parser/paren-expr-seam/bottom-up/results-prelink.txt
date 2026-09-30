@@ -1,9 +1,11 @@
-# Pre-link comparison (pcmp.py on the assembly that rustc writes for the crate with the release flags, before ThinLTO) of
+# Pre-link comparison (tools/pcmp.py on the assembly that rustc writes for the crate with the release flags, before ThinLTO) of
 # variants of src/js_parser at e3566be889. 'stub' = only the stand-in lint helpers and three fields in the boxed table.
 # Each section: stub vs variant, every function of the crate whose code differs (all four instantiations of P).
 # Variant definitions: tools/variant.py (docstring) and diffs/<tag>.diff. Counts: instructions, conditional branches, calls.
 # ThinLTO later inlines into parse_paren_expr::<true,false>: is_type_script_arrow_return_type_after_question_and_before_colon,
 # try_skip_type_script_arrow_return_type_with_backtracking, parser_snapshot, pop_and_flatten_scope; and pfx_t_* into parse_prefix.
+# Combined tags: N=v3r+p57+r3 T=v1ts+v3pr+p57+r3 W=v2+p57+r3 X=v1x+v3pr+p57+r3 ; N2/T2/X2/W2 use v3d|v3pd and p57v ;
+# N3=topd+v3d2+r3 X3=v1x+topd+v3pd2+r3 T3=v1ts+topd+v3pd2+r3 (final forms) ; E=e1+e2 EC=e1c+e2
 ### base vs stub
 functions a 2376 b 2380; matched a 2376 b 2380; identical 2374, different 2, only a 0, only b 4
 DIFF  insns  1789 ->  1795 (+6)  jcc  168 ->  168 (+0)  calls 104 -> 104 (+0)  changed lines   10  <bun_js_parser::parse::parse_entry::Parser>::parse_only::<bun_js_parser::function_identities::FunctionIdentities, <bun_js_parser::function_identities:
@@ -283,6 +285,27 @@ ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_p
 ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, true>>::lint_parse_paren_expr
 SUM of ONLY B: insns 878, jcc 32
 
+### stub vs topd
+functions a 2380 b 2394; matched a 2380 b 2394; identical 2376, different 4, only a 0, only b 14
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<false, false>>::pfx_t_open_paren
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<false, true>>::pfx_t_open_paren
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<true, false>>::pfx_t_open_paren
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<true, true>>::pfx_t_open_paren
+SUM of DIFF: insns +32, jcc +4, calls +4
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, false>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<false, false>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, false>>::lint_parenthesized
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, true>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<false, true>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, true>>::lint_parenthesized
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, false>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<true, false>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, false>>::lint_parenthesized
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, true>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<true, true>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_parenthesized
+SUM of ONLY B: insns 1170, jcc 64
+
 ### stub vs p57
 functions a 2380 b 2385; matched a 2380 b 2385; identical 2376, different 4, only a 0, only b 5
 DIFF  insns   109 ->   113 (+4)  jcc   10 ->   12 (+2)  calls   6 ->   7 (+1)  changed lines   85  <bun_js_parser::p::P<false, false>>::pfx_t_open_paren
@@ -295,6 +318,23 @@ ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, true>>::lint_
 ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, false>>::lint_parenthesized
 ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_parenthesized
 SUM of ONLY B: insns 170, jcc 13
+
+### stub vs p57v
+functions a 2380 b 2389; matched a 2380 b 2389; identical 2376, different 4, only a 0, only b 9
+DIFF  insns   109 ->   126 (+17)  jcc   10 ->   12 (+2)  calls   6 ->   7 (+1)  changed lines   52  <bun_js_parser::p::P<false, false>>::pfx_t_open_paren
+DIFF  insns   109 ->   126 (+17)  jcc   10 ->   12 (+2)  calls   6 ->   7 (+1)  changed lines   52  <bun_js_parser::p::P<false, true>>::pfx_t_open_paren
+DIFF  insns   109 ->   126 (+17)  jcc   10 ->   12 (+2)  calls   6 ->   7 (+1)  changed lines   52  <bun_js_parser::p::P<true, false>>::pfx_t_open_paren
+DIFF  insns   109 ->   126 (+17)  jcc   10 ->   12 (+2)  calls   6 ->   7 (+1)  changed lines   52  <bun_js_parser::p::P<true, true>>::pfx_t_open_paren
+SUM of DIFF: insns +68, jcc +8, calls +4
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, false>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<false, false>>::lint_parenthesized_value
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, true>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<false, true>>::lint_parenthesized_value
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, false>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<true, false>>::lint_parenthesized_value
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<true, true>>::lint_parenthesized_value
+SUM of ONLY B: insns 186, jcc 13
 
 ### stub vs r1
 functions a 2380 b 2382; matched a 2380 b 2382; identical 2370, different 10, only a 0, only b 2
@@ -528,6 +568,292 @@ ONLY B insns    12 jcc    1 calls   1  <bun_js_parser::p::P<true, true>>::skip_a
 ONLY B insns    56 jcc    5 calls   5  <bun_js_parser::p::P<true, true>>::skip_arrow_return_type
 ONLY B insns    33 jcc    6 calls   0  <bun_js_parser::p::StartsForParseOnly>::lint_rewind_to
 SUM of ONLY B: insns 1681, jcc 110
+
+### stub vs N2
+functions a 2380 b 2401; matched a 2380 b 2401; identical 2368, different 12, only a 0, only b 21
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<false, false>>::pfx_t_open_paren
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<false, true>>::pfx_t_open_paren
+DIFF  insns   652 ->   661 (+9)  jcc   44 ->   46 (+2)  calls  31 ->  31 (+0)  changed lines  595  <bun_js_parser::p::P<true, false>>::parse_async_prefix_expr
+DIFF  insns   527 ->   525 (-2)  jcc   70 ->   70 (+0)  calls  23 ->  23 (+0)  changed lines  150  <bun_js_parser::p::P<true, false>>::pfx_t_identifier
+DIFF  insns   157 ->   181 (+24)  jcc   19 ->   21 (+2)  calls  17 ->  19 (+2)  changed lines  128  <bun_js_parser::p::P<true, false>>::pfx_t_less_than
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<true, false>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, false>>::restore_parser_snapshot
+DIFF  insns   679 ->   685 (+6)  jcc   48 ->   50 (+2)  calls  33 ->  33 (+0)  changed lines  600  <bun_js_parser::p::P<true, true>>::parse_async_prefix_expr
+DIFF  insns   544 ->   541 (-3)  jcc   74 ->   74 (+0)  calls  25 ->  25 (+0)  changed lines  301  <bun_js_parser::p::P<true, true>>::pfx_t_identifier
+DIFF  insns   157 ->   181 (+24)  jcc   19 ->   21 (+2)  calls  17 ->  19 (+2)  changed lines  128  <bun_js_parser::p::P<true, true>>::pfx_t_less_than
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<true, true>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, true>>::restore_parser_snapshot
+SUM of DIFF: insns +176, jcc +22, calls +14
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, false>>::lint_after_paren_expr
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, false>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<false, false>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<false, false>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, true>>::lint_after_paren_expr
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, true>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<false, true>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<false, true>>::lint_parse_paren_expr
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, false>>::lint_after_paren_expr
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, false>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<true, false>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, false>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, false>>::lint_rewind_after_backtrack
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, true>>::lint_after_paren_expr
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<true, true>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, true>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, true>>::lint_rewind_after_backtrack
+ONLY B insns    33 jcc    6 calls   0  <bun_js_parser::p::StartsForParseOnly>::lint_rewind_to
+SUM of ONLY B: insns 949, jcc 40
+
+### stub vs T2
+functions a 2380 b 2409; matched a 2380 b 2409; identical 2370, different 10, only a 0, only b 29
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<false, false>>::pfx_t_open_paren
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<false, true>>::pfx_t_open_paren
+DIFF  insns   773 ->   796 (+23)  jcc   80 ->   86 (+6)  calls  54 ->  57 (+3)  changed lines  414  <bun_js_parser::p::P<true, false>>::parse_paren_expr
+DIFF  insns   157 ->   169 (+12)  jcc   19 ->   20 (+1)  calls  17 ->  18 (+1)  changed lines   99  <bun_js_parser::p::P<true, false>>::pfx_t_less_than
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<true, false>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, false>>::restore_parser_snapshot
+DIFF  insns   763 ->   786 (+23)  jcc   79 ->   85 (+6)  calls  54 ->  57 (+3)  changed lines  778  <bun_js_parser::p::P<true, true>>::parse_paren_expr
+DIFF  insns   157 ->   169 (+12)  jcc   19 ->   20 (+1)  calls  17 ->  18 (+1)  changed lines   99  <bun_js_parser::p::P<true, true>>::pfx_t_less_than
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<true, true>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, true>>::restore_parser_snapshot
+SUM of DIFF: insns +188, jcc +28, calls +18
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, false>>::lint_after_paren_expr
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, false>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<false, false>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<false, false>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, true>>::lint_after_paren_expr
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, true>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<false, true>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<false, true>>::lint_parse_paren_expr
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, false>>::lint_after_paren_expr
+ONLY B insns    49 jcc    4 calls   2  <bun_js_parser::p::P<true, false>>::lint_arrow_parameter_type
+ONLY B insns    45 jcc    3 calls   2  <bun_js_parser::p::P<true, false>>::lint_arrow_return_type_known
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, false>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<true, false>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, false>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, false>>::lint_rewind_after_backtrack
+ONLY B insns   260 jcc   17 calls   4  <bun_js_parser::p::P<true, false>>::lint_try_arrow_return_type
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, true>>::lint_after_paren_expr
+ONLY B insns    49 jcc    4 calls   2  <bun_js_parser::p::P<true, true>>::lint_arrow_parameter_type
+ONLY B insns    45 jcc    3 calls   2  <bun_js_parser::p::P<true, true>>::lint_arrow_return_type_known
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<true, true>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, true>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, true>>::lint_rewind_after_backtrack
+ONLY B insns   260 jcc   17 calls   4  <bun_js_parser::p::P<true, true>>::lint_try_arrow_return_type
+ONLY B insns    33 jcc    6 calls   0  <bun_js_parser::p::StartsForParseOnly>::lint_rewind_to
+SUM of ONLY B: insns 1671, jcc 90
+
+### stub vs X2
+functions a 2380 b 2415; matched a 2380 b 2415; identical 2370, different 10, only a 0, only b 35
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<false, false>>::pfx_t_open_paren
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<false, true>>::pfx_t_open_paren
+DIFF  insns   773 ->   752 (-21)  jcc   80 ->   76 (-4)  calls  54 ->  55 (+1)  changed lines  616  <bun_js_parser::p::P<true, false>>::parse_paren_expr
+DIFF  insns   157 ->   169 (+12)  jcc   19 ->   20 (+1)  calls  17 ->  18 (+1)  changed lines   99  <bun_js_parser::p::P<true, false>>::pfx_t_less_than
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<true, false>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, false>>::restore_parser_snapshot
+DIFF  insns   763 ->   742 (-21)  jcc   79 ->   75 (-4)  calls  54 ->  55 (+1)  changed lines  856  <bun_js_parser::p::P<true, true>>::parse_paren_expr
+DIFF  insns   157 ->   169 (+12)  jcc   19 ->   20 (+1)  calls  17 ->  18 (+1)  changed lines   99  <bun_js_parser::p::P<true, true>>::pfx_t_less_than
+DIFF  insns   109 ->   136 (+27)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   95  <bun_js_parser::p::P<true, true>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, true>>::restore_parser_snapshot
+SUM of DIFF: insns +100, jcc +8, calls +14
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, false>>::lint_after_paren_expr
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, false>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<false, false>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<false, false>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, true>>::lint_after_paren_expr
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, true>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<false, true>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<false, true>>::lint_parse_paren_expr
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, false>>::lint_after_paren_expr
+ONLY B insns    49 jcc    4 calls   2  <bun_js_parser::p::P<true, false>>::lint_arrow_parameter_type
+ONLY B insns    49 jcc    4 calls   4  <bun_js_parser::p::P<true, false>>::lint_arrow_return_type
+ONLY B insns    45 jcc    3 calls   2  <bun_js_parser::p::P<true, false>>::lint_arrow_return_type_known
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, false>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<true, false>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, false>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, false>>::lint_rewind_after_backtrack
+ONLY B insns   260 jcc   17 calls   4  <bun_js_parser::p::P<true, false>>::lint_try_arrow_return_type
+ONLY B insns    12 jcc    1 calls   1  <bun_js_parser::p::P<true, false>>::skip_arrow_parameter_type
+ONLY B insns    56 jcc    5 calls   5  <bun_js_parser::p::P<true, false>>::skip_arrow_return_type
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, true>>::lint_after_paren_expr
+ONLY B insns    49 jcc    4 calls   2  <bun_js_parser::p::P<true, true>>::lint_arrow_parameter_type
+ONLY B insns    49 jcc    4 calls   4  <bun_js_parser::p::P<true, true>>::lint_arrow_return_type
+ONLY B insns    45 jcc    3 calls   2  <bun_js_parser::p::P<true, true>>::lint_arrow_return_type_known
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<true, true>>::lint_parenthesized_value
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, true>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, true>>::lint_rewind_after_backtrack
+ONLY B insns   260 jcc   17 calls   4  <bun_js_parser::p::P<true, true>>::lint_try_arrow_return_type
+ONLY B insns    12 jcc    1 calls   1  <bun_js_parser::p::P<true, true>>::skip_arrow_parameter_type
+ONLY B insns    56 jcc    5 calls   5  <bun_js_parser::p::P<true, true>>::skip_arrow_return_type
+ONLY B insns    33 jcc    6 calls   0  <bun_js_parser::p::StartsForParseOnly>::lint_rewind_to
+SUM of ONLY B: insns 1905, jcc 110
+
+### stub vs W2
+functions a 2380 b 2405; matched a 2380 b 2405; identical 2358, different 22, only a 0, only b 25
+DIFF  insns   394 ->   401 (+7)  jcc   33 ->   34 (+1)  calls  26 ->  27 (+1)  changed lines   72  <bun_js_parser::p::P<false, false>>::parse_async_prefix_expr
+DIFF  insns   581 ->   582 (+1)  jcc   51 ->   51 (+0)  calls  38 ->  38 (+0)  changed lines  246  <bun_js_parser::p::P<false, false>>::parse_paren_expr
+DIFF  insns   527 ->   525 (-2)  jcc   70 ->   70 (+0)  calls  23 ->  23 (+0)  changed lines  150  <bun_js_parser::p::P<false, false>>::pfx_t_identifier
+DIFF  insns   195 ->   194 (-1)  jcc   19 ->   19 (+0)  calls  15 ->  15 (+0)  changed lines   21  <bun_js_parser::p::P<false, false>>::pfx_t_new
+DIFF  insns   109 ->   134 (+25)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   89  <bun_js_parser::p::P<false, false>>::pfx_t_open_paren
+DIFF  insns   394 ->   401 (+7)  jcc   33 ->   34 (+1)  calls  26 ->  27 (+1)  changed lines   72  <bun_js_parser::p::P<false, true>>::parse_async_prefix_expr
+DIFF  insns   557 ->   558 (+1)  jcc   47 ->   47 (+0)  calls  37 ->  37 (+0)  changed lines  232  <bun_js_parser::p::P<false, true>>::parse_paren_expr
+DIFF  insns   527 ->   525 (-2)  jcc   70 ->   70 (+0)  calls  23 ->  23 (+0)  changed lines  150  <bun_js_parser::p::P<false, true>>::pfx_t_identifier
+DIFF  insns   197 ->   196 (-1)  jcc   19 ->   19 (+0)  calls  15 ->  15 (+0)  changed lines   21  <bun_js_parser::p::P<false, true>>::pfx_t_new
+DIFF  insns   109 ->   134 (+25)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   89  <bun_js_parser::p::P<false, true>>::pfx_t_open_paren
+DIFF  insns   652 ->   667 (+15)  jcc   44 ->   46 (+2)  calls  31 ->  33 (+2)  changed lines  391  <bun_js_parser::p::P<true, false>>::parse_async_prefix_expr
+DIFF  insns   773 ->   775 (+2)  jcc   80 ->   80 (+0)  calls  54 ->  55 (+1)  changed lines  200  <bun_js_parser::p::P<true, false>>::parse_paren_expr
+DIFF  insns   527 ->   525 (-2)  jcc   70 ->   70 (+0)  calls  23 ->  23 (+0)  changed lines  150  <bun_js_parser::p::P<true, false>>::pfx_t_identifier
+DIFF  insns   157 ->   174 (+17)  jcc   19 ->   21 (+2)  calls  17 ->  19 (+2)  changed lines   83  <bun_js_parser::p::P<true, false>>::pfx_t_less_than
+DIFF  insns   109 ->   134 (+25)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   89  <bun_js_parser::p::P<true, false>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, false>>::restore_parser_snapshot
+DIFF  insns   679 ->   693 (+14)  jcc   48 ->   50 (+2)  calls  33 ->  35 (+2)  changed lines  128  <bun_js_parser::p::P<true, true>>::parse_async_prefix_expr
+DIFF  insns   763 ->   765 (+2)  jcc   79 ->   79 (+0)  calls  54 ->  55 (+1)  changed lines  196  <bun_js_parser::p::P<true, true>>::parse_paren_expr
+DIFF  insns   544 ->   541 (-3)  jcc   74 ->   74 (+0)  calls  25 ->  25 (+0)  changed lines  301  <bun_js_parser::p::P<true, true>>::pfx_t_identifier
+DIFF  insns   157 ->   174 (+17)  jcc   19 ->   21 (+2)  calls  17 ->  19 (+2)  changed lines   83  <bun_js_parser::p::P<true, true>>::pfx_t_less_than
+DIFF  insns   109 ->   134 (+25)  jcc   10 ->   13 (+3)  calls   6 ->   8 (+2)  changed lines   89  <bun_js_parser::p::P<true, true>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, true>>::restore_parser_snapshot
+SUM of DIFF: insns +182, jcc +24, calls +22
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, false>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<false, false>>::lint_parenthesized_value
+ONLY B insns   584 jcc   51 calls  39  <bun_js_parser::p::P<false, false>>::parse_paren_expr_for_lint
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, true>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<false, true>>::lint_parenthesized_value
+ONLY B insns   560 jcc   47 calls  38  <bun_js_parser::p::P<false, true>>::parse_paren_expr_for_lint
+ONLY B insns    49 jcc    4 calls   2  <bun_js_parser::p::P<true, false>>::lint_arrow_parameter_type
+ONLY B insns    45 jcc    3 calls   2  <bun_js_parser::p::P<true, false>>::lint_arrow_return_type_known
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, false>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<true, false>>::lint_parenthesized_value
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, false>>::lint_rewind_after_backtrack
+ONLY B insns   260 jcc   17 calls   4  <bun_js_parser::p::P<true, false>>::lint_try_arrow_return_type
+ONLY B insns   771 jcc   81 calls  59  <bun_js_parser::p::P<true, false>>::parse_paren_expr_for_lint
+ONLY B insns    49 jcc    4 calls   2  <bun_js_parser::p::P<true, true>>::lint_arrow_parameter_type
+ONLY B insns    45 jcc    3 calls   2  <bun_js_parser::p::P<true, true>>::lint_arrow_return_type_known
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_parenthesized
+ONLY B insns     4 jcc    0 calls   0  <bun_js_parser::p::P<true, true>>::lint_parenthesized_value
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, true>>::lint_rewind_after_backtrack
+ONLY B insns   260 jcc   17 calls   4  <bun_js_parser::p::P<true, true>>::lint_try_arrow_return_type
+ONLY B insns   773 jcc   79 calls  59  <bun_js_parser::p::P<true, true>>::parse_paren_expr_for_lint
+ONLY B insns    33 jcc    6 calls   0  <bun_js_parser::p::StartsForParseOnly>::lint_rewind_to
+SUM of ONLY B: insns 3665, jcc 330
+
+### stub vs N3
+functions a 2380 b 2399; matched a 2380 b 2399; identical 2368, different 12, only a 0, only b 19
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<false, false>>::pfx_t_open_paren
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<false, true>>::pfx_t_open_paren
+DIFF  insns   652 ->   661 (+9)  jcc   44 ->   46 (+2)  calls  31 ->  31 (+0)  changed lines  595  <bun_js_parser::p::P<true, false>>::parse_async_prefix_expr
+DIFF  insns   527 ->   525 (-2)  jcc   70 ->   70 (+0)  calls  23 ->  23 (+0)  changed lines  150  <bun_js_parser::p::P<true, false>>::pfx_t_identifier
+DIFF  insns   157 ->   181 (+24)  jcc   19 ->   21 (+2)  calls  17 ->  19 (+2)  changed lines  128  <bun_js_parser::p::P<true, false>>::pfx_t_less_than
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<true, false>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, false>>::restore_parser_snapshot
+DIFF  insns   679 ->   685 (+6)  jcc   48 ->   50 (+2)  calls  33 ->  33 (+0)  changed lines  600  <bun_js_parser::p::P<true, true>>::parse_async_prefix_expr
+DIFF  insns   544 ->   541 (-3)  jcc   74 ->   74 (+0)  calls  25 ->  25 (+0)  changed lines  301  <bun_js_parser::p::P<true, true>>::pfx_t_identifier
+DIFF  insns   157 ->   181 (+24)  jcc   19 ->   21 (+2)  calls  17 ->  19 (+2)  changed lines  128  <bun_js_parser::p::P<true, true>>::pfx_t_less_than
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<true, true>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, true>>::restore_parser_snapshot
+SUM of DIFF: insns +100, jcc +14, calls +10
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, false>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<false, false>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, false>>::lint_parenthesized
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, true>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<false, true>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, true>>::lint_parenthesized
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, false>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<true, false>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, false>>::lint_parenthesized
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, false>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, false>>::lint_rewind_after_backtrack
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, true>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<true, true>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_parenthesized
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, true>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, true>>::lint_rewind_after_backtrack
+ONLY B insns    33 jcc    6 calls   0  <bun_js_parser::p::StartsForParseOnly>::lint_rewind_to
+SUM of ONLY B: insns 1345, jcc 74
+
+### stub vs X3
+functions a 2380 b 2413; matched a 2380 b 2413; identical 2370, different 10, only a 0, only b 33
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<false, false>>::pfx_t_open_paren
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<false, true>>::pfx_t_open_paren
+DIFF  insns   773 ->   752 (-21)  jcc   80 ->   76 (-4)  calls  54 ->  55 (+1)  changed lines  616  <bun_js_parser::p::P<true, false>>::parse_paren_expr
+DIFF  insns   157 ->   169 (+12)  jcc   19 ->   20 (+1)  calls  17 ->  18 (+1)  changed lines   99  <bun_js_parser::p::P<true, false>>::pfx_t_less_than
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<true, false>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, false>>::restore_parser_snapshot
+DIFF  insns   763 ->   742 (-21)  jcc   79 ->   75 (-4)  calls  54 ->  55 (+1)  changed lines  856  <bun_js_parser::p::P<true, true>>::parse_paren_expr
+DIFF  insns   157 ->   169 (+12)  jcc   19 ->   20 (+1)  calls  17 ->  18 (+1)  changed lines   99  <bun_js_parser::p::P<true, true>>::pfx_t_less_than
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<true, true>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, true>>::restore_parser_snapshot
+SUM of DIFF: insns +24, jcc +0, calls +10
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, false>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<false, false>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, false>>::lint_parenthesized
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, true>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<false, true>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, true>>::lint_parenthesized
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, false>>::lint_after_paren_expr
+ONLY B insns    49 jcc    4 calls   2  <bun_js_parser::p::P<true, false>>::lint_arrow_parameter_type
+ONLY B insns    49 jcc    4 calls   4  <bun_js_parser::p::P<true, false>>::lint_arrow_return_type
+ONLY B insns    45 jcc    3 calls   2  <bun_js_parser::p::P<true, false>>::lint_arrow_return_type_known
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<true, false>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, false>>::lint_parenthesized
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, false>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, false>>::lint_rewind_after_backtrack
+ONLY B insns   260 jcc   17 calls   4  <bun_js_parser::p::P<true, false>>::lint_try_arrow_return_type
+ONLY B insns    12 jcc    1 calls   1  <bun_js_parser::p::P<true, false>>::skip_arrow_parameter_type
+ONLY B insns    56 jcc    5 calls   5  <bun_js_parser::p::P<true, false>>::skip_arrow_return_type
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, true>>::lint_after_paren_expr
+ONLY B insns    49 jcc    4 calls   2  <bun_js_parser::p::P<true, true>>::lint_arrow_parameter_type
+ONLY B insns    49 jcc    4 calls   4  <bun_js_parser::p::P<true, true>>::lint_arrow_return_type
+ONLY B insns    45 jcc    3 calls   2  <bun_js_parser::p::P<true, true>>::lint_arrow_return_type_known
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<true, true>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_parenthesized
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, true>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, true>>::lint_rewind_after_backtrack
+ONLY B insns   260 jcc   17 calls   4  <bun_js_parser::p::P<true, true>>::lint_try_arrow_return_type
+ONLY B insns    12 jcc    1 calls   1  <bun_js_parser::p::P<true, true>>::skip_arrow_parameter_type
+ONLY B insns    56 jcc    5 calls   5  <bun_js_parser::p::P<true, true>>::skip_arrow_return_type
+ONLY B insns    33 jcc    6 calls   0  <bun_js_parser::p::StartsForParseOnly>::lint_rewind_to
+SUM of ONLY B: insns 2301, jcc 144
+
+### stub vs T3
+functions a 2380 b 2407; matched a 2380 b 2407; identical 2370, different 10, only a 0, only b 27
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<false, false>>::pfx_t_open_paren
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<false, true>>::pfx_t_open_paren
+DIFF  insns   773 ->   796 (+23)  jcc   80 ->   86 (+6)  calls  54 ->  57 (+3)  changed lines  414  <bun_js_parser::p::P<true, false>>::parse_paren_expr
+DIFF  insns   157 ->   169 (+12)  jcc   19 ->   20 (+1)  calls  17 ->  18 (+1)  changed lines   99  <bun_js_parser::p::P<true, false>>::pfx_t_less_than
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<true, false>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, false>>::restore_parser_snapshot
+DIFF  insns   763 ->   786 (+23)  jcc   79 ->   85 (+6)  calls  54 ->  57 (+3)  changed lines  778  <bun_js_parser::p::P<true, true>>::parse_paren_expr
+DIFF  insns   157 ->   169 (+12)  jcc   19 ->   20 (+1)  calls  17 ->  18 (+1)  changed lines   99  <bun_js_parser::p::P<true, true>>::pfx_t_less_than
+DIFF  insns   109 ->   117 (+8)  jcc   10 ->   11 (+1)  calls   6 ->   7 (+1)  changed lines   81  <bun_js_parser::p::P<true, true>>::pfx_t_open_paren
+DIFF  insns   166 ->   171 (+5)  jcc   15 ->   16 (+1)  calls   8 ->   9 (+1)  changed lines   75  <bun_js_parser::p::P<true, true>>::restore_parser_snapshot
+SUM of DIFF: insns +112, jcc +20, calls +14
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, false>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<false, false>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, false>>::lint_parenthesized
+ONLY B insns    11 jcc    1 calls   1  <bun_js_parser::p::P<false, true>>::lint_after_paren_expr
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<false, true>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<false, true>>::lint_parenthesized
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, false>>::lint_after_paren_expr
+ONLY B insns    49 jcc    4 calls   2  <bun_js_parser::p::P<true, false>>::lint_arrow_parameter_type
+ONLY B insns    45 jcc    3 calls   2  <bun_js_parser::p::P<true, false>>::lint_arrow_return_type_known
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<true, false>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, false>>::lint_parenthesized
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, false>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, false>>::lint_rewind_after_backtrack
+ONLY B insns   260 jcc   17 calls   4  <bun_js_parser::p::P<true, false>>::lint_try_arrow_return_type
+ONLY B insns   216 jcc    6 calls   2  <bun_js_parser::p::P<true, true>>::lint_after_paren_expr
+ONLY B insns    49 jcc    4 calls   2  <bun_js_parser::p::P<true, true>>::lint_arrow_parameter_type
+ONLY B insns    45 jcc    3 calls   2  <bun_js_parser::p::P<true, true>>::lint_arrow_return_type_known
+ONLY B insns   133 jcc    9 calls   7  <bun_js_parser::p::P<true, true>>::lint_open_paren
+ONLY B insns    39 jcc    3 calls   1  <bun_js_parser::p::P<true, true>>::lint_parenthesized
+ONLY B insns    60 jcc    1 calls   2  <bun_js_parser::p::P<true, true>>::lint_parse_paren_expr
+ONLY B insns    11 jcc    1 calls   0  <bun_js_parser::p::P<true, true>>::lint_rewind_after_backtrack
+ONLY B insns   260 jcc   17 calls   4  <bun_js_parser::p::P<true, true>>::lint_try_arrow_return_type
+ONLY B insns    33 jcc    6 calls   0  <bun_js_parser::p::StartsForParseOnly>::lint_rewind_to
+SUM of ONLY B: insns 2067, jcc 124
 
 ### stub vs E
 functions a 2380 b 2380; matched a 2380 b 2380; identical 2374, different 6, only a 0, only b 0

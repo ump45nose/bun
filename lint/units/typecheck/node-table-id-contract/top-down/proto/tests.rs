@@ -1,0 +1,412 @@
+use crate::ast::ast_generated::{Def, is_call_expression, is_identifier, is_variable_declaration};
+use crate::ast::context::{AstContext, Mode};
+use crate::ast::dump::{Dump, tree_digest};
+use crate::ast::factory::{NodeFactoryHooks, NodeVisitorHooks, new_node_factory, new_node_visitor};
+use crate::ast::flags_generated::{ModifierFlags, NodeFlags, TokenFlags};
+use crate::ast::kind_generated::{Kind, is_token_kind};
+use crate::ast::program::{IdAllocator, freeze};
+use crate::ast::symbol::{FlowNodeRec, SymbolRec};
+use crate::ast::table::{FileData, NodeTable};
+use crate::core::new_text_range;
+use crate::ids::{FlowNodeId, NodeId, NodeListId, PAGE_SIZE, SymbolId};
+use crate::internal::FaultKind;
+use crate::producers::importer::{import_file, read_bundle};
+use std::io::Write;
+use std::time::Instant;
+
+// `const x: number = "s";` made with the factory: children before parents, ranges afterwards.
+fn build_min(a: &AstContext<'_>) -> NodeId {
+    let f = new_node_factory(a, NodeFactoryHooks::default());
+    let name = f.new_identifier(b"x");
+    a.set_loc(name, new_text_range(5, 7));
+    let type_node = f.new_keyword_type_node(Kind::NumberKeyword);
+    a.set_loc(type_node, new_text_range(8, 15));
+    let initializer = f.new_string_literal(b"s", TokenFlags::empty());
+    a.set_loc(initializer, new_text_range(17, 21));
+    let declaration = f.new_variable_declaration(name, NodeId::NIL, type_node, initializer);
+    a.set_loc(declaration, new_text_range(5, 21));
+    let declarations = f.new_node_list(&[declaration]);
+    a.set_list_loc(declarations, new_text_range(5, 21));
+    let declaration_list = f.new_variable_declaration_list(declarations, NodeFlags::CONST);
+    a.set_loc(declaration_list, new_text_range(0, 21));
+    let statement = f.new_variable_statement(crate::ids::ModifierListId::NIL, declaration_list);
+    a.set_loc(statement, new_text_range(0, 22));
+    let statements = f.new_node_list(&[statement]);
+    a.set_list_loc(statements, new_text_range(0, 22));
+    let eof = f.new_token(Kind::EndOfFile);
+    a.set_loc(eof, new_text_range(22, 23));
+    let file = f.new_source_file(statements, eof);
+    a.set_loc(file, new_text_range(0, 23));
+    assert_eq!(f.node_count(), 8);
+    assert_eq!(f.text_count(), 2);
+    file
+}
+
+fn min_table() -> NodeTable {
+    let a = AstContext::for_building();
+    let root = build_min(&a);
+    let table = a.finish(root, b"const x: number = \"s\";\n".to_vec(), FileData::default());
+    assert_eq!(a.log.count(), 0);
+    table
+}
+
+const MIN_GOLDEN: &str = "root KindSourceFile [0,23) f=0x0
+  .Statements: list [0,22) n=1
+    - KindVariableStatement [0,22) f=0x0
+      .DeclarationList: KindVariableDeclarationList [0,21) f=0x2
+        .Declarations: list [5,21) n=1
+          - KindVariableDeclaration [5,21) f=0x0
+            .Initializer: KindStringLiteral [17,21) f=0x0 Text=\"s\" TokenFlags=0x0
+            .Type: KindNumberKeyword [8,15) f=0x0
+            .name: KindIdentifier [5,7) f=0x0 Text=\"x\"
+  .EndOfFileToken: KindEndOfFile [22,23) f=0x0
+";
+
+fn dump_text(a: &AstContext<'_>, root: NodeId) -> String {
+    let mut text = Vec::new();
+    let mut sink = |line: &[u8]| {
+        text.extend_from_slice(line);
+        text.push(b'\n');
+    };
+    Dump::new(a, false, &mut sink).node("root", root, NodeId::NIL, 0);
+    String::from_utf8_lossy(&text).into_owned()
+}
+
+#[test]
+fn factory_finish_and_read() {
+    let table = min_table();
+    assert_eq!(table.node_count(), 8);
+    let a = AstContext::for_binding(&table);
+    assert_eq!(a.mode(), Mode::Bind);
+    let file = table.root;
+    // The ids are the positions in the order of ForEachChild.
+    assert_eq!(file, NodeId(1));
+    let statement = file.statements(&a).at(0usize);
+    assert_eq!(statement, NodeId(2));
+    assert_eq!(statement.kind(&a), Kind::VariableStatement);
+    assert_eq!(statement.parent(&a), file);
+    let list = statement.as_variable_statement(&a).declaration_list;
+    assert!(list.flags(&a).contains(NodeFlags::CONST));
+    let declaration = list.as_variable_declaration_list(&a).declarations;
+    let declaration = a.list_nodes(declaration).at(0usize);
+    assert!(is_variable_declaration(&a, declaration));
+    assert_eq!(declaration.name(&a).text(&a), b"x");
+    assert!(is_identifier(&a, declaration.name(&a)));
+    assert_eq!(declaration.type_node(&a).kind(&a), Kind::NumberKeyword);
+    assert_eq!(declaration.initializer(&a).text(&a), b"s");
+    assert_eq!(declaration.initializer(&a).parent(&a), declaration);
+    assert_eq!(declaration.pos(&a), 5);
+    assert!(file.contains(&a, declaration.name(&a)));
+    assert!(!declaration.contains(&a, statement));
+    // ForEachChild of VariableDeclaration: name, ExclamationToken, Type, Initializer.
+    let mut seen = Vec::new();
+    declaration.for_each_child(&a, &mut |child| {
+        seen.push(child.kind(&a));
+        false
+    });
+    assert_eq!(seen, [Kind::Identifier, Kind::NumberKeyword, Kind::StringLiteral]);
+    assert_eq!(dump_text(&a, file), MIN_GOLDEN);
+    assert_eq!(a.log.count(), 0);
+
+    // A nil read, a wrong cast and an unhandled accessor give zero values and one log entry each.
+    assert_eq!(NodeId::NIL.kind(&a), Kind::Unknown);
+    assert_eq!(statement.as_call_expression(&a).arguments, NodeListId::NIL);
+    assert!(declaration.expression(&a).is_nil());
+    assert!(!is_call_expression(&a, statement));
+    let faults = a.log.snapshot();
+    assert_eq!(faults.len(), 3);
+    assert_eq!(faults[0].kind, FaultKind::NilRead);
+    assert_eq!(faults[1].kind, FaultKind::BadCast);
+    assert_eq!(faults[2].kind, FaultKind::Panic);
+    assert_eq!(faults[2].message, "Unhandled case in Node.Expression: ");
+    assert_eq!(faults[2].detail, Kind::VariableDeclaration as u32);
+    assert!(is_token_kind(Kind::EndOfFile));
+    assert_eq!(Kind::FIRST_ASSIGNMENT, Kind::EqualsToken);
+}
+
+#[test]
+fn binder_writes_then_freeze_and_share() {
+    let mut table = min_table();
+    let mut other = min_table();
+    {
+        // The binder writes flags and its own fields through the shared view. A syntax field is refused.
+        let a = AstContext::for_binding(&table);
+        let file = table.root;
+        let statement = file.statements(&a).at(0usize);
+        let declaration = a
+            .list_nodes(statement.as_variable_statement(&a).declaration_list.as_variable_declaration_list(&a).declarations)
+            .at(0usize);
+        a.set_flags(file, file.flags(&a) | NodeFlags::EXPORT_CONTEXT);
+        assert!(a.set_slot_by_table(declaration, &crate::ast::SYMBOL_SLOT, 1));
+        assert!(a.set_slot_by_table(statement, &crate::ast::FLOW_NODE_SLOT, 1));
+        assert_eq!(a.log.count(), 0);
+        declaration.set_initializer(&a, NodeId::NIL);
+        assert_eq!(a.log.snapshot()[0].kind, FaultKind::WriteToBoundObject);
+        assert_eq!(declaration.symbol(&a), SymbolId(1));
+        assert_eq!(statement.flow_node_data(&a).flow_node, FlowNodeId(1));
+        assert!(declaration.flow_node_data(&a).nil);
+    }
+    // What the binder hands over at its end: symbols, tables, flow nodes, and its flow data nodes.
+    let name = table.bound.push_name(b"x");
+    table.bound.declarations.push(NodeId(4));
+    table.bound.symbols.push(SymbolRec {
+        flags: 2,
+        name,
+        declarations: (0, 1),
+        value_declaration: NodeId(4),
+        ..SymbolRec::default()
+    });
+    let locals = table.bound.push_symbol_table(1, &[(b"x", SymbolId(1))]);
+    table.bound.flow_nodes.push(FlowNodeRec {
+        flags: 2,
+        ..FlowNodeRec::default()
+    });
+
+    let ids = IdAllocator::new();
+    let table = freeze(table, &ids).unwrap_or_else(|t| t);
+    other.file.file_name = b"/other.ts".to_vec();
+    let other = freeze(other, &ids).unwrap_or_else(|t| t);
+    assert!(table.is_frozen() && other.is_frozen());
+    assert_eq!(table.first(), PAGE_SIZE);
+    assert_eq!(other.first(), 2 * PAGE_SIZE);
+    let delta = PAGE_SIZE - 1;
+
+    // Two programs with the files in a different order: a file has the same ids in both.
+    for order in [[&table, &other], [&other, &table]] {
+        let a = AstContext::for_checking(&order);
+        assert_eq!(a.mode(), Mode::Check);
+        let file = table.root;
+        assert_eq!(file, NodeId(PAGE_SIZE));
+        assert!(file.flags(&a).contains(NodeFlags::EXPORT_CONTEXT));
+        let statement = file.statements(&a).at(0usize);
+        assert_eq!(statement, NodeId(2 + delta));
+        assert_eq!(statement.parent(&a), file);
+        let declaration = NodeId(4 + delta);
+        assert_eq!(declaration.kind(&a), Kind::VariableDeclaration);
+        assert_eq!(declaration.name(&a).text(&a), b"x");
+        let symbol = declaration.symbol(&a);
+        assert_eq!(symbol, SymbolId(1 + delta));
+        let read = a.symbol(symbol);
+        assert_eq!(read.name, b"x");
+        assert_eq!(read.value_declaration, declaration);
+        assert_eq!(read.declarations.at(0usize), declaration);
+        assert_eq!(a.symbol_table_get(crate::ids::SymbolTableId(locals.0 + delta), b"x"), symbol);
+        assert!(a.symbol_table_get(crate::ids::SymbolTableId(locals.0 + delta), b"y").is_nil());
+        assert_eq!(a.flow_node(statement.flow_node_data(&a).flow_node).flags, 2);
+        let other_file = other.root;
+        assert_eq!(other_file.statements(&a).at(0usize).parent(&a), other_file);
+        assert_eq!(a.log.count(), 0);
+
+        // A checker makes a node over a file node, as checker.go:5054 does, and writes only its own nodes.
+        let f = new_node_factory(&a, NodeFactoryHooks::default());
+        let this = f.new_keyword_expression(Kind::ThisKeyword);
+        let reference = f.new_property_access_expression(this, NodeId::NIL, declaration.name(&a), NodeFlags::empty());
+        a.set_parent(reference.expression(&a), reference);
+        a.set_parent(reference, statement);
+        assert!(a.set_slot_by_table(reference, &crate::ast::FLOW_NODE_SLOT, 7));
+        assert!(reference.is_synthetic());
+        assert_eq!(reference.name(&a), declaration.name(&a));
+        assert_eq!(reference.name(&a).parent(&a), declaration);
+        assert_eq!(reference.expression(&a).parent(&a), reference);
+        assert_eq!(reference.flow_node_data(&a).flow_node, FlowNodeId(7));
+        assert_eq!(a.log.count(), 0);
+        a.set_parent(declaration, reference);
+        a.set_flags(declaration, NodeFlags::empty());
+        assert_eq!(a.log.count(), 2);
+        assert_eq!(declaration.parent(&a).kind(&a), Kind::VariableDeclarationList);
+    }
+}
+
+#[test]
+fn update_clone_and_visit() {
+    let a = AstContext::for_building();
+    let file = build_min(&a);
+    let f = new_node_factory(&a, NodeFactoryHooks::default());
+    let statement = file.statements(&a).at(0usize);
+    let declaration = a
+        .list_nodes(statement.as_variable_statement(&a).declaration_list.as_variable_declaration_list(&a).declarations)
+        .at(0usize);
+    // Update with the same members returns the node; with a new member it returns a new node with the old range.
+    let d = declaration.as_variable_declaration(&a);
+    assert_eq!(f.update_variable_declaration(declaration, d.name, d.exclamation_token, d.type_node, d.initializer), declaration);
+    let other = f.new_numeric_literal(b"1", TokenFlags::empty());
+    let updated = f.update_variable_declaration(declaration, d.name, d.exclamation_token, d.type_node, other);
+    assert_ne!(updated, declaration);
+    assert_eq!(updated.loc(&a), declaration.loc(&a));
+    assert_eq!(updated.initializer(&a), other);
+    let cloned = f.clone(d.name);
+    assert_ne!(cloned, d.name);
+    assert_eq!(cloned.text(&a), b"x");
+    assert_eq!(cloned.loc(&a), d.name.loc(&a));
+    // VisitEachChild: the identity visitor keeps the node, a visitor that replaces a child makes a new parent.
+    let identity = |node: NodeId| node;
+    let v = new_node_visitor(Some(&identity), &f, NodeVisitorHooks::default());
+    assert_eq!(v.visit_each_child(declaration), declaration);
+    assert_eq!(v.visit_each_child(file), file);
+    let replace = |node: NodeId| if node == d.initializer { other } else { node };
+    let v = new_node_visitor(Some(&replace), &f, NodeVisitorHooks::default());
+    let visited = v.visit_each_child(declaration);
+    assert_ne!(visited, declaration);
+    assert_eq!(visited.initializer(&a), other);
+    assert_eq!(visited.name(&a), d.name);
+    let modifiers = f.new_modifier_list(&[f.new_modifier(Kind::ExportKeyword), f.new_modifier(Kind::DeclareKeyword)]);
+    assert_eq!(a.list_modifier_flags(modifiers), ModifierFlags::EXPORT | ModifierFlags::AMBIENT);
+    assert_eq!(a.def(f.new_token(Kind::TrueKeyword)), Def::Token);
+    assert_eq!(a.def(f.new_keyword_expression(Kind::TrueKeyword)), Def::KeywordExpression);
+    assert_eq!(a.log.count(), 0);
+}
+
+fn read(path: &str) -> Option<Vec<u8>> {
+    bun_sys::File::read_from(bun_sys::Fd::cwd(), path.as_bytes()).ok()
+}
+
+#[test]
+fn importer_gives_the_reference_tree() {
+    let json = br#"{"v":1,"kinds":["SourceFile","VariableStatement","VariableDeclarationList","VariableDeclaration","Identifier","NumberKeyword","StringLiteral","EndOfFile"],"fields":["Statements","DeclarationList","Declarations","name","Text","Type","Initializer","TokenFlags","EndOfFileToken"],"strings":["x","s"],"files":[{"fileName":"/min.ts","scriptKind":3,"languageVariant":0,"isDeclarationFile":0,"externalModuleIndicator":-1,"nodes":[0,0,23,0,-1,-1,-1,1,0,22,0,0,-1,0,2,0,21,2,1,1,-1,3,5,21,0,2,-1,1,4,5,7,0,3,3,-1,5,8,15,0,3,5,-1,6,17,21,0,3,6,-1,7,22,23,0,0,8,-1],"lists":[0,0,0,22,0,0,2,2,5,21,0,0],"scalars":[4,4,2,0,6,4,2,1,6,7,3,0],"text":"const x: number = \"s\";\n"}]}"#;
+    let bundle = read_bundle(json).unwrap_or_default();
+    assert_eq!(bundle.files.len(), 1);
+    let (table, faults, _) = import_file(&bundle, &bundle.files[0]);
+    assert_eq!(faults, 0);
+    let a = AstContext::for_binding(&table);
+    assert_eq!(dump_text(&a, table.root), MIN_GOLDEN);
+    // The importer made the nodes in another order than the factory did: the tables are the same.
+    let by_factory = min_table();
+    let b = AstContext::for_binding(&by_factory);
+    assert_eq!(tree_digest(&a, table.root, false), tree_digest(&b, by_factory.root, false));
+    assert_eq!(table.node_count(), by_factory.node_count());
+    for id in 1..=table.node_count() {
+        assert_eq!(NodeId(id).kind(&a), NodeId(id).kind(&b));
+        assert_eq!(NodeId(id).parent(&a), NodeId(id).parent(&b));
+    }
+}
+
+// The golden digests of the dump research: FNV-1a of the reference's own tree of each lib file, without JSDoc.
+fn golden_digests() -> Vec<(String, u64, u32)> {
+    let path = "/workspace/notes/lint/units/typecheck/ts-dump-and-test-importer/top-down/golden/libs.tsgo-digests.tsv";
+    let text = read(path).unwrap_or_default();
+    let mut rows = Vec::new();
+    for line in String::from_utf8_lossy(&text).split('\n') {
+        let cells: Vec<&str> = line.split('\t').collect();
+        if line.starts_with('#') || cells.len() < 11 {
+            continue;
+        }
+        let digest = u64::from_str_radix(cells[5], 16).unwrap_or(0);
+        rows.push((cells[2].to_string(), digest, cells[10].parse().unwrap_or(0)));
+    }
+    rows
+}
+
+// Imports a bundle made by probes/flatten-converted.ts, compares every file with the reference, then measures.
+fn measure_bundle(label: &str, path: &str) {
+    let mut err = std::io::stderr();
+    let Some(bytes) = read(path) else {
+        let _ = writeln!(err, "{label}: {path} is missing, nothing measured");
+        return;
+    };
+    let golden = golden_digests();
+    let t0 = Instant::now();
+    let bundle = read_bundle(&bytes).unwrap_or_default();
+    let t_json = t0.elapsed();
+    let mut tables: Vec<NodeTable> = Vec::new();
+    let (mut t_build, mut t_finish, mut arena_bytes, mut faults) = (0.0f64, 0.0f64, 0usize, 0u32);
+    for dump in &bundle.files {
+        let a = AstContext::for_building();
+        let t = Instant::now();
+        let ids = crate::producers::importer::build_file(&a, &bundle, dump);
+        t_build += t.elapsed().as_secs_f64();
+        let t = Instant::now();
+        let file = FileData {
+            file_name: dump.file_name.clone(),
+            ..FileData::default()
+        };
+        tables.push(a.finish(ids.first().copied().unwrap_or(NodeId::NIL), dump.text.clone(), file));
+        t_finish += t.elapsed().as_secs_f64();
+        arena_bytes += a.arena.heap_bytes();
+        faults += a.log.count();
+    }
+    // Compare with the reference before the ids move.
+    let (mut same, mut differ, mut unknown) = (0, 0, 0);
+    for table in &tables {
+        let a = AstContext::for_binding(table);
+        let (digest, nodes) = tree_digest(&a, table.root, true);
+        let name = String::from_utf8_lossy(table.file.file_name.get(1..).unwrap_or(&[])).into_owned();
+        match golden.iter().find(|row| row.0 == name) {
+            Some(row) if row.1 == digest && row.2 == nodes => same += 1,
+            Some(row) => {
+                differ += 1;
+                let _ = writeln!(err, "{label}: {name} differs: digest {digest:016x} nodes {nodes}, reference {:016x} nodes {}", row.1, row.2);
+            }
+            None => unknown += 1,
+        }
+        faults += a.log.count();
+    }
+    let ids = IdAllocator::new();
+    let t = Instant::now();
+    let tables: Vec<NodeTable> = tables.into_iter().map(|table| freeze(table, &ids).unwrap_or_else(|t| t)).collect();
+    let t_freeze = t.elapsed();
+    let nodes: u32 = tables.iter().map(NodeTable::node_count).sum();
+    let lists: u32 = tables.iter().map(NodeTable::list_count).sum();
+    let heap: usize = tables.iter().map(NodeTable::heap_bytes).sum();
+    let source: usize = tables.iter().map(|t| t.source_text().len()).sum();
+    // A program over the frozen files, then a second program over the same files in reverse order.
+    let refs: Vec<&NodeTable> = tables.iter().collect();
+    let t = Instant::now();
+    let first = AstContext::for_checking(&refs);
+    let t_first = t.elapsed();
+    let reversed: Vec<&NodeTable> = tables.iter().rev().collect();
+    let t = Instant::now();
+    let second = AstContext::for_checking(&reversed);
+    let t_second = t.elapsed();
+    // Read every node through the context: kind, parent and children, as a checker pass would.
+    let t = Instant::now();
+    let (mut visited, mut kinds) = (0u64, 0u64);
+    for table in &tables {
+        let mut stack = vec![table.root];
+        while let Some(node) = stack.pop() {
+            visited += 1;
+            kinds += node.kind(&second) as u64 + u64::from(node.parent(&second).0 & 1);
+            node.for_each_child(&second, &mut |child| {
+                stack.push(child);
+                false
+            });
+        }
+    }
+    let t_walk = t.elapsed();
+    let t = Instant::now();
+    let mut after = 0;
+    for table in &tables {
+        let (_, n) = tree_digest(&first, table.root, true);
+        after += n;
+    }
+    let t_dump = t.elapsed();
+    faults += first.log.count() + second.log.count();
+    let _ = writeln!(
+        err,
+        "{label}: files {} nodes {nodes} lists {lists} source bytes {source} dump bytes {}\n  reference digests: same {same} differ {differ} not in the golden table {unknown}; faults {faults}; nodes printed after freeze {after}\n  json read {:.1} ms; build {:.1} ms; finish {:.1} ms; freeze {:.2} ms; program 1 {:.3} ms; program 2 {:.3} ms ({} pages)\n  walk of {visited} nodes {:.1} ms (checksum {kinds}); dump of all trees {:.1} ms\n  table heap {heap} bytes ({:.1} per node, source text included); arena while building {arena_bytes} bytes; ids used {} pages",
+        tables.len(),
+        bytes.len(),
+        t_json.as_secs_f64() * 1e3,
+        t_build * 1e3,
+        t_finish * 1e3,
+        t_freeze.as_secs_f64() * 1e3,
+        t_first.as_secs_f64() * 1e3,
+        t_second.as_secs_f64() * 1e3,
+        second.page_count(),
+        t_walk.as_secs_f64() * 1e3,
+        t_dump.as_secs_f64() * 1e3,
+        heap as f64 / f64::from(nodes.max(1)),
+        ids.pages_used() - 1,
+    );
+    assert_eq!(differ, 0);
+    assert_eq!(faults, 0);
+}
+
+#[test]
+fn measure_es5_closure() {
+    measure_bundle("es5 closure", "/tmp/ntc-td/es5.json");
+}
+
+#[test]
+fn measure_esnext_closure() {
+    measure_bundle("esnext closure", "/tmp/ntc-td/esnext.json");
+}

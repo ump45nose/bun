@@ -25,8 +25,7 @@ export function generateFlags(): { text: string; counts: Record<string, number> 
       const name = m[1].slice(goType.length);
       if (name === "None") continue;
       // Go gives a shift a higher precedence than `-`, Rust a lower one.
-      const expr = m[2]
-        .replace(/(\d+)\s*<<\s*(\d+)/g, "($1 << $2)")
+      const expr = (/^\d+\s*<<\s*\d+$/.test(m[2]) ? m[2] : m[2].replace(/(\d+)\s*<<\s*(\d+)/g, "($1 << $2)"))
         .replace(new RegExp(`\\b${goType}(\\w+)`, "g"), (_, n) => (n === "None" ? "0" : `Self::${upperSnake(n)}.0`))
         .replace(/&\s*\^/g, "& !")
         .replace(/^\^/, "!");

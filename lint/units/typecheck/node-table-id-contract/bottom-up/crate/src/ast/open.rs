@@ -143,3 +143,9 @@ pub(crate) fn push<T>(cell: &RefCell<Vec<T>>, value: T) -> u32 {
         Err(_) => 0,
     }
 }
+
+impl Open<'_> {
+    pub fn table_count(&self) -> u32 {
+        count(&self.tables)
+    }
+}

@@ -670,6 +670,86 @@ def macro_twin(t):
     mod = mod.replace(anchor, macro + anchor)
     open(t.dir + '/' + MOD, 'w').write(mod)
 
+# ---- the source twin with a hook for a run: BUN_LINT_SEAM_OUT=<file> turns the records on and appends them to the file ----
+ENTRY = 'parse/parse_entry.rs'
+TSD = 'parse/parse_typescript.rs'
+def runnable_twin(t):
+    source_twin(t, cold_twin=False)
+    guard = '!SCAN_ONLY && Self::IS_TYPESCRIPT_ENABLED && ' + LINT
+    mod = open(t.dir + '/' + MOD).read()
+    tw = cut(mod, '    #[inline(never)]\n    pub(crate) fn parse_paren_expr_for_lint(', '    #[cold]\n    #[inline(never)]\n    pub(crate) fn parse_paren_expr_for_lint_cold(')
+    new = tw
+    old_close = '        // The parenthetical construct must end with a close parenthesis\n        p.lexer.expect(T::TCloseParen)?;\n'
+    assert new.count(old_close) == 1
+    new = new.replace(old_close, '        // The parenthetical construct must end with a close parenthesis\n        let lint_close = p.lexer.loc();\n        p.lexer.expect(T::TCloseParen)?;\n')
+    assert new.count('p.lint_paren(loc, value);') == 1
+    new = new.replace('p.lint_paren(loc, value);', 'p.lint_paren_at(loc, lint_close, value);')
+    open(t.dir + '/' + MOD, 'w').write(mod.replace(tw, new))
+    t.append(SKIP, """
+impl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_ONLY> {
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn lint_paren_at(&mut self, open: bun_ast::Loc, close: bun_ast::Loc, value: bun_ast::Expr) {
+        if let Some(l) = self.lint_seam() {
+            l.parens.push((open.start, close.start, value));
+        }
+    }
+}
+""")
+    t.rep(TSD, """        if p.lexer.token == T::TOpenParen {
+            p.lexer.next()?;
+            let expr = p.parse_expr(Level::Lowest)?;
+            p.lexer.expect(T::TCloseParen)?;
+            return Ok(expr);
+        }
+""", """        if p.lexer.token == T::TOpenParen {
+            let open = p.lexer.loc();
+            p.lexer.next()?;
+            let expr = p.parse_expr(Level::Lowest)?;
+            if %s {
+                p.lint_paren(open, expr);
+            }
+            p.lexer.expect(T::TCloseParen)?;
+            return Ok(expr);
+        }
+""" % guard)
+    t.rep(ENTRY, """        let p: &mut P<'_, TS, false> = unsafe { __p.assume_init_mut() };
+
+        if p.options.features.hot_module_reloading {""", """        let p: &mut P<'_, TS, false> = unsafe { __p.assume_init_mut() };
+        if TS && std::env::var_os("BUN_LINT_SEAM_OUT").is_some() {
+            p.starts_for_parse_only = Some(Box::new(crate::p::StartsForParseOnly {
+                lint: Some(Default::default()),
+                ..Default::default()
+            }));
+        }
+
+        if p.options.features.hot_module_reloading {""")
+    t.rep(ENTRY, """        parse_tracer.end();
+
+        // Halt parsing right here if there were any errors""", """        parse_tracer.end();
+        if TS {
+            if let Some(side) = p.starts_for_parse_only.take() {
+                if let (Some(lint), Some(path)) = (side.lint, std::env::var_os("BUN_LINT_SEAM_OUT")) {
+                    use std::io::Write as _;
+                    if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open(path) {
+                        let mut s = format!("F {} {}\\n", p.source.contents().len(), p.log().errors);
+                        for r in &lint.parens {
+                            s.push_str(&format!("P {} {} {} {}\\n", r.0, r.1, r.2.loc.start, r.2.data.tag() as u8));
+                        }
+                        for r in &lint.annotations {
+                            s.push_str(&format!("A {} {} {}\\n", r.0, r.1, r.2));
+                        }
+                        for r in &lint.return_types {
+                            s.push_str(&format!("R {} {} {}\\n", r.0, r.1, r.2));
+                        }
+                        let _ = f.write_all(s.as_bytes());
+                    }
+                }
+            }
+        }
+
+        // Halt parsing right here if there were any errors""")
+
 # ---- V5: the tests live in callees, the function only calls other names ----
 def callee(t, with_args=True, never=True):
     nv = '    #[inline(never)]\n' if never else ''
@@ -709,8 +789,8 @@ def callee(t, with_args=True, never=True):
 ''' % (nv, (', ' + a_loc) if a_loc else '', p_loc, nv, (', ' + a_item) if a_item else '', p_item, nv, (', ' + a_loc) if a_loc else '', p_loc))
 
 # ---- V5 with one dispatch at the top of pfx_t_open_paren: the lint wrapper calls the function of a parse without lint ----
-def top_dispatch_wrapper(t):
-    guard = '!SCAN_ONLY && Self::IS_TYPESCRIPT_ENABLED && ' + LINT
+def top_dispatch_wrapper(t, js_too=False):
+    guard = ('!SCAN_ONLY && ' if js_too else '!SCAN_ONLY && Self::IS_TYPESCRIPT_ENABLED && ') + LINT
     t.rep(PFX, """    fn pfx_t_open_paren(p: &mut Self, level: Level, flags: EFlags) -> PResult<Expr> {
         let loc = p.lexer.loc();
         p.lexer.next()?;
@@ -887,6 +967,7 @@ VARIANTS = {
     'v2m': lambda t: (stub(t), source_twin(t)),
     'v2m2': lambda t: (stub(t), source_twin(t, cold_twin=False)),
     'v2mm': lambda t: (stub(t), macro_twin(t)),
+    'v2x': lambda t: (stub(t), runnable_twin(t)),
     'v2mi': lambda t: (stub(t), source_twin(t, always_inline=True)),
     # V3
     'v3': lambda t: (stub(t), after_tests(t, ts_only=False), paren_tests(t, ts_only=False, in_function=False)),
@@ -900,6 +981,7 @@ VARIANTS = {
     'v5p': lambda t: (stub(t), callee(t, with_args=True), after_tests(t, ts_only=True, others=False), paren_tests(t, ts_only=True, in_function=False)),
     'v5t': lambda t: (stub(t), callee(t, with_args=True), top_dispatch_wrapper(t)),
     'topw': lambda t: (stub(t), top_dispatch_wrapper(t)),
+    'topwjs': lambda t: (stub(t), top_dispatch_wrapper(t, js_too=True)),
     # P3.4
     'w1': lambda t: (stub(t), rewind_in_backtrackers(t), rewind_in_snapshot_mark(t)),
     'w1b': lambda t: (stub(t), rewind_in_backtrackers(t)),

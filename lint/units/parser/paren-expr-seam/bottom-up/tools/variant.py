@@ -16,7 +16,11 @@ Variants (see README.md of this directory for what each one means):
   v3r    v3 with the result kept in place (the cold helper gets &mut Result), v3pr: the same for v3p
   v3d    nothing inside: the five callers test BEFORE the call and go to a cold wrapper that calls the SAME
          parse_paren_expr and then the hook (no code after the call on the path without lint), v3pd: two callers only
-  p57    the parenthesis record at parse_prefix.rs:57 (level above Assign), outside parse_paren_expr
+  p57    the parenthesis record at parse_prefix.rs:57 (level above Assign), outside parse_paren_expr; p57v: the
+         expression goes to the cold helper by value (no copy to the stack on the path without lint)
+  v3d2   v3d without the pfx_t_open_paren site (use with topd), v3pd2: only the '<T>(' cast path (use with topd)
+  topd   ONE test at the top of pfx_t_open_paren: a lint parse goes to a cold copy of that small function (both of its
+         paths record), which calls the SAME parse_paren_expr
   r1     sidecar lengths saved and cut back inside lexer_backtracker_bool and lexer_backtracker_result
   r1f    the cut only on the failure path of the two backtrackers, by position (nothing saved)
   r2     sidecar lengths as a field of ParserSnapshot (saved in parser_snapshot, cut in restore_parser_snapshot)
@@ -207,6 +211,12 @@ impl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_O
 
     #[cold]
     #[inline(never)]
+    pub(crate) fn lint_parenthesized_value(&mut self, open: bun_ast::Loc, value: bun_ast::Expr) {
+        self.lint_parenthesized(open, &value);
+    }
+
+    #[cold]
+    #[inline(never)]
     pub(crate) fn lint_parse_paren_expr(
         &mut self,
         open: usize,
@@ -217,6 +227,38 @@ impl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_O
         let value = self.parse_paren_expr(loc, level, opts)?;
         let open = bun_ast::Loc { start: open as i32 };
         self.lint_after_paren_expr(open, loc, &value)?;
+        Ok(value)
+    }
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn lint_open_paren(
+        &mut self,
+        level: Level,
+        flags: bun_ast::expr::EFlags,
+    ) -> Result<bun_ast::Expr, Error> {
+        let loc = self.lexer.loc();
+        self.lexer.next()?;
+        if level.gt(Level::Assign) {
+            let old_allow_in = self.allow_in;
+            self.allow_in = true;
+            let mut value = self.parse_expr(Level::Lowest)?;
+            self.mark_expr_as_parenthesized(&mut value);
+            self.lint_parenthesized(loc, &value);
+            self.lexer.expect(T::TCloseParen)?;
+            self.allow_in = old_allow_in;
+            return Ok(value);
+        }
+        let value = self.parse_paren_expr(
+            loc,
+            level,
+            crate::parser::ParenExprOpts {
+                is_after_question_and_before_colon: flags
+                    == bun_ast::expr::EFlags::AfterQuestionAndBeforeColon,
+                ..Default::default()
+            },
+        )?;
+        self.lint_after_paren_expr(loc, loc, &value)?;
         Ok(value)
     }
 
@@ -643,7 +685,7 @@ impl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_O
                                     );
                                 }
                                 return result;''')
-    elif v in ('v3d', 'v3pd'):
+    elif v in ('v3d', 'v3pd', 'v3d2', 'v3pd2'):
         def disp(text, open_expr, owner, gate='p.starts_for_parse_only.is_some()', indent=''):
             a = text.index('return p.parse_paren_expr(') if 'return p.parse_paren_expr(' in text else text.index('p.parse_paren_expr(')
             head = text[:a]; call = text[a:]
@@ -655,9 +697,10 @@ impl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_O
             if lint.endswith(';'): lint = lint[:-1]
             if lint.endswith('}'): lint = lint[:-1].rstrip()
             return head + 'if ' + gate + ' {\n' + indent + '    return ' + lint + ';\n' + indent + '}\n' + indent + call
-        rep(PP, CALL1, disp(CALL1, 'loc.start as usize', 'loc', indent='        '))
+        if v in ('v3d', 'v3pd'):
+            rep(PP, CALL1, disp(CALL1, 'loc.start as usize', 'loc', indent='        '))
         rep(PP, CALL3, disp(CALL3.replace('p.lexer.expect(T::TOpenParen)?;', 'let paren_start = p.lexer.start;\n                    p.lexer.expect(T::TOpenParen)?;'), 'paren_start', 'loc', indent='                    '))
-        if v == 'v3d':
+        if v in ('v3d', 'v3d2'):
             rep(PP, CALL2, disp(CALL2, 'paren_start', 'loc', indent='                '))
             rep(PP, '''                p.lexer.expect(T::TOpenParen)?;
                 if p.starts_for_parse_only.is_some() {
@@ -712,6 +755,24 @@ impl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_O
             p.mark_expr_as_parenthesized(&mut value);
             if p.starts_for_parse_only.is_some() {
                 p.lint_parenthesized(loc, &value);
+            }
+            p.lexer.expect(T::TCloseParen)?;
+''')
+    elif v == 'topd':
+        rep(PP, '''    fn pfx_t_open_paren(p: &mut Self, level: Level, flags: EFlags) -> PResult<Expr> {
+        let loc = p.lexer.loc();''', '''    fn pfx_t_open_paren(p: &mut Self, level: Level, flags: EFlags) -> PResult<Expr> {
+        if p.starts_for_parse_only.is_some() {
+            return p.lint_open_paren(level, flags);
+        }
+        let loc = p.lexer.loc();''')
+    elif v == 'p57v':
+        rep(PP, '''            let mut value = p.parse_expr(Level::Lowest)?;
+            p.mark_expr_as_parenthesized(&mut value);
+            p.lexer.expect(T::TCloseParen)?;
+''', '''            let mut value = p.parse_expr(Level::Lowest)?;
+            p.mark_expr_as_parenthesized(&mut value);
+            if p.starts_for_parse_only.is_some() {
+                p.lint_parenthesized_value(loc, value);
             }
             p.lexer.expect(T::TCloseParen)?;
 ''')

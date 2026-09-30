@@ -18,8 +18,8 @@ const cmp = G.compareStrings as (a: string, b: string) => number;
 const sha = (x: string | Uint8Array) => createHash("sha256").update(x).digest("hex");
 // The digest of a set of rows: sha256 of the rows in the byte order of their UTF-8 text, each row with its line feed.
 const digestOf = (rows: string[]) => sha(rows.slice().sort(cmp).join(""));
-// The bucket of a case: the rule of every sample of the test file. Bucket 0 is what a debug build enumerates.
-const buckets = 40;
+// The bucket of a case. A debug build enumerates the first eight buckets, about 48 cases each; a release build all of them.
+const buckets = 256;
 const bucketOf = (casePath: string) => Bun.hash.crc32(casePath) % buckets;
 
 const c = home + "/corpus";
