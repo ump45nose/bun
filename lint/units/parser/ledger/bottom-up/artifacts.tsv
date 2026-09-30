@@ -65,7 +65,7 @@ this machine: notes of the parser unit	/workspace/notes/lint/units/parser/lint-e
 this machine: notes of the parser unit	/workspace/notes/lint/units/parser/api-contract-top-down	present	directory, 3 files, 34486 bytes, tracked in the notes: 3
 this machine: notes of the parser unit	/workspace/notes/lint/units/parser/ledger/rescued-tmp	present	directory, 142 files, 867555 bytes, tracked in the notes: 142
 this machine: notes of the parser unit	/workspace/notes/lint/units/parser/ledger/bottom-up/tmp-rescue	present	directory, 118 files, 599933 bytes, tracked in the notes: 118
-this machine: notes of the parser unit	/workspace/notes/lint/units/parser/ledger/bottom-up/corpus	present	directory, 40 files, 13517833 bytes, tracked in the notes: 40
+this machine: notes of the parser unit	/workspace/notes/lint/units/parser/ledger/bottom-up/corpus	present	directory, 41 files, 13521049 bytes, tracked in the notes: 40
 this machine: notes of the parser unit	/workspace/notes/lint/units/parser/ledger/bottom-up/tsgo-oracle	present	directory, 2 files, 7247 bytes, tracked in the notes: 2
 this machine: notes of the parser unit	/workspace/notes/lint/units/parser/ledger/bottom-up/pins	present	directory, 17 files, 215773 bytes, tracked in the notes: 17
 this machine: shared tools	/workspace/notes/lint/tools/symsizes.py	present	file, 2300 bytes, tracked in the notes: 1
@@ -114,4 +114,4 @@ git	commit 367d939d9	present	367d939d9a node:net: let the GC collect a handle wh
 git	commit 2d28b35c01	present	2d28b35c01 js_parser: make the type grammar generic over a sink
 git	commit 36cd1514e	present	36cd1514ec Remove dead code from the bake client, uSockets, uWS HTTP/2, uws_sys, and the CI pipeline
 git	commit e3566be889	present	e3566be889 typecheck, lint: add the two crates to the workspace
-git	notes HEAD	0c9cf8ffb0	origin 0c9cf8ffb0
+git	notes HEAD	de1d0b8f31	origin de1d0b8f31

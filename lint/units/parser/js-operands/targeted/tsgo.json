@@ -7261,6 +7261,1566 @@
     "jsdoc": []
    }
   },
+  "x50": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@8+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@8+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@8+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@8+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x51": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8009@10+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8009@10+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8009@10+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8009@10+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x52": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@22+6 Type annotations can only be used in TypeScript files.",
+     "TS8017@0+35 Signature declarations can only be used in TypeScript files.",
+     "TS8009@0+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@22+6 Type annotations can only be used in TypeScript files.",
+     "TS8017@0+35 Signature declarations can only be used in TypeScript files.",
+     "TS8009@0+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@22+6 Type annotations can only be used in TypeScript files.",
+     "TS8017@0+35 Signature declarations can only be used in TypeScript files.",
+     "TS8009@0+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@22+6 Type annotations can only be used in TypeScript files.",
+     "TS8017@0+35 Signature declarations can only be used in TypeScript files.",
+     "TS8009@0+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x53": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8009@12+1 The '?' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8009@12+1 The '?' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8009@12+1 The '?' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8009@12+1 The '?' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x54": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@24+3 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@24+3 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@24+3 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@24+3 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x55": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@19+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@48+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@19+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@48+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@19+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@48+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@19+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@48+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x56": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8017@10+14 Signature declarations can only be used in TypeScript files.",
+     "TS8010@40+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8017@10+14 Signature declarations can only be used in TypeScript files.",
+     "TS8010@40+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8017@10+14 Signature declarations can only be used in TypeScript files.",
+     "TS8010@40+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8017@10+14 Signature declarations can only be used in TypeScript files.",
+     "TS8010@40+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x57": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8004@21+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8004@21+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8004@21+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8004@21+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x58": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@30+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@30+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@30+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@30+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x59": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8013@10+2 Non-null assertions can only be used in TypeScript files.",
+     "TS8013@10+5 Non-null assertions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8013@10+2 Non-null assertions can only be used in TypeScript files.",
+     "TS8013@10+5 Non-null assertions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8013@10+2 Non-null assertions can only be used in TypeScript files.",
+     "TS8013@10+5 Non-null assertions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8013@10+2 Non-null assertions can only be used in TypeScript files.",
+     "TS8013@10+5 Non-null assertions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x61": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8006@0+23 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@24+28 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@53+23 'export type' declarations can only be used in TypeScript files.",
+     "TS8006@77+28 'export type' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8006@0+23 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@24+28 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@53+23 'export type' declarations can only be used in TypeScript files.",
+     "TS8006@77+28 'export type' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8006@0+23 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@24+28 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@53+23 'export type' declarations can only be used in TypeScript files.",
+     "TS8006@77+28 'export type' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8006@0+23 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@24+28 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@53+23 'export type' declarations can only be used in TypeScript files.",
+     "TS8006@77+28 'export type' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x62": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8002@0+21 'import ... =' can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8002@0+21 'import ... =' can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8002@0+21 'import ... =' can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8002@0+21 'import ... =' can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x63": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8002@0+14 'import ... =' can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8002@0+14 'import ... =' can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8002@0+14 'import ... =' can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8002@0+14 'import ... =' can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x64": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@24+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@7+7 The 'declare' modifier can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@24+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@7+7 The 'declare' modifier can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@24+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@7+7 The 'declare' modifier can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@24+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@7+7 The 'declare' modifier can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x65": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8006@14+1 'namespace' declarations can only be used in TypeScript files.",
+     "TS8006@12+1 'namespace' declarations can only be used in TypeScript files.",
+     "TS8006@10+1 'namespace' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8006@14+1 'namespace' declarations can only be used in TypeScript files.",
+     "TS8006@12+1 'namespace' declarations can only be used in TypeScript files.",
+     "TS8006@10+1 'namespace' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8006@14+1 'namespace' declarations can only be used in TypeScript files.",
+     "TS8006@12+1 'namespace' declarations can only be used in TypeScript files.",
+     "TS8006@10+1 'namespace' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8006@14+1 'namespace' declarations can only be used in TypeScript files.",
+     "TS8006@12+1 'namespace' declarations can only be used in TypeScript files.",
+     "TS8006@10+1 'namespace' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x66": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@7+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@18+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@7+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@18+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@7+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@18+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@7+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@18+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x67": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@12+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@12+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@12+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@12+6 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x69": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8004@8+8 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8004@8+8 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8004@8+8 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8004@8+8 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x70": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@15+11 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@15+11 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@15+11 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@15+11 Type annotations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x71": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x72": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x73": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS1206@7+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS1206@7+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS1206@7+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS1206@7+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x74": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS1206@10+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS1206@10+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS1206@10+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS1206@10+4 Decorators are not valid here."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x75": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8037@16+1 Type satisfaction expressions can only be used in TypeScript files.",
+     "TS8016@21+1 Type assertion expressions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8037@16+1 Type satisfaction expressions can only be used in TypeScript files.",
+     "TS8016@21+1 Type assertion expressions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8037@16+1 Type satisfaction expressions can only be used in TypeScript files.",
+     "TS8016@21+1 Type assertion expressions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8037@16+1 Type satisfaction expressions can only be used in TypeScript files.",
+     "TS8016@21+1 Type assertion expressions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x76": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8006@5+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@34+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@51+1 'enum' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8006@5+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@34+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@51+1 'enum' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8006@5+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@34+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@51+1 'enum' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8006@5+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@34+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@51+1 'enum' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x80": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8017@19+19 Signature declarations can only be used in TypeScript files.",
+     "TS8009@19+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8010@51+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8009@0+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8017@19+19 Signature declarations can only be used in TypeScript files.",
+     "TS8009@19+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8010@51+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8009@0+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8017@19+19 Signature declarations can only be used in TypeScript files.",
+     "TS8009@19+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8010@51+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8009@0+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8017@19+19 Signature declarations can only be used in TypeScript files.",
+     "TS8009@19+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8010@51+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8009@0+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x82": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8008@5+1 Type aliases can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8008@5+1 Type aliases can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8008@5+1 Type aliases can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8008@5+1 Type aliases can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x83": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8006@10+1 'interface' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8006@10+1 'interface' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8006@10+1 'interface' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8006@10+1 'interface' declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x84": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@23+1 Type annotations can only be used in TypeScript files.",
+     "TS8004@11+7 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@23+1 Type annotations can only be used in TypeScript files.",
+     "TS8004@11+7 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@23+1 Type annotations can only be used in TypeScript files.",
+     "TS8004@11+7 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@23+1 Type annotations can only be used in TypeScript files.",
+     "TS8004@11+7 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x85": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@21+1 Type annotations can only be used in TypeScript files.",
+     "TS8010@30+3 Type annotations can only be used in TypeScript files.",
+     "TS8010@36+8 Type annotations can only be used in TypeScript files.",
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@21+1 Type annotations can only be used in TypeScript files.",
+     "TS8010@30+3 Type annotations can only be used in TypeScript files.",
+     "TS8010@36+8 Type annotations can only be used in TypeScript files.",
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@21+1 Type annotations can only be used in TypeScript files.",
+     "TS8010@30+3 Type annotations can only be used in TypeScript files.",
+     "TS8010@36+8 Type annotations can only be used in TypeScript files.",
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@21+1 Type annotations can only be used in TypeScript files.",
+     "TS8010@30+3 Type annotations can only be used in TypeScript files.",
+     "TS8010@36+8 Type annotations can only be used in TypeScript files.",
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x86": {
+   "a.js": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x87": {
+   "a.js": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x88": {
+   "a.js": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x89": {
+   "a.js": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x90": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8010@31+1 Type annotations can only be used in TypeScript files.",
+     "TS8004@25+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8010@31+1 Type annotations can only be used in TypeScript files.",
+     "TS8004@25+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8010@31+1 Type annotations can only be used in TypeScript files.",
+     "TS8004@25+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8010@31+1 Type annotations can only be used in TypeScript files.",
+     "TS8004@25+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x91": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8005@18+15 'implements' clauses can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8005@18+15 'implements' clauses can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8005@18+15 'implements' clauses can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8005@18+15 'implements' clauses can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x92": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8004@15+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@44+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@64+2 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8004@15+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@44+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@64+2 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8004@15+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@44+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@64+2 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8004@15+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@44+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@64+2 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
   "p01": {
    "a.js": {
     "parse": [],

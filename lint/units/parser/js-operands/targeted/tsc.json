@@ -12056,6 +12056,2352 @@
     "module": "Unexpected token ':'"
    }
   },
+  "x50": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@8+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken NumberKeyword)))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@8+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken NumberKeyword)))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@8+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken NumberKeyword)))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@8+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken NumberKeyword)))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken NumberKeyword)))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken NumberKeyword)))"
+   },
+   "v8": {
+    "script": "Unexpected token '!'",
+    "module": "Unexpected token '!'"
+   }
+  },
+  "x51": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@10+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Property(DeclareKeyword x) Property(StaticKeyword y) Property(AccessorKeyword z) Method(AsyncKeyword m Block))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@10+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Property(DeclareKeyword x) Property(StaticKeyword y) Property(AccessorKeyword z) Method(AsyncKeyword m Block))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@10+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Property(DeclareKeyword x) Property(StaticKeyword y) Property(AccessorKeyword z) Method(AsyncKeyword m Block))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@10+7 The 'declare' modifier can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Property(DeclareKeyword x) Property(StaticKeyword y) Property(AccessorKeyword z) Method(AsyncKeyword m Block))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A Property(DeclareKeyword x) Property(StaticKeyword y) Property(AccessorKeyword z) Method(AsyncKeyword m Block))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A Property(DeclareKeyword x) Property(StaticKeyword y) Property(AccessorKeyword z) Method(AsyncKeyword m Block))"
+   },
+   "v8": {
+    "script": "Unexpected identifier 'x'",
+    "module": "Unexpected identifier 'x'"
+   }
+  },
+  "x52": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8017@17+1 Signature declarations can only be used in TypeScript files."
+    ],
+    "tree": "Function(DeclareKeyword f Parameter(a NumberKeyword) VoidKeyword)"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8017@17+1 Signature declarations can only be used in TypeScript files."
+    ],
+    "tree": "Function(DeclareKeyword f Parameter(a NumberKeyword) VoidKeyword)"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8017@17+1 Signature declarations can only be used in TypeScript files."
+    ],
+    "tree": "Function(DeclareKeyword f Parameter(a NumberKeyword) VoidKeyword)"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8017@17+1 Signature declarations can only be used in TypeScript files."
+    ],
+    "tree": "Function(DeclareKeyword f Parameter(a NumberKeyword) VoidKeyword)"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(DeclareKeyword f Parameter(a NumberKeyword) VoidKeyword)"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(DeclareKeyword f Parameter(a NumberKeyword) VoidKeyword)"
+   },
+   "v8": {
+    "script": "Unexpected token 'function'",
+    "module": "Unexpected token 'function'"
+   }
+  },
+  "x53": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@12+1 The '?' modifier can only be used in TypeScript files."
+    ],
+    "tree": "Function(f Parameter(a QuestionToken) Block)"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@12+1 The '?' modifier can only be used in TypeScript files."
+    ],
+    "tree": "Function(f Parameter(a QuestionToken) Block)"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@12+1 The '?' modifier can only be used in TypeScript files."
+    ],
+    "tree": "Function(f Parameter(a QuestionToken) Block)"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@12+1 The '?' modifier can only be used in TypeScript files."
+    ],
+    "tree": "Function(f Parameter(a QuestionToken) Block)"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f Parameter(a QuestionToken) Block)"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f Parameter(a QuestionToken) Block)"
+   },
+   "v8": {
+    "script": "Unexpected token '?'",
+    "module": "Unexpected token '?'"
+   }
+  },
+  "x54": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@24+3 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(f Function(Parameter(this AnyKeyword) Parameter(a) Block))))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@24+3 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(f Function(Parameter(this AnyKeyword) Parameter(a) Block))))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@24+3 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(f Function(Parameter(this AnyKeyword) Parameter(a) Block))))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@24+3 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(f Function(Parameter(this AnyKeyword) Parameter(a) Block))))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(f Function(Parameter(this AnyKeyword) Parameter(a) Block))))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(f Function(Parameter(this AnyKeyword) Parameter(a) Block))))"
+   },
+   "v8": {
+    "script": "Unexpected token 'this'",
+    "module": "Unexpected token 'this'"
+   }
+  },
+  "x55": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@19+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@48+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A GetAccessor(x NumberKeyword Block(Return(\"1\"))) SetAccessor(x Parameter(v NumberKeyword) Block))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@19+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@48+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A GetAccessor(x NumberKeyword Block(Return(\"1\"))) SetAccessor(x Parameter(v NumberKeyword) Block))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@19+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@48+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A GetAccessor(x NumberKeyword Block(Return(\"1\"))) SetAccessor(x Parameter(v NumberKeyword) Block))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@19+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@48+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A GetAccessor(x NumberKeyword Block(Return(\"1\"))) SetAccessor(x Parameter(v NumberKeyword) Block))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A GetAccessor(x NumberKeyword Block(Return(\"1\"))) SetAccessor(x Parameter(v NumberKeyword) Block))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A GetAccessor(x NumberKeyword Block(Return(\"1\"))) SetAccessor(x Parameter(v NumberKeyword) Block))"
+   },
+   "v8": {
+    "script": "Unexpected token ':'",
+    "module": "Unexpected token ':'"
+   }
+  },
+  "x56": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8017@10+11 Signature declarations can only be used in TypeScript files.",
+     "TS8010@40+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Constructor Constructor(Parameter(a NumberKeyword) Block))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8017@10+11 Signature declarations can only be used in TypeScript files.",
+     "TS8010@40+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Constructor Constructor(Parameter(a NumberKeyword) Block))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8017@10+11 Signature declarations can only be used in TypeScript files.",
+     "TS8010@40+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Constructor Constructor(Parameter(a NumberKeyword) Block))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8017@10+11 Signature declarations can only be used in TypeScript files.",
+     "TS8010@40+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Constructor Constructor(Parameter(a NumberKeyword) Block))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A Constructor Constructor(Parameter(a NumberKeyword) Block))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A Constructor Constructor(Parameter(a NumberKeyword) Block))"
+   },
+   "v8": {
+    "script": "Unexpected token ';'",
+    "module": "Unexpected token ';'"
+   }
+  },
+  "x57": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@21+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "Class(ExportKeyword DefaultKeyword TypeParameter(T))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@21+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "Class(ExportKeyword DefaultKeyword TypeParameter(T))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@21+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "Class(ExportKeyword DefaultKeyword TypeParameter(T))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@21+1 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "Class(ExportKeyword DefaultKeyword TypeParameter(T))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(ExportKeyword DefaultKeyword TypeParameter(T))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(ExportKeyword DefaultKeyword TypeParameter(T))"
+   },
+   "v8": {
+    "script": "Unexpected token 'export'",
+    "module": "Unexpected token '<'"
+   }
+  },
+  "x58": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@30+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(o ObjectLiteral(Method(m TypeParameter(T) Block) GetAccessor(x NumberKeyword Block(Return(\"1\")))))))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@30+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(o ObjectLiteral(Method(m TypeParameter(T) Block) GetAccessor(x NumberKeyword Block(Return(\"1\")))))))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@30+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(o ObjectLiteral(Method(m TypeParameter(T) Block) GetAccessor(x NumberKeyword Block(Return(\"1\")))))))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@30+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(o ObjectLiteral(Method(m TypeParameter(T) Block) GetAccessor(x NumberKeyword Block(Return(\"1\")))))))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(o ObjectLiteral(Method(m TypeParameter(T) Block) GetAccessor(x NumberKeyword Block(Return(\"1\")))))))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(o ObjectLiteral(Method(m TypeParameter(T) Block) GetAccessor(x NumberKeyword Block(Return(\"1\")))))))"
+   },
+   "v8": {
+    "script": "Unexpected token '<'",
+    "module": "Unexpected token '<'"
+   }
+  },
+  "x59": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8013@10+5 Non-null assertions can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x Call(NonNull(PropertyAccess(NonNull(y) z))))))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8013@10+5 Non-null assertions can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x Call(NonNull(PropertyAccess(NonNull(y) z))))))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8013@10+5 Non-null assertions can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x Call(NonNull(PropertyAccess(NonNull(y) z))))))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8013@10+5 Non-null assertions can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x Call(NonNull(PropertyAccess(NonNull(y) z))))))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x Call(NonNull(PropertyAccess(NonNull(y) z))))))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x Call(NonNull(PropertyAccess(NonNull(y) z))))))"
+   },
+   "v8": {
+    "script": "Unexpected token '!'",
+    "module": "Unexpected token '!'"
+   }
+  },
+  "x61": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@0+23 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@24+28 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@53+23 'export type' declarations can only be used in TypeScript files.",
+     "TS8006@77+28 'export type' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Import(ImportClause(X) \"x\") Import(ImportClause(NamespaceImport(N)) \"y\") Export(\"z\") Export(NamespaceExport(M) \"w\")"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@0+23 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@24+28 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@53+23 'export type' declarations can only be used in TypeScript files.",
+     "TS8006@77+28 'export type' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Import(ImportClause(X) \"x\") Import(ImportClause(NamespaceImport(N)) \"y\") Export(\"z\") Export(NamespaceExport(M) \"w\")"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@0+23 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@24+28 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@53+23 'export type' declarations can only be used in TypeScript files.",
+     "TS8006@77+28 'export type' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Import(ImportClause(X) \"x\") Import(ImportClause(NamespaceImport(N)) \"y\") Export(\"z\") Export(NamespaceExport(M) \"w\")"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@0+23 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@24+28 'import type' declarations can only be used in TypeScript files.",
+     "TS8006@53+23 'export type' declarations can only be used in TypeScript files.",
+     "TS8006@77+28 'export type' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Import(ImportClause(X) \"x\") Import(ImportClause(NamespaceImport(N)) \"y\") Export(\"z\") Export(NamespaceExport(M) \"w\")"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Import(ImportClause(X) \"x\") Import(ImportClause(NamespaceImport(N)) \"y\") Export(\"z\") Export(NamespaceExport(M) \"w\")"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Import(ImportClause(X) \"x\") Import(ImportClause(NamespaceImport(N)) \"y\") Export(\"z\") Export(NamespaceExport(M) \"w\")"
+   },
+   "v8": {
+    "script": "Cannot use import statement outside a module",
+    "module": "Unexpected identifier 'X'"
+   }
+  },
+  "x62": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8002@0+21 'import ... =' can only be used in TypeScript files."
+    ],
+    "tree": "ImportEquals(ExportKeyword a Node(b c))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8002@0+21 'import ... =' can only be used in TypeScript files."
+    ],
+    "tree": "ImportEquals(ExportKeyword a Node(b c))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8002@0+21 'import ... =' can only be used in TypeScript files."
+    ],
+    "tree": "ImportEquals(ExportKeyword a Node(b c))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8002@0+21 'import ... =' can only be used in TypeScript files."
+    ],
+    "tree": "ImportEquals(ExportKeyword a Node(b c))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "ImportEquals(ExportKeyword a Node(b c))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "ImportEquals(ExportKeyword a Node(b c))"
+   },
+   "v8": {
+    "script": "Unexpected token 'export'",
+    "module": "Unexpected token 'export'"
+   }
+  },
+  "x63": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8002@0+14 'import ... =' can only be used in TypeScript files."
+    ],
+    "tree": "ImportEquals(a Node(b c))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8002@0+14 'import ... =' can only be used in TypeScript files."
+    ],
+    "tree": "ImportEquals(a Node(b c))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8002@0+14 'import ... =' can only be used in TypeScript files."
+    ],
+    "tree": "ImportEquals(a Node(b c))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8002@0+14 'import ... =' can only be used in TypeScript files."
+    ],
+    "tree": "ImportEquals(a Node(b c))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "ImportEquals(a Node(b c))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "ImportEquals(a Node(b c))"
+   },
+   "v8": {
+    "script": "Cannot use import statement outside a module",
+    "module": "Unexpected token '='"
+   }
+  },
+  "x64": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@7+7 The 'declare' modifier can only be used in TypeScript files.",
+     "TS8010@24+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "tree": "(ExportKeyword DeclareKeyword VariableDeclarationList(Variable(x NumberKeyword))) Class(ExportKeyword ContextualKeyword A)"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@7+7 The 'declare' modifier can only be used in TypeScript files.",
+     "TS8010@24+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "tree": "(ExportKeyword DeclareKeyword VariableDeclarationList(Variable(x NumberKeyword))) Class(ExportKeyword ContextualKeyword A)"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@7+7 The 'declare' modifier can only be used in TypeScript files.",
+     "TS8010@24+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "tree": "(ExportKeyword DeclareKeyword VariableDeclarationList(Variable(x NumberKeyword))) Class(ExportKeyword ContextualKeyword A)"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@7+7 The 'declare' modifier can only be used in TypeScript files.",
+     "TS8010@24+6 Type annotations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files."
+    ],
+    "tree": "(ExportKeyword DeclareKeyword VariableDeclarationList(Variable(x NumberKeyword))) Class(ExportKeyword ContextualKeyword A)"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(ExportKeyword DeclareKeyword VariableDeclarationList(Variable(x NumberKeyword))) Class(ExportKeyword ContextualKeyword A)"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(ExportKeyword DeclareKeyword VariableDeclarationList(Variable(x NumberKeyword))) Class(ExportKeyword ContextualKeyword A)"
+   },
+   "v8": {
+    "script": "Unexpected token 'export'",
+    "module": "Unexpected token 'export'"
+   }
+  },
+  "x65": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@10+1 'namespace' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Module(A Module(B Module(C ModuleBlock)))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@10+1 'namespace' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Module(A Module(B Module(C ModuleBlock)))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@10+1 'namespace' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Module(A Module(B Module(C ModuleBlock)))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@10+1 'namespace' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Module(A Module(B Module(C ModuleBlock)))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Module(A Module(B Module(C ModuleBlock)))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Module(A Module(B Module(C ModuleBlock)))"
+   },
+   "v8": {
+    "script": "Unexpected identifier 'A'",
+    "module": "Unexpected identifier 'A'"
+   }
+  },
+  "x66": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@7+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@18+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x NumberKeyword) Variable(y StringKeyword)))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@7+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@18+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x NumberKeyword) Variable(y StringKeyword)))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@7+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@18+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x NumberKeyword) Variable(y StringKeyword)))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@7+6 Type annotations can only be used in TypeScript files.",
+     "TS8010@18+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "(VariableDeclarationList(Variable(x NumberKeyword) Variable(y StringKeyword)))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x NumberKeyword) Variable(y StringKeyword)))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x NumberKeyword) Variable(y StringKeyword)))"
+   },
+   "v8": {
+    "script": "Unexpected token ':'",
+    "module": "Unexpected token ':'"
+   }
+  },
+  "x67": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@12+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "For(VariableDeclarationList(Variable(i NumberKeyword \"0\")) Block)"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@12+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "For(VariableDeclarationList(Variable(i NumberKeyword \"0\")) Block)"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@12+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "For(VariableDeclarationList(Variable(i NumberKeyword \"0\")) Block)"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@12+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "For(VariableDeclarationList(Variable(i NumberKeyword \"0\")) Block)"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "For(VariableDeclarationList(Variable(i NumberKeyword \"0\")) Block)"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "For(VariableDeclarationList(Variable(i NumberKeyword \"0\")) Block)"
+   },
+   "v8": {
+    "script": "Unexpected token ':'",
+    "module": "Unexpected token ':'"
+   }
+  },
+  "x69": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@8+8 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A TypeParameter(InKeyword OutKeyword T))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@8+8 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A TypeParameter(InKeyword OutKeyword T))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@8+8 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A TypeParameter(InKeyword OutKeyword T))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@8+8 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A TypeParameter(InKeyword OutKeyword T))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A TypeParameter(InKeyword OutKeyword T))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A TypeParameter(InKeyword OutKeyword T))"
+   },
+   "v8": {
+    "script": "Unexpected token '<'",
+    "module": "Unexpected token '<'"
+   }
+  },
+  "x70": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@15+11 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(f Parameter(x) TypeNode(x StringKeyword) Block(Return(TrueKeyword)))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@15+11 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(f Parameter(x) TypeNode(x StringKeyword) Block(Return(TrueKeyword)))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@15+11 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(f Parameter(x) TypeNode(x StringKeyword) Block(Return(TrueKeyword)))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8010@15+11 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(f Parameter(x) TypeNode(x StringKeyword) Block(Return(TrueKeyword)))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f Parameter(x) TypeNode(x StringKeyword) Block(Return(TrueKeyword)))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f Parameter(x) TypeNode(x StringKeyword) Block(Return(TrueKeyword)))"
+   },
+   "v8": {
+    "script": "Unexpected token ':'",
+    "module": "Unexpected token ':'"
+   }
+  },
+  "x71": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "tree": "Function(Decorator(dec) f Block)"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "tree": "Function(Decorator(dec) f Block)"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "tree": "Function(Decorator(dec) f Block)"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "tree": "Function(Decorator(dec) f Block)"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(Decorator(dec) f Block)"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(Decorator(dec) f Block)"
+   },
+   "v8": {
+    "script": "Invalid or unexpected token",
+    "module": "Invalid or unexpected token"
+   }
+  },
+  "x72": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "tree": "(Decorator(dec) VariableDeclarationList(Variable(x)))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "tree": "(Decorator(dec) VariableDeclarationList(Variable(x)))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "tree": "(Decorator(dec) VariableDeclarationList(Variable(x)))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@0+4 Decorators are not valid here."
+    ],
+    "tree": "(Decorator(dec) VariableDeclarationList(Variable(x)))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(Decorator(dec) VariableDeclarationList(Variable(x)))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(Decorator(dec) VariableDeclarationList(Variable(x)))"
+   },
+   "v8": {
+    "script": "Invalid or unexpected token",
+    "module": "Invalid or unexpected token"
+   }
+  },
+  "x73": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@7+4 Decorators are not valid here."
+    ],
+    "tree": "Class(ExportKeyword Decorator(dec) DefaultKeyword)"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@7+4 Decorators are not valid here."
+    ],
+    "tree": "Class(ExportKeyword Decorator(dec) DefaultKeyword)"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@7+4 Decorators are not valid here."
+    ],
+    "tree": "Class(ExportKeyword Decorator(dec) DefaultKeyword)"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@7+4 Decorators are not valid here."
+    ],
+    "tree": "Class(ExportKeyword Decorator(dec) DefaultKeyword)"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(ExportKeyword Decorator(dec) DefaultKeyword)"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(ExportKeyword Decorator(dec) DefaultKeyword)"
+   },
+   "v8": {
+    "script": "Unexpected token 'export'",
+    "module": "Unexpected token 'export'"
+   }
+  },
+  "x74": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@10+4 Decorators are not valid here."
+    ],
+    "tree": "Class(A Constructor(Decorator(dec) Block))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@10+4 Decorators are not valid here."
+    ],
+    "tree": "Class(A Constructor(Decorator(dec) Block))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@10+4 Decorators are not valid here."
+    ],
+    "tree": "Class(A Constructor(Decorator(dec) Block))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS1206@10+4 Decorators are not valid here."
+    ],
+    "tree": "Class(A Constructor(Decorator(dec) Block))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A Constructor(Decorator(dec) Block))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A Constructor(Decorator(dec) Block))"
+   },
+   "v8": {
+    "script": "Invalid or unexpected token",
+    "module": "Invalid or unexpected token"
+   }
+  },
+  "x75": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8016@21+1 Type assertion expressions can only be used in TypeScript files."
+    ],
+    "tree": "(a = As(Satisfies(b TypeReference(c)) TypeReference(d)));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8016@21+1 Type assertion expressions can only be used in TypeScript files."
+    ],
+    "tree": "(a = As(Satisfies(b TypeReference(c)) TypeReference(d)));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8016@21+1 Type assertion expressions can only be used in TypeScript files."
+    ],
+    "tree": "(a = As(Satisfies(b TypeReference(c)) TypeReference(d)));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8016@21+1 Type assertion expressions can only be used in TypeScript files."
+    ],
+    "tree": "(a = As(Satisfies(b TypeReference(c)) TypeReference(d)));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(a = As(Satisfies(b TypeReference(c)) TypeReference(d)));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(a = As(Satisfies(b TypeReference(c)) TypeReference(d)));"
+   },
+   "v8": {
+    "script": "Unexpected identifier 'satisfies'",
+    "module": "Unexpected identifier 'satisfies'"
+   }
+  },
+  "x76": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@5+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@34+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@51+1 'enum' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Enum(E EnumMember(A \"1\") EnumMember(B)) Empty Enum(DeclareKeyword F) Empty Enum(ConstKeyword G)"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@5+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@34+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@51+1 'enum' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Enum(E EnumMember(A \"1\") EnumMember(B)) Empty Enum(DeclareKeyword F) Empty Enum(ConstKeyword G)"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@5+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@34+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@51+1 'enum' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Enum(E EnumMember(A \"1\") EnumMember(B)) Empty Enum(DeclareKeyword F) Empty Enum(ConstKeyword G)"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@5+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@34+1 'enum' declarations can only be used in TypeScript files.",
+     "TS8006@51+1 'enum' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Enum(E EnumMember(A \"1\") EnumMember(B)) Empty Enum(DeclareKeyword F) Empty Enum(ConstKeyword G)"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Enum(E EnumMember(A \"1\") EnumMember(B)) Empty Enum(DeclareKeyword F) Empty Enum(ConstKeyword G)"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Enum(E EnumMember(A \"1\") EnumMember(B)) Empty Enum(DeclareKeyword F) Empty Enum(ConstKeyword G)"
+   },
+   "v8": {
+    "script": "Unexpected reserved word",
+    "module": "Unexpected reserved word"
+   }
+  },
+  "x80": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@0+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8017@28+1 Signature declarations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8010@51+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(ContextualKeyword A Method(ContextualKeyword m VoidKeyword) Property(ContextualKeyword x NumberKeyword))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@0+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8017@28+1 Signature declarations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8010@51+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(ContextualKeyword A Method(ContextualKeyword m VoidKeyword) Property(ContextualKeyword x NumberKeyword))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@0+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8017@28+1 Signature declarations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8010@51+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(ContextualKeyword A Method(ContextualKeyword m VoidKeyword) Property(ContextualKeyword x NumberKeyword))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8009@0+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8017@28+1 Signature declarations can only be used in TypeScript files.",
+     "TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files.",
+     "TS8010@51+6 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(ContextualKeyword A Method(ContextualKeyword m VoidKeyword) Property(ContextualKeyword x NumberKeyword))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(ContextualKeyword A Method(ContextualKeyword m VoidKeyword) Property(ContextualKeyword x NumberKeyword))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(ContextualKeyword A Method(ContextualKeyword m VoidKeyword) Property(ContextualKeyword x NumberKeyword))"
+   },
+   "v8": {
+    "script": "Unexpected token 'class'",
+    "module": "Unexpected token 'class'"
+   }
+  },
+  "x82": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8008@5+1 Type aliases can only be used in TypeScript files."
+    ],
+    "tree": "TypeAlias(A TypeParameter(T) TypeReference(T))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8008@5+1 Type aliases can only be used in TypeScript files."
+    ],
+    "tree": "TypeAlias(A TypeParameter(T) TypeReference(T))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8008@5+1 Type aliases can only be used in TypeScript files."
+    ],
+    "tree": "TypeAlias(A TypeParameter(T) TypeReference(T))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8008@5+1 Type aliases can only be used in TypeScript files."
+    ],
+    "tree": "TypeAlias(A TypeParameter(T) TypeReference(T))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "TypeAlias(A TypeParameter(T) TypeReference(T))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "TypeAlias(A TypeParameter(T) TypeReference(T))"
+   },
+   "v8": {
+    "script": "Unexpected identifier 'A'",
+    "module": "Unexpected identifier 'A'"
+   }
+  },
+  "x83": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@10+1 'interface' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Interface(I TypeParameter(T) HeritageClause(ExpressionWithTypeArguments(J TypeReference(T))) MethodSignature(m TypeParameter(U) VoidKeyword))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@10+1 'interface' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Interface(I TypeParameter(T) HeritageClause(ExpressionWithTypeArguments(J TypeReference(T))) MethodSignature(m TypeParameter(U) VoidKeyword))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@10+1 'interface' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Interface(I TypeParameter(T) HeritageClause(ExpressionWithTypeArguments(J TypeReference(T))) MethodSignature(m TypeParameter(U) VoidKeyword))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8006@10+1 'interface' declarations can only be used in TypeScript files."
+    ],
+    "tree": "Interface(I TypeParameter(T) HeritageClause(ExpressionWithTypeArguments(J TypeReference(T))) MethodSignature(m TypeParameter(U) VoidKeyword))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Interface(I TypeParameter(T) HeritageClause(ExpressionWithTypeArguments(J TypeReference(T))) MethodSignature(m TypeParameter(U) VoidKeyword))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Interface(I TypeParameter(T) HeritageClause(ExpressionWithTypeArguments(J TypeReference(T))) MethodSignature(m TypeParameter(U) VoidKeyword))"
+   },
+   "v8": {
+    "script": "Unexpected identifier 'I'",
+    "module": "Unexpected strict mode reserved word"
+   }
+  },
+  "x84": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@11+7 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@23+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(f TypeParameter(ConstKeyword T) Parameter(x TypeReference(T)) Block)"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@11+7 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@23+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(f TypeParameter(ConstKeyword T) Parameter(x TypeReference(T)) Block)"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@11+7 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@23+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(f TypeParameter(ConstKeyword T) Parameter(x TypeReference(T)) Block)"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@11+7 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@23+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(f TypeParameter(ConstKeyword T) Parameter(x TypeReference(T)) Block)"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f TypeParameter(ConstKeyword T) Parameter(x TypeReference(T)) Block)"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f TypeParameter(ConstKeyword T) Parameter(x TypeReference(T)) Block)"
+   },
+   "v8": {
+    "script": "Unexpected token '<'",
+    "module": "Unexpected token '<'"
+   }
+  },
+  "x85": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@21+1 Type annotations can only be used in TypeScript files.",
+     "TS8010@30+3 Type annotations can only be used in TypeScript files.",
+     "TS8010@36+8 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Method(m TypeParameter(T) Parameter(this TypeReference(A)) Parameter(DotDotDotToken a ArrayType(TypeReference(T))) TypeNode(a AnyKeyword) Block(Return(TrueKeyword))))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@21+1 Type annotations can only be used in TypeScript files.",
+     "TS8010@30+3 Type annotations can only be used in TypeScript files.",
+     "TS8010@36+8 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Method(m TypeParameter(T) Parameter(this TypeReference(A)) Parameter(DotDotDotToken a ArrayType(TypeReference(T))) TypeNode(a AnyKeyword) Block(Return(TrueKeyword))))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@21+1 Type annotations can only be used in TypeScript files.",
+     "TS8010@30+3 Type annotations can only be used in TypeScript files.",
+     "TS8010@36+8 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Method(m TypeParameter(T) Parameter(this TypeReference(A)) Parameter(DotDotDotToken a ArrayType(TypeReference(T))) TypeNode(a AnyKeyword) Block(Return(TrueKeyword))))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@12+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@21+1 Type annotations can only be used in TypeScript files.",
+     "TS8010@30+3 Type annotations can only be used in TypeScript files.",
+     "TS8010@36+8 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Class(A Method(m TypeParameter(T) Parameter(this TypeReference(A)) Parameter(DotDotDotToken a ArrayType(TypeReference(T))) TypeNode(a AnyKeyword) Block(Return(TrueKeyword))))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A Method(m TypeParameter(T) Parameter(this TypeReference(A)) Parameter(DotDotDotToken a ArrayType(TypeReference(T))) TypeNode(a AnyKeyword) Block(Return(TrueKeyword))))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A Method(m TypeParameter(T) Parameter(this TypeReference(A)) Parameter(DotDotDotToken a ArrayType(TypeReference(T))) TypeNode(a AnyKeyword) Block(Return(TrueKeyword))))"
+   },
+   "v8": {
+    "script": "Unexpected token '<'",
+    "module": "Unexpected token '<'"
+   }
+  },
+  "x86": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type default)))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type default)))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type default)))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type default)))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type default)))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type default)))"
+   },
+   "v8": {
+    "script": "Unexpected token 'export'",
+    "module": "ok"
+   }
+  },
+  "x87": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f Parameter(this) Block)"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f Parameter(this) Block)"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f Parameter(this) Block)"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f Parameter(this) Block)"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f Parameter(this) Block)"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(f Parameter(this) Block)"
+   },
+   "v8": {
+    "script": "Unexpected token 'this'",
+    "module": "Unexpected token 'this'"
+   }
+  },
+  "x88": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken)))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken)))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken)))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken)))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken)))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(VariableDeclarationList(Variable(x ExclamationToken)))"
+   },
+   "v8": {
+    "script": "Unexpected token '!'",
+    "module": "Unexpected token '!'"
+   }
+  },
+  "x89": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A ClassStaticBlock(Block) Property(StaticKeyword x) Method(StaticKeyword m Block) Method(StaticKeyword AsyncKeyword AsteriskToken g Block))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A ClassStaticBlock(Block) Property(StaticKeyword x) Method(StaticKeyword m Block) Method(StaticKeyword AsyncKeyword AsteriskToken g Block))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A ClassStaticBlock(Block) Property(StaticKeyword x) Method(StaticKeyword m Block) Method(StaticKeyword AsyncKeyword AsteriskToken g Block))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A ClassStaticBlock(Block) Property(StaticKeyword x) Method(StaticKeyword m Block) Method(StaticKeyword AsyncKeyword AsteriskToken g Block))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A ClassStaticBlock(Block) Property(StaticKeyword x) Method(StaticKeyword m Block) Method(StaticKeyword AsyncKeyword AsteriskToken g Block))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A ClassStaticBlock(Block) Property(StaticKeyword x) Method(StaticKeyword m Block) Method(StaticKeyword AsyncKeyword AsteriskToken g Block))"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "x90": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@25+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@31+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(ExportKeyword DefaultKeyword TypeParameter(T) Parameter(a TypeReference(T)) Block)"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@25+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@31+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(ExportKeyword DefaultKeyword TypeParameter(T) Parameter(a TypeReference(T)) Block)"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@25+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@31+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(ExportKeyword DefaultKeyword TypeParameter(T) Parameter(a TypeReference(T)) Block)"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@25+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8010@31+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Function(ExportKeyword DefaultKeyword TypeParameter(T) Parameter(a TypeReference(T)) Block)"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(ExportKeyword DefaultKeyword TypeParameter(T) Parameter(a TypeReference(T)) Block)"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Function(ExportKeyword DefaultKeyword TypeParameter(T) Parameter(a TypeReference(T)) Block)"
+   },
+   "v8": {
+    "script": "Unexpected token 'export'",
+    "module": "Unexpected token '<'"
+   }
+  },
+  "x91": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8005@18+15 'implements' clauses can only be used in TypeScript files."
+    ],
+    "tree": "Class(A HeritageClause(ExpressionWithTypeArguments(B)) HeritageClause(ExpressionWithTypeArguments(C) ExpressionWithTypeArguments(D)))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8005@18+15 'implements' clauses can only be used in TypeScript files."
+    ],
+    "tree": "Class(A HeritageClause(ExpressionWithTypeArguments(B)) HeritageClause(ExpressionWithTypeArguments(C) ExpressionWithTypeArguments(D)))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8005@18+15 'implements' clauses can only be used in TypeScript files."
+    ],
+    "tree": "Class(A HeritageClause(ExpressionWithTypeArguments(B)) HeritageClause(ExpressionWithTypeArguments(C) ExpressionWithTypeArguments(D)))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8005@18+15 'implements' clauses can only be used in TypeScript files."
+    ],
+    "tree": "Class(A HeritageClause(ExpressionWithTypeArguments(B)) HeritageClause(ExpressionWithTypeArguments(C) ExpressionWithTypeArguments(D)))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A HeritageClause(ExpressionWithTypeArguments(B)) HeritageClause(ExpressionWithTypeArguments(C) ExpressionWithTypeArguments(D)))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Class(A HeritageClause(ExpressionWithTypeArguments(B)) HeritageClause(ExpressionWithTypeArguments(C) ExpressionWithTypeArguments(D)))"
+   },
+   "v8": {
+    "script": "Unexpected strict mode reserved word",
+    "module": "Unexpected strict mode reserved word"
+   }
+  },
+  "x92": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@15+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@44+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@64+2 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "(x = Function(AsteriskToken TypeParameter(T) Block)); (y = Function(AsyncKeyword TypeParameter(T) Block)); (z = ArrowFunction(AsyncKeyword TypeParameter(T) EqualsGreaterThanToken Block));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@15+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@44+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@64+2 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "(x = Function(AsteriskToken TypeParameter(T) Block)); (y = Function(AsyncKeyword TypeParameter(T) Block)); (z = ArrowFunction(AsyncKeyword TypeParameter(T) EqualsGreaterThanToken Block));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@15+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@44+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@64+2 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "(x = Function(AsteriskToken TypeParameter(T) Block)); (y = Function(AsyncKeyword TypeParameter(T) Block)); (z = ArrowFunction(AsyncKeyword TypeParameter(T) EqualsGreaterThanToken Block));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [
+     "TS8004@15+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@44+1 Type parameter declarations can only be used in TypeScript files.",
+     "TS8004@64+2 Type parameter declarations can only be used in TypeScript files."
+    ],
+    "tree": "(x = Function(AsteriskToken TypeParameter(T) Block)); (y = Function(AsyncKeyword TypeParameter(T) Block)); (z = ArrowFunction(AsyncKeyword TypeParameter(T) EqualsGreaterThanToken Block));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(x = Function(AsteriskToken TypeParameter(T) Block)); (y = Function(AsyncKeyword TypeParameter(T) Block)); (z = ArrowFunction(AsyncKeyword TypeParameter(T) EqualsGreaterThanToken Block));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "(x = Function(AsteriskToken TypeParameter(T) Block)); (y = Function(AsyncKeyword TypeParameter(T) Block)); (z = ArrowFunction(AsyncKeyword TypeParameter(T) EqualsGreaterThanToken Block));"
+   },
+   "v8": {
+    "script": "Unexpected token '<'",
+    "module": "Unexpected token '<'"
+   }
+  },
   "p01": {
    "a.js": {
     "jsx": true,

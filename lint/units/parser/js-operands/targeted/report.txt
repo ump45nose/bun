@@ -2317,6 +2317,467 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(v TypeNode(LiteralType("y")))))
    go  .js parse-clean js[TS8010@7+18]
       js-diag TS8010@7+18 Type annotations can only be used in TypeScript files.
+## x50  "let x!: number"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token '!'  module=ERR Unexpected token '!'
+   bun js  ERR 1:6 Expected ";" but found "!"
+   bun jsx ERR 1:6 Expected ";" but found "!"
+   bun ts  OK  let x;
+   bun tsx OK  let x;
+   tsc .js parse-clean js[TS8010@8+6]  (VariableDeclarationList(Variable(x ExclamationToken NumberKeyword)))
+   tsc .ts parse-clean  (VariableDeclarationList(Variable(x ExclamationToken NumberKeyword)))
+   tsc .tsx parse-clean  (VariableDeclarationList(Variable(x ExclamationToken NumberKeyword)))
+   go  .js parse-clean js[TS8010@8+6]
+      js-diag TS8010@8+6 Type annotations can only be used in TypeScript files.
+## x51  "class A { declare x; static y; accessor z; async m() {} }"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected identifier 'x'  module=ERR Unexpected identifier 'x'
+   bun js  ERR 1:19 Expected ";" but found "x"
+   bun jsx ERR 1:19 Expected ";" but found "x"
+   bun ts  OK  import { __privateAdd as __privateAdd_jy12bb7f, __privateGet as __privateGet_t4v9rzz2, __privateSet as __privateSet_3ajc9ey2 } from "bun:wrap";\nvar _z$1;\n\nclass A {\n  constructor() {\n    __privateAdd_jy12bb7f(this, _z$1, void 0);\n  }\n  static {\n    _z$1 = new WeakMap;\n  }\n  static y;\n  get z() {\n    return __privateGet_t4v9rzz2(this, _z$1);\n  }\n  set z(v) {\n    __privateSet_3ajc9ey2(this, _z$1, v);\n  }\n  async m() {}\n}
+   bun tsx OK  import { __privateAdd as __privateAdd_jy12bb7f, __privateGet as __privateGet_t4v9rzz2, __privateSet as __privateSet_3ajc9ey2 } from "bun:wrap";\nvar _z$1;\n\nclass A {\n  constructor() {\n    __privateAdd_jy12bb7f(this, _z$1, void 0);\n  }\n  static {\n    _z$1 = new WeakMap;\n  }\n  static y;\n  get z() {\n    return __privateGet_t4v9rzz2(this, _z$1);\n  }\n  set z(v) {\n    __privateSet_3ajc9ey2(this, _z$1, v);\n  }\n  async m() {}\n}
+   tsc .js parse-clean js[TS8009@10+7]  Class(A Property(DeclareKeyword x) Property(StaticKeyword y) Property(AccessorKeyword z) Method(AsyncKeyword m Block))
+   tsc .ts parse-clean  Class(A Property(DeclareKeyword x) Property(StaticKeyword y) Property(AccessorKeyword z) Method(AsyncKeyword m Block))
+   tsc .tsx parse-clean  Class(A Property(DeclareKeyword x) Property(StaticKeyword y) Property(AccessorKeyword z) Method(AsyncKeyword m Block))
+   go  .js parse-clean js[TS8009@10+7]
+      js-diag TS8009@10+7 The 'declare' modifier can only be used in TypeScript files.
+## x52  "declare function f(a: number): void"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Unexpected token 'function'  module=ERR Unexpected token 'function'
+   bun js  ERR 1:9 Expected ";" but found "function"
+   bun jsx ERR 1:9 Expected ";" but found "function"
+   bun ts  OK  
+   bun tsx OK  
+   tsc .js parse-clean js[TS8017@17+1]  Function(DeclareKeyword f Parameter(a NumberKeyword) VoidKeyword)
+   tsc .ts parse-clean  Function(DeclareKeyword f Parameter(a NumberKeyword) VoidKeyword)
+   tsc .tsx parse-clean  Function(DeclareKeyword f Parameter(a NumberKeyword) VoidKeyword)
+   go  .js parse-clean js[TS8010@22+6,TS8017@0+35,TS8009@0+7]
+      js-diag TS8017@17+1 Signature declarations can only be used in TypeScript files.
+## x53  "function f(a?) {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token '?'  module=ERR Unexpected token '?'
+   bun js  ERR 1:13 Expected ")" but found "?"
+   bun jsx ERR 1:13 Expected ")" but found "?"
+   bun ts  OK  function f(a) {}
+   bun tsx OK  function f(a) {}
+   tsc .js parse-clean js[TS8009@12+1]  Function(f Parameter(a QuestionToken) Block)
+   tsc .ts parse-clean  Function(f Parameter(a QuestionToken) Block)
+   tsc .tsx parse-clean  Function(f Parameter(a QuestionToken) Block)
+   go  .js parse-clean js[TS8009@12+1]
+      js-diag TS8009@12+1 The '?' modifier can only be used in TypeScript files.
+## x54  "var f = function (this: any, a) {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token 'this'  module=ERR Unexpected token 'this'
+   bun js  ERR 1:19 Expected identifier but found "this"
+   bun jsx ERR 1:19 Expected identifier but found "this"
+   bun ts  OK  var f = function(a) {};
+   bun tsx OK  var f = function(a) {};
+   tsc .js parse-clean js[TS8010@24+3]  (VariableDeclarationList(Variable(f Function(Parameter(this AnyKeyword) Parameter(a) Block))))
+   tsc .ts parse-clean  (VariableDeclarationList(Variable(f Function(Parameter(this AnyKeyword) Parameter(a) Block))))
+   tsc .tsx parse-clean  (VariableDeclarationList(Variable(f Function(Parameter(this AnyKeyword) Parameter(a) Block))))
+   go  .js parse-clean js[TS8010@24+3]
+      js-diag TS8010@24+3 Type annotations can only be used in TypeScript files.
+## x55  "class A { get x(): number { return 1 } set x(v: number) {} }"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token ':'  module=ERR Unexpected token ':'
+   bun js  ERR 1:18 Expected "{" but found ":"
+   bun jsx ERR 1:18 Expected "{" but found ":"
+   bun ts  OK  class A {\n  get x() {\n    return 1;\n  }\n  set x(v) {}\n}
+   bun tsx OK  class A {\n  get x() {\n    return 1;\n  }\n  set x(v) {}\n}
+   tsc .js parse-clean js[TS8010@19+6,TS8010@48+6]  Class(A GetAccessor(x NumberKeyword Block(Return("1"))) SetAccessor(x Parameter(v NumberKeyword) Block))
+   tsc .ts parse-clean  Class(A GetAccessor(x NumberKeyword Block(Return("1"))) SetAccessor(x Parameter(v NumberKeyword) Block))
+   tsc .tsx parse-clean  Class(A GetAccessor(x NumberKeyword Block(Return("1"))) SetAccessor(x Parameter(v NumberKeyword) Block))
+   go  .js parse-clean js[TS8010@19+6,TS8010@48+6]
+      js-diag TS8010@19+6 Type annotations can only be used in TypeScript files.
+      js-diag TS8010@48+6 Type annotations can only be used in TypeScript files.
+## x56  "class A { constructor(); constructor(a: number) {} }"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Unexpected token ';'  module=ERR Unexpected token ';'
+   bun js  ERR 1:24 Expected "{" but found ";"
+   bun jsx ERR 1:24 Expected "{" but found ";"
+   bun ts  OK  class A {\n  constructor(a) {}\n}
+   bun tsx OK  class A {\n  constructor(a) {}\n}
+   tsc .js parse-clean js[TS8017@10+11,TS8010@40+6]  Class(A Constructor Constructor(Parameter(a NumberKeyword) Block))
+   tsc .ts parse-clean  Class(A Constructor Constructor(Parameter(a NumberKeyword) Block))
+   tsc .tsx parse-clean  Class(A Constructor Constructor(Parameter(a NumberKeyword) Block))
+   go  .js parse-clean js[TS8017@10+14,TS8010@40+6]
+      js-diag TS8017@10+11 Signature declarations can only be used in TypeScript files.
+      js-diag TS8010@40+6 Type annotations can only be used in TypeScript files.
+## x57  "export default class<T> {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token 'export'  module=ERR Unexpected token '<'
+   bun js  ERR 1:21 Expected "{" but found "<"
+   bun jsx ERR 1:21 Expected "{" but found "<"
+   bun ts  OK  export default class {\n}
+   bun tsx OK  export default class {\n}
+   tsc .js parse-clean js[TS8004@21+1]  Class(ExportKeyword DefaultKeyword TypeParameter(T))
+   tsc .ts parse-clean  Class(ExportKeyword DefaultKeyword TypeParameter(T))
+   tsc .tsx parse-clean  Class(ExportKeyword DefaultKeyword TypeParameter(T))
+   go  .js parse-clean js[TS8004@21+1]
+      js-diag TS8004@21+1 Type parameter declarations can only be used in TypeScript files.
+## x58  "var o = { m<T>() {}, get x(): number { return 1 } }"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
+   bun js  ERR 1:12 Expected ":" but found "<"
+   bun jsx ERR 1:12 Expected ":" but found "<"
+   bun ts  OK  var o = { m() {}, get x() {\n  return 1;\n} };
+   bun tsx OK  var o = { m() {}, get x() {\n  return 1;\n} };
+   tsc .js parse-clean js[TS8004@12+1,TS8010@30+6]  (VariableDeclarationList(Variable(o ObjectLiteral(Method(m TypeParameter(T) Block) GetAccessor(x NumberKeyword Block(Return("1")))))))
+   tsc .ts parse-clean  (VariableDeclarationList(Variable(o ObjectLiteral(Method(m TypeParameter(T) Block) GetAccessor(x NumberKeyword Block(Return("1")))))))
+   tsc .tsx parse-clean  (VariableDeclarationList(Variable(o ObjectLiteral(Method(m TypeParameter(T) Block) GetAccessor(x NumberKeyword Block(Return("1")))))))
+   go  .js parse-clean js[TS8004@12+1,TS8010@30+6]
+      js-diag TS8004@12+1 Type parameter declarations can only be used in TypeScript files.
+      js-diag TS8010@30+6 Type annotations can only be used in TypeScript files.
+## x59  "const x = y!.z!()"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Unexpected token '!'  module=ERR Unexpected token '!'
+   bun js  ERR 1:12 Unexpected !
+   bun jsx ERR 1:12 Unexpected !
+   bun ts  OK  const x = y.z();
+   bun tsx OK  const x = y.z();
+   tsc .js parse-clean js[TS8013@10+5]  (VariableDeclarationList(Variable(x Call(NonNull(PropertyAccess(NonNull(y) z))))))
+   tsc .ts parse-clean  (VariableDeclarationList(Variable(x Call(NonNull(PropertyAccess(NonNull(y) z))))))
+   tsc .tsx parse-clean  (VariableDeclarationList(Variable(x Call(NonNull(PropertyAccess(NonNull(y) z))))))
+   go  .js parse-clean js[TS8013@10+2,TS8013@10+5]
+      js-diag TS8013@10+5 Non-null assertions can only be used in TypeScript files.
+## x61  "import type X from 'x'; import type * as N from 'y'; export type * from 'z'; export type * as M from 'w';"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Cannot use import statement outside a module  module=ERR Unexpected identifier 'X'
+   bun js  ERR 1:13 Expected "from" but found "X"
+   bun jsx ERR 1:13 Expected "from" but found "X"
+   bun ts  OK  
+   bun tsx OK  
+   tsc .js parse-clean js[TS8006@0+23,TS8006@24+28,TS8006@53+23,TS8006@77+28]  Import(ImportClause(X) "x") Import(ImportClause(NamespaceImport(N)) "y") Export("z") Export(NamespaceExport(M) "w")
+   tsc .ts parse-clean  Import(ImportClause(X) "x") Import(ImportClause(NamespaceImport(N)) "y") Export("z") Export(NamespaceExport(M) "w")
+   tsc .tsx parse-clean  Import(ImportClause(X) "x") Import(ImportClause(NamespaceImport(N)) "y") Export("z") Export(NamespaceExport(M) "w")
+   go  .js parse-clean js[TS8006@0+23,TS8006@24+28,TS8006@53+23,TS8006@77+28]
+      js-diag TS8006@0+23 'import type' declarations can only be used in TypeScript files.
+      js-diag TS8006@24+28 'import type' declarations can only be used in TypeScript files.
+      js-diag TS8006@53+23 'export type' declarations can only be used in TypeScript files.
+      js-diag TS8006@77+28 'export type' declarations can only be used in TypeScript files.
+## x62  "export import a = b.c"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token 'export'  module=ERR Unexpected token 'export'
+   bun js  ERR 1:8 Unexpected import
+   bun jsx ERR 1:8 Unexpected import
+   bun ts  OK  export const a = b.c;
+   bun tsx OK  export const a = b.c;
+   tsc .js parse-clean js[TS8002@0+21]  ImportEquals(ExportKeyword a Node(b c))
+   tsc .ts parse-clean  ImportEquals(ExportKeyword a Node(b c))
+   tsc .tsx parse-clean  ImportEquals(ExportKeyword a Node(b c))
+   go  .js parse-clean js[TS8002@0+21]
+      js-diag TS8002@0+21 'import ... =' can only be used in TypeScript files.
+## x63  "import a = b.c"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Cannot use import statement outside a module  module=ERR Unexpected token '='
+   bun js  ERR 1:10 Expected "from" but found "="
+   bun jsx ERR 1:10 Expected "from" but found "="
+   bun ts  OK  
+   bun tsx OK  
+   tsc .js parse-clean js[TS8002@0+14]  ImportEquals(a Node(b c))
+   tsc .ts parse-clean  ImportEquals(a Node(b c))
+   tsc .tsx parse-clean  ImportEquals(a Node(b c))
+   go  .js parse-clean js[TS8002@0+14]
+      js-diag TS8002@0+14 'import ... =' can only be used in TypeScript files.
+## x64  "export declare const x: number; export abstract class A {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Unexpected token 'export'  module=ERR Unexpected token 'export'
+   bun js  ERR 1:8 Unexpected declare
+   bun jsx ERR 1:8 Unexpected declare
+   bun ts  OK  export class A {\n}
+   bun tsx OK  export class A {\n}
+   tsc .js parse-clean js[TS8009@7+7,TS8010@24+6,TS8009@39+8]  (ExportKeyword DeclareKeyword VariableDeclarationList(Variable(x NumberKeyword))) Class(ExportKeyword ContextualKeyword A)
+   tsc .ts parse-clean  (ExportKeyword DeclareKeyword VariableDeclarationList(Variable(x NumberKeyword))) Class(ExportKeyword ContextualKeyword A)
+   tsc .tsx parse-clean  (ExportKeyword DeclareKeyword VariableDeclarationList(Variable(x NumberKeyword))) Class(ExportKeyword ContextualKeyword A)
+   go  .js parse-clean js[TS8010@24+6,TS8009@7+7,TS8009@39+8]
+      js-diag TS8009@7+7 The 'declare' modifier can only be used in TypeScript files.
+      js-diag TS8010@24+6 Type annotations can only be used in TypeScript files.
+      js-diag TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files.
+## x65  "namespace A.B.C {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Unexpected identifier 'A'  module=ERR Unexpected identifier 'A'
+   bun js  ERR 1:11 Expected ";" but found "A"
+   bun jsx ERR 1:11 Expected ";" but found "A"
+   bun ts  OK  var A;\n((A) => {\n  let B;\n  ((B) => {})(B = A.B ||= {});\n})(A ||= {});
+   bun tsx OK  var A;\n((A) => {\n  let B;\n  ((B) => {})(B = A.B ||= {});\n})(A ||= {});
+   tsc .js parse-clean js[TS8006@10+1]  Module(A Module(B Module(C ModuleBlock)))
+   tsc .ts parse-clean  Module(A Module(B Module(C ModuleBlock)))
+   tsc .tsx parse-clean  Module(A Module(B Module(C ModuleBlock)))
+   go  .js parse-clean js[TS8006@14+1,TS8006@12+1,TS8006@10+1]
+      js-diag TS8006@10+1 'namespace' declarations can only be used in TypeScript files.
+## x66  "let x: number, y: string"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token ':'  module=ERR Unexpected token ':'
+   bun js  ERR 1:6 Expected ";" but found ":"
+   bun jsx ERR 1:6 Expected ";" but found ":"
+   bun ts  OK  let x, y;
+   bun tsx OK  let x, y;
+   tsc .js parse-clean js[TS8010@7+6,TS8010@18+6]  (VariableDeclarationList(Variable(x NumberKeyword) Variable(y StringKeyword)))
+   tsc .ts parse-clean  (VariableDeclarationList(Variable(x NumberKeyword) Variable(y StringKeyword)))
+   tsc .tsx parse-clean  (VariableDeclarationList(Variable(x NumberKeyword) Variable(y StringKeyword)))
+   go  .js parse-clean js[TS8010@7+6,TS8010@18+6]
+      js-diag TS8010@7+6 Type annotations can only be used in TypeScript files.
+      js-diag TS8010@18+6 Type annotations can only be used in TypeScript files.
+## x67  "for (let i: number = 0;;) {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token ':'  module=ERR Unexpected token ':'
+   bun js  ERR 1:11 Expected ";" but found ":"
+   bun jsx ERR 1:11 Expected ";" but found ":"
+   bun ts  OK  for (let i = 0;; )\n  ;
+   bun tsx OK  for (let i = 0;; )\n  ;
+   tsc .js parse-clean js[TS8010@12+6]  For(VariableDeclarationList(Variable(i NumberKeyword "0")) Block)
+   tsc .ts parse-clean  For(VariableDeclarationList(Variable(i NumberKeyword "0")) Block)
+   tsc .tsx parse-clean  For(VariableDeclarationList(Variable(i NumberKeyword "0")) Block)
+   go  .js parse-clean js[TS8010@12+6]
+      js-diag TS8010@12+6 Type annotations can only be used in TypeScript files.
+## x69  "class A<in out T> {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
+   bun js  ERR 1:8 Expected "{" but found "<"
+   bun jsx ERR 1:8 Expected "{" but found "<"
+   bun ts  OK  class A {\n}
+   bun tsx OK  class A {\n}
+   tsc .js parse-clean js[TS8004@8+8]  Class(A TypeParameter(InKeyword OutKeyword T))
+   tsc .ts parse-clean  Class(A TypeParameter(InKeyword OutKeyword T))
+   tsc .tsx parse-clean  Class(A TypeParameter(InKeyword OutKeyword T))
+   go  .js parse-clean js[TS8004@8+8]
+      js-diag TS8004@8+8 Type parameter declarations can only be used in TypeScript files.
+## x70  "function f(x): x is string { return true }"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token ':'  module=ERR Unexpected token ':'
+   bun js  ERR 1:14 Expected "{" but found ":"
+   bun jsx ERR 1:14 Expected "{" but found ":"
+   bun ts  OK  function f(x) {\n  return !0;\n}
+   bun tsx OK  function f(x) {\n  return !0;\n}
+   tsc .js parse-clean js[TS8010@15+11]  Function(f Parameter(x) TypeNode(x StringKeyword) Block(Return(TrueKeyword)))
+   tsc .ts parse-clean  Function(f Parameter(x) TypeNode(x StringKeyword) Block(Return(TrueKeyword)))
+   tsc .tsx parse-clean  Function(f Parameter(x) TypeNode(x StringKeyword) Block(Return(TrueKeyword)))
+   go  .js parse-clean js[TS8010@15+11]
+      js-diag TS8010@15+11 Type annotations can only be used in TypeScript files.
+## x71  "@dec function f() {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err]
+   v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
+   bun js  ERR 1:6 Expected "class" but found "function"
+   bun jsx ERR 1:6 Expected "class" but found "function"
+   bun ts  ERR 1:6 Expected "class" but found "function"
+   bun tsx ERR 1:6 Expected "class" but found "function"
+   tsc .js parse-clean js[TS1206@0+4]  Function(Decorator(dec) f Block)
+   tsc .ts parse-clean  Function(Decorator(dec) f Block)
+   tsc .tsx parse-clean  Function(Decorator(dec) f Block)
+   go  .js parse-clean js[TS1206@0+4]
+      js-diag TS1206@0+4 Decorators are not valid here.
+## x72  "@dec var x"
+   [v8:invalid] [bun-js:err] [bun-jsx:err]
+   v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
+   bun js  ERR 1:6 Expected "class" but found "var"
+   bun jsx ERR 1:6 Expected "class" but found "var"
+   bun ts  ERR 1:6 Expected "class" but found "var"
+   bun tsx ERR 1:6 Expected "class" but found "var"
+   tsc .js parse-clean js[TS1206@0+4]  (Decorator(dec) VariableDeclarationList(Variable(x)))
+   tsc .ts parse-clean  (Decorator(dec) VariableDeclarationList(Variable(x)))
+   tsc .tsx parse-clean  (Decorator(dec) VariableDeclarationList(Variable(x)))
+   go  .js parse-clean js[TS1206@0+4]
+      js-diag TS1206@0+4 Decorators are not valid here.
+## x73  "export @dec default class {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err]
+   v8      script=ERR Unexpected token 'export'  module=ERR Unexpected token 'export'
+   bun js  ERR 1:13 Expected "class" but found "default"
+   bun jsx ERR 1:13 Expected "class" but found "default"
+   bun ts  ERR 1:13 Expected "class" but found "default"
+   bun tsx ERR 1:13 Expected "class" but found "default"
+   tsc .js parse-clean js[TS1206@7+4]  Class(ExportKeyword Decorator(dec) DefaultKeyword)
+   tsc .ts parse-clean  Class(ExportKeyword Decorator(dec) DefaultKeyword)
+   tsc .tsx parse-clean  Class(ExportKeyword Decorator(dec) DefaultKeyword)
+   go  .js parse-clean js[TS1206@7+4]
+      js-diag TS1206@7+4 Decorators are not valid here.
+## x74  "class A { @dec constructor() {} }"
+   [v8:invalid] [bun-js:err] [bun-jsx:err]
+   v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
+   bun js  ERR 1:11 TypeScript does not allow decorators on class constructors
+   bun jsx ERR 1:11 TypeScript does not allow decorators on class constructors
+   bun ts  ERR 1:11 TypeScript does not allow decorators on class constructors
+   bun tsx ERR 1:11 TypeScript does not allow decorators on class constructors
+   tsc .js parse-clean js[TS1206@10+4]  Class(A Constructor(Decorator(dec) Block))
+   tsc .ts parse-clean  Class(A Constructor(Decorator(dec) Block))
+   tsc .tsx parse-clean  Class(A Constructor(Decorator(dec) Block))
+   go  .js parse-clean js[TS1206@10+4]
+      js-diag TS1206@10+4 Decorators are not valid here.
+## x75  "a = b satisfies c as d"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Unexpected identifier 'satisfies'  module=ERR Unexpected identifier 'satisfies'
+   bun js  ERR 1:7 Expected ";" but found "satisfies"
+   bun jsx ERR 1:7 Expected ";" but found "satisfies"
+   bun ts  OK  a = b;
+   bun tsx OK  a = b;
+   tsc .js parse-clean js[TS8016@21+1]  (a = As(Satisfies(b TypeReference(c)) TypeReference(d)));
+   tsc .ts parse-clean  (a = As(Satisfies(b TypeReference(c)) TypeReference(d)));
+   tsc .tsx parse-clean  (a = As(Satisfies(b TypeReference(c)) TypeReference(d)));
+   go  .js parse-clean js[TS8037@16+1,TS8016@21+1]
+      js-diag TS8016@21+1 Type assertion expressions can only be used in TypeScript files.
+## x76  "enum E { A = 1, B }; declare enum F {}; const enum G {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected reserved word  module=ERR Unexpected reserved word
+   bun js  ERR 1:1 Unexpected enum
+   bun jsx ERR 1:1 Unexpected enum
+   bun ts  OK  var E;\n((E) => {\n  E[E.A = 1] = "A";\n  E[E.B = 2] = "B";\n})(E ||= {});\nvar G;\n((G) => {})(G ||= {});
+   bun tsx OK  var E;\n((E) => {\n  E[E.A = 1] = "A";\n  E[E.B = 2] = "B";\n})(E ||= {});\nvar G;\n((G) => {})(G ||= {});
+   tsc .js parse-clean js[TS8006@5+1,TS8006@34+1,TS8006@51+1]  Enum(E EnumMember(A "1") EnumMember(B)) Empty Enum(DeclareKeyword F) Empty Enum(ConstKeyword G)
+   tsc .ts parse-clean  Enum(E EnumMember(A "1") EnumMember(B)) Empty Enum(DeclareKeyword F) Empty Enum(ConstKeyword G)
+   tsc .tsx parse-clean  Enum(E EnumMember(A "1") EnumMember(B)) Empty Enum(DeclareKeyword F) Empty Enum(ConstKeyword G)
+   go  .js parse-clean js[TS8006@5+1,TS8006@34+1,TS8006@51+1]
+      js-diag TS8006@5+1 'enum' declarations can only be used in TypeScript files.
+      js-diag TS8006@34+1 'enum' declarations can only be used in TypeScript files.
+      js-diag TS8006@51+1 'enum' declarations can only be used in TypeScript files.
+## x80  "abstract class A { abstract m(): void; abstract x: number }"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Unexpected token 'class'  module=ERR Unexpected token 'class'
+   bun js  ERR 1:10 Expected ";" but found "class"
+   bun jsx ERR 1:10 Expected ";" but found "class"
+   bun ts  OK  class A {\n}
+   bun tsx OK  class A {\n}
+   tsc .js parse-clean js[TS8009@0+8,TS8017@28+1,TS8009@39+8,TS8010@51+6]  Class(ContextualKeyword A Method(ContextualKeyword m VoidKeyword) Property(ContextualKeyword x NumberKeyword))
+   tsc .ts parse-clean  Class(ContextualKeyword A Method(ContextualKeyword m VoidKeyword) Property(ContextualKeyword x NumberKeyword))
+   tsc .tsx parse-clean  Class(ContextualKeyword A Method(ContextualKeyword m VoidKeyword) Property(ContextualKeyword x NumberKeyword))
+   go  .js parse-clean js[TS8017@19+19,TS8009@19+8,TS8010@51+6,TS8009@39+8,TS8009@0+8]
+      js-diag TS8009@0+8 The 'abstract' modifier can only be used in TypeScript files.
+      js-diag TS8017@28+1 Signature declarations can only be used in TypeScript files.
+      js-diag TS8009@39+8 The 'abstract' modifier can only be used in TypeScript files.
+      js-diag TS8010@51+6 Type annotations can only be used in TypeScript files.
+## x82  "type A<T> = T"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected identifier 'A'  module=ERR Unexpected identifier 'A'
+   bun js  ERR 1:6 Expected ";" but found "A"
+   bun jsx ERR 1:6 Expected ";" but found "A"
+   bun ts  OK  
+   bun tsx OK  
+   tsc .js parse-clean js[TS8008@5+1]  TypeAlias(A TypeParameter(T) TypeReference(T))
+   tsc .ts parse-clean  TypeAlias(A TypeParameter(T) TypeReference(T))
+   tsc .tsx parse-clean  TypeAlias(A TypeParameter(T) TypeReference(T))
+   go  .js parse-clean js[TS8008@5+1]
+      js-diag TS8008@5+1 Type aliases can only be used in TypeScript files.
+## x83  "interface I<T> extends J<T> { m<U>(): void }"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected identifier 'I'  module=ERR Unexpected strict mode reserved word
+   bun js  ERR 1:11 Expected ";" but found "I"
+   bun jsx ERR 1:11 Expected ";" but found "I"
+   bun ts  OK  
+   bun tsx OK  
+   tsc .js parse-clean js[TS8006@10+1]  Interface(I TypeParameter(T) HeritageClause(ExpressionWithTypeArguments(J TypeReference(T))) MethodSignature(m TypeParameter(U) VoidKeyword))
+   tsc .ts parse-clean  Interface(I TypeParameter(T) HeritageClause(ExpressionWithTypeArguments(J TypeReference(T))) MethodSignature(m TypeParameter(U) VoidKeyword))
+   tsc .tsx parse-clean  Interface(I TypeParameter(T) HeritageClause(ExpressionWithTypeArguments(J TypeReference(T))) MethodSignature(m TypeParameter(U) VoidKeyword))
+   go  .js parse-clean js[TS8006@10+1]
+      js-diag TS8006@10+1 'interface' declarations can only be used in TypeScript files.
+## x84  "function f<const T>(x: T) {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
+   bun js  ERR 1:11 Expected "(" but found "<"
+   bun jsx ERR 1:11 Expected "(" but found "<"
+   bun ts  OK  function f(x) {}
+   bun tsx OK  function f(x) {}
+   tsc .js parse-clean js[TS8004@11+7,TS8010@23+1]  Function(f TypeParameter(ConstKeyword T) Parameter(x TypeReference(T)) Block)
+   tsc .ts parse-clean  Function(f TypeParameter(ConstKeyword T) Parameter(x TypeReference(T)) Block)
+   tsc .tsx parse-clean  Function(f TypeParameter(ConstKeyword T) Parameter(x TypeReference(T)) Block)
+   go  .js parse-clean js[TS8010@23+1,TS8004@11+7]
+      js-diag TS8004@11+7 Type parameter declarations can only be used in TypeScript files.
+      js-diag TS8010@23+1 Type annotations can only be used in TypeScript files.
+## x85  "class A { m<T>(this: A, ...a: T[]): a is any { return true } }"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
+   bun js  ERR 1:12 Expected ";" but found "<"
+   bun jsx ERR 1:12 Expected ";" but found "<"
+   bun ts  OK  class A {\n  m(...a) {\n    return !0;\n  }\n}
+   bun tsx OK  class A {\n  m(...a) {\n    return !0;\n  }\n}
+   tsc .js parse-clean js[TS8004@12+1,TS8010@21+1,TS8010@30+3,TS8010@36+8]  Class(A Method(m TypeParameter(T) Parameter(this TypeReference(A)) Parameter(DotDotDotToken a ArrayType(TypeReference(T))) TypeNode(a AnyKeyword) Block(Return(TrueKeyword))))
+   tsc .ts parse-clean  Class(A Method(m TypeParameter(T) Parameter(this TypeReference(A)) Parameter(DotDotDotToken a ArrayType(TypeReference(T))) TypeNode(a AnyKeyword) Block(Return(TrueKeyword))))
+   tsc .tsx parse-clean  Class(A Method(m TypeParameter(T) Parameter(this TypeReference(A)) Parameter(DotDotDotToken a ArrayType(TypeReference(T))) TypeNode(a AnyKeyword) Block(Return(TrueKeyword))))
+   go  .js parse-clean js[TS8010@21+1,TS8010@30+3,TS8010@36+8,TS8004@12+1]
+      js-diag TS8004@12+1 Type parameter declarations can only be used in TypeScript files.
+      js-diag TS8010@21+1 Type annotations can only be used in TypeScript files.
+      js-diag TS8010@30+3 Type annotations can only be used in TypeScript files.
+      js-diag TS8010@36+8 Type annotations can only be used in TypeScript files.
+## x86  "var type; export { type as default }"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok]
+   v8      script=ERR Unexpected token 'export'  module=ok
+   bun js  OK  var type;\n\nexport { type as default };
+   bun jsx OK  var type;\n\nexport { type as default };
+   bun ts  OK  var type;\n\nexport { type as default };
+   bun tsx OK  var type;\n\nexport { type as default };
+   tsc .js parse-clean  (VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type default)))
+   tsc .ts parse-clean  (VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type default)))
+   tsc .tsx parse-clean  (VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type default)))
+   go  .js parse-clean
+## x87  "function f(this) {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token 'this'  module=ERR Unexpected token 'this'
+   bun js  ERR 1:12 Expected identifier but found "this"
+   bun jsx ERR 1:12 Expected identifier but found "this"
+   bun ts  OK  function f() {}
+   bun tsx OK  function f() {}
+   tsc .js parse-clean  Function(f Parameter(this) Block)
+   tsc .ts parse-clean  Function(f Parameter(this) Block)
+   tsc .tsx parse-clean  Function(f Parameter(this) Block)
+   go  .js parse-clean
+## x88  "let x!"
+   [v8:invalid] [bun-js:err] [bun-jsx:err]
+   v8      script=ERR Unexpected token '!'  module=ERR Unexpected token '!'
+   bun js  ERR 1:6 Expected ";" but found "!"
+   bun jsx ERR 1:6 Expected ";" but found "!"
+   bun ts  ERR 1:6 Expected ":" but found end of file
+   bun tsx ERR 1:6 Expected ":" but found end of file
+   tsc .js parse-clean  (VariableDeclarationList(Variable(x ExclamationToken)))
+   tsc .ts parse-clean  (VariableDeclarationList(Variable(x ExclamationToken)))
+   tsc .tsx parse-clean  (VariableDeclarationList(Variable(x ExclamationToken)))
+   go  .js parse-clean
+## x89  "class A { static { } static x; static m() {} static async *g() {} }"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok]
+   v8      script=ok  module=ok
+   bun js  OK  class A {\n  static {}\n  static x;\n  static m() {}\n  static async* g() {}\n}
+   bun jsx OK  class A {\n  static {}\n  static x;\n  static m() {}\n  static async* g() {}\n}
+   bun ts  OK  class A {\n  static {}\n  static x;\n  static m() {}\n  static async* g() {}\n}
+   bun tsx OK  class A {\n  static {}\n  static x;\n  static m() {}\n  static async* g() {}\n}
+   tsc .js parse-clean  Class(A ClassStaticBlock(Block) Property(StaticKeyword x) Method(StaticKeyword m Block) Method(StaticKeyword AsyncKeyword AsteriskToken g Block))
+   tsc .ts parse-clean  Class(A ClassStaticBlock(Block) Property(StaticKeyword x) Method(StaticKeyword m Block) Method(StaticKeyword AsyncKeyword AsteriskToken g Block))
+   tsc .tsx parse-clean  Class(A ClassStaticBlock(Block) Property(StaticKeyword x) Method(StaticKeyword m Block) Method(StaticKeyword AsyncKeyword AsteriskToken g Block))
+   go  .js parse-clean
+## x90  "export default function <T>(a: T) {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Unexpected token 'export'  module=ERR Unexpected token '<'
+   bun js  ERR 1:25 Expected "(" but found "<"
+   bun jsx ERR 1:25 Expected "(" but found "<"
+   bun ts  OK  export default function input_default(a) {}
+   bun tsx OK  export default function input_default(a) {}
+   tsc .js parse-clean js[TS8004@25+1,TS8010@31+1]  Function(ExportKeyword DefaultKeyword TypeParameter(T) Parameter(a TypeReference(T)) Block)
+   tsc .ts parse-clean  Function(ExportKeyword DefaultKeyword TypeParameter(T) Parameter(a TypeReference(T)) Block)
+   tsc .tsx parse-clean  Function(ExportKeyword DefaultKeyword TypeParameter(T) Parameter(a TypeReference(T)) Block)
+   go  .js parse-clean js[TS8010@31+1,TS8004@25+1]
+      js-diag TS8004@25+1 Type parameter declarations can only be used in TypeScript files.
+      js-diag TS8010@31+1 Type annotations can only be used in TypeScript files.
+## x91  "class A extends B implements C, D {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected strict mode reserved word  module=ERR Unexpected strict mode reserved word
+   bun js  ERR 1:19 Expected "{" but found "implements"
+   bun jsx ERR 1:19 Expected "{" but found "implements"
+   bun ts  OK  class A extends B {\n}
+   bun tsx OK  class A extends B {\n}
+   tsc .js parse-clean js[TS8005@18+15]  Class(A HeritageClause(ExpressionWithTypeArguments(B)) HeritageClause(ExpressionWithTypeArguments(C) ExpressionWithTypeArguments(D)))
+   tsc .ts parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(B)) HeritageClause(ExpressionWithTypeArguments(C) ExpressionWithTypeArguments(D)))
+   tsc .tsx parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(B)) HeritageClause(ExpressionWithTypeArguments(C) ExpressionWithTypeArguments(D)))
+   go  .js parse-clean js[TS8005@18+15]
+      js-diag TS8005@18+15 'implements' clauses can only be used in TypeScript files.
+## x92  "x = function* <T>() {}; y = async function <T>() {}; z = async <T,>() => {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
+   bun js  ERR 1:15 Expected "(" but found "<"
+   bun jsx ERR 1:15 Expected "(" but found "<"
+   bun ts  OK  x = function* () {};\ny = async function() {};\nz = async () => {};
+   bun tsx OK  x = function* () {};\ny = async function() {};\nz = async () => {};
+   tsc .js parse-clean js[TS8004@15+1,TS8004@44+1,TS8004@64+2]  (x = Function(AsteriskToken TypeParameter(T) Block)); (y = Function(AsyncKeyword TypeParameter(T) Block)); (z = ArrowFunction(AsyncKeyword TypeParameter(T) EqualsGreaterThanToken Block));
+   tsc .ts parse-clean  (x = Function(AsteriskToken TypeParameter(T) Block)); (y = Function(AsyncKeyword TypeParameter(T) Block)); (z = ArrowFunction(AsyncKeyword TypeParameter(T) EqualsGreaterThanToken Block));
+   tsc .tsx parse-clean  (x = Function(AsteriskToken TypeParameter(T) Block)); (y = Function(AsyncKeyword TypeParameter(T) Block)); (z = ArrowFunction(AsyncKeyword TypeParameter(T) EqualsGreaterThanToken Block));
+   go  .js parse-clean js[TS8004@15+1,TS8004@44+1,TS8004@64+2]
+      js-diag TS8004@15+1 Type parameter declarations can only be used in TypeScript files.
+      js-diag TS8004@44+1 Type parameter declarations can only be used in TypeScript files.
+      js-diag TS8004@64+2 Type parameter declarations can only be used in TypeScript files.
 ## p01  "// @ts-check\n/** @type {number} */\nvar x = /** @type {any} */ (y);"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -2460,16 +2921,17 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
   "TSC js!=tsx": 2
  },
  "x": {
-  "v8:invalid": 53,
-  "bun-js:err": 49,
-  "bun-jsx:err": 49,
-  "BUN js!=ts": 46,
-  "BUN jsx!=tsx": 45,
-  "GO!=TSC js-diag": 7,
-  "bun-js:ok": 4,
-  "bun-jsx:ok": 4,
+  "v8:invalid": 88,
+  "bun-js:err": 84,
+  "bun-jsx:err": 84,
+  "BUN js!=ts": 76,
+  "BUN jsx!=tsx": 75,
+  "GO!=TSC js-diag": 17,
+  "bun-js:ok": 6,
+  "bun-jsx:ok": 6,
   "TSC js!=ts": 3,
-  "TSC js!=tsx": 2
+  "TSC js!=tsx": 2,
+  "v8:valid": 2
  },
  "p": {
   "v8:valid": 8,

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Prototype of expressions inside type syntax on a COPY of src/js_parser (never the worktree).
 usage: patch.py <copy of src/js_parser> [variant]
-variant "all" (default): helper + every cold edge + the restart of a computed name.
-variant "helper": only the helper in p.rs and lexer.rs (no call site), to see what a call site costs.
-variant "noA": all edges except the restart of a computed name.
+variant: "all" (default) or a string of site letters, e.g. "B", "CH", "DE", "G", "A", "BCHDE".
+B parameter initializer, C binding pattern initializer and computed key, H parameter decorator,
+D/E member tail (property initializer, accessor body), G constraint expression, A computed name restart.
+The helper functions in p.rs, lexer.rs and the grammar file are always added.
 Compile with ../../../build-sink-positions/quick/run.py (RELAX=1) and compare with scmp.py."""
 import sys, re
 root = sys.argv[1]; variant = sys.argv[2] if len(sys.argv) > 2 else 'all'
@@ -253,7 +254,7 @@ sub('p.rs', '''    /// When not transpiling we dont use the renamer, so our solu
     /// hard to collide with variables, instead of actually making things collision free
     pub(crate) fn generate_temp_ref(''')
 
-if variant == 'helper': sys.exit(0)
+on = lambda c: variant == 'all' or c in variant
 G = 'parse/parse_skip_typescript.rs'
 sub(G, '''use crate::p::P;
 use crate::parse::type_sink''', '''use crate::p::{P, TypeExprKind};
@@ -292,7 +293,8 @@ sub(G, '''    pub(crate) fn skip_typescript_fn_args(&mut self) -> Result<(), Err
     #[inline(never)]
     fn skip_computed_key_in_binding(&mut self) -> Result<(), Error> {
         if self.lexer.token != T::TOpenBracket {
-            return self.lexer.unexpected();
+            self.lexer.unexpected()?;
+            return Ok(());
         }
         self.lexer.next()?;
         self.skip_type_script_type_with_opts::<Discard>(
@@ -300,7 +302,8 @@ sub(G, '''    pub(crate) fn skip_typescript_fn_args(&mut self) -> Result<(), Err
             SkipTypeOptionsBitset::only(SkipTypeOptions::IsIndexSignature),
             &mut (),
         )?;
-        self.lexer.expect(T::TCloseBracket)
+        self.lexer.expect(T::TCloseBracket)?;
+        Ok(())
     }
 
     /// What tsc reads where a member of an object type should end: an initializer or an accessor body.
@@ -313,7 +316,10 @@ sub(G, '''    pub(crate) fn skip_typescript_fn_args(&mut self) -> Result<(), Err
                 self.parse_expr_in_type(TypeExprKind::Initializer)?;
                 match self.lexer.token {
                     T::TCloseBrace => Ok(()),
-                    T::TComma | T::TSemicolon => self.lexer.next(),
+                    T::TComma | T::TSemicolon => {
+                        self.lexer.next()?;
+                        Ok(())
+                    }
                     _ => {
                         if !self.lexer.has_newline_before {
                             self.lexer.unexpected()?;
@@ -373,7 +379,7 @@ sub(G, '''    pub(crate) fn skip_typescript_fn_args(&mut self) -> Result<(), Err
     pub(crate) fn skip_typescript_fn_args(&mut self) -> Result<(), Error> {''')
 
 # ---- B: parameter initializer
-sub(G, '''            // "(a, b)"
+if on('B'): sub(G, '''            // "(a, b)"
             if self.lexer.token != T::TComma {
                 break;
             }
@@ -397,7 +403,7 @@ sub(G, '''            // "(a, b)"
         self.lexer.expect(T::TCloseParen)?;''')
 
 # ---- C: binding pattern elements
-sub(G, '''                    self.skip_type_script_binding()?;
+if on('C'): sub(G, '''                    self.skip_type_script_binding()?;
 
                     if self.lexer.token != T::TComma {
                         break;
@@ -419,7 +425,7 @@ sub(G, '''                    self.skip_type_script_binding()?;
                 }
 
                 self.lexer.expect(T::TCloseBracket)?;''')
-sub(G, '''                    if self.lexer.token != T::TComma {
+if on('C'): sub(G, '''                    if self.lexer.token != T::TComma {
                         break;
                     }
 
@@ -439,7 +445,7 @@ sub(G, '''                    if self.lexer.token != T::TComma {
                 }
 
                 self.lexer.expect(T::TCloseBrace)?;''')
-sub(G, '''                            if self.lexer.is_identifier_or_keyword() {
+if on('C'): sub(G, '''                            if self.lexer.is_identifier_or_keyword() {
                                 // "{if: x}"
                                 self.lexer.next()?;
                             } else {
@@ -451,7 +457,7 @@ sub(G, '''                            if self.lexer.is_identifier_or_keyword() {
                                 self.skip_computed_key_in_binding()?;
                             }''')
 # ---- H: decorators
-sub(G, '''            _ => {
+if on('H'): sub(G, '''            _ => {
                 self.lexer.unexpected()?;
                 return Err(crate::Error::SyntaxError);
             }
@@ -468,7 +474,7 @@ sub(G, '''            _ => {
 
     /// "= expression" after a parameter.''')
 # ---- D, E: member tail
-sub(G, '''                _ => {
+if on('D') or on('E'): sub(G, '''                _ => {
                     if !found_key {
                         self.lexer.unexpected()?;
                         return Err(crate::Error::SyntaxError);
@@ -505,7 +511,7 @@ sub(G, '''                _ => {
                 }
             }''')
 # ---- G: constraint
-sub(G, '''            if self.lexer.token == T::TExtends {
+if on('G'): sub(G, '''            if self.lexer.token == T::TExtends {
                 result = SkipTypeParameterResult::DefinitelyTypeParameters;
                 self.lexer.next()?;
                 self.skip_type_script_type(Level::Lowest)?;
@@ -518,7 +524,7 @@ sub(G, '''            if self.lexer.token == T::TExtends {
                     &mut (),
                 )?;
             }''')
-sub(G, '''                    } else {
+if on('G'): sub(G, '''                    } else {
                         self.lexer.expect(T::TNumericLiteral)?;
                         S::literal(out, TypeLiteral::Number);
                     }''', '''                    } else {
@@ -531,7 +537,7 @@ sub(G, '''                    } else {
                         self.lexer.next()?;
                         S::literal(out, TypeLiteral::Number);
                     }''')
-sub(G, '''                        return Ok(());
+if on('G'): sub(G, '''                        return Ok(());
                     }
 
                     self.lexer.unexpected()?;
@@ -547,9 +553,8 @@ sub(G, '''                        return Ok(());
                 }
             }
             break;''')
-if variant == 'noA': sys.exit(0)
 # ---- A: computed name
-sub(G, '''            if self.lexer.token == T::TOpenBracket {
+if on('A'): sub(G, '''            if self.lexer.token == T::TOpenBracket {
                 // Index signature or computed property
                 self.lexer.next()?;
                 self.skip_type_script_type_with_opts::<Discard>(
@@ -569,7 +574,7 @@ sub(G, '''            if self.lexer.token == T::TOpenBracket {
                     self.retry_computed_name_as_expr(open, Some(err))?;
                 }
 ''')
-sub(G, '''                            self.skip_type_script_type(Level::Lowest)?;
+if on('A'): sub(G, '''                            self.skip_type_script_type(Level::Lowest)?;
                         }
                     }
                     _ => {}
