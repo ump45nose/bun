@@ -498,13 +498,15 @@ it("Workers can read the working directory while the main thread changes it", as
         const start = process.cwd();
         const a = path.join(start, "a");
         const b = path.join(start, "b");
+        const WORKERS = 4;
         const stop = new Int32Array(new SharedArrayBuffer(4));
+        // How many times each Worker has read the working directory.
+        const reads = new Int32Array(new SharedArrayBuffer(4 * WORKERS));
         const source = \`
           const { parentPort, workerData } = require("node:worker_threads");
           const path = require("node:path");
-          const { stop, dirs } = workerData;
+          const { stop, reads, index, dirs } = workerData;
           const resolved = dirs.map(d => path.join(d, "x"));
-          let reads = 0;
           const wrong = [];
           parentPort.postMessage("ready");
           while (Atomics.load(stop, 0) === 0) {
@@ -512,14 +514,17 @@ it("Workers can read the working directory while the main thread changes it", as
             if (!dirs.includes(cwd)) wrong.push(cwd);
             const x = path.resolve("x");
             if (!resolved.includes(x)) wrong.push(x);
-            reads++;
+            Atomics.add(reads, index, 1);
           }
-          parentPort.postMessage({ reads: reads > 0, wrong });
+          parentPort.postMessage(wrong);
         \`;
         (async () => {
           const workers = [];
-          for (let i = 0; i < 4; i++) {
-            const worker = new Worker(source, { eval: true, workerData: { stop, dirs: [start, a, b] } });
+          for (let index = 0; index < WORKERS; index++) {
+            const worker = new Worker(source, {
+              eval: true,
+              workerData: { stop, reads, index, dirs: [start, a, b] },
+            });
             await new Promise((resolve, reject) => {
               worker.once("message", resolve);
               worker.once("error", reject);
@@ -527,12 +532,19 @@ it("Workers can read the working directory while the main thread changes it", as
             workers.push(worker);
           }
           const results = workers.map(worker => new Promise(resolve => worker.once("message", resolve)));
-          for (let i = 0; i < 500; i++) {
+          // Keep moving until every Worker has read while this thread moved.
+          const everyWorkerHasRead = () => {
+            for (let index = 0; index < WORKERS; index++) if (Atomics.load(reads, index) < 200) return false;
+            return true;
+          };
+          let moves = 0;
+          while (moves < 500 || !everyWorkerHasRead()) {
             process.chdir(a);
             process.chdir(b);
+            moves++;
           }
           Atomics.store(stop, 0, 1);
-          console.log(JSON.stringify({ workers: await Promise.all(results), cwd: process.cwd() === b }));
+          console.log(JSON.stringify({ wrong: await Promise.all(results), cwd: process.cwd() === b }));
           process.exit(0);
         })().catch(e => { console.error(e); process.exit(1); });
       `,
@@ -544,7 +556,7 @@ it("Workers can read the working directory while the main thread changes it", as
   });
   const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
   expect({ out: JSON.parse(stdout.trim() || "null"), stderr: exitCode === 0 ? "" : stderr }).toEqual({
-    out: { workers: Array(4).fill({ reads: true, wrong: [] }), cwd: true },
+    out: { wrong: [[], [], [], []], cwd: true },
     stderr: "",
   });
   expect(exitCode).toBe(0);

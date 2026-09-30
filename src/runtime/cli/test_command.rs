@@ -1520,17 +1520,6 @@ pub(crate) fn print_coverage_reports(
     opts: &mut CodeCoverageOptions,
     reports: &[CodeCoverageReport<'_>],
 ) -> bun_sys::Result<()> {
-    if Output::enable_ansi_colors_stderr() {
-        print_coverage_reports_::<true>(opts, reports)
-    } else {
-        print_coverage_reports_::<false>(opts, reports)
-    }
-}
-
-fn print_coverage_reports_<const COLORS: bool>(
-    opts: &mut CodeCoverageOptions,
-    reports: &[CodeCoverageReport<'_>],
-) -> bun_sys::Result<()> {
     let relative_dir = bun_core::cwd::get();
     let thresholds = opts.fractions;
 
@@ -1539,7 +1528,11 @@ fn print_coverage_reports_<const COLORS: bool>(
     opts.fractions.failing = failing;
 
     if opts.reporters.text {
-        print_coverage_table::<COLORS>(&relative_dir, &thresholds, reports, &fractions, failing);
+        if Output::enable_ansi_colors_stderr() {
+            print_coverage_table::<true>(&relative_dir, &thresholds, reports, &fractions, failing);
+        } else {
+            print_coverage_table::<false>(&relative_dir, &thresholds, reports, &fractions, failing);
+        }
     }
     if opts.reporters.lcov {
         write_lcov_report(opts, &relative_dir, reports)?;
