@@ -38,6 +38,23 @@ pub struct ImportStats {
     pub build_ns: u64,
     pub finish_ns: u64,
     pub first_unmapped: Vec<u8>,
+    // The kind names of the dump that are no kind of the port.
+    pub unknown_kind_names: Vec<Vec<u8>>,
+    // Distinct `Kind.property` that no slot took, with their count. At most 32 are kept.
+    pub unmapped: Vec<(Vec<u8>, u32)>,
+}
+
+impl ImportStats {
+    fn lost(&mut self, kind: Kind, prop: &[u8]) {
+        let mut key = kind.name().as_bytes().to_vec();
+        key.push(b'.');
+        key.extend_from_slice(prop);
+        match self.unmapped.iter_mut().find(|entry| entry.0 == key) {
+            Some(entry) => entry.1 += 1,
+            None if self.unmapped.len() < 32 => self.unmapped.push((key, 1)),
+            None => {}
+        }
+    }
 }
 
 // The bits of ts.NodeFlags (TypeScript 6.0) that the parser sets, with the flag of the port.
@@ -87,6 +104,7 @@ fn takes(go: &str, ts: &[u8]) -> bool {
         || (go == "PostfixToken" && (ts == b"questionToken" || ts == b"exclamationToken"))
         || (go == "TokenFlags" && (ts == b"$tokenFlags" || ts == b"numericLiteralFlags"))
         || (go == "Comment" && ts == b"comment")
+        || (go == "DefaultType" && ts == b"default")
 }
 
 struct DumpFile<'d> {
@@ -399,6 +417,23 @@ fn import_file(
             });
             stats.first_unmapped.extend_from_slice(lost.unwrap_or(b"?"));
         }
+        for entry in children.iter().filter(|entry| !entry.1) {
+            stats.lost(kind, dump.prop(dump.node_field(entry.0, 5)));
+        }
+        for entry in lists.iter().filter(|entry| !entry.1) {
+            stats.lost(
+                kind,
+                dump.prop(dump.lists.get(entry.0 * 5 + 1).copied().unwrap_or(-1)),
+            );
+        }
+        for at in
+            (attrs_from..attrs_to).filter(|at| attr_used & (1u64 << ((at - attrs_from) & 63)) == 0)
+        {
+            stats.lost(
+                kind,
+                dump.prop(dump.attrs.get(at * 4 + 1).copied().unwrap_or(-1)),
+            );
+        }
         stats.unmapped_children += lost_children;
         stats.unmapped_lists += lost_lists;
         stats.unmapped_attrs += lost_attrs;
@@ -429,13 +464,20 @@ pub fn import_dump(
         b"EndOfFileToken" => Kind::EndOfFile,
         other => Kind::from_name(other).unwrap_or(Kind::Unknown),
     };
-    let kinds: Vec<Kind> = root
+    let kind_names = root
         .get("kinds")
         .ok_or(ImportError::Shape("kinds"))?
-        .items()
-        .iter()
-        .map(kind_of)
-        .collect();
+        .items();
+    let kinds: Vec<Kind> = kind_names.iter().map(kind_of).collect();
+    for (name, kind) in kind_names.iter().zip(&kinds) {
+        let name = name.bytes();
+        if *kind == Kind::Unknown
+            && name != b"Unknown"
+            && !stats.unknown_kind_names.iter().any(|known| known == name)
+        {
+            stats.unknown_kind_names.push(name.to_vec());
+        }
+    }
     let props: Vec<&[u8]> = root
         .get("props")
         .ok_or(ImportError::Shape("props"))?

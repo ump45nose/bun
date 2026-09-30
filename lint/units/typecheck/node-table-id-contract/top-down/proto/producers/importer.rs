@@ -25,6 +25,8 @@ pub struct FileDump {
 
 #[derive(Default)]
 pub struct Bundle {
+    // The index of the first file in the corpus the bundle is a part of.
+    pub start: u32,
     pub kinds: Vec<Kind>,
     pub fields: Vec<Vec<u8>>,
     pub strings: Vec<Vec<u8>>,
@@ -86,6 +88,7 @@ pub fn read_bundle(bytes: &[u8]) -> Option<Bundle> {
                     }
                 }
             }
+            b"start" => bundle.start = json.integer() as u32,
             b"fields" => bundle.fields = strings(&mut json),
             b"strings" => bundle.strings = strings(&mut json),
             b"files" => {

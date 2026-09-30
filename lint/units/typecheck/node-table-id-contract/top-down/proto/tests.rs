@@ -639,3 +639,114 @@ mod core_name_probe {
         assert!(matches!(format!("{range:?}").len(), 1..));
     }
 }
+
+// Every unit of the conformance corpus: the tree the importer builds against the digest of the reference's own tree.
+// The bundles come from probes/flatten-corpus.ts, the digests from the dump research (one row per unit, same order).
+#[test]
+fn corpus_against_reference_digests() {
+    let mut err = std::io::stderr();
+    let Some(golden) = read("/tmp/ntc-td/cases.tsv") else {
+        let _ = writeln!(
+            err,
+            "corpus: /tmp/ntc-td/cases.tsv is missing, nothing compared"
+        );
+        return;
+    };
+    let rows: Vec<(u64, u32, u32)> = split_at_byte(&golden, b'\n')
+        .into_iter()
+        .filter(|line| line.first() != Some(&b'#'))
+        .map(|line| split_at_byte(line, b'\t'))
+        .filter(|cells| cells.len() >= 12)
+        .map(|cells| {
+            (
+                parse_number(cells[5], 16),
+                parse_number(cells[10], 10) as u32,
+                parse_number(cells[11], 10) as u32,
+            )
+        })
+        .collect();
+    // Classes: TypeScript family, JavaScript, JSON. Per class: units, same, differ, with faults, same among the units without parse errors, units without parse errors.
+    let mut stats = [[0u32; 6]; 3];
+    let mut defs_seen = [false; crate::ast::DEF_COUNT];
+    let mut kinds_seen = [false; Kind::COUNT];
+    let (mut nodes, mut heap, mut seconds) = (0u64, 0usize, 0.0f64);
+    let mut differing: Vec<Vec<u8>> = Vec::new();
+    for bundle_index in 0..100 {
+        let path = format!("/tmp/ntc-td/corpus/b{bundle_index:02}.json");
+        let Some(bytes) = read(&path) else {
+            break;
+        };
+        let bundle = read_bundle(&bytes).unwrap_or_default();
+        for (index, dump) in bundle.files.iter().enumerate() {
+            let name = dump.file_name.as_slice();
+            let class = if name.ends_with(b".json") {
+                2
+            } else if name.ends_with(b".js")
+                || name.ends_with(b".jsx")
+                || name.ends_with(b".mjs")
+                || name.ends_with(b".cjs")
+            {
+                1
+            } else {
+                0
+            };
+            let Some(&(digest, count, parse_errors)) = rows.get(bundle.start as usize + index)
+            else {
+                continue;
+            };
+            let t = Instant::now();
+            let (table, faults, _) = import_file(&bundle, dump);
+            seconds += t.elapsed().as_secs_f64();
+            let a = AstContext::for_binding(&table);
+            let (found, found_count) = tree_digest(&a, table.root, true);
+            for id in 1..=table.node_count() {
+                if let Some(seen) = defs_seen.get_mut(a.def(NodeId(id)) as usize) {
+                    *seen = true;
+                }
+                if let Some(seen) = kinds_seen.get_mut(NodeId(id).kind(&a) as usize) {
+                    *seen = true;
+                }
+            }
+            nodes += u64::from(table.node_count());
+            heap += table.heap_bytes();
+            let same = found == digest && found_count == count;
+            if let Some(row) = stats.get_mut(class) {
+                row[0] += 1;
+                row[1] += u32::from(same);
+                row[2] += u32::from(!same);
+                row[3] += u32::from(faults + a.log.count() != 0);
+                row[4] += u32::from(same && parse_errors == 0);
+                row[5] += u32::from(parse_errors == 0);
+            }
+            if !same && class == 0 {
+                differing.push(name.to_vec());
+            }
+        }
+    }
+    let defs = defs_seen.iter().filter(|seen| **seen).count();
+    let kinds = kinds_seen.iter().filter(|seen| **seen).count();
+    let _ = writeln!(
+        err,
+        "corpus: nodes {nodes}; import and finish {seconds:.2} s; table heap {heap} bytes; structs seen {defs} of {}; kinds seen {kinds} of {}",
+        crate::ast::DEF_COUNT - 1,
+        Kind::COUNT
+    );
+    for (label, row) in ["ts family", "js", "json"].iter().zip(stats.iter()) {
+        let _ = writeln!(
+            err,
+            "  {label}: units {} same as the reference {} differ {} with importer faults {}; without parse errors {} of which same {}",
+            row[0], row[1], row[2], row[3], row[5], row[4]
+        );
+    }
+    let _ = writeln!(err, "  differing ts family units:");
+    for name in &differing {
+        let _ = writeln!(err, "    {}", bstr::BStr::new(name));
+    }
+    let missing: Vec<&str> = crate::ast::LAYOUTS
+        .iter()
+        .zip(defs_seen.iter())
+        .filter(|(layout, seen)| !**seen && !layout.name.is_empty())
+        .map(|(layout, _)| layout.name)
+        .collect();
+    let _ = writeln!(err, "  structs that no unit has: {missing:?}");
+}

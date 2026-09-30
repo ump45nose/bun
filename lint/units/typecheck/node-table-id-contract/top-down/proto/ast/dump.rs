@@ -15,7 +15,7 @@ pub struct Dump<'a, 's> {
     pub nodes: u32,
 }
 
-const MAX_DEPTH: usize = 4000;
+const MAX_DEPTH: usize = 400_000;
 
 // strconv.QuoteToASCII
 pub fn quote_to_ascii(text: &[u8], out: &mut Vec<u8>) {
