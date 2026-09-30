@@ -5,7 +5,7 @@
 # usage: sh import-legacy.sh
 set -e
 HERE=$(cd "$(dirname "$0")" && pwd)
-N=$(cd "$HERE/../.." && pwd)
+N=$(cd "$HERE/../../.." && pwd)
 take() {
   mkdir -p "$HERE/sub/$1"
   { echo "// Imported from units/typecheck/$2 by import-legacy.sh. Do not edit here."; sed -e "s/^package main\$/package $1/" -e 's/^func main() {$/func Main() {/' -e 's#"golden/#"github.com/microsoft/typescript-go/internal/#' "$N/$2"; } > "$HERE/sub/$1/main.go"

@@ -28,6 +28,7 @@ type imp struct {
 	std     types.Importer
 	cache   map[string]*types.Package
 	shown   int
+	fakes   []string
 	other   map[string]int
 }
 
@@ -109,7 +110,7 @@ func (im *imp) load(path string) *types.Package {
 		Error: func(err error) {
 			te, ok := err.(types.Error)
 			if ok {
-				if _, mine := im.overlay[te.Fset.Position(te.Pos).Filename]; mine {
+				if _, mine := im.overlay[te.Fset.Position(te.Pos).Filename]; mine && !im.standIn(te.Msg) {
 					fmt.Println("error:", err)
 					im.shown++
 					return
@@ -123,6 +124,16 @@ func (im *imp) load(path string) *types.Package {
 	pkg, _ := conf.Check(path, im.fset, files, nil)
 	im.cache[path] = pkg
 	return pkg
+}
+
+// standIn reports an error that only says that a member of an empty stand-in package is missing.
+func (im *imp) standIn(msg string) bool {
+	for _, n := range im.fakes {
+		if strings.HasPrefix(msg, "undefined: "+n+".") {
+			return true
+		}
+	}
+	return false
 }
 
 func (im *imp) ImportFrom(path, dir string, mode types.ImportMode) (*types.Package, error) {
@@ -140,6 +151,7 @@ func (im *imp) ImportFrom(path, dir string, mode types.ImportMode) (*types.Packa
 		return p, nil
 	}
 	pkg := types.NewPackage(path, path[strings.LastIndex(path, "/")+1:])
+	im.fakes = append(im.fakes, pkg.Name())
 	pkg.MarkComplete()
 	im.cache[path] = pkg
 	return pkg, nil

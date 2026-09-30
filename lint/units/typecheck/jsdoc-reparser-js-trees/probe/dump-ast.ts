@@ -63,6 +63,7 @@ export interface FileDump {
   lists: number[];
   attrs: number[];
   diagnostics: [number, number, number, number, string][];
+  jsDocDiagnostics: [number, number, number, number, string][];
   commentDirectives: [number, number, number][];
   referencedFiles: [number, number, string, number, number][];
   typeReferenceDirectives: [number, number, string, number, number][];
@@ -345,6 +346,13 @@ export function dumpFile(
     lists,
     attrs,
     diagnostics: internal.parseDiagnostics.map((d: ts.DiagnosticWithLocation) => [
+      p(d.start),
+      p(d.start + d.length) - p(d.start),
+      d.code,
+      d.category,
+      ts.flattenDiagnosticMessageText(d.messageText, "\n"),
+    ]),
+    jsDocDiagnostics: (internal.jsDocDiagnostics ?? []).map((d: ts.DiagnosticWithLocation) => [
       p(d.start),
       p(d.start + d.length) - p(d.start),
       d.code,

@@ -11,7 +11,8 @@ Two modes:
            cache holds the native object of the bun_js_parser module; that object is copied to $OUT/<tag>/bun_js_parser.lto.o.
            It is the machine code that the full link would place, before identical-code folding (about 2 minutes).
 After its own tag the script works through $OUT/queue.txt (lines `<tag> [full]`, rlib at /tmp/paren-seam/out/<tag>/, or
-`cg <tag> [<binary>]`: cgbench.sh on $OUT/<tag>/bun-profile, counts to /tmp/paren-seam/cg.<tag>.txt), so that a batch started
+`cg <tag> [<binary>]`: cgbench.sh on $OUT/<tag>/bun-profile, counts to /tmp/paren-seam/cg.<tag>.txt, or
+`sh <tag> <command>`: a shell command in the worktree directory, output to /tmp/paren-seam/sh.<tag>.txt), so that a batch started
 once under the lock can be extended without giving the lock back. While $OUT/HOLD holds the tag of the running
 invocation, an empty queue is polled for up to ten minutes before the script ends."""
 import os, re, signal, shutil, subprocess, sys, time
@@ -108,6 +109,12 @@ def main():
             r = subprocess.run(['/workspace/notes/lint/tools/cgbench.sh', binary, '/tmp/paren-seam/cg', parts[1], '20'], capture_output=True, text=True)
             open('/tmp/paren-seam/cg.' + parts[1] + '.txt', 'w').write(r.stdout + r.stderr)
             print('cg', parts[1], 'rc', r.returncode, 'seconds', int(time.time() - t), flush=True)
+            continue
+        if parts[0] == 'sh':
+            t = time.time()
+            r = subprocess.run(lines[0].split(None, 2)[2], shell=True, cwd='/workspace/wt/parser', capture_output=True, text=True)
+            open('/tmp/paren-seam/sh.' + parts[1] + '.txt', 'w').write(r.stdout + r.stderr)
+            print('sh', parts[1], 'rc', r.returncode, 'seconds', int(time.time() - t), flush=True)
             continue
         one(parts[0], RLIB % parts[0], 'full' in parts[1:])
     sys.exit(rc)

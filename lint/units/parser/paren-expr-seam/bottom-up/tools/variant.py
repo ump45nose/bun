@@ -12,7 +12,10 @@ Variants (see README.md of this directory for what each one means):
   v2     the five callers choose between parse_paren_expr and a #[cold] twin (const generic on the function)
   v2ts   v2 with the choice only in the TypeScript instantiation
   v3     nothing inside: the five callers call a cold helper after the function returned
-  v3p    nothing inside: only the parenthesis record after return (pfx_t_open_paren, the cast path) 
+  v3p    nothing inside: only the parenthesis record after return (pfx_t_open_paren, the cast path)
+  v3r    v3 with the result kept in place (the cold helper gets &mut Result), v3pr: the same for v3p
+  v3d    nothing inside: the five callers test BEFORE the call and go to a cold wrapper that calls the SAME
+         parse_paren_expr and then the hook (no code after the call on the path without lint), v3pd: two callers only
   p57    the parenthesis record at parse_prefix.rs:57 (level above Assign), outside parse_paren_expr
   r1     sidecar lengths saved and cut back inside lexer_backtracker_bool and lexer_backtracker_result
   r1f    the cut only on the failure path of the two backtrackers, by position (nothing saved)
@@ -200,6 +203,21 @@ impl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_O
         if let Err(err) = self.lint_after_paren_expr(open, owner, &value) {
             *result = Err(err);
         }
+    }
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn lint_parse_paren_expr(
+        &mut self,
+        open: usize,
+        loc: bun_ast::Loc,
+        level: Level,
+        opts: crate::parser::ParenExprOpts,
+    ) -> Result<bun_ast::Expr, Error> {
+        let value = self.parse_paren_expr(loc, level, opts)?;
+        let open = bun_ast::Loc { start: open as i32 };
+        self.lint_after_paren_expr(open, loc, &value)?;
+        Ok(value)
     }
 
     #[cold]
@@ -625,6 +643,38 @@ impl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_O
                                     );
                                 }
                                 return result;''')
+    elif v in ('v3d', 'v3pd'):
+        def disp(text, open_expr, owner, gate='p.starts_for_parse_only.is_some()', indent=''):
+            a = text.index('return p.parse_paren_expr(') if 'return p.parse_paren_expr(' in text else text.index('p.parse_paren_expr(')
+            head = text[:a]; call = text[a:]
+            ret = call.startswith('return ')
+            body = call[len('return '):] if ret else call
+            args = body[len('p.parse_paren_expr('):]
+            lint = 'p.lint_parse_paren_expr(' + open_expr + ',' + args
+            lint = lint.rstrip()
+            if lint.endswith(';'): lint = lint[:-1]
+            if lint.endswith('}'): lint = lint[:-1].rstrip()
+            return head + 'if ' + gate + ' {\n' + indent + '    return ' + lint + ';\n' + indent + '}\n' + indent + call
+        rep(PP, CALL1, disp(CALL1, 'loc.start as usize', 'loc', indent='        '))
+        rep(PP, CALL3, disp(CALL3.replace('p.lexer.expect(T::TOpenParen)?;', 'let paren_start = p.lexer.start;\n                    p.lexer.expect(T::TOpenParen)?;'), 'paren_start', 'loc', indent='                    '))
+        if v == 'v3d':
+            rep(PP, CALL2, disp(CALL2, 'paren_start', 'loc', indent='                '))
+            rep(PP, '''                p.lexer.expect(T::TOpenParen)?;
+                if p.starts_for_parse_only.is_some() {
+                    return p.lint_parse_paren_expr(paren_start,
+                    loc,
+                    level,
+                    ParenExprOpts {
+                        force_arrow_fn: true,''', '''                let paren_start = p.lexer.start;
+                p.lexer.expect(T::TOpenParen)?;
+                if p.starts_for_parse_only.is_some() {
+                    return p.lint_parse_paren_expr(paren_start,
+                    loc,
+                    level,
+                    ParenExprOpts {
+                        force_arrow_fn: true,''')
+            rep(M, CALL4, disp(CALL4.replace('p.lexer.next()?;', 'let paren_start = p.lexer.start;\n                    p.lexer.next()?;'), 'paren_start', 'async_range.loc', gate='Self::IS_TYPESCRIPT_ENABLED && p.starts_for_parse_only.is_some()', indent='                    '))
+            rep(M, CALL5, disp(CALL5.replace('p.lexer.next()?;', 'let paren_start = p.lexer.start;\n                                p.lexer.next()?;'), 'paren_start', 'async_range.loc', indent='                                '))
     elif v == 'v3p':
         rep(PP, CALL1, '''        let value = p.parse_paren_expr(
             loc,

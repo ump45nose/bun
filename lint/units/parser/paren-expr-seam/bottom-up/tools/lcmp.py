@@ -2,14 +2,21 @@
 """Compare the bun_js_parser functions of two LINKED bun-profile binaries (outputs of fnasm.py), with counts.
 usage: lcmp.py <a.json> <b.json> [--only REGEX] [--diff N] [--lines N]
 For every function whose normalised disassembly differs: bytes, instructions and conditional branches in a and b.
-Functions only in b are the text that b adds. A name that differs only in the spelling of the Discard sink is one name."""
+Functions only in b are the text that b adds. A name that differs only in the spelling of the Discard sink is one name. A rip-relative data operand is compared without
+its displacement and without the data symbol that objdump prints: both move when the size of the text changes."""
 import json, sys, re, difflib
 a = json.load(open(sys.argv[1])); b = json.load(open(sys.argv[2]))
 arg = lambda k, d: sys.argv[sys.argv.index(k) + 1] if k in sys.argv else d
 ndiff = int(arg('--diff', 0)); only = re.compile(arg('--only', '.')); nlines = int(arg('--lines', 60))
 JCC = re.compile(r'^(j(?!mp)[a-z]+|loop[a-z]*|jrcxz|jecxz)\b')
+RIP = re.compile(r'-?0x[0-9a-f]+\(%rip\)([^#\n]*)(#[^\n]*)?')
+ANON = re.compile(r'anon\.[0-9a-f]+\.\d+')
 def norm(s):
-    return s.replace('::<bun_js_parser::parse::type_sink::Discard>', '').replace('::<bun_js_parser::parse::type_sink::Discard, ', '::<')
+    s = s.replace('::<bun_js_parser::parse::type_sink::Discard>', '').replace('::<bun_js_parser::parse::type_sink::Discard, ', '::<')
+    s = re.sub(r'\.llvm\.\d+', '', s)
+    # a rip-relative operand: the displacement moves with the layout of the binary, the comment names the nearest data symbol
+    s = RIP.sub(lambda m: '<rip>' + m.group(1).rstrip(), s)
+    return ANON.sub('anon', s)
 def st(e):
     L = e['text'].splitlines()
     return e['size'], len(L), sum(1 for l in L if JCC.match(l.strip())), sum(1 for l in L if l.strip().startswith('call'))

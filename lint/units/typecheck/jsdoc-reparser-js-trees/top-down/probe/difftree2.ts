@@ -5,7 +5,7 @@ import path from "node:path";
 import { dumpFiles } from "./dump-ast.ts";
 import { inflate, convert, postprocess, ruleHits } from "./convert.mjs";
 import { reparse, print, setParents, stats } from "./reparse.mjs";
-import { fixJSDoc } from "./jsdocfix.mjs";
+import { fixJSDoc, fixHits } from "./jsdocfix.mjs";
 
 const CORPUS = process.env.CORPUS ?? "/tmp/tsimp/corpus";
 const GOOUT = process.env.GOOUT ?? "/tmp/tsimp/go-out";
@@ -116,5 +116,5 @@ if (import.meta.main) {
   fs.writeFileSync(rep + ".classes.json", JSON.stringify(sorted, null, 1));
   fs.writeFileSync(rep + ".differing.txt", differing.join("\n") + "\n");
   fs.writeFileSync(rep + ".same.txt", sameList.join("\n") + "\n");
-  fs.writeFileSync(rep + ".rules.json", JSON.stringify({ convert: [...ruleHits].sort((a: any, b: any) => b[1] - a[1]), reparse: [...stats].sort((a: any, b: any) => b[1] - a[1]) }, null, 1));
+  fs.writeFileSync(rep + ".rules.json", JSON.stringify({ convert: [...ruleHits].sort((a: any, b: any) => b[1] - a[1]), reparse: [...stats].sort((a: any, b: any) => b[1] - a[1]), jsdocfix: [...fixHits].sort((a: any, b: any) => b[1] - a[1]) }, null, 1));
 }

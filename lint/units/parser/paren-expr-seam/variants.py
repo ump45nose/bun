@@ -527,11 +527,11 @@ def cut(src, start, end):
     a = src.index(start); b = src.index(end, a + len(start))
     return src[a:b]
 
-def source_twin(t, always_inline=False):
+def source_twin(t, always_inline=False, cold_twin=True):
     guard = '!SCAN_ONLY && Self::IS_TYPESCRIPT_ENABLED && ' + LINT
     mod = open(t.dir + '/' + MOD).read()
     body = cut(mod, '    /// This assumes that the open parenthesis has already been parsed by the caller\n    pub(crate) fn parse_paren_expr(', '    pub(crate) fn parse_label_name(')
-    tw = body.replace('    /// This assumes that the open parenthesis has already been parsed by the caller\n    pub(crate) fn parse_paren_expr(', '    #[cold]\n    #[inline(never)]\n    pub(crate) fn parse_paren_expr_for_lint(')
+    tw = body.replace('    /// This assumes that the open parenthesis has already been parsed by the caller\n    pub(crate) fn parse_paren_expr(', ('    #[cold]\n' if cold_twin else '') + '    #[inline(never)]\n    pub(crate) fn parse_paren_expr_for_lint(')
     def r(old, new):
         nonlocal tw
         assert tw.count(old) == 1, old[:60]
@@ -556,7 +556,7 @@ def source_twin(t, always_inline=False):
         lint_attempt = 'self.is_type_script_arrow_return_type_after_question_and_before_colon(arrow_data)?'
         copies_p = ''; copies_s = ''
     else:
-        cold = '    #[cold]\n    #[inline(never)]\n'
+        cold = '    #[cold]\n    #[inline(never)]\n' if cold_twin else ''
         copies_p = (cold + pop.replace('fn pop_and_flatten_scope(', 'fn lint_pop_and_flatten_scope(') + cold + snap.replace('fn parser_snapshot(', 'fn lint_parser_snapshot(') + cold + logerr.replace('fn log_arrow_arg_errors(', 'fn lint_log_arrow_arg_errors('))
         copies_s = cold + attempt.replace('fn is_type_script_arrow_return_type_after_question_and_before_colon(', 'fn lint_is_arrow_return_type_after_question(').replace('self.parser_snapshot()', 'self.lint_parser_snapshot()')
         lint_attempt = 'self.lint_is_arrow_return_type_after_question(arrow_data)?'
@@ -622,9 +622,23 @@ def source_twin(t, always_inline=False):
             return Self::pfx_t_open_paren_for_lint(p, loc, level, flags);
         }
 """ % guard)
+    name = 'parse_paren_expr_for_lint' if cold_twin else 'parse_paren_expr_for_lint_cold'
+    if not cold_twin:
+        t.rep(MOD, '    pub(crate) fn parse_label_name(', '''    #[cold]
+    #[inline(never)]
+    pub(crate) fn parse_paren_expr_for_lint_cold(
+        &mut self,
+        loc: bun_ast::Loc,
+        level: Level,
+        opts: ParenExprOpts,
+    ) -> Result<Expr, Error> {
+        self.parse_paren_expr_for_lint(loc, level, opts)
+    }
+
+    pub(crate) fn parse_label_name(''')
     for f, old in ((PFX, TSX_CALL_OLD), (PFX, CAST_CALL_OLD), (MOD, ASYNC_CALL_OLD), (MOD, ASYNC_LT_CALL_OLD)):
         indent = old[:len(old) - len(old.lstrip(' '))]
-        lint_call = old.replace('p.parse_paren_expr(', 'p.parse_paren_expr_for_lint(', 1)
+        lint_call = old.replace('p.parse_paren_expr(', 'p.' + name + '(', 1)
         lint_call = ''.join('    ' + l + '\n' for l in lint_call.splitlines())
         t.rep(f, old, indent + 'if ' + guard + ' {\n' + lint_call + indent + '}\n' + old)
 
@@ -665,6 +679,50 @@ def callee(t, with_args=True, never=True):
         self.skip_typescript_return_type()
     }
 ''' % (nv, (', ' + a_loc) if a_loc else '', p_loc, nv, (', ' + a_item) if a_item else '', p_item, nv, (', ' + a_loc) if a_loc else '', p_loc))
+
+# ---- V5 with one dispatch at the top of pfx_t_open_paren: the lint wrapper calls the function of a parse without lint ----
+def top_dispatch_wrapper(t):
+    guard = '!SCAN_ONLY && Self::IS_TYPESCRIPT_ENABLED && ' + LINT
+    t.rep(PFX, """    fn pfx_t_open_paren(p: &mut Self, level: Level, flags: EFlags) -> PResult<Expr> {
+        let loc = p.lexer.loc();
+        p.lexer.next()?;
+""", """    #[cold]
+    #[inline(never)]
+    fn pfx_t_open_paren_for_lint(
+        p: &mut Self,
+        loc: bun_ast::Loc,
+        level: Level,
+        flags: EFlags,
+    ) -> PResult<Expr> {
+        if level.gt(Level::Assign) {
+            let old_allow_in = p.allow_in;
+            p.allow_in = true;
+            let mut value = p.parse_expr(Level::Lowest)?;
+            p.mark_expr_as_parenthesized(&mut value);
+            p.lint_paren(loc, value);
+            p.lexer.expect(T::TCloseParen)?;
+            p.allow_in = old_allow_in;
+            return Ok(value);
+        }
+        let value = p.parse_paren_expr(
+            loc,
+            level,
+            ParenExprOpts {
+                is_after_question_and_before_colon: flags == EFlags::AfterQuestionAndBeforeColon,
+                ..Default::default()
+            },
+        )?;
+        p.lint_after_paren_expr(loc, value);
+        Ok(value)
+    }
+
+    fn pfx_t_open_paren(p: &mut Self, level: Level, flags: EFlags) -> PResult<Expr> {
+        let loc = p.lexer.loc();
+        p.lexer.next()?;
+        if %s {
+            return Self::pfx_t_open_paren_for_lint(p, loc, level, flags);
+        }
+""" % guard)
 
 # ---- P3.4: where the lists are rewound ----
 def rewind_in_backtrackers(t):
@@ -799,6 +857,7 @@ VARIANTS = {
     'v2gt': lambda t: (stub(t), twin(t, ts_only=True, fixed=True)),
     'v2gts': lambda t: (stub(t), twin(t, ts_only=True, fixed=True, no_scan=True)),
     'v2m': lambda t: (stub(t), source_twin(t)),
+    'v2m2': lambda t: (stub(t), source_twin(t, cold_twin=False)),
     'v2mi': lambda t: (stub(t), source_twin(t, always_inline=True)),
     # V3
     'v3': lambda t: (stub(t), after_tests(t, ts_only=False), paren_tests(t, ts_only=False, in_function=False)),
@@ -810,6 +869,8 @@ VARIANTS = {
     'v5n': lambda t: (stub(t), callee(t, with_args=False)),
     'v5inl': lambda t: (stub(t), callee(t, with_args=True, never=False)),
     'v5p': lambda t: (stub(t), callee(t, with_args=True), after_tests(t, ts_only=True, others=False), paren_tests(t, ts_only=True, in_function=False)),
+    'v5t': lambda t: (stub(t), callee(t, with_args=True), top_dispatch_wrapper(t)),
+    'topw': lambda t: (stub(t), top_dispatch_wrapper(t)),
     # P3.4
     'w1': lambda t: (stub(t), rewind_in_backtrackers(t), rewind_in_snapshot_mark(t)),
     'w1b': lambda t: (stub(t), rewind_in_backtrackers(t)),
