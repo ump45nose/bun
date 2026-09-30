@@ -28,7 +28,11 @@ for (let s = 0; s < info.jobs; s++) {
 }
 
 const isGrammar = c => c < 2000 || (c >= 8000 && c < 9000) || (c >= 17000 && c < 19000);
-const NR = new Set([2304, 2552, 2503, 2307, 2792, 2318, 2468, 2580, 2581, 2582, 2583, 2584, 2585, 2591, 2592, 2593, 2686, 2693, 2694, 2749, 2867, 2868, 2874, 2875, 2879, 2882, 7026, 2354, 2343]);
+// The same rule as report.mjs (rule R): A3 when a code says that the shape of a declaration is wrong.
+const SHAPE = new Set([
+  2207, 2206, 2300, 2331, 2332, 2337, 2357, 2364, 2369, 2371, 2391, 2452, 2462, 2480, 2483, 2499, 2500, 2660, 2669, 2670, 2680,
+  2730, 2784, 2842, 2857, 2858, 5084, 5085, 5086, 5087, 5088, 7061, 2323, 2335, 2395, 2440, 2451, 2567, 2813,
+]);
 const NAME_CODES = new Set([2304, 2552, 2503, 2693, 2694, 2749]);
 const RESERVED = new Set(
   "break case catch class const continue debugger default delete do else enum export extends finally for function if import in instanceof new return super switch throw try var while with".split(" "),
@@ -37,7 +41,7 @@ const classOf = (src, one) => {
   if (!one) return "A?";
   const codes = [...new Set(one.c.map(x => x[0]))];
   if (codes.some(isGrammar)) return "A2";
-  if (!codes.every(c => NR.has(c))) return "A3";
+  if (codes.some(c => SHAPE.has(c))) return "A3";
   if (one.js !== 1 && one.js !== undefined) return "A1j";
   return one.c.some(x => NAME_CODES.has(x[0]) && RESERVED.has(src.slice(x[1], x[1] + x[2]))) ? "A1r" : "A1v";
 };

@@ -10,6 +10,7 @@
 //   G (probes/run.mjs)   A2: the checker reports a code of the grammar ranges (<2000, 8xxx, 17xxx, 18xxx)
 //                        A1s: no such code, and a code of STRUCTURAL (probes/report.mjs)     A1c: the rest
 //   N (name resolution)  A1: every checker code is a name-resolution code (NR)   A2: as G   A3: the rest
+//   R (used for the split) A2: as G   A3: a code of SHAPE   A1: the rest (see SHAPE below)
 //   V (lost probe.mjs)   A1: every checker code is in VH (its "environment noise" list)   A2: as G   A3: the rest
 // Files written: see the list at the end of this file.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -30,7 +31,11 @@ const NR = new Set([
   2875, 2879, 2882, 7026, 2354, 2343,
 ]);
 const VH = new Set([2304, 2307, 2318, 2322, 2339, 2355, 2503, 2552, 2554, 2580, 2584, 2693, 2697, 2711, 2749]);
-// Class A1 of rule N is split once more:
+// Rule R, the one the split below uses: A2 as above; A3 when a code says that the SHAPE of a declaration is wrong
+// (STRUCTURAL plus the redeclaration and merge codes); A1 for the rest: name resolution and type noise of a small
+// snippet (implicit any 70xx, 2564, 2339, 2322, ...). Rule N puts 363 rows of the ts view into A3 for such noise alone.
+const SHAPE = new Set([...STRUCTURAL, 2323, 2335, 2395, 2440, 2451, 2567, 2813]);
+// Class A1 of rule R is split once more:
 //   A1j  tsc's JavaScript for the row does not parse with the js loader of the bun side (an early error of JavaScript
 //        that tsc does not report: accepting the row would print code that does not run)
 //   A1r  an unresolved name of the row is a reserved word (tsc and typescript-go read `let x: if` as a type reference)
@@ -138,10 +143,11 @@ for (const row of corpus) {
       const G = gr.length ? "A2" : rest.some(c => STRUCTURAL.has(c)) ? "A1s" : "A1c";
       const N = gr.length ? "A2" : rest.every(c => NR.has(c)) ? "A1" : "A3";
       const V = gr.length ? "A2" : rest.every(c => VH.has(c)) ? "A1" : "A3";
+      const R = gr.length ? "A2" : rest.some(c => SHAPE.has(c)) ? "A3" : "A1";
       const reserved = one.c.some(x => NAME_CODES.has(x[0]) && RESERVED.has(row.src.slice(x[1], x[1] + x[2])));
-      const sub = N !== "A1" ? N : one.js !== 1 && one.js !== undefined ? "A1j" : reserved ? "A1r" : "A1v";
+      const sub = R !== "A1" ? R : one.js !== 1 && one.js !== undefined ? "A1j" : reserved ? "A1r" : "A1v";
       const goOk = g ? g[VIEWS[view][1]][0] === 0 : null;
-      e.views[view] = { codes, G, N, V, sub, goOk, js: one.js, m: one.m, msg: b.b[VIEWS[view][0]][0], threw: one.threw };
+      e.views[view] = { codes, G, N, V, R, sub, goOk, js: one.js, m: one.m, msg: b.b[VIEWS[view][0]][0], threw: one.threw };
     }
     A.push(e);
   }
@@ -219,13 +225,14 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
 // ───────────── set A ─────────────
 {
   const L = [];
-  const rowsOut = ["i\tview\tG\tN (A1 split)\tV\ttypescript-go\tchecker codes\ttsc emit parses as js\tbun first message\tpins\torigins\tsource"];
+  const rowsOut = ["i\tview\tG\tR (A1 split)\tV\ttypescript-go\tchecker codes\ttsc emit parses as js\tbun first message\tpins\torigins\tsource"];
   for (const view of VIEW_NAMES) {
     const es = A.filter(e => e.views[view]);
     const cG = {};
     const cN = {};
     const cV = {};
     const cS = {};
+    const cR = {};
     const cGo = {};
     const cross = {};
     const js = {};
@@ -235,9 +242,10 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
       inc(cN, x.N);
       inc(cV, x.V);
       inc(cS, x.sub);
+      inc(cR, x.R);
       if (x.goOk === false) inc(cGo, x.sub);
-      inc(cross, `G=${x.G} N=${x.N} V=${x.V}`);
-      inc(js, `${x.N} js=${x.js === 1 ? "parses" : x.js === null ? "emit threw" : x.js === undefined ? "n/a" : "REJECTED"}`);
+      inc(cross, `G=${x.G} N=${x.N} V=${x.V} R=${x.R}`);
+      inc(js, `${x.R} js=${x.js === 1 ? "parses" : x.js === null ? "emit threw" : x.js === undefined ? "n/a" : "REJECTED"}`);
       rowsOut.push(
         [e.row.i, view, x.G, x.sub, x.V, x.goOk === false ? "go rejects" : "", x.codes.join(","), x.js === 1 ? "yes" : x.js === undefined ? "" : x.js === null ? "emit threw" : "no: " + tsv(x.js[0]), tsv(x.msg), tsv((e.row.pin ?? []).join(" | ")), e.row.o.slice(0, 4).join(" "), tsv(e.row.src)].join("\t"),
       );
@@ -246,11 +254,12 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
     L.push(`  rule G: ${JSON.stringify(cG)}`);
     L.push(`  rule N: ${JSON.stringify(cN)}`);
     L.push(`  rule V: ${JSON.stringify(cV)}`);
-    L.push(`  rule N with A1 split (A1v worklist, A1r reserved word as a name, A1j tsc's JavaScript does not parse): ${JSON.stringify(cS)}`);
+    L.push(`  rule R: ${JSON.stringify(cR)}`);
+    L.push(`  rule R with A1 split (A1v worklist, A1r reserved word as a name, A1j tsc's JavaScript does not parse): ${JSON.stringify(cS)}`);
     L.push(`  of these, rows that the parser of typescript-go rejects: ${JSON.stringify(cGo)}`);
     L.push("  cross table:");
     for (const [k, n] of Object.entries(cross).sort((a, b) => b[1] - a[1])) L.push(`    ${String(n).padStart(6)}  ${k}`);
-    L.push("  does the JavaScript that tsc prints parse with the js loader of the bun side (by class of rule N):");
+    L.push("  does the JavaScript that tsc prints parse with the js loader of the bun side (by class of rule R):");
     for (const [k, n] of Object.entries(js).sort()) L.push(`    ${String(n).padStart(6)}  ${k}`);
     L.push("");
   }
@@ -293,10 +302,10 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
       for (const c of x.codes) if (!NR.has(c)) inc(k.codes, c);
       k.ex[x.sub].push(e.row.src);
     }
-    const L2 = [`set A by cause, view ${view}: the first message of the bun side (token text replaced). N: classes of rule N, A1 split. Sorted by A1v.`, ""];
+    const L2 = [`set A by cause, view ${view}: the first message of the bun side (token text replaced). R: classes of rule R, A1 split. Sorted by A1v.`, ""];
     for (const [msg, k] of Object.entries(clusters).sort((a, b) => (b[1].N.A1v ?? 0) - (a[1].N.A1v ?? 0) || b[1].n - a[1].n)) {
       L2.push(`${String(k.n).padStart(6)}  ${msg}`);
-      L2.push(`        N: A1v=${k.N.A1v ?? 0} A1r=${k.N.A1r ?? 0} A1j=${k.N.A1j ?? 0} A2=${k.N.A2 ?? 0} A3=${k.N.A3 ?? 0}   G: A1c=${k.G.A1c ?? 0} A1s=${k.G.A1s ?? 0} A2=${k.G.A2 ?? 0}   tsc's emit parses as js: ${k.js}   rows with a pin: ${k.pins}`);
+      L2.push(`        R: A1v=${k.N.A1v ?? 0} A1r=${k.N.A1r ?? 0} A1j=${k.N.A1j ?? 0} A2=${k.N.A2 ?? 0} A3=${k.N.A3 ?? 0}   G: A1c=${k.G.A1c ?? 0} A1s=${k.G.A1s ?? 0} A2=${k.G.A2 ?? 0}   tsc's emit parses as js: ${k.js}   rows with a pin: ${k.pins}`);
       const codes = Object.entries(k.codes).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([c, n]) => `${c}x${n}`).join(" ");
       if (codes) L2.push(`        checker codes outside NR: ${codes}`);
       if (k.N.A1v) L2.push(`        origins of A1v: ${Object.entries(k.fams).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([f, n]) => `${f}x${n}`).join(" ")}`);
@@ -483,7 +492,7 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
 
 // ───────────── pins ─────────────
 {
-  const flip = ["pin (test file:line loader method expectation)\tclass N (A1 split)\tclass G\tclass V\tchecker codes\ttsc emit parses as js\tsource"];
+  const flip = ["pin (test file:line loader method expectation)\tclass R (A1 split)\tclass G\tclass V\tchecker codes\ttsc emit parses as js\tsource"];
   const keep = ["pin\ttsc first code\tstart\tlength\ttsc message\ttypescript-go first\tsource"];
   const odd = ["pin\tstage 1 verdict of the same loader\tsource"];
   const S = { pins: 0, expectError: 0, expectOk: 0, flip: 0, flipByN: {}, flipJs: 0, keep: 0, errorBoth: 0, okBoth: 0, odd: 0, bundleFiles: 0, bundleKeep: 0, bundleA: 0 };
@@ -548,7 +557,7 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
       `pins (call sites x distinct input): ${S.pins - S.bundleFiles}; files of itBundled cases: ${S.bundleFiles}`,
       `the test expects an error: ${S.expectError}`,
       `   tsc parses the input without a diagnostic (a set A fix flips the expectation): ${S.flip}   -> pins.flip.tsv`,
-      `      by class of rule N: ${JSON.stringify(S.flipByN)}; tsc's emit parses as js for ${S.flipJs}`,
+      `      by class of rule R (A1 split): ${JSON.stringify(S.flipByN)}; tsc's emit parses as js for ${S.flipJs}`,
       `   tsc rejects as well: ${S.errorBoth}`,
       `the test expects the input to be accepted: ${S.expectOk}`,
       `   the parser of tsc rejects it (a parse without lint must keep accepting it): ${S.keep}   -> pins.keep.tsv`,
