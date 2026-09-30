@@ -948,6 +948,12 @@ def p1_body_flag_field(t):
             };
             let arrow_result = p.parse_arrow_body(args, &mut fn_or_arrow_data);''')
 
+# The DecoratorMetadata sink calls find_symbol while it parses (type_sink.rs:239, parse_skip_typescript.rs:540): inside a lint
+# attempt that is not pure. v2y stands in with the Discard sink, which touches nothing but the lexer, as the Build sink will.
+def pure_type_stub(t):
+    t.rep(SKIP, "        let mut out = Metadata::DEFAULT;\n        let opts = if return_type {", "        let opts = if return_type {")
+    t.rep(SKIP, "        self.skip_type_script_type_with_opts::<DecoratorMetadata>(Level::Lowest, opts, &mut out)?;\n        Ok((start, self.lexer.start as i32))", "        self.skip_type_script_type_with_opts::<Discard>(Level::Lowest, opts, &mut ())?;\n        Ok((start, self.lexer.start as i32))")
+
 VARIANTS = {
     'base': lambda t: None,
     'stub': lambda t: stub(t),
@@ -968,6 +974,7 @@ VARIANTS = {
     'v2m2': lambda t: (stub(t), source_twin(t, cold_twin=False)),
     'v2mm': lambda t: (stub(t), macro_twin(t)),
     'v2x': lambda t: (stub(t), runnable_twin(t)),
+    'v2y': lambda t: (stub(t), runnable_twin(t), pure_type_stub(t)),
     'v2mi': lambda t: (stub(t), source_twin(t, always_inline=True)),
     # V3
     'v3': lambda t: (stub(t), after_tests(t, ts_only=False), paren_tests(t, ts_only=False, in_function=False)),
