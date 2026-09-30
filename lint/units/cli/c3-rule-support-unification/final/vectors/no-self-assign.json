@@ -9154,5 +9154,165 @@
 				"message": "'a['a']' is assigned to itself."
 			}
 		]
+	},
+	{
+		"code": "a.b.c = ( a.b ).c",
+		"sourceType": "script",
+		"eslint": [
+			{
+				"line": 1,
+				"column": 9,
+				"endLine": 1,
+				"endColumn": 18,
+				"message": "'(a.b).c' is assigned to itself."
+			}
+		],
+		"expect": [
+			{
+				"line": 1,
+				"column": 9,
+				"start": 8,
+				"length": 1,
+				"message": "'(a.b).c' is assigned to itself."
+			}
+		]
+	},
+	{
+		"code": "a[b][c] = a[b][c]",
+		"sourceType": "script",
+		"eslint": [
+			{
+				"line": 1,
+				"column": 11,
+				"endLine": 1,
+				"endColumn": 18,
+				"message": "'a[b][c]' is assigned to itself."
+			}
+		],
+		"expect": [
+			{
+				"line": 1,
+				"column": 11,
+				"start": 10,
+				"length": 1,
+				"message": "'a[b][c]' is assigned to itself."
+			}
+		]
+	},
+	{
+		"code": "a.b = (( a )).b",
+		"sourceType": "script",
+		"eslint": [
+			{
+				"line": 1,
+				"column": 7,
+				"endLine": 1,
+				"endColumn": 16,
+				"message": "'((a)).b' is assigned to itself."
+			}
+		],
+		"expect": [
+			{
+				"line": 1,
+				"column": 7,
+				"start": 6,
+				"length": 1,
+				"message": "'((a)).b' is assigned to itself."
+			}
+		]
+	},
+	{
+		"code": "a[`x`] = a[`x`]",
+		"sourceType": "script",
+		"eslint": [
+			{
+				"line": 1,
+				"column": 10,
+				"endLine": 1,
+				"endColumn": 16,
+				"message": "'a[`x`]' is assigned to itself."
+			}
+		],
+		"expect": [
+			{
+				"line": 1,
+				"column": 10,
+				"start": 9,
+				"length": 1,
+				"message": "'a[`x`]' is assigned to itself."
+			}
+		]
+	},
+	{
+		"code": "a[`x${y}`] = a[`x${y}`]",
+		"sourceType": "script",
+		"eslint": [],
+		"expect": []
+	},
+	{
+		"code": "a.b /* c */ .d = a.b.d",
+		"sourceType": "script",
+		"eslint": [
+			{
+				"line": 1,
+				"column": 18,
+				"endLine": 1,
+				"endColumn": 23,
+				"message": "'a.b.d' is assigned to itself."
+			}
+		],
+		"expect": [
+			{
+				"line": 1,
+				"column": 18,
+				"start": 17,
+				"length": 1,
+				"message": "'a.b.d' is assigned to itself."
+			}
+		]
+	},
+	{
+		"code": "a.b = a /* c */ .b",
+		"sourceType": "script",
+		"eslint": [
+			{
+				"line": 1,
+				"column": 7,
+				"endLine": 1,
+				"endColumn": 19,
+				"message": "'a/*c*/.b' is assigned to itself."
+			}
+		],
+		"expect": [
+			{
+				"line": 1,
+				"column": 7,
+				"start": 6,
+				"length": 1,
+				"message": "'a/*c*/.b' is assigned to itself."
+			}
+		]
+	},
+	{
+		"code": "a[b /* c */] = a[b]",
+		"sourceType": "script",
+		"eslint": [
+			{
+				"line": 1,
+				"column": 16,
+				"endLine": 1,
+				"endColumn": 20,
+				"message": "'a[b]' is assigned to itself."
+			}
+		],
+		"expect": [
+			{
+				"line": 1,
+				"column": 16,
+				"start": 15,
+				"length": 1,
+				"message": "'a[b]' is assigned to itself."
+			}
+		]
 	}
 ]

@@ -485,5 +485,13 @@
 	{"code":"a[''] = a[``]","expect":[{"line":1,"column":9,"message":"'a[``]' is assigned to itself."}]},
 	{"code":"a[1] = a[`1`]","expect":[{"line":1,"column":8,"message":"'a[`1`]' is assigned to itself."}]},
 	{"code":"a.a = a[`a`]","expect":[{"line":1,"column":7,"message":"'a[`a`]' is assigned to itself."}]},
-	{"code":"a[`a`] = a['a']","expect":[{"line":1,"column":10,"message":"'a['a']' is assigned to itself."}]}
+	{"code":"a[`a`] = a['a']","expect":[{"line":1,"column":10,"message":"'a['a']' is assigned to itself."}]},
+	{"code":"a.b.c = ( a.b ).c","expect":[{"line":1,"column":9,"message":"'(a.b).c' is assigned to itself."}]},
+	{"code":"a[b][c] = a[b][c]","expect":[{"line":1,"column":11,"message":"'a[b][c]' is assigned to itself."}]},
+	{"code":"a.b = (( a )).b","expect":[{"line":1,"column":7,"message":"'((a)).b' is assigned to itself."}]},
+	{"code":"a[`x`] = a[`x`]","expect":[{"line":1,"column":10,"message":"'a[`x`]' is assigned to itself."}]},
+	{"code":"a[`x${y}`] = a[`x${y}`]","expect":[]},
+	{"code":"a.b /* c */ .d = a.b.d","expect":[{"line":1,"column":18,"message":"'a.b.d' is assigned to itself."}]},
+	{"code":"a.b = a /* c */ .b","expect":[{"line":1,"column":7,"message":"'a/*c*/.b' is assigned to itself."}]},
+	{"code":"a[b /* c */] = a[b]","expect":[{"line":1,"column":16,"message":"'a[b]' is assigned to itself."}]}
 ]

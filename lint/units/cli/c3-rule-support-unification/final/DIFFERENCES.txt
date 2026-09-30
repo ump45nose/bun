@@ -112,7 +112,7 @@ missing: "function f(a = typeof x === undefined) { var undefined; }" [script]
     eslint: 1:29 Invalid typeof comparison value.
     bun:    (none)
 no-unsafe-negation: 102 cases: same 102
-no-duplicate-case: 342 cases: same 317, moved 17, missing 2, bun-rejects 1, eslint-rejects 1, both-reject 4
+no-duplicate-case: 354 cases: same 329, moved 17, missing 2, bun-rejects 1, eslint-rejects 1, both-reject 4
 bun-rejects: "switch (a) { case await: case await: }" [script]
     eslint: 1:26 Duplicate case label.
     bun:    PARSE
@@ -176,7 +176,7 @@ eslint-rejects: "switch (a) { case new.target: break; case new.target: break; }"
 moved: "switch (a) { case a: break;\n  case // case\n a: break; }" [script]
     eslint: 2:3 Duplicate case label.
     bun:    3:2 Duplicate case label.
-no-self-assign: 493 cases: same 484, moved 1, extra 2, eslint-rejects 2, both-reject 4
+no-self-assign: 501 cases: same 492, moved 1, extra 2, eslint-rejects 2, both-reject 4
 moved: "a.b = (\na).b" [script]
     eslint: 1:7 '(a).b' is assigned to itself.
     bun:    2:1 '(a).b' is assigned to itself.

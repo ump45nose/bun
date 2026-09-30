@@ -23,8 +23,8 @@ $D no-compare-neg-zero $O --out vectors/no-compare-neg-zero.json $R/upstream-no-
 $D use-isnan $O --out vectors/use-isnan.json $R/upstream-use-isnan.json $C/final-use-isnan.txt $C/isnan.txt $C/shadow.txt $C/chain.txt $C/dyn.txt $C/uni.txt $C/smoke.txt $C/naive.txt $C/html.txt $C/extra-pd.txt
 $D valid-typeof $O --out vectors/valid-typeof.json $R/upstream-valid-typeof.json $C/final-valid-typeof.txt $C/typeof.txt $C/shadow.txt $C/uni.txt $C/smoke.txt
 $D no-unsafe-negation $O --out vectors/no-unsafe-negation.json $R/upstream-no-unsafe-negation.json $C/final-no-unsafe-negation.txt $C/nun.txt $C/extra-nun.txt
-$D no-duplicate-case $O --out vectors/no-duplicate-case.json $R/upstream-no-duplicate-case.json $R/extra-no-duplicate-case.json $B/vectors-no-duplicate-case.json $E/dup-diff.json $E/dup-edge.json $E/dup-eslint-tests.json $E/dup-final.json $E/dup-final-module.json
-$D no-self-assign $O --out vectors/no-self-assign.json $R/upstream-no-self-assign.json $R/extra-no-self-assign.json $B/vectors-no-self-assign.json $E/self-edge.json $E/self-eslint-tests.json $E/self-static.json
+$D no-duplicate-case $O --out vectors/no-duplicate-case.json $R/upstream-no-duplicate-case.json $R/extra-no-duplicate-case.json $B/vectors-no-duplicate-case.json $E/dup-diff.json $E/dup-edge.json $E/dup-eslint-tests.json $E/dup-final.json $E/dup-final-module.json cases/own-no-duplicate-case.json
+$D no-self-assign $O --out vectors/no-self-assign.json $R/upstream-no-self-assign.json $R/extra-no-self-assign.json $B/vectors-no-self-assign.json $E/self-edge.json $E/self-eslint-tests.json $E/self-static.json cases/own-no-self-assign.json
 } > DIFFERENCES.txt 2>&1
 grep -E '^[a-z-]+: [0-9]+ cases' DIFFERENCES.txt
 # Marks the vectors whose code is a case of ESLint's own test of the rule: `"eslintTest": true`.

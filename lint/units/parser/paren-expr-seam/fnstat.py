@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Per-function numbers from the output of run.py: bytes (object file), instructions, conditional branches, calls.
+"""Per-function numbers from the assembly that `EMIT=asm run.py` writes (code BEFORE the ThinLTO link): instructions, conditional branches, calls.
 usage: fnstat.py <out dir of a tag> [--match REGEX] [--calls]   (REGEX is matched on the demangled name)
        fnstat.py <out dir A> <out dir B> --cmp [--match REGEX] [--diff N]
 --cmp prints, per function present in both, whether the normalized assembly is identical, and the deltas."""
@@ -9,7 +9,9 @@ DEFAULT = r'>::(parse_paren_expr|parse_prefix|parse_suffix|parse_async_prefix_ex
 rx = re.compile(arg('--match', DEFAULT))
 CC = re.compile(r'^j(?!mp)[a-z]+\s')
 def sizes(d):
-    o = glob.glob(d + '/*.o')[0]
+    o = glob.glob(d + '/*.o')
+    if not o: return {}
+    o = o[0]
     out = subprocess.run(['llvm-nm', '-S', '--defined-only', '-C', o], capture_output=True, text=True, errors='replace').stdout
     res = {}
     for line in out.splitlines():

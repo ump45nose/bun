@@ -19,7 +19,7 @@ oracle/diff.cjs        ESLint at the pin against the probe for one rule and list
 oracle/corpus.cjs      the eleven rules of ESLint against the probe over a list of real files
 oracle/tokens-diff.cjs the tokens of the scanner against espree's tokens over a list of real files
 oracle/extract.cjs     the cases of ESLint's own test of a rule; oracle/mark-origin.cjs marks them in the vectors
-make-vectors.sh        every case list on disk -> vectors/<rule>.json and DIFFERENCES.txt
+make-vectors.sh        every case list on disk (the earlier units' and cases/) -> vectors/<rule>.json and DIFFERENCES.txt
 make-fixtures.cjs      vectors -> fixtures/<rule>.json, what ships as test/cli/lint/rules/<rule>.json
 rules.test.ts.draft    the test that reads the fixtures. NOT RUN: `bun --lint` does not exist in the build yet.
 UPSTREAM_PORTED        the text of src/lint/UPSTREAM_PORTED.  LICENSE.eslint  the text of src/lint/LICENSE.eslint.
@@ -30,7 +30,7 @@ VECTORS   vectors/<rule>.json: { code, sourceType, jsx?, eslint: [{line, column,
           eslint null: ESLint's parser rejects. expect null: Bun's parser rejects. expect is what the probe printed
           (walk order, not deduplicated); start and length in bytes, columns in UTF-16 units.
 FIXTURES  fixtures/<rule>.json: { code, jsx?, expect: [{line, column, message}], differs?, eslint?, eslintTest? }
-          sorted, equal reports once, no case that a parser rejects. 2657 cases, 276 KB.
+          sorted, equal reports once, no case that a parser rejects. 2677 cases, 278 KB.
 
 REBUILD AND RERUN (every heavy command through /workspace/tools/lk, timeout 3600000)
   1. the worktree has its debug build (bun bd --version); ESLint with its dependencies:
@@ -46,7 +46,7 @@ REBUILD AND RERUN (every heavy command through /workspace/tools/lk, timeout 3600
   (a line break of the text as \n, a backslash as two).
 
 RESULTS (debug build with ASAN; ESLint 4618052e, espree 11.2.0, acorn 8.18.0, eslint-scope 9.1.2)
-  vectors: 2699 cases: 2618 with ESLint's answer, 21 moved, 16 missing, 2 with another name (both no-self-assign behind
+  vectors: 2719 cases: 2638 with ESLint's answer, 21 moved, 16 missing, 2 with another name (both no-self-assign behind
     a comment), 20 that both parsers reject, 21 that only ESLint's rejects, 1 that only Bun's rejects. DIFFERENCES.txt.
   real files: 16159 (9813 of node_modules, 12 large ones, 6334 of ESLint, Node's tests and Bun's tests): 16067 with the
     same reports, 0 different, 92 that ESLint's parser rejects, 445 reports. logs/corpus*.log.

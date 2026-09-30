@@ -16,8 +16,9 @@
 # The base binary is a release build of the commit that the differential harness compares against
 # (e3566be889: /workspace/notes/lint/units/parser/measure/base/bin/bun, a copy of build/release/bun of the
 # clean worktree; the directory is git-ignored, rebuild it with `bun run build:release` after a restart).
-# To classify another build (the branch under work), pass it as the base binary and another work dir, and
-# compare out/classes.jsonl.gz of the two runs; only the stages bun and classify depend on the binary.
+# The branch under work: <its bun binary> progress.mjs <work dir> runs the 38,719 sources of class A, class B and
+# of the pinned tests (18 s with a release build) and prints what changed against the saved base results:
+# fixed, lost (exit 1), widened, output, message. With --all it runs the whole corpus.
 set -e
 BASE=${1:?usage: run.sh <base bun binary> [work dir] [stage...]}
 WORK=${2:-/tmp/ledger-work}

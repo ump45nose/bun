@@ -334,5 +334,17 @@
 	{"code":"class A { #b; m(a) { switch (a) { case a.#b: break; case a.#b: break; } } }","expect":[{"line":1,"column":53,"message":"Duplicate case label."}]},
 	{"code":"class A extends B { m(a) { switch (a) { case super.x: break; case super.x: break; } } }","expect":[{"line":1,"column":62,"message":"Duplicate case label."}]},
 	{"code":"switch (a) { case import.meta: break; case import.meta: break; }","expect":[{"line":1,"column":39,"message":"Duplicate case label."}]},
-	{"code":"switch (a) { case import.meta.url: break; case import.meta.url: break; }","expect":[{"line":1,"column":43,"message":"Duplicate case label."}]}
+	{"code":"switch (a) { case import.meta.url: break; case import.meta.url: break; }","expect":[{"line":1,"column":43,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case a.class: break; case a.cl\\u0061ss: break; }","expect":[{"line":1,"column":35,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case a.b: break; case a.\\u0062: break; }","expect":[{"line":1,"column":31,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case 'a': break; case '\\u0061': break; }","expect":[]},
+	{"code":"switch (a) { case (a): break; case a: break; case ((a)): break; }","expect":[{"line":1,"column":31,"message":"Duplicate case label."},{"line":1,"column":46,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case {a: 1}: break; case {a:1}: break; }","expect":[{"line":1,"column":34,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case `a${b ? c : d}`: break; case `a${b?c:d}`: break; case `a${ b ? c : d }x`: break; }","expect":[{"line":1,"column":43,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case a?.b: break; case a?.b: break; case a ?. b: break; }","expect":[{"line":1,"column":32,"message":"Duplicate case label."},{"line":1,"column":50,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case 1: break; default: break; case 1: break; }","expect":[{"line":1,"column":45,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case function(){ return x ? 1 : 2 }: break; case function(){ return x ? 1 : 2 }: break; }","expect":[{"line":1,"column":58,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case x => x ? 1 : 2: break; case x => x ? 1 : 2: break; }","expect":[{"line":1,"column":42,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case a: case a: case a: case b: case b: }","expect":[{"line":1,"column":22,"message":"Duplicate case label."},{"line":1,"column":30,"message":"Duplicate case label."},{"line":1,"column":46,"message":"Duplicate case label."}]},
+	{"code":"switch (a) { case class { static x = 1 ? 2 : 3 }: break; case class { static x = 1 ? 2 : 3 }: break; }","expect":[{"line":1,"column":58,"message":"Duplicate case label."}]}
 ]
