@@ -1,5 +1,5 @@
 // Transpiles each listed file with the loaders js, jsx, ts, tsx and writes one JSON line per file.
-// usage: [CFG=parse|dce|default] bun corpus-worker.mjs <list file> <out jsonl>
+// usage: [CFG=parse|dce|default|minify] bun corpus-worker.mjs <list file> <out jsonl>
 import { readFileSync, appendFileSync, writeFileSync } from "node:fs";
 const [listFile, outFile] = process.argv.slice(2);
 const files = readFileSync(listFile, "utf8").split("\n").filter(Boolean);
@@ -8,6 +8,8 @@ const base = {
   parse: { trimUnusedImports: false, deadCodeElimination: false, target: "bun" },
   dce: { trimUnusedImports: false, target: "bun" },
   default: { target: "bun" },
+  // Minified names depend on the order and the use counts of the symbols.
+  minify: { target: "bun", minify: { identifiers: true, syntax: true, whitespace: true } },
 }[process.env.CFG || "parse"];
 const transpilers = {};
 for (const loader of ["js", "jsx", "ts", "tsx"]) transpilers[loader] = new Bun.Transpiler({ ...base, loader });

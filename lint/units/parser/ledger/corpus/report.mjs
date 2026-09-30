@@ -19,6 +19,8 @@
 //   D1 (the two tsc oracle probes): A2 when the checker reports a code below 2000 or in 8xxx, 17xxx, 18xxx, else A1
 //   D2 (every checker diagnostic minus the noise of a one-file program without a library):
 //      A1 no rule code, A2 a rule code of the ranges of D1, A3 rule codes only outside those ranges
+//      A1 is split: A1r an unresolved name is a reserved word (no program can declare it), A1j the JavaScript
+//      that tsc prints is rejected by the js loader of Bun, A1v the rest (valid TypeScript by every test here)
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { gzipSync } from "node:zlib";
@@ -97,6 +99,9 @@ for (const p of pinned) {
 }
 
 // ───────────────────────────── set A ─────────────────────────────
+const RESERVED = new Set(
+  "break case catch class const continue debugger default delete do else enum export extends false finally for function if import in instanceof new null return super switch this throw true try typeof var void while with".split(" "),
+);
 const aRows = [];
 for (const chk of checks.values()) {
   const rec = byId.get(chk.id);
@@ -115,11 +120,15 @@ for (const chk of checks.values()) {
   }
   const g = tsgo.out.get(chk.id)[d];
   const pins = (pinnedBySrc.get(rec.src) ?? []).filter(p => p.pin === "reject");
+  const reserved = (chk.names ?? []).filter(n => RESERVED.has(n));
+  const d2x = d2 !== "A1" ? d2 : reserved.length > 0 ? "A1r" : js !== "ok" ? "A1j" : "A1v";
   aRows.push({
     id: chk.id,
     dialect: d,
     d1,
     d2,
+    d2x,
+    reserved,
     js,
     tsgo: g[0] === 0 ? "parses" : `TS${g[1][0][0]}`,
     message: bun[1][0][0],
@@ -133,18 +142,18 @@ for (const chk of checks.values()) {
   });
 }
 {
-  const lines = ["id\tdialect\tD1\tD2\ttsc emit through Bun's js loader\ttypescript-go\tBun message\toffset\trule codes\tnoise codes\trule codes with experimentalDecorators when they differ\tpinned by\torigin family\tsets\tsource"];
+  const lines = ["id\tdialect\tD1\tD2\tD2 detail\ttsc emit through Bun's js loader\ttypescript-go\tBun message\toffset\trule codes\tnoise codes\trule codes with experimentalDecorators when they differ\tpinned by\torigin family\tsets\tsource"];
   for (const r of aRows) {
     lines.push(
-      [r.id, r.dialect, r.d1, r.d2, r.js, r.tsgo, tsv(r.message), r.offset, r.rule.map(c => c[0]).join(","), r.noise.join(","), r.decoRule ? r.decoRule.join(",") || "none" : "", r.pins.map(p => p.at).join(" "), r.family, r.rec.sets.join(","), tsv(r.rec.src)].join("\t"),
+      [r.id, r.dialect, r.d1, r.d2, r.d2x, r.js, r.tsgo, tsv(r.message), r.offset, r.rule.map(c => c[0]).join(","), r.noise.join(","), r.decoRule ? r.decoRule.join(",") || "none" : "", r.pins.map(p => p.at).join(" "), r.family, r.rec.sets.join(","), tsv(r.rec.src)].join("\t"),
     );
   }
   writeFileSync(join(outDir, "setA.tsv.gz"), gzipSync(lines.join("\n") + "\n"));
 }
 const cnt = (rows, f) => rows.filter(f).length;
 const aLine = rows =>
-  `${rows.length}\t${cnt(rows, r => r.d2 === "A1")}\t${cnt(rows, r => r.d2 === "A2")}\t${cnt(rows, r => r.d2 === "A3")}\t${cnt(rows, r => r.d1 === "A1")}\t${cnt(rows, r => r.d1 === "A2")}\t${cnt(rows, r => r.js !== "ok")}\t${cnt(rows, r => r.tsgo !== "parses")}\t${cnt(rows, r => r.pins.length > 0)}`;
-const A_HEAD = "rows\tD2 A1\tD2 A2\tD2 A3\tD1 A1\tD1 A2\ttsc emit rejected by Bun's js loader\ttypescript-go rejects\tpinned";
+  `${rows.length}\t${cnt(rows, r => r.d2x === "A1v")}\t${cnt(rows, r => r.d2x === "A1r")}\t${cnt(rows, r => r.d2x === "A1j")}\t${cnt(rows, r => r.d2 === "A2")}\t${cnt(rows, r => r.d2 === "A3")}\t${cnt(rows, r => r.d1 === "A1")}\t${cnt(rows, r => r.d1 === "A2")}\t${cnt(rows, r => r.js !== "ok")}\t${cnt(rows, r => r.tsgo !== "parses")}\t${cnt(rows, r => r.pins.length > 0)}`;
+const A_HEAD = "rows\tD2 A1v\tD2 A1r\tD2 A1j\tD2 A2\tD2 A3\tD1 A1\tD1 A2\ttsc emit rejected by Bun's js loader\ttypescript-go rejects\tpinned";
 function groupTable(rows, keyOf, file, head, extra) {
   const groups = new Map();
   for (const r of rows) {
@@ -203,15 +212,16 @@ say(`  definition D1 (grammar ranges only):       A1=${cnt(aRows, r => r.d1 === 
 say(`  definition D2 (every code minus noise):    A1=${cnt(aRows, r => r.d2 === "A1")}  A2=${cnt(aRows, r => r.d2 === "A2")}  A3=${cnt(aRows, r => r.d2 === "A3")}`);
 say(`  rows whose class differs between D1 and D2: ${cnt(aRows, r => r.d1 !== r.d2)} (D1 A1 -> D2 A3: ${cnt(aRows, r => r.d1 === "A1" && r.d2 === "A3")}, D1 A2 -> D2 A1: ${cnt(aRows, r => r.d1 === "A2" && r.d2 === "A1")})`);
 say(`  the checker reports nothing at all: ${cnt(aRows, r => r.rule.length === 0 && r.noise.length === 0)}`);
-for (const cls of ["A1", "A2", "A3"]) {
-  const list = aRows.filter(r => r.d2 === cls);
+say(`  D2 A1 split: A1v=${cnt(aRows, r => r.d2x === "A1v")} (valid by every test here)  A1r=${cnt(aRows, r => r.d2x === "A1r")} (an unresolved name is a reserved word)  A1j=${cnt(aRows, r => r.d2x === "A1j")} (tsc emit rejected by the js loader of Bun)`);
+for (const cls of ["A1v", "A1r", "A1j", "A2", "A3"]) {
+  const list = aRows.filter(r => r.d2x === cls);
   say(`  D2 ${cls}: ${list.length} rows; tsc emit rejected by Bun's js loader ${cnt(list, r => r.js !== "ok")}; typescript-go rejects ${cnt(list, r => r.tsgo !== "parses")}; pinned by an existing test ${cnt(list, r => r.pins.length > 0)}; distinct Bun messages ${new Set(list.map(r => normMessage(r.message))).size}`);
 }
 say(`  distinct Bun messages ${byMessage.size}, origin families ${byFamily.size}`);
-say(`  per origin set (D2 A1 / A2 / A3):`);
+say(`  per origin set (D2 A1v / A1r / A1j / A2 / A3):`);
 for (const s of ["bu", "td", "otg", "res", "gd", "lex", "sc", "test"]) {
   const list = aRows.filter(r => r.rec.sets.includes(s));
-  say(`    ${s.padEnd(5)} ${String(list.length).padStart(6)}   ${cnt(list, r => r.d2 === "A1")} / ${cnt(list, r => r.d2 === "A2")} / ${cnt(list, r => r.d2 === "A3")}`);
+  say(`    ${s.padEnd(5)} ${String(list.length).padStart(6)}   ${cnt(list, r => r.d2x === "A1v")} / ${cnt(list, r => r.d2x === "A1r")} / ${cnt(list, r => r.d2x === "A1j")} / ${cnt(list, r => r.d2 === "A2")} / ${cnt(list, r => r.d2 === "A3")}`);
 }
 
 // ───────────────────────────── set B ─────────────────────────────
@@ -297,13 +307,13 @@ say(`set B (the base build accepts, tsc 6.0.2 reports a parse diagnostic): ${bRo
       const a = aById.get(id);
       if (!a) continue;
       flipCounts.total++;
-      flipCounts[a.d2]++;
+      flipCounts[a.d2x] = (flipCounts[a.d2x] ?? 0) + 1;
       flipCounts[a.d1 === "A1" ? "d1A1" : "d1A2"]++;
       if (a.js !== "ok") flipCounts.jsBad++;
       flipCounts.sources.add(id);
       bump(flipCounts.byMessage, normMessage(p.messages[0] ?? ""));
       bump(flipCounts.byFile, p.at.replace(/:\d+$/, ""));
-      flips.push([p.at, p.loader, p.method, tsv(p.messages.join(" | ")), a.d1, a.d2, a.rule.map(c => `TS${c[0]}`).join(","), a.js, a.tsgo, tsv(p.src)].join("\t"));
+      flips.push([p.at, p.loader, p.method, tsv(p.messages.join(" | ")), a.d1, a.d2x, a.rule.map(c => `TS${c[0]}`).join(","), a.js, a.tsgo, tsv(p.src)].join("\t"));
     }
     void bById;
   }
@@ -312,7 +322,7 @@ say(`set B (the base build accepts, tsc 6.0.2 reports a parse diagnostic): ${bRo
   say("");
   say(`pinned expectations of the existing tests: ${pinned.length} rows (${unknown} with a source that is not in the corpus)`);
   for (const [k, n] of [...counts].sort()) say(`  ${String(n).padStart(5)}  ${k}`);
-  say(`  a set A fix flips ${flipCounts.total} pinned rejections (${flipCounts.sources.size} distinct sources): D2 A1=${flipCounts.A1} A2=${flipCounts.A2} A3=${flipCounts.A3}; D1 A1=${flipCounts.d1A1} A2=${flipCounts.d1A2}; tsc emit rejected by Bun's js loader ${flipCounts.jsBad}`);
+  say(`  a set A fix flips ${flipCounts.total} pinned rejections (${flipCounts.sources.size} distinct sources): D2 A1v=${flipCounts.A1v ?? 0} A1r=${flipCounts.A1r ?? 0} A1j=${flipCounts.A1j ?? 0} A2=${flipCounts.A2} A3=${flipCounts.A3}; D1 A1=${flipCounts.d1A1} A2=${flipCounts.d1A2}; tsc emit rejected by Bun's js loader ${flipCounts.jsBad}`);
   say(`  by test file: ${top(flipCounts.byFile, 8)}`);
   say(`  by pinned message: ${top(flipCounts.byMessage, 12)}`);
 }
@@ -332,8 +342,10 @@ say(`set B (the base build accepts, tsc 6.0.2 reports a parse diagnostic): ${bRo
     if (/\/\/\/\s*<reference/.test(src)) return "triple-slash reference directive: malformed directive (TS1084 only in typescript-go's parser) or position of TS1453";
     if (/\b(type|interface)\s+await\b/.test(src)) return "`await` as the name of an exported type alias or interface";
     if (/export\s+type\s*(=|default\b)/.test(src)) return "`export type =` and `export type default`: other first code";
-    if (/\b(as|satisfies)\b/.test(src) && /';' expected/.test(g) && /^0:/.test(a)) return "`as` / `satisfies` followed by an operator that binds tighter than the one before it: typescript-go stops (TypeScript issue 63527), tsc 6.0.2 continues";
+    if (/\b(as|satisfies)\b/.test(src) && /^0:/.test(a) && /TS1005/.test(g)) return "`as` / `satisfies` followed by an operator that binds tighter than the one before it: typescript-go stops (TypeScript issue 63527), tsc 6.0.2 continues";
     if (/TS1127/.test(a) && /TS1127/.test(g)) return "TS1127 Invalid character: length 0 in tsc 6.0.2, length 1 in typescript-go";
+    if (/TS1351/.test(a) && /TS(1125|1177|1178)/.test(g)) return "numeric literal prefix without digits (`0x`, `0b`, `0o`): TS1351 in tsc 6.0.2, TS1125 / TS1177 / TS1178 in typescript-go";
+    if (!/^[\x00-\x7f]*$/.test(src)) return "source is not ASCII: tsc counts UTF-16 code units, typescript-go bytes";
     if (/\?/.test(src)) return "`?` at a type position (JSDoc unknown and nullable types): tsc 6.0.2 reads a lone `?` as a type, typescript-go requires a type behind it";
     return "other";
   };

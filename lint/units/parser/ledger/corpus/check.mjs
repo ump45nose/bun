@@ -5,7 +5,8 @@
 // Reads  <out>/a-rows.jsonl (join.mjs).
 // Writes <out>/a-check.jsonl  {"id","dialect","codes":[[code, message of its first report], ...],
 //                              "decoCodes": the same with experimentalDecorators + emitDecoratorMetadata,
-//                              only when the set of codes differs, "threw": text when the program threw}
+//                              only when the set of codes differs, "names": every name that a diagnostic of an
+//                              unresolved name quotes (TS2304, TS2503, TS2552), "threw": text when the program threw}
 //        <out>/a-emit.jsonl   {"id","src": the JavaScript that ts.transpileModule prints} (input of bun-side.mjs,
 //                              configurations js and jsx)
 // The program has one file and no library (noLib, noResolve), so the checker reports unresolved names and
@@ -59,8 +60,16 @@ function programCodes(src, dialect, deco) {
   const sf = program.getSourceFile(fileName);
   const all = [...program.getSyntacticDiagnostics(sf), ...program.getSemanticDiagnostics(sf)];
   const seen = new Map();
-  for (const d of all) if (!seen.has(d.code)) seen.set(d.code, ts.flattenDiagnosticMessageText(d.messageText, " ").slice(0, 160));
-  return [...seen].sort((a, b) => a[0] - b[0]);
+  const names = new Set();
+  for (const d of all) {
+    const text = ts.flattenDiagnosticMessageText(d.messageText, " ");
+    if (!seen.has(d.code)) seen.set(d.code, text.slice(0, 160));
+    if (d.code === 2304 || d.code === 2503 || d.code === 2552) {
+      const m = /'([^']*)'/.exec(text);
+      if (m) names.add(m[1]);
+    }
+  }
+  return { codes: [...seen].sort((a, b) => a[0] - b[0]), names: [...names] };
 }
 
 function emit(src, dialect, deco) {
@@ -85,8 +94,10 @@ let threw = 0;
 for (const r of rows) {
   const out = { id: r.id, dialect: r.dialect };
   try {
-    out.codes = programCodes(r.src, r.dialect, false);
-    const deco = programCodes(r.src, r.dialect, true);
+    const plain = programCodes(r.src, r.dialect, false);
+    out.codes = plain.codes;
+    if (plain.names.length) out.names = plain.names;
+    const deco = programCodes(r.src, r.dialect, true).codes;
     if (JSON.stringify(deco.map(c => c[0])) !== JSON.stringify(out.codes.map(c => c[0]))) out.decoCodes = deco;
   } catch (e) {
     out.codes = out.codes ?? [];

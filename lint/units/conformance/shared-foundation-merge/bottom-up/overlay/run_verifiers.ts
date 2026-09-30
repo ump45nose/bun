@@ -91,6 +91,8 @@ const tasks: Task[] = [
   { id: "ccds.td.drive.empty", cmd: b("check-contract-default-spawn/top-down/drive.ts", "empty") },
   { id: "ccds.td.drive.plain", cmd: b("check-contract-default-spawn/top-down/drive.ts", "plain") },
   { id: "ccds.td.drive.plain-configured", cmd: b("check-contract-default-spawn/top-down/drive.ts", "plain-configured") },
+  { id: "ccds.td.drive_spawn.operands", cmd: b("check-contract-default-spawn/top-down/drive_spawn.ts", "conformance/types/tuple", "operands") },
+  { id: "ccds.td.drive_spawn.manifest", cmd: b("check-contract-default-spawn/top-down/drive_spawn.ts", "conformance/types/tuple", "manifest") },
   { id: "oe.bu.expectations.test", cmd: t("oracle-and-expectations/bottom-up/prototype/expectations.test.ts"), test: true },
   { id: "oe.bu.verify_list", cmd: b("oracle-and-expectations/bottom-up/prototype/verify_list.ts") },
   { id: "oe.td.selfcheck", cmd: b("oracle-and-expectations/top-down/prototype/selfcheck.ts") },
