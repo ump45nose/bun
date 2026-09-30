@@ -261,7 +261,7 @@ async function runGo(corpus, work, tsgo) {
   }
   const fd = openSync(out, "a");
   for (let i = 0; i < corpus.length; i++) {
-    writeSync(fd, JSON.stringify({ i, g: { ts: got[i * 3], tsx: got[i * 3 + 1], dts: got[i * 3 + 2] } }) + "\n");
+    writeSync(fd, JSON.stringify({ i: corpus[i].i, g: { ts: got[i * 3], tsx: got[i * 3 + 1], dts: got[i * 3 + 2] } }) + "\n");
   }
   closeSync(fd);
 }

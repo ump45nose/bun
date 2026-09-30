@@ -10,7 +10,7 @@ function bun(loader, src) {
   try { return { ok: true, out: T[loader].transformSync(src).replace(/"input\.[jt]sx?"/g, '"input.X"') }; }
   catch (e) { const l = e?.errors?.length ? e.errors : [e]; return { ok: false, err: l.map(x => String(x.message)) }; }
 }
-const files = [...new Bun.Glob("**/*.{ts,tsx,js,jsx,mjs,cjs}").scanSync({ cwd: root, absolute: true })].sort();
+const files = [...new Bun.Glob((process.argv[5] ?? "**") + "/*.{ts,tsx,js,jsx,mjs,cjs}").scanSync({ cwd: root, absolute: true })].sort();
 writeFileSync(outPath, "");
 const c = {};
 const bump = k => (c[k] = (c[k] ?? 0) + 1);
