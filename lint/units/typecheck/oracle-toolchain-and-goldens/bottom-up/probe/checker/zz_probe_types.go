@@ -8,6 +8,7 @@ package checker
 import (
 	"context"
 	"fmt"
+	"math"
 	"reflect"
 	"sort"
 	"strconv"
@@ -1049,6 +1050,9 @@ func probeNodeRef(n *ast.Node) string {
 // ProbeDrive runs one step on the files and returns one line per call. Each step calls entry points of one layer
 // group in source order, so that a port can be compared when that group lands:
 //
+//	lit         a fixed list of literal, union, intersection and template literal constructions over the intrinsic types
+//	tuple       a fixed list of array and tuple constructions over the intrinsic types
+//	proptypes   getTypeOfSymbol of every property of every object, union and intersection type
 //	declared    getDeclaredTypeOfSymbol of every class, interface, type alias, enum, enum member and type parameter
 //	typenodes   getTypeFromTypeNode of every type node
 //	symtypes    getTypeOfSymbol of every declaration with a value meaning
@@ -1083,6 +1087,70 @@ func ProbeDrive(c *Checker, files []*ast.SourceFile, step string, since int) []s
 		return d.sref(s)
 	}
 	switch step {
+	case "lit":
+		say := func(label string, t *Type) { out = append(out, "LIT "+label+" "+tref(t)) }
+		probeGuard(&out, step, func() {
+			a := c.getStringLiteralType("a")
+			say(`"a"`, a)
+			say(`"a" again`, c.getStringLiteralType("a"))
+			b := c.getStringLiteralType("b")
+			say(`"b"`, b)
+			one := c.getNumberLiteralType(jsnum.Number(1))
+			say("1", one)
+			say("0", c.getNumberLiteralType(jsnum.Number(0)))
+			say("-0", c.getNumberLiteralType(jsnum.Number(math.Copysign(0, -1))))
+			say("12n", c.getBigIntLiteralType(jsnum.NewPseudoBigInt("12", false)))
+			fa := c.getFreshTypeOfLiteralType(a)
+			say(`fresh "a"`, fa)
+			say(`regular of fresh "a"`, c.getRegularTypeOfLiteralType(fa))
+			sn := c.getUnionType([]*Type{c.stringType, c.numberType})
+			say("string | number", sn)
+			say("number | string", c.getUnionType([]*Type{c.numberType, c.stringType}))
+			ab := c.getUnionType([]*Type{b, a})
+			say(`"b" | "a"`, ab)
+			say(`"a" | "b" | string`, c.getUnionType([]*Type{a, b, c.stringType}))
+			say(`("b" | "a") | 1 | undefined | null`, c.getUnionType([]*Type{ab, one, c.undefinedType, c.nullType}))
+			say(`fresh "a" | "b"`, c.getUnionType([]*Type{fa, b}))
+			say("true | false", c.getUnionType([]*Type{c.trueType, c.falseType}))
+			say("never | string", c.getUnionType([]*Type{c.neverType, c.stringType}))
+			say("any | string", c.getUnionType([]*Type{c.anyType, c.stringType}))
+			say("unknown | string", c.getUnionType([]*Type{c.unknownType, c.stringType}))
+			say(`"a" | "b" | string, no reduction`, c.getUnionTypeEx([]*Type{a, b, c.stringType}, UnionReductionNone, nil, nil))
+			say("string & number", c.getIntersectionType([]*Type{c.stringType, c.numberType}))
+			say(`string & "a"`, c.getIntersectionType([]*Type{c.stringType, a}))
+			say("(string | number) & string", c.getIntersectionType([]*Type{sn, c.stringType}))
+			say(`("b" | "a") & ("b" | 1)`, c.getIntersectionType([]*Type{ab, c.getUnionType([]*Type{b, one})}))
+			say("{} & string", c.getIntersectionType([]*Type{c.emptyObjectType, c.stringType}))
+			say("unknown & string", c.getIntersectionType([]*Type{c.unknownType, c.stringType}))
+			say("object & {}", c.getIntersectionType([]*Type{c.nonPrimitiveType, c.emptyObjectType}))
+			say("`id-${number}`", c.getTemplateLiteralType([]string{"id-", ""}, []*Type{c.numberType}))
+			say("`id-${\"a\" | \"b\"}`", c.getTemplateLiteralType([]string{"id-", ""}, []*Type{ab}))
+		})
+	case "tuple":
+		say := func(label string, t *Type) { out = append(out, "TUPLE "+label+" "+tref(t)) }
+		probeGuard(&out, step, func() {
+			say("string[]", c.createArrayType(c.stringType))
+			say("string[] again", c.createArrayType(c.stringType))
+			say("readonly number[]", c.createArrayTypeEx(c.numberType, true))
+			sn := c.createTupleType([]*Type{c.stringType, c.numberType})
+			say("[string, number]", sn)
+			say("[string, number] again", c.createTupleType([]*Type{c.stringType, c.numberType}))
+			say("[string, number?]", c.createTupleTypeEx([]*Type{c.stringType, c.numberType}, []TupleElementInfo{{flags: ElementFlagsRequired}, {flags: ElementFlagsOptional}}, false))
+			say("readonly [string, ...number[]]", c.createTupleTypeEx([]*Type{c.stringType, c.numberType}, []TupleElementInfo{{flags: ElementFlagsRequired}, {flags: ElementFlagsRest}}, true))
+			say("[...string[], number]", c.createTupleTypeEx([]*Type{c.stringType, c.numberType}, []TupleElementInfo{{flags: ElementFlagsRest}, {flags: ElementFlagsRequired}}, false))
+			say("[]", c.createTupleType(nil))
+			say("[[string, number]]", c.createTupleType([]*Type{sn}))
+			say("[string, number][]", c.createArrayType(sn))
+		})
+	case "proptypes":
+		each(func(t *Type) {
+			if t.flags&(TypeFlagsObject|TypeFlagsUnionOrIntersection) == 0 {
+				return
+			}
+			for _, p := range c.getPropertiesOfType(t) {
+				out = append(out, fmt.Sprintf("PROPTYPE %s %s %s", tref(t), d.name(p.Name), tref(c.getTypeOfSymbol(p))))
+			}
+		})
 	case "declared":
 		for _, n := range probeNodes(files) {
 			switch n.Kind {

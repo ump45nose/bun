@@ -113,7 +113,11 @@ pub fn build_file(a: &AstContext<'_>, bundle: &Bundle, dump: &FileDump) -> Vec<N
     let count = dump.nodes.len() / NODE_WORDS;
     let mut ids: Vec<NodeId> = Vec::with_capacity(count);
     for &[kind, pos, end, flags, _, _, _] in dump.nodes.as_chunks::<NODE_WORDS>().0 {
-        let kind = bundle.kinds.get(kind as usize).copied().unwrap_or(Kind::Unknown);
+        let kind = bundle
+            .kinds
+            .get(kind as usize)
+            .copied()
+            .unwrap_or(Kind::Unknown);
         ids.push(a.raw_new_node(
             default_def(kind),
             kind,
@@ -122,7 +126,12 @@ pub fn build_file(a: &AstContext<'_>, bundle: &Bundle, dump: &FileDump) -> Vec<N
         ));
     }
     let id = |index: i32| ids.get(index as usize).copied().unwrap_or(NodeId::NIL);
-    let field = |index: i32| bundle.fields.get(index as usize).map_or(&[][..], Vec::as_slice);
+    let field = |index: i32| {
+        bundle
+            .fields
+            .get(index as usize)
+            .map_or(&[][..], Vec::as_slice)
+    };
     let list_count = dump.lists.len() / LIST_WORDS;
     let mut elements: Vec<Vec<NodeId>> = vec![Vec::new(); list_count];
     let mut jsdoc: Vec<(NodeId, Vec<NodeId>)> = Vec::new();
@@ -150,8 +159,12 @@ pub fn build_file(a: &AstContext<'_>, bundle: &Bundle, dump: &FileDump) -> Vec<N
         let nodes = elements.get(index).map_or(&[][..], Vec::as_slice);
         let loc = new_text_range(pos, end);
         let made = if kind == 1 {
-            a.raw_new_modifier_list(nodes, loc, ModifierFlags::from_bits_retain(modifier_flags as u32))
-                .as_node_list()
+            a.raw_new_modifier_list(
+                nodes,
+                loc,
+                ModifierFlags::from_bits_retain(modifier_flags as u32),
+            )
+            .as_node_list()
         } else {
             a.raw_new_list(nodes, loc)
         };
@@ -162,8 +175,19 @@ pub fn build_file(a: &AstContext<'_>, bundle: &Bundle, dump: &FileDump) -> Vec<N
     for &[node, field_index, kind, value] in dump.scalars.as_chunks::<SCALAR_WORDS>().0 {
         let raw = match kind {
             0 => RawValue::Bool(value != 0),
-            1 => RawValue::Kind(bundle.kinds.get(value as usize).copied().unwrap_or(Kind::Unknown)),
-            2 => RawValue::Text(bundle.strings.get(value as usize).map_or(&[][..], Vec::as_slice)),
+            1 => RawValue::Kind(
+                bundle
+                    .kinds
+                    .get(value as usize)
+                    .copied()
+                    .unwrap_or(Kind::Unknown),
+            ),
+            2 => RawValue::Text(
+                bundle
+                    .strings
+                    .get(value as usize)
+                    .map_or(&[][..], Vec::as_slice),
+            ),
             _ => RawValue::U32(value as u32),
         };
         if !a.raw_set(id(node), field(field_index), raw) {

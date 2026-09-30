@@ -196,7 +196,9 @@ impl<'t> Json<'t> {
 fn push_code_point(out: &mut Vec<u8>, code: u32) {
     match code {
         0..=0x7F => out.push(code as u8),
-        0x80..=0x7FF => out.extend_from_slice(&[0xC0 | (code >> 6) as u8, 0x80 | (code & 0x3F) as u8]),
+        0x80..=0x7FF => {
+            out.extend_from_slice(&[0xC0 | (code >> 6) as u8, 0x80 | (code & 0x3F) as u8])
+        }
         0x800..=0xFFFF => out.extend_from_slice(&[
             0xE0 | (code >> 12) as u8,
             0x80 | ((code >> 6) & 0x3F) as u8,

@@ -1,5 +1,5 @@
 // Research prototype of the same blocks for the other form of the list: reference_instances.tsv holds every instance, so every difference is a name.
-// usage: CGT_ASM=<assembled runner root> CGT_HOME=<conformance directory with corpus/ and reference_instances.tsv> bun test ./instances.test.ts
+// usage: CGT_ASM=<assembled runner root> CGT_HOME=<conformance directory with corpus/> [CGT_FX=<directory of reference_counts.json and reference_instances.tsv>] bun test ./instances.test.ts
 import { describe, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -30,12 +30,16 @@ const corpus = R.loadCorpus(layout);
 const cases: Map<string, string> = R.indexCases(layout.casesRoot);
 const rowOf = (f: any) => `${f.name}\t${f.status}\t${f.reason}\t${f.kind ?? ""}`;
 const group = (casePath: string) => Bun.hash.crc32(casePath) % 256;
-// The rows of the list whose case is in a set of cases.
-const rowsOf = (casePaths: Set<string>) => lines.filter(l => casePaths.has(cases.get(R.caseBaseName(l.slice(0, l.indexOf("\t")))) ?? ""));
+// The rows of the list by the group of their case, made once: a debug build needs a second for it.
+const rowsByGroup = new Map<number, string[]>();
+for (const l of lines) {
+  const k = group(cases.get(R.caseBaseName(l.slice(0, l.indexOf("\t")))) ?? "");
+  rowsByGroup.set(k, [...(rowsByGroup.get(k) ?? []), l]);
+}
 
 describe("listed enumeration", () => {
   test("the list is the pinned one", () => {
-    expect({ rows: lines.length, sha256: createHash("sha256").update(text).digest("hex") }).toEqual(pins.instancesFile);
+    expect({ rows: lines.length, sha256: createHash("sha256").update(text).digest("hex") }).toEqual(pins.list);
   });
 
   // About 48 cases each: a debug build gets through one group within the time of one test.
@@ -43,7 +47,7 @@ describe("listed enumeration", () => {
     const sample = [...cases.values()].filter(p => group(p) === k).sort();
     const got = sample.flatMap(p => R.enumerateCase(layout.casesRoot, p)).map((i: any) => rowOf(R.factsOf(corpus, i)));
     expect(got.length).toBeGreaterThan(20);
-    expect(got.sort()).toEqual(rowsOf(new Set(sample)).sort());
+    expect(got.sort()).toEqual((rowsByGroup.get(k) ?? []).slice().sort());
   });
 
   test.skipIf(small)(

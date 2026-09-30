@@ -19,6 +19,7 @@ unsafe extern "C" fn highway_index_of_char(
     haystack_len: usize,
     needle: u8,
 ) -> usize {
+    // SAFETY: the caller passes a pointer and a length that describe one live allocation.
     let h = unsafe { core::slice::from_raw_parts(haystack, haystack_len) };
     h.iter().position(|&c| c == needle).unwrap_or(haystack_len)
 }
@@ -30,6 +31,7 @@ unsafe extern "C" fn highway_index_of_any_char(
     chars: *const u8,
     chars_len: usize,
 ) -> usize {
+    // SAFETY: the caller passes a pointer and a length that describe one live allocation.
     let (t, cs) = unsafe {
         (
             core::slice::from_raw_parts(text, text_len),
@@ -46,6 +48,7 @@ unsafe extern "C" fn highway_memmem(
     needle: *const u8,
     needle_len: usize,
 ) -> *const u8 {
+    // SAFETY: the caller passes a pointer and a length that describe one live allocation.
     let (h, n) = unsafe {
         (
             core::slice::from_raw_parts(haystack, haystack_len),
@@ -59,6 +62,7 @@ unsafe extern "C" fn highway_memmem(
         return core::ptr::null();
     }
     match (0..=h.len() - n.len()).find(|&i| h[i..i + n.len()] == *n) {
+        // SAFETY: the caller passes a pointer and a length that describe one live allocation.
         Some(i) => unsafe { haystack.add(i) },
         None => core::ptr::null(),
     }
@@ -70,6 +74,7 @@ unsafe extern "C" fn highway_last_index_of_char(
     haystack_len: usize,
     needle: u8,
 ) -> usize {
+    // SAFETY: the caller passes a pointer and a length that describe one live allocation.
     let h = unsafe { core::slice::from_raw_parts(haystack, haystack_len) };
     h.iter().rposition(|&c| c == needle).unwrap_or(haystack_len)
 }
@@ -80,6 +85,7 @@ unsafe extern "C" fn highway_index_of_not_char(
     haystack_len: usize,
     value: u8,
 ) -> usize {
+    // SAFETY: the caller passes a pointer and a length that describe one live allocation.
     let h = unsafe { core::slice::from_raw_parts(haystack, haystack_len) };
     h.iter().position(|&c| c != value).unwrap_or(haystack_len)
 }
@@ -90,6 +96,7 @@ unsafe extern "C" fn highway_count_char(
     haystack_len: usize,
     needle: u8,
 ) -> usize {
+    // SAFETY: the caller passes a pointer and a length that describe one live allocation.
     let h = unsafe { core::slice::from_raw_parts(haystack, haystack_len) };
     h.iter().filter(|&&c| c == needle).count()
 }
@@ -101,6 +108,7 @@ unsafe extern "C" fn highway_last_index_of_any_char(
     chars: *const u8,
     chars_len: usize,
 ) -> usize {
+    // SAFETY: the caller passes a pointer and a length that describe one live allocation.
     let (t, cs) = unsafe {
         (
             core::slice::from_raw_parts(text, text_len),
@@ -117,6 +125,7 @@ unsafe extern "C" fn highway_memrmem(
     needle: *const u8,
     needle_len: usize,
 ) -> usize {
+    // SAFETY: the caller passes a pointer and a length that describe one live allocation.
     let (h, n) = unsafe {
         (
             core::slice::from_raw_parts(haystack, haystack_len),

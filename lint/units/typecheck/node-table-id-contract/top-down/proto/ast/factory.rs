@@ -97,7 +97,12 @@ impl<'a> NodeFactory<'a> {
         for modifier in nodes {
             flags |= modifier_to_flag(modifier.kind(self.a));
         }
-        ModifierListId(self.a.arena.new_list(nodes, core::undefined_text_range(), flags).0)
+        ModifierListId(
+            self.a
+                .arena
+                .new_list(nodes, core::undefined_text_range(), flags)
+                .0,
+        )
     }
     pub fn new_modifier(&self, kind: Kind) -> NodeId {
         self.new_token(kind)
@@ -177,11 +182,17 @@ impl<'v, 'a> NodeVisitor<'v, 'a> {
         if !visited.is_nil() && visited.kind(a) == Kind::SyntaxList {
             let nodes = a.list_nodes(visited.as_syntax_list(a).children);
             if nodes.len() != 1 {
-                a.unhandled("Expected only a single node to be written to output", visited);
+                a.unhandled(
+                    "Expected only a single node to be written to output",
+                    visited,
+                );
             }
             visited = nodes.at(0usize);
             if !visited.is_nil() && visited.kind(a) == Kind::SyntaxList {
-                a.unhandled("The result of visiting and lifting a Node may not be SyntaxList", visited);
+                a.unhandled(
+                    "The result of visiting and lifting a Node may not be SyntaxList",
+                    visited,
+                );
             }
         }
         visited
@@ -343,10 +354,17 @@ impl<'v, 'a> NodeVisitor<'v, 'a> {
         }
         match nodes.as_slice() {
             [only] => node = *only,
-            _ => node = self.factory.new_block(self.factory.new_node_list(&nodes), true),
+            _ => {
+                node = self
+                    .factory
+                    .new_block(self.factory.new_node_list(&nodes), true)
+            }
         }
         if node.kind(a) == Kind::SyntaxList {
-            a.unhandled("The result of visiting and lifting a Node may not be SyntaxList", node);
+            a.unhandled(
+                "The result of visiting and lifting a Node may not be SyntaxList",
+                node,
+            );
         }
         node
     }

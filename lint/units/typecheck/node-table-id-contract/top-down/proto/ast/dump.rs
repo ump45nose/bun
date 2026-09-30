@@ -175,7 +175,12 @@ impl<'a, 's> Dump<'a, 's> {
         for &(name, ty, value) in &fields {
             match ty {
                 SlotType::Kind => {
-                    let _ = write!(self.line, " {}={}", name, Kind::from_u16(value as u16).string());
+                    let _ = write!(
+                        self.line,
+                        " {}={}",
+                        name,
+                        Kind::from_u16(value as u16).string()
+                    );
                 }
                 SlotType::TokenFlags => {
                     let _ = write!(self.line, " {name}={value:#x}");

@@ -45,7 +45,11 @@ fn build_min(a: &AstContext<'_>) -> NodeId {
 fn min_table() -> NodeTable {
     let a = AstContext::for_building();
     let root = build_min(&a);
-    let table = a.finish(root, b"const x: number = \"s\";\n".to_vec(), FileData::default());
+    let table = a.finish(
+        root,
+        b"const x: number = \"s\";\n".to_vec(),
+        FileData::default(),
+    );
     assert_eq!(a.log.count(), 0);
     table
 }
@@ -62,14 +66,14 @@ const MIN_GOLDEN: &str = "root KindSourceFile [0,23) f=0x0
   .EndOfFileToken: KindEndOfFile [22,23) f=0x0
 ";
 
-fn dump_text(a: &AstContext<'_>, root: NodeId) -> String {
+fn dump_text(a: &AstContext<'_>, root: NodeId) -> Vec<u8> {
     let mut text = Vec::new();
     let mut sink = |line: &[u8]| {
         text.extend_from_slice(line);
         text.push(b'\n');
     };
     Dump::new(a, false, &mut sink).node("root", root, NodeId::NIL, 0);
-    String::from_utf8_lossy(&text).into_owned()
+    text
 }
 
 #[test]
@@ -104,8 +108,14 @@ fn factory_finish_and_read() {
         seen.push(child.kind(&a));
         false
     });
-    assert_eq!(seen, [Kind::Identifier, Kind::NumberKeyword, Kind::StringLiteral]);
-    assert_eq!(dump_text(&a, file), MIN_GOLDEN);
+    assert_eq!(
+        seen,
+        [Kind::Identifier, Kind::NumberKeyword, Kind::StringLiteral]
+    );
+    assert_eq!(
+        bstr::BStr::new(&dump_text(&a, file)),
+        bstr::BStr::new(MIN_GOLDEN.as_bytes())
+    );
     assert_eq!(a.log.count(), 0);
 
     // A nil read, a wrong cast and an unhandled accessor give zero values and one log entry each.
@@ -134,7 +144,13 @@ fn binder_writes_then_freeze_and_share() {
         let file = table.root;
         let statement = file.statements(&a).at(0usize);
         let declaration = a
-            .list_nodes(statement.as_variable_statement(&a).declaration_list.as_variable_declaration_list(&a).declarations)
+            .list_nodes(
+                statement
+                    .as_variable_statement(&a)
+                    .declaration_list
+                    .as_variable_declaration_list(&a)
+                    .declarations,
+            )
             .at(0usize);
         a.set_flags(file, file.flags(&a) | NodeFlags::EXPORT_CONTEXT);
         assert!(a.set_slot_by_table(declaration, &crate::ast::SYMBOL_SLOT, 1));
@@ -190,8 +206,14 @@ fn binder_writes_then_freeze_and_share() {
         assert_eq!(read.name, b"x");
         assert_eq!(read.value_declaration, declaration);
         assert_eq!(read.declarations.at(0usize), declaration);
-        assert_eq!(a.symbol_table_get(crate::ids::SymbolTableId(locals.0 + delta), b"x"), symbol);
-        assert!(a.symbol_table_get(crate::ids::SymbolTableId(locals.0 + delta), b"y").is_nil());
+        assert_eq!(
+            a.symbol_table_get(crate::ids::SymbolTableId(locals.0 + delta), b"x"),
+            symbol
+        );
+        assert!(
+            a.symbol_table_get(crate::ids::SymbolTableId(locals.0 + delta), b"y")
+                .is_nil()
+        );
         assert_eq!(a.flow_node(statement.flow_node_data(&a).flow_node).flags, 2);
         let other_file = other.root;
         assert_eq!(other_file.statements(&a).at(0usize).parent(&a), other_file);
@@ -200,7 +222,12 @@ fn binder_writes_then_freeze_and_share() {
         // A checker makes a node over a file node, as checker.go:5054 does, and writes only its own nodes.
         let f = new_node_factory(&a, NodeFactoryHooks::default());
         let this = f.new_keyword_expression(Kind::ThisKeyword);
-        let reference = f.new_property_access_expression(this, NodeId::NIL, declaration.name(&a), NodeFlags::empty());
+        let reference = f.new_property_access_expression(
+            this,
+            NodeId::NIL,
+            declaration.name(&a),
+            NodeFlags::empty(),
+        );
         a.set_parent(reference.expression(&a), reference);
         a.set_parent(reference, statement);
         assert!(a.set_slot_by_table(reference, &crate::ast::FLOW_NODE_SLOT, 7));
@@ -213,7 +240,10 @@ fn binder_writes_then_freeze_and_share() {
         a.set_parent(declaration, reference);
         a.set_flags(declaration, NodeFlags::empty());
         assert_eq!(a.log.count(), 2);
-        assert_eq!(declaration.parent(&a).kind(&a), Kind::VariableDeclarationList);
+        assert_eq!(
+            declaration.parent(&a).kind(&a),
+            Kind::VariableDeclarationList
+        );
     }
 }
 
@@ -224,13 +254,29 @@ fn update_clone_and_visit() {
     let f = new_node_factory(&a, NodeFactoryHooks::default());
     let statement = file.statements(&a).at(0usize);
     let declaration = a
-        .list_nodes(statement.as_variable_statement(&a).declaration_list.as_variable_declaration_list(&a).declarations)
+        .list_nodes(
+            statement
+                .as_variable_statement(&a)
+                .declaration_list
+                .as_variable_declaration_list(&a)
+                .declarations,
+        )
         .at(0usize);
     // Update with the same members returns the node; with a new member it returns a new node with the old range.
     let d = declaration.as_variable_declaration(&a);
-    assert_eq!(f.update_variable_declaration(declaration, d.name, d.exclamation_token, d.type_node, d.initializer), declaration);
+    assert_eq!(
+        f.update_variable_declaration(
+            declaration,
+            d.name,
+            d.exclamation_token,
+            d.type_node,
+            d.initializer
+        ),
+        declaration
+    );
     let other = f.new_numeric_literal(b"1", TokenFlags::empty());
-    let updated = f.update_variable_declaration(declaration, d.name, d.exclamation_token, d.type_node, other);
+    let updated =
+        f.update_variable_declaration(declaration, d.name, d.exclamation_token, d.type_node, other);
     assert_ne!(updated, declaration);
     assert_eq!(updated.loc(&a), declaration.loc(&a));
     assert_eq!(updated.initializer(&a), other);
@@ -249,10 +295,19 @@ fn update_clone_and_visit() {
     assert_ne!(visited, declaration);
     assert_eq!(visited.initializer(&a), other);
     assert_eq!(visited.name(&a), d.name);
-    let modifiers = f.new_modifier_list(&[f.new_modifier(Kind::ExportKeyword), f.new_modifier(Kind::DeclareKeyword)]);
-    assert_eq!(a.list_modifier_flags(modifiers), ModifierFlags::EXPORT | ModifierFlags::AMBIENT);
+    let modifiers = f.new_modifier_list(&[
+        f.new_modifier(Kind::ExportKeyword),
+        f.new_modifier(Kind::DeclareKeyword),
+    ]);
+    assert_eq!(
+        a.list_modifier_flags(modifiers),
+        ModifierFlags::EXPORT | ModifierFlags::AMBIENT
+    );
     assert_eq!(a.def(f.new_token(Kind::TrueKeyword)), Def::Token);
-    assert_eq!(a.def(f.new_keyword_expression(Kind::TrueKeyword)), Def::KeywordExpression);
+    assert_eq!(
+        a.def(f.new_keyword_expression(Kind::TrueKeyword)),
+        Def::KeywordExpression
+    );
     assert_eq!(a.log.count(), 0);
 }
 
@@ -268,11 +323,17 @@ fn importer_gives_the_reference_tree() {
     let (table, faults, _) = import_file(&bundle, &bundle.files[0]);
     assert_eq!(faults, 0);
     let a = AstContext::for_binding(&table);
-    assert_eq!(dump_text(&a, table.root), MIN_GOLDEN);
+    assert_eq!(
+        bstr::BStr::new(&dump_text(&a, table.root)),
+        bstr::BStr::new(MIN_GOLDEN.as_bytes())
+    );
     // The importer made the nodes in another order than the factory did: the tables are the same.
     let by_factory = min_table();
     let b = AstContext::for_binding(&by_factory);
-    assert_eq!(tree_digest(&a, table.root, false), tree_digest(&b, by_factory.root, false));
+    assert_eq!(
+        tree_digest(&a, table.root, false),
+        tree_digest(&b, by_factory.root, false)
+    );
     assert_eq!(table.node_count(), by_factory.node_count());
     for id in 1..=table.node_count() {
         assert_eq!(NodeId(id).kind(&a), NodeId(id).kind(&b));
@@ -280,18 +341,46 @@ fn importer_gives_the_reference_tree() {
     }
 }
 
+// Splits at a byte with the repository's own search.
+fn split_at_byte(text: &[u8], byte: u8) -> Vec<&[u8]> {
+    let mut parts = Vec::new();
+    let mut rest = text;
+    while let Some(at) = bun_core::strings::index_of_char(rest, byte) {
+        parts.push(rest.get(..at as usize).unwrap_or(&[]));
+        rest = rest.get(at as usize + 1..).unwrap_or(&[]);
+    }
+    parts.push(rest);
+    parts
+}
+
+fn parse_number(text: &[u8], radix: u64) -> u64 {
+    let mut value = 0u64;
+    for b in text {
+        let digit = match b {
+            b'0'..=b'9' => u64::from(b - b'0'),
+            b'a'..=b'f' => u64::from(b - b'a') + 10,
+            _ => 0,
+        };
+        value = value.wrapping_mul(radix).wrapping_add(digit);
+    }
+    value
+}
+
 // The golden digests of the dump research: FNV-1a of the reference's own tree of each lib file, without JSDoc.
-fn golden_digests() -> Vec<(String, u64, u32)> {
+fn golden_digests() -> Vec<(Vec<u8>, u64, u32)> {
     let path = "/workspace/notes/lint/units/typecheck/ts-dump-and-test-importer/top-down/golden/libs.tsgo-digests.tsv";
     let text = read(path).unwrap_or_default();
     let mut rows = Vec::new();
-    for line in String::from_utf8_lossy(&text).split('\n') {
-        let cells: Vec<&str> = line.split('\t').collect();
-        if line.starts_with('#') || cells.len() < 11 {
+    for line in split_at_byte(&text, b'\n') {
+        let cells = split_at_byte(line, b'\t');
+        if line.first() == Some(&b'#') || cells.len() < 11 {
             continue;
         }
-        let digest = u64::from_str_radix(cells[5], 16).unwrap_or(0);
-        rows.push((cells[2].to_string(), digest, cells[10].parse().unwrap_or(0)));
+        rows.push((
+            cells[2].to_vec(),
+            parse_number(cells[5], 16),
+            parse_number(cells[10], 10) as u32,
+        ));
     }
     rows
 }
@@ -319,7 +408,11 @@ fn measure_bundle(label: &str, path: &str) {
             file_name: dump.file_name.clone(),
             ..FileData::default()
         };
-        tables.push(a.finish(ids.first().copied().unwrap_or(NodeId::NIL), dump.text.clone(), file));
+        tables.push(a.finish(
+            ids.first().copied().unwrap_or(NodeId::NIL),
+            dump.text.clone(),
+            file,
+        ));
         t_finish += t.elapsed().as_secs_f64();
         arena_bytes += a.arena.heap_bytes();
         faults += a.log.count();
@@ -329,12 +422,18 @@ fn measure_bundle(label: &str, path: &str) {
     for table in &tables {
         let a = AstContext::for_binding(table);
         let (digest, nodes) = tree_digest(&a, table.root, true);
-        let name = String::from_utf8_lossy(table.file.file_name.get(1..).unwrap_or(&[])).into_owned();
+        let name = table.file.file_name.get(1..).unwrap_or(&[]);
         match golden.iter().find(|row| row.0 == name) {
             Some(row) if row.1 == digest && row.2 == nodes => same += 1,
             Some(row) => {
                 differ += 1;
-                let _ = writeln!(err, "{label}: {name} differs: digest {digest:016x} nodes {nodes}, reference {:016x} nodes {}", row.1, row.2);
+                let _ = writeln!(
+                    err,
+                    "{label}: {} differs: digest {digest:016x} nodes {nodes}, reference {:016x} nodes {}",
+                    bstr::BStr::new(name),
+                    row.1,
+                    row.2
+                );
             }
             None => unknown += 1,
         }
@@ -437,7 +536,12 @@ fn rewind_and_synthetic_table() {
     let b = AstContext::for_building();
     let f = new_node_factory(&b, NodeFactoryHooks::default());
     let specifier = f.new_string_literal(b"tslib", TokenFlags::empty());
-    let import = f.new_import_declaration(crate::ids::ModifierListId::NIL, NodeId::NIL, specifier, NodeId::NIL);
+    let import = f.new_import_declaration(
+        crate::ids::ModifierListId::NIL,
+        NodeId::NIL,
+        specifier,
+        NodeId::NIL,
+    );
     b.set_parent(specifier, import);
     b.set_parent(import, file.root);
     let synthetic = b.finish_synthetic(&[import], &ids);

@@ -1,7 +1,7 @@
 // Probe (route A): a port of typescript-go's internal/parser/reparser.go as a pass over a finished tree.
 // Input: the tree that convert.mjs makes from a TypeScript 6.0.2 dump (nodes carry their JSDoc in `jsdoc`).
 // Each function below has the name of the function of reparser.go that it follows.
-import { GOF } from "./convert.mjs";
+import { GOF, externalModuleIndicator } from "./convert.mjs";
 
 export const CONTEXT_MASK = (GOF.DisallowInContext | GOF.DisallowConditionalTypesContext | GOF.YieldContext | GOF.DecoratorContext | GOF.AwaitContext | GOF.JavaScriptFile | GOF.InWithStatement | GOF.Ambient) >>> 0;
 const MOD = { PublicKeyword: 1 << 0, PrivateKeyword: 1 << 1, ProtectedKeyword: 1 << 2, ReadonlyKeyword: 1 << 3, OverrideKeyword: 1 << 4, ExportKeyword: 1 << 5,
@@ -783,12 +783,42 @@ export function reparse(root) {
   const eof = root.children.get("EndOfFileToken");
   const order = finishOrder(root);
   const indexOf = new Map(order.map((n, i) => [n, i]));
+  // Rule top-level-await: a statement that the parser reads a second time, in the await context, keeps the unhosted
+  // declarations of the first reading and loses the JSDoc attachments and the clone records of the second reading.
+  const isModule = !!externalModuleIndicator(root, {});
+  const AWAIT_BY_ITSELF = new Set(["ExportAssignment", "ExportDeclaration", "ImportEqualsDeclaration", "ImportDeclaration", "FunctionDeclaration", "ClassDeclaration"]);
+  const rereadStatements = new Set(isModule ? root.children.get("Statements").nodes.filter(s => (s.flags & GOF.AwaitContext) && !AWAIT_BY_ITSELF.has(s.kind)) : []);
+  const topStatementOf = n => { while (n.parent && n.parent !== root) n = n.parent; return n; };
   for (const { node, inObjectLiteral } of collectHosts(root)) {
-    r.contextFlags = (node.flags & CONTEXT_MASK) >>> 0;
+    const reread = rereadStatements.has(topStatementOf(node));
     r.inObjectLiteralMembers = inObjectLiteral;
-    r.reparseList = [];
     const errorsBefore = r.diagnostics.length;
-    r.reparseTags(node, node.jsdoc);
+    if (reread) {
+      hit("top-level-await:reread-host");
+      // First reading: only the unhosted declarations survive, made from a copy of the comment without the await flag.
+      const clearAwait = g => { g.flags = (g.flags & ~GOF.AwaitContext) >>> 0; for (const c of g.children.values()) { if (c.list) for (const x of c.nodes) clearAwait(x); else clearAwait(c); } };
+      const firstJsdoc = node.jsdoc.map(j => { const c = cloneTree(j); c.parent = node; setParentInChildren(c); clearAwait(c); return c; });
+      r.contextFlags = (node.flags & CONTEXT_MASK & ~GOF.AwaitContext) >>> 0;
+      r.reparseList = [];
+      const clonesBefore = r.reparsedClones;
+      for (const j of firstJsdoc) { const tags = j.children.get("Tags"); if (tags) for (const tag of tags.nodes) r.reparseUnhosted(tag, node, j); }
+      const kept = r.reparseList;
+      // Second reading: the hosted changes stay, its unhosted declarations and its records are dropped.
+      r.contextFlags = (node.flags & CONTEXT_MASK) >>> 0;
+      r.reparseList = [];
+      const secondClones = r.reparsedClones;
+      const last = node.jsdoc[node.jsdoc.length - 1];
+      const tags = last?.children.get("Tags");
+      if (tags) for (const tag of tags.nodes) r.reparseHosted(tag, node, last);
+      r.reparsedClones = secondClones;
+      node.jsdoc = [];
+      r.reparseList = kept;
+      void clonesBefore;
+    } else {
+      r.contextFlags = (node.flags & CONTEXT_MASK) >>> 0;
+      r.reparseList = [];
+      r.reparseTags(node, node.jsdoc);
+    }
     // A parse error of the reparser is pending: the node that the parser finishes next carries the flag.
     if (r.diagnostics.length !== errorsBefore) {
       const next = order[indexOf.get(node) + 1];

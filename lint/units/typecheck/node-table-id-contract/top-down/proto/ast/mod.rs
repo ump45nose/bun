@@ -14,7 +14,10 @@ pub mod table;
 
 pub use ast_generated::*;
 pub use context::{Ast, AstContext, Mode};
-pub use factory::{NodeFactory, NodeFactoryHooks, NodeVisitor, NodeVisitorHooks, new_node_factory, new_node_visitor};
+pub use factory::{
+    NodeFactory, NodeFactoryHooks, NodeVisitor, NodeVisitorHooks, new_node_factory,
+    new_node_visitor,
+};
 pub use flags_generated::{ModifierFlags, NodeFlags, TokenFlags};
 pub use kind_generated::*;
 pub use table::{FileData, NodeTable};

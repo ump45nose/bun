@@ -98,7 +98,11 @@ impl BoundData {
         (start, name.len() as u32)
     }
     // Adds a table with its entries in insertion order and builds its lookup index. `first` is the table's block.
-    pub fn push_symbol_table(&mut self, first: u32, entries: &[(&[u8], SymbolId)]) -> SymbolTableId {
+    pub fn push_symbol_table(
+        &mut self,
+        first: u32,
+        entries: &[(&[u8], SymbolId)],
+    ) -> SymbolTableId {
         let start = self.entries.len() as u32;
         for (name, symbol) in entries {
             let span = self.push_name(name);
@@ -132,7 +136,10 @@ impl BoundData {
         Some(Symbol {
             flags: rec.flags,
             name: self.name(rec.name),
-            declarations: match self.declarations.get(start as usize..(start + len) as usize) {
+            declarations: match self
+                .declarations
+                .get(start as usize..(start + len) as usize)
+            {
                 Some(slice) if len != 0 => List::from_slice(slice),
                 _ => List::NIL,
             },
@@ -175,8 +182,15 @@ impl BoundData {
             .map_or(0, |rec| rec.entries.1)
     }
     // The entry at a position of the insertion order.
-    pub fn symbol_table_entry_at(&self, first: u32, table: SymbolTableId, position: u32) -> Option<(&[u8], SymbolId)> {
-        let rec = self.symbol_tables.get(table.0.wrapping_sub(first) as usize)?;
+    pub fn symbol_table_entry_at(
+        &self,
+        first: u32,
+        table: SymbolTableId,
+        position: u32,
+    ) -> Option<(&[u8], SymbolId)> {
+        let rec = self
+            .symbol_tables
+            .get(table.0.wrapping_sub(first) as usize)?;
         if position >= rec.entries.1 {
             return None;
         }

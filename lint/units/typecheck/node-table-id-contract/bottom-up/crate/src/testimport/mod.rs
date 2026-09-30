@@ -4,7 +4,7 @@ pub mod json;
 use crate::ast::ast_generated::{Def, NodeFactory};
 use crate::ast::builder::FileBuilder;
 use crate::ast::factory::NodeSink;
-use crate::ast::file::{File, SourceFileData};
+use crate::ast::file::{File, IdAllocator, SourceFileData};
 use crate::ast::flags_generated::NodeFlags;
 use crate::ast::kind_generated::Kind;
 use crate::ast::layout::SlotType;
@@ -17,6 +17,7 @@ pub enum ImportError {
     Json(json::JsonError),
     Version,
     Shape(&'static str),
+    IdSpaceExhausted,
 }
 
 #[derive(Default, Debug, Clone)]
@@ -120,7 +121,7 @@ fn text_slot(builder: &mut FileBuilder, dump: &DumpFile<'_>, text: &[u8], end: i
     builder.text_slot(text)
 }
 
-fn import_file(dump: &DumpFile<'_>, data: SourceFileData, stats: &mut ImportStats) -> File {
+fn import_file(dump: &DumpFile<'_>, data: SourceFileData, ids: &IdAllocator, stats: &mut ImportStats) -> Option<File> {
     let count = dump.nodes.len() / 8;
     let mut builder = FileBuilder::new(dump.text);
     // The children and the lists of each node, in the order of the dump.
@@ -333,11 +334,11 @@ fn import_file(dump: &DumpFile<'_>, data: SourceFileData, stats: &mut ImportStat
     stats.dump_nodes += count as u32;
     stats.files += 1;
     let root = made.first().copied().unwrap_or(NodeId::NIL);
-    builder.finish(root, data)
+    builder.finish(root, data, ids)
 }
 
-// Every file of a dump, as unpublished files in the order of the dump.
-pub fn import_dump(bytes: &[u8], stats: &mut ImportStats) -> Result<Vec<File>, ImportError> {
+// Every file of a dump, not bound yet, in the order of the dump.
+pub fn import_dump(bytes: &[u8], ids: &IdAllocator, stats: &mut ImportStats) -> Result<Vec<File>, ImportError> {
     let root = Json::parse(bytes).map_err(ImportError::Json)?;
     if root.get("v").map(Json::number) != Some(1.0) {
         return Err(ImportError::Version);
@@ -368,7 +369,7 @@ pub fn import_dump(bytes: &[u8], stats: &mut ImportStats) -> Result<Vec<File>, I
             is_declaration_file: field("isDeclarationFile")?.is_true(),
             ..SourceFileData::default()
         };
-        files.push(import_file(&dump, data, stats));
+        files.push(import_file(&dump, data, ids, stats).ok_or(ImportError::IdSpaceExhausted)?);
     }
     Ok(files)
 }

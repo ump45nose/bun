@@ -270,12 +270,18 @@ f_e2e() {
   (cd "$T/run" && "$O" tsc min.ts --noEmit > "$T/k4.txt" 2>&1; echo "exit=$?" >> "$T/k4.txt")
   printf 'min.ts(1,7): error TS2322: Type '"'"'string'"'"' is not assignable to type '"'"'number'"'"'.\nexit=2\n' > "$T/k4.expected.txt"
   if cmp -s "$T/k4.txt" "$T/k4.expected.txt"; then note identical "K4 line of goals/typecheck.md through the real command line"; else note differs "K4 line of goals/typecheck.md through the real command line"; fi
+  # The stored output was made in /tmp/e2e/run3 with these three files, and one message holds that path.
+  mkdir -p "$T/run3"
+  printf 'export const x = 1;\n' > "$T/run3/a.ts"
+  printf 'export const y = 1;\n' > "$T/run3/b.js"
+  printf 'export const z = <div/>;\n' > "$T/run3/c.tsx"
   : > "$T/verify.txt"
   while IFS= read -r line; do
     [ -z "$line" ] && continue
-    { echo ">>> $line"; (cd "$T/run" && "$O" tsc $line 2>&1; echo "exit=$?"); } >> "$T/verify.txt"
+    { echo ">>> $line"; (cd "$T/run3" && "$O" tsc $line 2>&1; echo "exit=$?"); } >> "$T/verify.txt"
   done < "$D/verify-compiler-options.cases.txt"
-  same "$D/verify-compiler-options.txt" "$T/verify.txt"
+  sed "s#/tmp/e2e/run3#$T/run3#g" "$D/verify-compiler-options.txt" > "$T/verify.expected.txt"
+  if cmp -s "$T/verify.expected.txt" "$T/verify.txt"; then note "identical (the run directory replaced)" "$D/verify-compiler-options.txt"; else note differs "$D/verify-compiler-options.txt"; fi
 }
 
 f_diagfmt() {

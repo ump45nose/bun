@@ -3,10 +3,11 @@
 use crate::ast::ast_generated::{
     BODY_ASTERISK_TOKEN_SLOT, BODY_SLOT, CLASS_LIKE_HERITAGE_CLAUSES_SLOT, CLASS_LIKE_MEMBERS_SLOT,
     CLASS_LIKE_TYPE_PARAMETERS_SLOT, Def, END_FLOW_NODE_SLOT, FLOW_NODE_SLOT,
-    FUNCTION_LIKE_FULL_SIGNATURE_SLOT, FUNCTION_LIKE_PARAMETERS_SLOT, FUNCTION_LIKE_TYPE_PARAMETERS_SLOT,
-    FUNCTION_LIKE_TYPE_SLOT, LITERAL_LIKE_TEXT_SLOT, LITERAL_LIKE_TOKEN_FLAGS_SLOT, LOCAL_SYMBOL_SLOT, LOCALS_SLOT,
-    MODIFIERS_SLOT, NAME_SLOT, NEXT_CONTAINER_SLOT, SYMBOL_SLOT, SlotType,
-    TEMPLATE_LITERAL_LIKE_RAW_TEXT_SLOT, TEMPLATE_LITERAL_LIKE_TEMPLATE_FLAGS_SLOT, layout,
+    FUNCTION_LIKE_FULL_SIGNATURE_SLOT, FUNCTION_LIKE_PARAMETERS_SLOT,
+    FUNCTION_LIKE_TYPE_PARAMETERS_SLOT, FUNCTION_LIKE_TYPE_SLOT, LITERAL_LIKE_TEXT_SLOT,
+    LITERAL_LIKE_TOKEN_FLAGS_SLOT, LOCAL_SYMBOL_SLOT, LOCALS_SLOT, MODIFIERS_SLOT, NAME_SLOT,
+    NEXT_CONTAINER_SLOT, SYMBOL_SLOT, SlotType, TEMPLATE_LITERAL_LIKE_RAW_TEXT_SLOT,
+    TEMPLATE_LITERAL_LIKE_TEMPLATE_FLAGS_SLOT, layout,
 };
 use crate::ast::context::Ast;
 use crate::ast::flags_generated::{ModifierFlags, NodeFlags, TokenFlags};
@@ -181,7 +182,10 @@ impl NodeId {
         match a.slot_by_table(self, &BODY_SLOT) {
             Some(body) => BodyBase {
                 nil: false,
-                asterisk_token: NodeId(a.slot_by_table(self, &BODY_ASTERISK_TOKEN_SLOT).unwrap_or(0)),
+                asterisk_token: NodeId(
+                    a.slot_by_table(self, &BODY_ASTERISK_TOKEN_SLOT)
+                        .unwrap_or(0),
+                ),
                 body: NodeId(body),
                 end_flow_node: FlowNodeId(a.slot_by_table(self, &END_FLOW_NODE_SLOT).unwrap_or(0)),
             },

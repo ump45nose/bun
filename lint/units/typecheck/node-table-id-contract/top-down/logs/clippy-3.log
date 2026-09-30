@@ -1,0 +1,6 @@
+    Checking ntproto v0.0.0 (/workspace/notes/lint/units/typecheck/node-table-id-contract/top-down/proto)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.31s
+
+real	0m3.946s
+user	0m2.980s
+sys	0m0.443s

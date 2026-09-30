@@ -29,7 +29,8 @@ pub enum RawValue<'t> {
 impl<'a> AstContext<'a> {
     // A node of struct `def` with every field zero.
     pub fn raw_new_node(&self, def: Def, kind: Kind, loc: TextRange, flags: NodeFlags) -> NodeId {
-        const ZEROS: [u32; crate::ast::ast_generated::MAX_SLOTS] = [0; crate::ast::ast_generated::MAX_SLOTS];
+        const ZEROS: [u32; crate::ast::ast_generated::MAX_SLOTS] =
+            [0; crate::ast::ast_generated::MAX_SLOTS];
         let n = layout(def).slots.len();
         let node = self
             .arena
@@ -55,7 +56,10 @@ impl<'a> AstContext<'a> {
         };
         let word = match (desc.ty, value) {
             (SlotType::Node, RawValue::Node(n)) => n.0,
-            (SlotType::NodeList | SlotType::ModifierList | SlotType::RawNodeList, RawValue::List(l)) => l.0,
+            (
+                SlotType::NodeList | SlotType::ModifierList | SlotType::RawNodeList,
+                RawValue::List(l),
+            ) => l.0,
             (SlotType::Text, RawValue::Text(t)) => self.arena.new_text(t),
             (SlotType::Bool, RawValue::Bool(b)) => u32::from(b),
             (SlotType::Kind, RawValue::Kind(k)) => k as u32,
@@ -69,7 +73,12 @@ impl<'a> AstContext<'a> {
     pub fn raw_new_list(&self, nodes: &[NodeId], loc: TextRange) -> NodeListId {
         self.arena.new_list(nodes, loc, ModifierFlags::empty())
     }
-    pub fn raw_new_modifier_list(&self, nodes: &[NodeId], loc: TextRange, flags: ModifierFlags) -> ModifierListId {
+    pub fn raw_new_modifier_list(
+        &self,
+        nodes: &[NodeId],
+        loc: TextRange,
+        flags: ModifierFlags,
+    ) -> ModifierListId {
         ModifierListId(self.arena.new_list(nodes, loc, flags).0)
     }
     // Attaches the JSDoc nodes of a host. The producer sets the flag HasJSDoc on the host.
@@ -114,7 +123,12 @@ impl<'a> AstContext<'a> {
         Some(table)
     }
 
-    fn finish_into(&'a self, first: u32, roots: &[NodeId], allow_foreign: bool) -> (NodeTable, Vec<u32>) {
+    fn finish_into(
+        &'a self,
+        first: u32,
+        roots: &[NodeId],
+        allow_foreign: bool,
+    ) -> (NodeTable, Vec<u32>) {
         let arena_nodes = self.arena.node_count() as usize;
         // new_id[arena index] is the id of a reached node in the new table, 0 otherwise.
         let mut new_id: Vec<u32> = vec![0; arena_nodes + 1];
@@ -124,8 +138,11 @@ impl<'a> AstContext<'a> {
         while let Some((node, parent)) = stack.pop() {
             if node.0 & SYNTH == 0 {
                 if !allow_foreign {
-                    self.log
-                        .record(FaultKind::BuilderMisuse, "finish: a node of another table", node.0);
+                    self.log.record(
+                        FaultKind::BuilderMisuse,
+                        "finish: a node of another table",
+                        node.0,
+                    );
                 }
                 continue;
             }
@@ -135,8 +152,11 @@ impl<'a> AstContext<'a> {
                 continue;
             };
             if *slot != 0 {
-                self.log
-                    .record(FaultKind::SharedNode, "finish: a node with two parents", node.0);
+                self.log.record(
+                    FaultKind::SharedNode,
+                    "finish: a node with two parents",
+                    node.0,
+                );
                 continue;
             }
             let id = first + order.len() as u32;

@@ -1,6 +1,6 @@
-// Prototype of the script that pins the constants of the runner after sync.sh: it writes reference_counts.json and reference_skips.tsv for the corpus in the committed layout.
-// usage: bun pin.ts <assembled runner root> <conformance directory with UPSTREAM, post-emit-order.txt and corpus/> <out directory> [--reference <typescript-go clone>] [--reference-log <output of go test -v of TestSubmodule>]
-// No Go and no network. --reference adds the counts that the baseline directories of the clone give; --reference-log adds the digests of the reference's own run and fails when the enumeration differs from it.
+// Prototype of the script that pins the constants of the runner after sync.sh: it writes reference_counts.json and the list of instances for the corpus in the committed layout.
+// usage: bun pin.ts <assembled runner root> <conformance directory with UPSTREAM, post-emit-order.txt and corpus/> <out directory> [--compact] [--reference <typescript-go clone>] [--reference-log <output of go test -v of TestSubmodule>]
+// Default: reference_instances.tsv, every instance by name. --compact: reference_skips.tsv and 256 bucket digests in its place. No Go and no network.
 import { createHash } from "node:crypto";
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -8,6 +8,7 @@ import { join } from "node:path";
 const argv = process.argv.slice(2);
 const flag = (name: string) => (argv.includes(name) ? argv[argv.indexOf(name) + 1] : undefined);
 const [asm, home, out] = argv;
+const compact = argv.includes("--compact");
 const clone = flag("--reference");
 const log = flag("--reference-log");
 const runner = join(asm, "test/cli/lint/conformance/runner");
@@ -152,10 +153,13 @@ const pins: any = {
     kinds: digestOf(facts.filter(f => f.status === "run").map(f => `${f.name}\t${f.kind}\n`)),
     oracles: digestOf(oracleRows),
   },
-  skips: { rows: n(f => f.status === "skipped"), sha256: sha(skipsText) },
-  instancesFile: { rows: facts.length, sha256: sha(instancesText) },
-  buckets: { of: buckets, columns: ["bucket", "cases", "instances", "run", "skipped", "E", "C", "digest"], rows: bucketRows },
 };
+if (compact) {
+  pins.skips = { rows: n(f => f.status === "skipped"), sha256: sha(skipsText) };
+  pins.buckets = { of: buckets, columns: ["bucket", "cases", "instances", "run", "skipped", "E", "C", "digest"], rows: bucketRows };
+} else {
+  pins.list = { rows: facts.length, sha256: sha(instancesText) };
+}
 
 // The baseline files of typescript-go in the clone, of every kind: each is the name of a run instance, and nearly every run instance has one.
 if (clone !== undefined) {
@@ -214,13 +218,15 @@ if (log !== undefined) {
 
 // One form: two spaces, one row of the buckets per line, a line feed at the end.
 function formatPins(p: any): string {
+  if (p.buckets === undefined) return JSON.stringify(p, null, 2) + "\n";
   const marker = "@@rows@@";
   const text = JSON.stringify({ ...p, buckets: { ...p.buckets, columns: "@@columns@@", rows: marker } }, null, 2);
   const rows = "[\n" + p.buckets.rows.map((r: unknown[]) => "      " + JSON.stringify(r).replaceAll(",", ", ")).join(",\n") + "\n    ]";
   return text.replace(JSON.stringify(marker), rows).replace('"@@columns@@"', JSON.stringify(p.buckets.columns).replaceAll(",", ", ")) + "\n";
 }
 mkdirSync(out, { recursive: true });
+const listName = compact ? "reference_skips.tsv" : "reference_instances.tsv";
+const listText = compact ? skipsText : instancesText;
 writeFileSync(join(out, "reference_counts.json"), formatPins(pins));
-writeFileSync(join(out, "reference_skips.tsv"), skipsText);
-writeFileSync(join(out, "reference_instances.tsv"), instancesText);
-console.log(`wrote ${join(out, "reference_counts.json")} (${formatPins(pins).length} bytes) and ${join(out, "reference_skips.tsv")} (${skipsText.length} bytes)`);
+writeFileSync(join(out, listName), listText);
+console.log(`wrote ${join(out, "reference_counts.json")} (${formatPins(pins).length} bytes) and ${join(out, listName)} (${listText.length} bytes)`);

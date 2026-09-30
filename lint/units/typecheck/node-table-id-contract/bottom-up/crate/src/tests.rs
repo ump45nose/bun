@@ -20,7 +20,7 @@ use std::sync::Arc;
 const MIN_TS: &[u8] = b"const x: number = \"s\";\n";
 
 // `const x: number = "s";` made the way a parser makes it: children before parents.
-fn build_min(extra_garbage: bool) -> File {
+fn build_min(extra_garbage: bool, ids: &IdAllocator) -> File {
     let mut b = FileBuilder::new(MIN_TS);
     let name = b.new_identifier(b"x");
     b.set_loc(name, TextRange::new(5, 7));
@@ -51,7 +51,10 @@ fn build_min(extra_garbage: bool) -> File {
     let root = b.new_source_file(statements, eof);
     b.set_loc(root, TextRange::new(0, 23));
     assert_eq!(b.faults.count(), 0);
-    b.finish(root, SourceFileData { file_name: b"/min.ts".to_vec(), ..SourceFileData::default() })
+    match b.finish(root, SourceFileData { file_name: b"/min.ts".to_vec(), ..SourceFileData::default() }, ids) {
+        Some(file) => file,
+        None => panic!("no ids left"),
+    }
 }
 
 fn bind_and_publish(file: File, ids: &IdAllocator) -> (Arc<File>, BindStats) {
@@ -64,16 +67,18 @@ fn bind_and_publish(file: File, ids: &IdAllocator) -> (Arc<File>, BindStats) {
         assert_eq!(open.faults.first(), None);
         stats
     };
-    match file.publish(&open, ids) {
-        Ok(file) => (Arc::new(file), stats),
-        Err(error) => panic!("publish: {error:?}"),
+    if let Err(error) = file.publish(&open, ids) {
+        panic!("publish: {error:?}");
     }
+    (Arc::new(file), stats)
 }
 
 // Everything a context can read below a node, with the ids of the file taken relative to its base.
 fn digest(a: Ast<'_>, file: &File) -> u64 {
     let base = file.base();
-    let rel = |id: u32| if id == 0 || id & OPEN_BIT != 0 { id } else { id - base };
+    let bound_base = file.bound().map_or(0, |bound| bound.base());
+    // An id of the nodes and lists relative to their range, an id of the binder relative to its range.
+    let rel = |id: u32| if id == 0 || id & OPEN_BIT != 0 { id } else if id > bound_base && bound_base > base { id - bound_base } else { id - base };
     let mut out: Vec<u8> = Vec::new();
     let mut put = |value: u32| out.extend_from_slice(&value.to_le_bytes());
     let mut stack = vec![file.source_file.root];
@@ -163,14 +168,18 @@ fn workspace_crates_link() {
 
 #[test]
 fn finish_numbers_in_for_each_child_order() {
+    let ids = IdAllocator::new();
     for garbage in [false, true] {
-        let file = build_min(garbage);
+        let file = build_min(garbage, &ids);
         assert_eq!(file.node_count(), 8);
+        let base = file.base();
+        assert_eq!(base, if garbage { 2 * PAGE_SIZE } else { PAGE_SIZE });
         let arena = Arena::new();
         let open = Open::new(&arena, 0);
         let frozen = Frozen::of_binding(&file);
         let a = Ast::new(&frozen, &open);
-        let kinds: Vec<Kind> = (1..=8).map(|id| a.kind(NodeId(id))).collect();
+        let n = |local: u32| NodeId(base + local);
+        let kinds: Vec<Kind> = (1..=8).map(|id| a.kind(n(id))).collect();
         assert_eq!(
             kinds,
             [
@@ -184,43 +193,46 @@ fn finish_numbers_in_for_each_child_order() {
                 Kind::EndOfFile
             ]
         );
-        let parents: Vec<u32> = (1..=8).map(|id| a.parent(NodeId(id)).0).collect();
+        let parents: Vec<u32> = (1..=8).map(|id| a.parent(n(id)).0.saturating_sub(base)).collect();
         assert_eq!(parents, [0, 1, 2, 3, 4, 4, 4, 1]);
-        let root = a.as_source_file(NodeId(1));
-        assert_eq!(a.nodes(root.statements).as_slice(), [NodeId(2)]);
-        assert_eq!(root.end_of_file_token, NodeId(8));
-        assert!(is_variable_statement(a, NodeId(2)));
-        let declaration = a.as_variable_declaration(NodeId(4));
+        assert_eq!(file.source_file.root, n(1));
+        let root = a.as_source_file(n(1));
+        assert_eq!(a.nodes(root.statements).as_slice(), [n(2)]);
+        assert_eq!(root.end_of_file_token, n(8));
+        assert!(is_variable_statement(a, n(2)));
+        let declaration = a.as_variable_declaration(n(4));
         assert!(is_identifier(a, declaration.name));
         assert_eq!(a.as_identifier(declaration.name).text, b"x");
-        assert_eq!(a.name(NodeId(4)), NodeId(5));
-        assert_eq!(a.type_node(NodeId(4)), NodeId(6));
-        assert_eq!(a.initializer(NodeId(4)), NodeId(7));
-        assert_eq!(a.text(NodeId(7)), b"s");
-        assert_eq!(a.flags(NodeId(3)), NodeFlags::CONST);
+        assert_eq!(a.name(n(4)), n(5));
+        assert_eq!(a.type_node(n(4)), n(6));
+        assert_eq!(a.initializer(n(4)), n(7));
+        assert_eq!(a.text(n(7)), b"s");
+        assert_eq!(a.flags(n(3)), NodeFlags::CONST);
         assert_eq!(a.list_loc(root.statements), TextRange::new(0, 22));
-        assert!(a.modifiers(NodeId(2)).is_nil());
-        assert!(a.nodes(a.modifiers(NodeId(2)).as_node_list()).is_nil());
-        assert_eq!(a.iter_children(NodeId(4)).collect::<Vec<_>>(), [NodeId(5), NodeId(6), NodeId(7)]);
+        assert!(a.modifiers(n(2)).is_nil());
+        assert!(a.nodes(a.modifiers(n(2)).as_node_list()).is_nil());
+        assert_eq!(a.iter_children(n(4)).collect::<Vec<_>>(), [n(5), n(6), n(7)]);
         assert_eq!(open.faults.count(), 0);
         // A cast to another definition gives the zero value and records a fault.
-        assert_eq!(a.as_if_statement(NodeId(4)).expression, NodeId::NIL);
+        assert_eq!(a.as_if_statement(n(4)).expression, NodeId::NIL);
         assert_eq!(open.faults.first().map(|fault| fault.kind), Some(FaultKind::BadCast));
         // A method of Node on a kind that upstream does not handle.
-        assert_eq!(a.expression(NodeId(4)), NodeId::NIL);
+        assert_eq!(a.expression(n(4)), NodeId::NIL);
         assert_eq!(open.faults.count(), 2);
+        // An id that no file of the context owns reads as nil.
+        assert_eq!((a.kind(NodeId(7)), a.parent(NodeId(base + 500)), a.kind(NodeId(u32::MAX))), (Kind::Unknown, NodeId::NIL, Kind::Unknown));
     }
 }
 
 #[test]
 fn bind_publish_and_share_between_programs() {
     let ids = IdAllocator::new();
-    let (first, stats) = bind_and_publish(build_min(false), &ids);
-    let (second, _) = bind_and_publish(build_min(true), &ids);
-    assert_eq!(stats, BindStats { nodes: 8, symbols: 1, declarations: 1, tables: 1, flow_nodes: 2, flow_data_nodes: 0, private_names: 0 });
-    assert_eq!(first.base(), PAGE_SIZE);
-    assert_eq!(second.base(), 2 * PAGE_SIZE);
-    assert_ne!(first.serial(), second.serial());
+    let (first, stats) = bind_and_publish(build_min(false, &ids), &ids);
+    let (second, _) = bind_and_publish(build_min(true, &ids), &ids);
+    assert_eq!(stats, BindStats { nodes: 8, symbols: 1, declarations: 1, tables: 1, flow_nodes: 3, flow_data_nodes: 0, private_names: 0 });
+    let bases = |file: &File| (file.base(), file.bound().map_or(0, |bound| bound.base()));
+    assert_eq!((bases(&first), bases(&second)), ((PAGE_SIZE, 2 * PAGE_SIZE), (3 * PAGE_SIZE, 4 * PAGE_SIZE)));
+    let second_bound = second.bound().map_or(0, |bound| bound.base());
 
     let one = Program::new(vec![first.clone(), second.clone()]);
     let other = Program::new(vec![second.clone(), first.clone()]);
@@ -240,7 +252,7 @@ fn bind_publish_and_share_between_programs() {
         // The declaration of x in the second file, by an id that is the same in every program.
         let declaration = NodeId(second.base() + 4);
         let symbol = a.symbol(declaration);
-        assert_eq!(symbol, SymbolId(second.base() + 1));
+        assert_eq!(symbol, SymbolId(second_bound + 1));
         assert_eq!(a.sym(symbol).name, b"x");
         assert_eq!(a.sym(symbol).declarations.as_slice(), [declaration]);
         let locals = a.locals(NodeId(second.base() + 1));
@@ -258,7 +270,8 @@ fn bind_publish_and_share_between_programs() {
     assert!(digests.iter().all(|d| *d == digests[0]), "{digests:?}");
 
     // Files of two allocators cannot be in one program.
-    let foreign = bind_and_publish(build_min(false), &IdAllocator::new()).0;
+    let other_ids = IdAllocator::new();
+    let foreign = bind_and_publish(build_min(false, &other_ids), &other_ids).0;
     let mixed = Program::new(vec![first, foreign]);
     assert_eq!(mixed.frozen().err(), Some(FrozenError::Overlap { first: 0, second: 1 }));
 }
@@ -266,7 +279,7 @@ fn bind_publish_and_share_between_programs() {
 #[test]
 fn checker_nodes_live_in_the_open_store() {
     let ids = IdAllocator::new();
-    let (file, _) = bind_and_publish(build_min(false), &ids);
+    let (file, _) = bind_and_publish(build_min(false, &ids), &ids);
     let program = Program::new(vec![file.clone()]);
     let frozen = match program.frozen() {
         Ok(frozen) => frozen,
@@ -341,7 +354,10 @@ fn lazy_symbol_ids_and_private_names() {
         let statements = b.new_node_list(&[class]);
         let eof = b.new_token(Kind::EndOfFile);
         let root = b.new_source_file(statements, eof);
-        b.finish(root, SourceFileData::default())
+        match b.finish(root, SourceFileData::default(), &ids) {
+            Some(file) => file,
+            None => panic!("no ids left"),
+        }
     };
     let (first, stats) = bind_and_publish(build(), &ids);
     let (second, _) = bind_and_publish(build(), &ids);
@@ -364,7 +380,7 @@ fn lazy_symbol_ids_and_private_names() {
         let member = a.table_get(a.locals(class), name);
         assert!(!member.is_nil(), "{:?}", String::from_utf8_lossy(name));
         assert_eq!(a.sym(member).name, name);
-        assert_eq!(a.get_symbol_id(class_symbol) >> 32, u64::from(file.serial()));
+        assert_eq!(a.get_symbol_id(class_symbol) >> 32, u64::from(file.bound().map_or(0, |bound| bound.serial())));
         names.push(name.to_vec());
     }
     assert_ne!(names[0], names[1]);
@@ -447,13 +463,13 @@ fn every_definition_round_trips() {
 #[test]
 fn imports_a_dump_of_typescript() {
     let mut stats = ImportStats::default();
-    let files = match import_dump(include_bytes!("../testdata/lib.decorators.legacy.d.ts.ast.json"), &mut stats) {
+    let ids = IdAllocator::new();
+    let files = match import_dump(include_bytes!("../testdata/lib.decorators.legacy.d.ts.ast.json"), &ids, &mut stats) {
         Ok(files) => files,
         Err(error) => panic!("{error:?}"),
     };
     assert_eq!((stats.files, stats.dump_nodes, stats.made_nodes), (1, 74, 74));
     assert_eq!((stats.unknown_kinds, stats.unmapped_children, stats.unmapped_lists, stats.unmapped_attrs), (0, 0, 0, 0), "{:?}", String::from_utf8_lossy(&stats.first_unmapped));
-    let ids = IdAllocator::new();
     let mut published = Vec::new();
     for file in files {
         assert_eq!(file.node_count(), 74);

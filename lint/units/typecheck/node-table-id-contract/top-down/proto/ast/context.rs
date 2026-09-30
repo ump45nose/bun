@@ -85,11 +85,16 @@ impl<'a> AstContext<'a> {
         let log = InternalLog::default();
         for table in tables {
             if !table.frozen {
-                log.record(FaultKind::BuilderMisuse, "a table that is not frozen", table.first);
+                log.record(
+                    FaultKind::BuilderMisuse,
+                    "a table that is not frozen",
+                    table.first,
+                );
                 continue;
             }
             let from = (table.first >> PAGE_SHIFT) as usize;
-            let to = (table.first.saturating_add(table.id_count().max(1) - 1) >> PAGE_SHIFT) as usize;
+            let to =
+                (table.first.saturating_add(table.id_count().max(1) - 1) >> PAGE_SHIFT) as usize;
             let page = Page {
                 recs: &table.recs,
                 first: table.first,
@@ -223,7 +228,12 @@ impl<'a> AstContext<'a> {
 
     // `n.data.(*X)`: the slots of the node when its struct is `def`, zeros and a BadCast entry otherwise.
     #[inline]
-    pub(crate) fn slots<const N: usize>(&self, node: NodeId, def: Def, who: &'static str) -> [u32; N] {
+    pub(crate) fn slots<const N: usize>(
+        &self,
+        node: NodeId,
+        def: Def,
+        who: &'static str,
+    ) -> [u32; N] {
         let mut out = [0u32; N];
         let id = node.0;
         if id & SYNTH == 0 {
@@ -417,7 +427,11 @@ impl<'a> AstContext<'a> {
     }
 
     // Writes. A node of the arena takes any write. A node of a file takes the binder's writes in Bind mode only.
-    fn writable_file_rec(&self, id: u32, who: &'static str) -> Option<(&'a NodeRec, &'a NodeTable)> {
+    fn writable_file_rec(
+        &self,
+        id: u32,
+        who: &'static str,
+    ) -> Option<(&'a NodeRec, &'a NodeTable)> {
         match (self.mode, self.file_rec(id), self.file_table(id)) {
             (Mode::Bind, Some(rec), Some(table)) if !table.frozen => Some((rec, table)),
             (_, Some(_), _) => {
@@ -491,7 +505,14 @@ impl<'a> AstContext<'a> {
         }
     }
     // `n.AsX().F = v`.
-    pub(crate) fn set_field(&self, node: NodeId, def: Def, slot: usize, value: u32, who: &'static str) {
+    pub(crate) fn set_field(
+        &self,
+        node: NodeId,
+        def: Def,
+        slot: usize,
+        value: u32,
+        who: &'static str,
+    ) {
         let found = self.def(node);
         if found != def {
             if found != Def::None {
@@ -502,7 +523,12 @@ impl<'a> AstContext<'a> {
         self.write_slot(node, def, slot, value, who);
     }
     // Writes a field of a base struct. False when the node's struct does not have it.
-    pub(crate) fn set_slot_by_table(&self, node: NodeId, slots: &[u8; DEF_COUNT], value: u32) -> bool {
+    pub(crate) fn set_slot_by_table(
+        &self,
+        node: NodeId,
+        slots: &[u8; DEF_COUNT],
+        value: u32,
+    ) -> bool {
         let def = self.def(node);
         let slot = slots.get(def as usize).copied().unwrap_or(NO_SLOT);
         if slot == NO_SLOT {
@@ -514,7 +540,10 @@ impl<'a> AstContext<'a> {
 
     // The bound data of the file that owns an id.
     pub fn symbol(&self, symbol: SymbolId) -> Symbol<'a> {
-        match self.table_of(symbol.0).and_then(|t| t.bound.symbol(t.first, symbol)) {
+        match self
+            .table_of(symbol.0)
+            .and_then(|t| t.bound.symbol(t.first, symbol))
+        {
             Some(found) => found,
             None => {
                 self.nil_read("Symbol", symbol.0);

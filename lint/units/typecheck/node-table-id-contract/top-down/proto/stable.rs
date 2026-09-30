@@ -48,7 +48,8 @@ impl StableCells {
         let (mut chunk, mut offset) = locate(self.first, start);
         if offset + values.len() > chunk_len(self.first, chunk) {
             // The run does not fit in the rest of the chunk: it starts the next one.
-            start = start.checked_add(u32::try_from(chunk_len(self.first, chunk) - offset).ok()?)?;
+            start =
+                start.checked_add(u32::try_from(chunk_len(self.first, chunk) - offset).ok()?)?;
             chunk += 1;
             offset = 0;
             if values.len() > chunk_len(self.first, chunk) {

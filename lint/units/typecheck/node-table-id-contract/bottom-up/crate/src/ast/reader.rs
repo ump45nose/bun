@@ -1,6 +1,6 @@
 // The context that resolves an id: the published files of a program, or the one file a binder binds, plus an open store.
 use crate::ast::ast_generated::Def;
-use crate::ast::file::{File, FlowList, FlowNode, NodeRecord};
+use crate::ast::file::{Bound, File, FlowList, FlowNode, NodeRecord};
 use crate::ast::flags_generated::{CheckFlags, FlowFlags, ModifierFlags, NodeFlags, SymbolFlags, TokenFlags};
 use crate::ast::kind_generated::Kind;
 use crate::ast::layout::{
@@ -21,6 +21,8 @@ struct PageEntry {
     // The index of the file plus one; 0 for a page that no file owns.
     file: u32,
     base: u32,
+    // The page is of the range that the binder of the file got, not of the range of its nodes and lists.
+    bound: bool,
 }
 
 // The files that a context reads, found by the page of an id.
@@ -35,34 +37,38 @@ pub struct Frozen<'a> {
 pub enum FrozenError {
     // Two files own the same page: they got their ids from two allocators.
     Overlap { first: usize, second: usize },
-    NotPublished { file: usize },
 }
 
 impl<'a> Frozen<'a> {
+    fn claim(pages: &mut Vec<PageEntry>, index: usize, base: u32, span: u32, bound: bool) -> Result<(), FrozenError> {
+        let first = (base >> PAGE_BITS) as usize;
+        let end = ((base + span) >> PAGE_BITS) as usize;
+        if pages.len() < end {
+            pages.resize(end, PageEntry::default());
+        }
+        for page in pages.get_mut(first..end).unwrap_or(&mut []) {
+            if page.file != 0 {
+                return Err(FrozenError::Overlap { first: page.file as usize - 1, second: index });
+            }
+            *page = PageEntry { file: index as u32 + 1, base, bound };
+        }
+        Ok(())
+    }
+    // The page table of a set of files, each with what its binder added when it is bound.
     pub fn of_files(files: &[&'a File]) -> Result<Self, FrozenError> {
         let mut pages: Vec<PageEntry> = Vec::new();
         for (index, file) in files.iter().enumerate() {
-            if !file.is_published() {
-                return Err(FrozenError::NotPublished { file: index });
-            }
-            let first = (file.base() >> PAGE_BITS) as usize;
-            let end = ((file.base() + file.span()) >> PAGE_BITS) as usize;
-            if pages.len() < end {
-                pages.resize(end, PageEntry::default());
-            }
-            for page in pages.get_mut(first..end).unwrap_or(&mut []) {
-                if page.file != 0 {
-                    return Err(FrozenError::Overlap { first: page.file as usize - 1, second: index });
-                }
-                *page = PageEntry { file: index as u32 + 1, base: file.base() };
+            Self::claim(&mut pages, index, file.base(), file.span(), false)?;
+            if let Some(bound) = file.bound() {
+                Self::claim(&mut pages, index, bound.base(), bound.span(), true)?;
             }
         }
         Ok(Self { pages, files: files.to_vec(), binding: false })
     }
-    // The context of a binder: one file that has no base yet.
+    // The context of the binder of `file`.
     pub fn of_binding(file: &'a File) -> Self {
-        let span = file.node_count().max(file.list_count()) + 1;
-        let pages = vec![PageEntry { file: 1, base: 0 }; (span >> PAGE_BITS) as usize + 1];
+        let mut pages: Vec<PageEntry> = Vec::new();
+        let _ = Self::claim(&mut pages, 0, file.base(), file.span(), false);
         Self { pages, files: vec![file], binding: true }
     }
     pub fn none() -> Self {
@@ -74,11 +80,25 @@ impl<'a> Frozen<'a> {
     pub fn page_count(&self) -> usize {
         self.pages.len()
     }
+    // A node or a list that a producer made.
     #[inline]
     fn locate(&self, id: u32) -> Option<(&'a File, usize)> {
         let page = self.pages.get((id >> PAGE_BITS) as usize)?;
+        if page.bound {
+            return None;
+        }
         let file = self.files.get((page.file as usize).checked_sub(1)?)?;
         Some((*file, (id - page.base) as usize))
+    }
+    // An object that a binder made.
+    #[inline]
+    fn locate_bound(&self, id: u32) -> Option<(&'a File, &'a Bound, usize)> {
+        let page = self.pages.get((id >> PAGE_BITS) as usize)?;
+        if !page.bound {
+            return None;
+        }
+        let file = self.files.get((page.file as usize).checked_sub(1)?)?;
+        Some((*file, file.bound()?, (id - page.base) as usize))
     }
 }
 
@@ -91,6 +111,7 @@ pub struct Ast<'a> {
 #[derive(Clone, Copy)]
 enum Texts<'a> {
     File(&'a File),
+    Bound(&'a Bound),
     Open(&'a Open<'a>),
 }
 
@@ -156,6 +177,7 @@ impl<'a> NodeData<'a> {
     pub fn text(&self, index: usize) -> Text<'a> {
         match self.texts {
             Texts::File(file) => file.text(self.raw(index)),
+            Texts::Bound(bound) => bound.text(self.raw(index)),
             Texts::Open(open) => read(&open.texts, self.raw(index) as usize, |text| *text),
         }
     }
@@ -250,6 +272,17 @@ impl<'a> Ast<'a> {
         let (file, local) = self.frozen.locate(node.0)?;
         Some((file, local, file.record(local)?))
     }
+    // The record of a node of a file: one that a producer made, or one that the binder added.
+    #[inline]
+    fn record(self, node: NodeId) -> Option<&'a NodeRecord> {
+        match self.frozen.locate(node.0) {
+            Some((file, local)) => file.record(local),
+            None => {
+                let (_, bound, local) = self.frozen.locate_bound(node.0)?;
+                bound.records.get(local)
+            }
+        }
+    }
     #[inline]
     fn open_node<R: Default>(self, node: NodeId, f: impl FnOnce(&OpenNode<'a>) -> R) -> R {
         read(&self.open.nodes, node.open_index(), f)
@@ -260,28 +293,28 @@ impl<'a> Ast<'a> {
         if node.is_open() {
             return self.open_node(node, |n| n.kind);
         }
-        self.file_record(node).map_or(Kind::Unknown, |(_, _, record)| record.kind)
+        self.record(node).map_or(Kind::Unknown, |record| record.kind)
     }
     #[inline]
     pub fn def(self, node: NodeId) -> Def {
         if node.is_open() {
             return self.open_node(node, |n| n.def);
         }
-        self.file_record(node).map_or(Def::None, |(_, _, record)| record.def)
+        self.record(node).map_or(Def::None, |record| record.def)
     }
     #[inline]
     pub fn parent(self, node: NodeId) -> NodeId {
         if node.is_open() {
             return self.open_node(node, |n| n.parent);
         }
-        self.file_record(node).map_or(NodeId::NIL, |(_, _, record)| record.parent)
+        self.record(node).map_or(NodeId::NIL, |record| record.parent)
     }
     #[inline]
     pub fn loc(self, node: NodeId) -> TextRange {
         if node.is_open() {
             return self.open_node(node, |n| n.loc);
         }
-        self.file_record(node).map_or_else(TextRange::default, |(_, _, record)| record.loc)
+        self.record(node).map_or_else(TextRange::default, |record| record.loc)
     }
     #[inline]
     pub fn pos(self, node: NodeId) -> i32 {
@@ -296,7 +329,13 @@ impl<'a> Ast<'a> {
         if node.is_open() {
             return self.open_node(node, |n| n.flags);
         }
-        self.frozen.locate(node.0).map_or(NodeFlags::NONE, |(file, local)| file.node_flags(local))
+        match self.frozen.locate(node.0) {
+            Some((file, local)) => file.node_flags(local),
+            None => match self.frozen.locate_bound(node.0) {
+                Some((_, bound, local)) => bound.flags.get(local).copied().unwrap_or(NodeFlags::NONE),
+                None => NodeFlags::NONE,
+            },
+        }
     }
     // True for a node that exists in this context.
     pub fn exists(self, node: NodeId) -> bool {
@@ -312,7 +351,14 @@ impl<'a> Ast<'a> {
             }
             return Some((n.def, NodeData { slots: n.slots, texts: Texts::Open(self.open), late: Late::Open { values: n.late } }));
         }
-        let (file, _, record) = self.file_record(node)?;
+        let Some((file, _, record)) = self.file_record(node) else {
+            let (_, bound, local) = self.frozen.locate_bound(node.0)?;
+            let record = bound.records.get(local)?;
+            if record.def == Def::None {
+                return None;
+            }
+            return Some((record.def, NodeData { slots: bound.node_slots(record), texts: Texts::Bound(bound), late: Late::Open { values: [0; 8] } }));
+        };
         if record.def == Def::None {
             return None;
         }
@@ -655,16 +701,16 @@ impl<'a> Ast<'a> {
         if symbol.is_open() {
             return read(&self.open.symbols, symbol.open_index(), |s: &Symbol<'a>| *s);
         }
-        let Some((file, local)) = self.frozen.locate(symbol.0) else {
+        let Some((file, bound, local)) = self.frozen.locate_bound(symbol.0) else {
             return Symbol::default();
         };
-        match file.symbols.get(local) {
+        match bound.symbols.get(local) {
             Some(record) if local != 0 => {
-                let declarations = file.symbol_declarations(record);
+                let declarations = bound.symbol_declarations(record);
                 Symbol {
                     flags: record.flags,
                     check_flags: CheckFlags::NONE,
-                    name: file.text(record.name),
+                    name: file.name(bound, record.name),
                     declarations: if declarations.is_empty() { List::NIL } else { List::from_slice(declarations) },
                     value_declaration: record.value_declaration,
                     members: record.members,
@@ -708,10 +754,10 @@ impl<'a> Ast<'a> {
             write(&self.open.open_symbol_ids, symbol.open_index(), |slot| *slot = id);
             return id;
         }
-        if let Some((file, local)) = self.frozen.locate(symbol.0) {
-            if let Some(record) = file.symbols.get(local) {
+        if let Some((_, bound, local)) = self.frozen.locate_bound(symbol.0) {
+            if let Some(record) = bound.symbols.get(local) {
                 if record.lazy_id != 0 {
-                    return (u64::from(file.serial()) << 32) | u64::from(record.lazy_id);
+                    return (u64::from(bound.serial()) << 32) | u64::from(record.lazy_id);
                 }
             }
         }
@@ -748,9 +794,9 @@ impl<'a> Ast<'a> {
         if table.is_open() {
             return read(&self.open.tables, table.open_index(), |t| t.get(&name));
         }
-        match self.frozen.locate(table.0) {
-            Some((file, local)) => match file.tables.get(local) {
-                Some(record) if local != 0 => file.table_lookup(record, name),
+        match self.frozen.locate_bound(table.0) {
+            Some((file, bound, local)) => match bound.tables.get(local) {
+                Some(record) if local != 0 => file.table_lookup(bound, record, name),
                 _ => SymbolId::NIL,
             },
             None => SymbolId::NIL,
@@ -761,8 +807,8 @@ impl<'a> Ast<'a> {
         if table.is_open() {
             return read(&self.open.tables, table.open_index(), |t| t.len());
         }
-        match self.frozen.locate(table.0) {
-            Some((file, local)) => file.tables.get(local).map_or(0, |record| record.len as isize),
+        match self.frozen.locate_bound(table.0) {
+            Some((_, bound, local)) => bound.tables.get(local).map_or(0, |record| record.len as isize),
             None => 0,
         }
     }
@@ -771,10 +817,10 @@ impl<'a> Ast<'a> {
         if table.is_open() {
             return read(&self.open.tables, table.open_index(), |t| t.entry_at(position));
         }
-        let (file, local) = self.frozen.locate(table.0)?;
-        let record = file.tables.get(local)?;
-        let entry = file.table_entries(record).get(position)?;
-        Some((file.text(entry.name), entry.symbol))
+        let (file, bound, local) = self.frozen.locate_bound(table.0)?;
+        let record = bound.tables.get(local)?;
+        let entry = bound.table_entries(record).get(position)?;
+        Some((file.name(bound, entry.name), entry.symbol))
     }
     // table[name] = symbol: only a table of the open store.
     pub fn table_set(self, table: SymbolTableId, name: Text<'a>, symbol: SymbolId) {
@@ -794,8 +840,8 @@ impl<'a> Ast<'a> {
         if flow.is_open() {
             return read(&self.open.flow_nodes, flow.open_index(), |f| *f);
         }
-        match self.frozen.locate(flow.0) {
-            Some((file, local)) if local != 0 => file.flow_nodes.get(local).copied().unwrap_or_default(),
+        match self.frozen.locate_bound(flow.0) {
+            Some((_, bound, local)) if local != 0 => bound.flow_nodes.get(local).copied().unwrap_or_default(),
             _ => FlowNode::default(),
         }
     }
@@ -817,8 +863,8 @@ impl<'a> Ast<'a> {
         if list.is_open() {
             return read(&self.open.flow_lists, list.open_index(), |l| *l);
         }
-        match self.frozen.locate(list.0) {
-            Some((file, local)) if local != 0 => file.flow_lists.get(local).copied().unwrap_or_default(),
+        match self.frozen.locate_bound(list.0) {
+            Some((_, bound, local)) if local != 0 => bound.flow_lists.get(local).copied().unwrap_or_default(),
             _ => FlowList::default(),
         }
     }
