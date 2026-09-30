@@ -1,13 +1,13 @@
-//! The one walk of a file: every rule handler is called from here.
+//! The one walk: every rule handler is called from here.
 
 use bun_ast::walk::{self, Visitor};
-use bun_ast::{B, Binding, E, Expr, ExprData, G, Loc, OpCode, S, Stmt, StmtData};
+use bun_ast::{B, E, Expr, ExprData, G, Loc, OpCode, S, Stmt, StmtData};
 
 use super::Diagnostic;
 use super::context::Context;
 use super::rules;
 
-pub(crate) fn run(context: Context<'_, '_>, stmts: &[Stmt], diagnostics: &mut Vec<Diagnostic>) {
+pub(crate) fn run(context: Context<'_, '_>, stmts: &[Stmt]) -> Vec<Diagnostic> {
     let mut linter = Linter {
         context,
         targets: Vec::new(),
@@ -15,7 +15,7 @@ pub(crate) fn run(context: Context<'_, '_>, stmts: &[Stmt], diagnostics: &mut Ve
     for stmt in stmts {
         linter.visit_stmt(stmt);
     }
-    linter.context.finish(diagnostics);
+    linter.context.finish()
 }
 
 struct Linter<'p, 'a> {
@@ -24,7 +24,7 @@ struct Linter<'p, 'a> {
     targets: Vec<usize>,
 }
 
-/// The address of the node that a mark names: an array or an object that is a pattern, or the `=` of a default.
+/// The address of the node that `mark` names: an array or an object that is a pattern, or the `=` of a default.
 fn target_of(expr: &Expr) -> Option<usize> {
     match &expr.data {
         ExprData::EArray(array) => Some(core::ptr::from_ref::<E::Array>(array).addr()),
@@ -93,7 +93,7 @@ impl<'ast> Visitor<'ast> for Linter<'_, '_> {
         walk::walk_expr(self, expr);
     }
 
-    fn visit_binding(&mut self, binding: &'ast Binding) {
+    fn visit_binding(&mut self, binding: &'ast bun_ast::Binding) {
         if !self.context.stack_check.is_safe_to_recurse() {
             self.context.too_deep(binding.loc);
             return;

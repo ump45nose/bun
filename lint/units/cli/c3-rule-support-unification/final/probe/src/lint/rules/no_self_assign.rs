@@ -3,9 +3,9 @@
 use bun_ast::flags::Property as Flag;
 use bun_ast::{E, Expr, ExprData, G, Loc, OpCode};
 
+use crate::lint::ast_utils::{self, is_same_reference};
 use crate::lint::context::Context;
 use crate::lint::rule::{Rule, RuleCategory};
-use crate::lint::rules::ast_utils::{self, is_same_reference};
 use crate::lint::rules::text;
 
 static RULE: Rule = Rule {
@@ -44,7 +44,6 @@ fn each_self_assignment(context: &mut Context<'_, '_>, left: &Expr, right: &Expr
         (ExprData::EArray(l), ExprData::EArray(r)) => {
             let (l, r) = (l.items.as_slice(), r.items.as_slice());
             for (index, (left, right)) in l.iter().zip(r).enumerate() {
-                // A rest element takes what is left: it pairs with a spread only when that is the last element.
                 if matches!(left.data, ExprData::ESpread(_)) && index + 1 < r.len() {
                     break;
                 }
@@ -55,7 +54,7 @@ fn each_self_assignment(context: &mut Context<'_, '_>, left: &Expr, right: &Expr
             }
         }
         (ExprData::ESpread(l), ExprData::ESpread(r)) => {
-            each_self_assignment(context, &l.value, &r.value);
+            each_self_assignment(context, &l.value, &r.value)
         }
         (ExprData::EObject(l), ExprData::EObject(r)) if !r.properties.as_slice().is_empty() => {
             let r = r.properties.as_slice();
@@ -79,7 +78,6 @@ fn each_self_assignment(context: &mut Context<'_, '_>, left: &Expr, right: &Expr
 }
 
 fn each_property(context: &mut Context<'_, '_>, left: &G::Property, right: &G::Property) {
-    // An initializer is the default of a shorthand property: `({a = 1} = {a})`.
     if !matches!(left.kind, G::PropertyKind::Normal)
         || !matches!(right.kind, G::PropertyKind::Normal)
         || right.flags.contains(Flag::IsMethod)
@@ -104,30 +102,30 @@ fn each_property(context: &mut Context<'_, '_>, left: &G::Property, right: &G::P
     }
 }
 
-/// Where ESTree starts `node`, the `(` before that start which were not found, and where it ends.
+/// Where ESTree starts `node`, how many `(` of it were not found before that, and where it ends.
 fn range_of(context: &Context<'_, '_>, node: &Expr) -> Option<(Loc, u32, u32)> {
     match &node.data {
-        ExprData::EIdentifier(_) => Some((node.loc, 0, context.name_end(node.loc)?)),
+        ExprData::EIdentifier(_) => Some((node.loc, 0, context.token_end(node.loc)?)),
         ExprData::EDot(dot) => {
-            let (start, missed) = context.start_of(node.loc, dot.name_loc, &[&dot.target]);
-            Some((start, missed, context.name_end(dot.name_loc)?))
+            let (start, missing) = context.start_of(node.loc, dot.name_loc, &[&dot.target])?;
+            Some((start, missing, context.token_end(dot.name_loc)?))
         }
         ExprData::EIndex(index) => {
-            let (start, missed) = context.start_of(node.loc, index.index.loc, &[&index.target]);
+            let (start, missing) = context.start_of(node.loc, index.index.loc, &[&index.target])?;
             let end = if matches!(index.index.data, ExprData::EPrivateIdentifier(_)) {
-                context.name_end(index.index.loc)?
+                context.token_end(index.index.loc)?
             } else {
-                context.close_bracket(&index.index)?
+                context.close_bracket(&index.index)?.checked_add(1)?
             };
-            Some((start, missed, end))
+            Some((start, missing, end))
         }
         _ => None,
     }
 }
 
 fn report(context: &mut Context<'_, '_>, node: &Expr) {
-    // The name in the text is the source of the node: a node whose end is not found is not reported.
-    let Some((start, missed, end)) = range_of(context, node) else {
+    // A node whose text does not read is not reported: its name is its text.
+    let Some((start, missing, end)) = range_of(context, node) else {
         return;
     };
     let Some(source) = usize::try_from(start.start)
@@ -136,7 +134,8 @@ fn report(context: &mut Context<'_, '_>, node: &Expr) {
     else {
         return;
     };
-    let mut name = vec![b'('; missed as usize];
+    // A `(` that was not found stands before a comment or a line break: the name has it all the same.
+    let mut name = vec![b'('; missing as usize];
     without_white_space(source, &mut name);
     context.report(
         &RULE,
@@ -145,7 +144,7 @@ fn report(context: &mut Context<'_, '_>, node: &Expr) {
     );
 }
 
-/// `text.replace(/\s+/gu, "")`, added to `out`.
+/// `text.replace(/\s+/gu, "")`.
 fn without_white_space(text: &[u8], out: &mut Vec<u8>) {
     let mut at = 0;
     while let Some(&byte) = text.get(at) {

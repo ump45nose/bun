@@ -50,6 +50,12 @@ Why (d), from the code:
   variables to declare                        3                  1                  1                      2
   the same mechanism is in the tree           the out file       no                 the switch only        the out file
 
+- The review rules of the repository decide for the smallest hook. REVIEW.md:15: "Never add production code
+  solely to make a test writable — use `bun:internal-for-testing` or externally observable behavior." All four
+  proposals add such code. (c) adds a second driver (a manifest, a loop over programs, state given back between
+  programs, a report protocol); (d) adds a reader and a writer and leaves what a user can observe as it is.
+  A lint run must not start JavaScriptCore (cli.md C1.1), so the module of that rule cannot serve the command
+  line. It is a question for the maintainers all the same: MQ-1.
 - conformance.md T2.4 fixes the default check: "the unit files as operands" and "the plain format ... from
   stderr". (a), (b) and (d) add to that one spawn. (c) is a second check beside it, with another operand, another
   stream and other exit codes, and only that second check could ever list an instance.
@@ -89,6 +95,8 @@ What (d) costs, measured. This is its weak side and the reason why the top-down 
   `--revision` on this machine, 16 threads, load average above 600: release 64 ms with 1 process at a time,
   40 ms with 8, 24 ms with 16; debug 270 ms with 1, 57 ms with 8 and with 16. On a lighter machine the earlier
   passes measured 12 ms for a release start, and (td) medians of 2.4 ms to 61 ms release, 272 ms to 351 ms debug.
+  The same probes an hour later, load average 570: release 151 ms with 1 at a time and 74 ms with 4, debug
+  460 ms with 1. The figures of this machine say how loaded it is more than what a start costs.
 - The default libraries are read again by each process. Today's parser, which drops the types, reads the 102
   library files that are no worker or script host library (2,984,246 bytes) in 10 ms in the release build; (td)
   the 15 files of a `target: es2015` program take 6 ms release and 284 ms to 311 ms debug. Binding and the start
@@ -163,9 +171,10 @@ Ask.
     src/bun_core/env_var.rs:181 and `.get_not_empty()` as src/jsc/BytecodeOrderRecorder.rs:67 does, or with no
     edit outside cli's files `bun_core::getenv_z(bun_core::zstr!("BUN_INTERNAL_LINT_REPORT"))` as
     src/runtime/cli/test/ChangedFilesFilter.rs:339 does (clippy.toml:16-17 bans std::env::var only).
-    A gate for test hooks exists at src/bundler/bytecode_order.rs:63-71 (debug build, or
-    BUN_GARBAGE_COLLECTOR_LEVEL and BUN_FEATURE_FLAG_INTERNAL_FOR_TESTING set); the runner sets both variables
-    in every spawn, so cli may use that gate.
+    A gate for test hooks exists at src/bundler/bytecode_order.rs:62-71 (debug build, or
+    BUN_GARBAGE_COLLECTOR_LEVEL and BUN_FEATURE_FLAG_INTERNAL_FOR_TESTING set). bunEnv has both
+    (test/harness.ts:78 and :85) and is the environment of every spawn of the runner, in the test file and in
+    sweep.ts, so cli may use that gate.
  2. The value is an absolute path. When the run ends with exit code 0 or 2 the binary writes ONE JSON object
     there (UTF-8, the file created or truncated) and then exits. With exit code 1 no file is written. stdout,
     stderr and the exit code are the same as without the variable.
@@ -262,7 +271,29 @@ Ask.
     (units/typecheck/conventions-scratch/rust/internal.rs:28-81, checker.rs:123-127, :294-297).
  5. typecheck: the default libraries are read from a directory that the caller names (K4 does that), with the
     names of internal/bundled/libs: LB-2.
- 6. noErrorTruncation is honoured: the harness sets it for every instance.
+ 6. noErrorTruncation is honoured: the harness sets it for every instance. It is one of four names that the
+    harness adds to the declared options (harnessutil.go:319-339: allowNonTsExtensions, noErrorTruncation,
+    suppressOutputPathCheck, noCheck); the entry of point 2 knows them too.
+ 7. The value of an option in the variable is what a tsconfig.json would hold, and the runner makes it from the
+    directive as the harness does (harnessutil.go:443-486): a boolean, a number, a string (a file name absolute
+    and real), a list of strings split at the commas, and for an enumeration the text of the directive in
+    lower case (`es2015`, `es6`, `react-jsx`). The binary turns the name of an enumeration and of a library
+    into its value as tsoptions does for a tsconfig.json (convertJsonOption, tsconfigparsing.go:457;
+    EnumMap, commandlineoption.go:86).
+The shape of points 2 to 4, with names that are typecheck's to choose:
+    pub enum OptionValue<'a> { Bool(bool), Number(f64), String(&'a [u8]), List(&'a [&'a [u8]]) }
+    pub enum OptionSet { Done, UnknownName, WrongValue, NotImplemented }
+    pub fn set_compiler_option(options: &mut CompilerOptions, name: &[u8], value: OptionValue<'_>) -> OptionSet;
+    pub struct Chain { pub text: Box<[u8]>, pub next: Vec<Chain> }
+    pub struct Related { pub code: i32, pub text: Box<[u8]>, pub next: Vec<Chain>,
+                         pub file: Option<FileId>, pub start: u32, pub length: u32 }
+    pub struct Reported { pub category: Category, pub code: i32, pub text: Box<[u8]>, pub next: Vec<Chain>,
+                          pub file: Option<FileId>, pub start: u32, pub length: u32, pub related: Vec<Related> }
+    pub fn diagnostics_of_harness(program: &Program) -> Vec<Reported>;
+    pub fn stand_ins(program: &Program) -> Vec<&'static str>;
+    pub fn internal_faults(program: &Program) -> u32;
+  cli turns a Reported into its own diagnostic (file, start, length, category, Code::Ts, text, chain, related:
+  the fields of lint-prototype.patch) and keeps the order that typecheck gives.
 Unlocks. (td) 12,786 of the 12,797 run instances set a declared compiler option by a directive, and the harness
 sets three more for all. With one root, no configuration file and files that can be written on Linux: 10,570
 run instances (E 5,830, C 4,740).
@@ -340,7 +371,7 @@ two entries they are not. The corpus adds 12,444 .ts and .tsx files. No workflow
 (lint.yml checks scripts and src only); it is a script of package.json:60 and the project of the editor.
 Until then: nothing in CI changes.
 
-RP-2. oxlint.json:40-69 ("ignorePatterns")
+RP-2. oxlint.json:40-74 ("ignorePatterns")
 To: integrator. Ask: "test/cli/lint/conformance/corpus" and "test/cli/lint/typecheck/fixtures".
 Why. `bun run lint:fix` (package.json:65) is `oxlint --config oxlint.json --fix` without a path. Proved with
 oxlint 1.70.0, the configuration and the plugin of this repository, on tests/cases/compiler copied to the path
@@ -396,6 +427,12 @@ To: integrator. For information.
    `.gitignore` with the line `!*` in the corpus directory lifts it, and `git add <directory>` then takes the
    file. That file is the unit's own.
    Differs: the top-down draft adds the file with `git add -f`, which leaves the trap for the next sync.
+ - The corpus directory has its own `.gitattributes` with the line `* -text`, as VN-1 asks of typecheck: the root
+   file gives `text eol=lf` to .ts, .tsx, .js, .json and .mts, so `git add` would store the 9,241 cases that hold
+   a CR LF (8,879 at every line break, 362 at some) with other bytes than upstream's. With the line, a clone
+   with core.autocrlf true (Git for Windows, and the
+   autofix workflow: format.yml:30, which pushes what differs at :123) leaves the bytes alone: proved by
+   simulation in corpus-repo-hazards/prove-corpus.sh.
  - No case name matches the test discovery (scripts/runner.node.ts:2492-2494, `\.test|spec\.`), the discovery of
    `bun test`, or the glob of prettier (package.json:80, test/**/*.{test,spec}.*): 0 of 12,445.
  - scripts/buildkite.ts:435-465 reads at most 500 files of a pull request (10 pages of 50, lines 441-443) and
@@ -410,7 +447,13 @@ RP-7. The formatter
 To: nobody; a duty of the unit. autofix.ci (.github/workflows/format.yml) runs `bun run prettier` over docs and
 test/**/*.{test,spec}.*: docs/project/license.mdx (the tables are aligned) and test/cli/lint/conformance.test.ts
 have to be formatted, or the workflow pushes a commit or fails. The other files of the runner are not in its
-glob. .prettierignore:3 has the react-compiler fixtures; the corpus needs no line today.
+glob. .prettierignore:3 has the react-compiler fixtures; CI needs no line for the corpus.
+To: integrator, not urgent: the lines `test/cli/lint/conformance/corpus` and `test/cli/lint/typecheck/fixtures`
+in .prettierignore. The editor settings of the repository format a file when it is saved
+(.vscode/settings.json:5) and the root .editorconfig asks for LF, a final line break and no white space at the
+end of a line in every file: a case that someone opens and saves is rewritten. Against the second the corpus
+directory has its own .editorconfig (`root = true` and no other line; the unit's own file, in the list of
+prove-corpus.sh); against the first only the root .prettierignore helps, which no unit owns.
 
 
 3. Libraries
@@ -446,8 +489,9 @@ Unlocks: (td) 12,788 run instances load a default library. Until then: the sweep
 LC-1. The credit for the ported checker and for the libraries
 To: typecheck, cli, the later unit that embeds the libraries, the maintainers.
 The unit owns LICENSE.md and docs/project/license.mdx for attribution. With T1 it adds the corpus (TypeScript and
-typescript-go, Apache-2.0, not part of the binary) under "Additional credits" (LICENSE.md:81-83,
-docs/project/license.mdx:86-90), and keeps beside the corpus LICENSE and NOTICE.txt of typescript-go (9,197 and
+typescript-go, Apache-2.0, not part of the binary) under "Additional credits" (LICENSE.md:81-84, two entries,
+the file ends without a line break; docs/project/license.mdx:86-90, three entries), in words that do not name
+the flag, which is hidden, and keeps beside the corpus LICENSE and NOTICE.txt of typescript-go (9,197 and
 48,860 bytes) and LICENSE.txt and ThirdPartyNoticeText.txt of TypeScript (9,197 bytes, the same bytes as
 LICENSE, and 37,824 bytes).
 Ask.
@@ -468,10 +512,12 @@ Until then: the corpus line only.
 
 VN-1. test/cli/lint/typecheck/fixtures/
 To: typecheck (K2).
-Ask. Before the first case is added, two files of its own there: `.gitattributes` with the line `* -text`, and
-`.gitignore` with the line `!*`. The entries RP-1, RP-2, RP-3 and CK-1 name its path too.
-Why. `git check-attr text eol` in the worktree gives `text: set`, `eol: lf` for .ts, .tsx, .js and .json below that
-path (the root .gitattributes:1-20) and nothing for .symbols and .errors.txt. Of the 12,445 case files 8,879 are
+Ask. Before the first case is added, three files of its own there: `.gitattributes` with the line `* -text`,
+`.gitignore` with the line `!*`, and `.editorconfig` with the line `root = true` (RP-7). The entries RP-1, RP-2,
+RP-3, RP-7 and CK-1 name its path too.
+Why. `git check-attr text eol` in the worktree gives `text: set`, `eol: lf` for .ts, .tsx, .d.ts, .js, .json and
+.mts below that path (the root .gitattributes:1-20) and nothing for .cts, .symbols, .types and .errors.txt.
+.gitignore:139 (`*.generated.ts`) hides a case of that name there as it does in the corpus (RP-6). Of the 12,445 case files 8,879 are
 CR LF, 362 mix CR LF and LF, 3,203 are LF, 8 have a lone CR, 9 a NUL byte, 7 a UTF-16 byte order mark and 844 a
 UTF-8 byte order mark. Proved in a scratch repository with the root .gitattributes: `git add` stores
 compiler/assignmentToObject.ts as blob 31990f31 below typecheck/fixtures and as upstream's blob 38206f54 below a

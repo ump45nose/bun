@@ -1,4 +1,4 @@
-//! The harness of the probe: not part of the proposed crate. In a text, `\\` stands for a backslash and `\n` for a line feed.
+//! The harness of the probe: not part of the proposed crate.
 
 use std::io::Write;
 
@@ -55,33 +55,11 @@ fn run(paths: Vec<String>) {
         let no_lint = std::env::var_os("PROBE_PARSE_ONLY").is_some();
         let result = parser.parse_only(|parsed| {
             let parsed_at = started.elapsed();
-            let mut diagnostics = Vec::new();
-            if !no_lint {
-                crate::lint::lint(
-                    parsed,
-                    &source,
-                    &arena,
-                    crate::lint::FileId(0),
-                    &mut diagnostics,
-                );
-            }
-            // The order and the merge of equal reports that the output layer gives to one file.
-            let name = |d: &crate::lint::Diagnostic| match d.code {
-                crate::lint::Code::Name(name) => name,
+            let diagnostics = if no_lint {
+                Vec::new()
+            } else {
+                crate::lint::lint(parsed, &source, &arena)
             };
-            diagnostics.sort_by(|a, b| {
-                (a.start, a.start + a.length, name(a), &a.text).cmp(&(
-                    b.start,
-                    b.start + b.length,
-                    name(b),
-                    &b.text,
-                ))
-            });
-            if std::env::var_os("PROBE_RAW").is_none() {
-                diagnostics.dedup_by(|b, a| {
-                    a.start == b.start && a.length == b.length && a.code == b.code && a.text == b.text
-                });
-            }
             (diagnostics, parsed_at, started.elapsed())
         });
         match result {
@@ -97,15 +75,13 @@ fn run(paths: Vec<String>) {
                 writeln!(out, "{path}\tOK").unwrap();
                 for d in diagnostics {
                     let (line, column) = line_column(&text, d.start as usize);
-                    let crate::lint::Category::Error = d.category;
-                    assert!(d.file == Some(crate::lint::FileId(0)));
-                    let crate::lint::Code::Name(code) = d.code;
+                    let crate::lint::Severity::Error = d.severity;
                     writeln!(
                         out,
                         "{path}\t{}\t{}\t{line}:{column}\t{}\t{}",
                         d.start,
-                        d.length,
-                        code,
+                        d.len,
+                        d.code,
                         String::from_utf8_lossy(&d.text)
                             .replace('\\', "\\\\")
                             .replace('\n', "\\n")

@@ -1,12 +1,11 @@
 //! Ported from ESLint lib/rules/valid-typeof.js, with its default: a value that is not a string literal is allowed.
 
-use std::borrow::Cow;
-
 use bun_ast::{E, Expr, ExprData, OpCode};
 
+use crate::lint::ast_utils;
 use crate::lint::context::{Context, Globals};
 use crate::lint::rule::{Rule, RuleCategory};
-use crate::lint::rules::{ast_utils, is_equality};
+use crate::lint::rules::is_equality;
 
 static RULE: Rule = Rule {
     name: "valid-typeof",
@@ -64,10 +63,5 @@ fn sibling(context: &mut Context<'_, '_>, value: &Expr) {
         }
         _ => return,
     };
-    context.report_if_global(
-        &RULE,
-        value.loc,
-        Cow::Borrowed(b"Invalid typeof comparison value."),
-        names,
-    );
+    context.report_if_global(&RULE, value.loc, b"Invalid typeof comparison value.", names);
 }

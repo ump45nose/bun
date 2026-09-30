@@ -67,7 +67,7 @@ no-compare-neg-zero: 86 cases: same 85, moved 1
 moved: "(/* c */ x) === -0" [script]
     eslint: 1:1 Do not use the '===' operator to compare against -0.
     bun:    1:10 Do not use the '===' operator to compare against -0.
-use-isnan: 316 cases: same 304, merged 3, moved 2, missing 6, both-reject 1
+use-isnan: 316 cases: same 307, moved 2, missing 6, both-reject 1
 moved: "switch (x) { case /* c */ NaN: }" [script]
     eslint: 1:14 'case NaN' can never match. Use Number.isNaN before the switch.
     bun:    1:27 'case NaN' can never match. Use Number.isNaN before the switch.
@@ -92,15 +92,6 @@ missing: "(class NaN {}); x == NaN" [script]
 missing: "function f(a = x === NaN) { var NaN; }" [script]
     eslint: 1:16 Use the isNaN function to compare with NaN.
     bun:    (none)
-merged: "x === NaN === NaN" [script]
-    eslint: 1:1 Use the isNaN function to compare with NaN. | 1:1 Use the isNaN function to compare with NaN.
-    bun:    1:1 Use the isNaN function to compare with NaN.
-merged: "x == NaN != NaN" [script]
-    eslint: 1:1 Use the isNaN function to compare with NaN. | 1:1 Use the isNaN function to compare with NaN.
-    bun:    1:1 Use the isNaN function to compare with NaN.
-merged: "NaN == NaN == NaN" [script]
-    eslint: 1:1 Use the isNaN function to compare with NaN. | 1:1 Use the isNaN function to compare with NaN.
-    bun:    1:1 Use the isNaN function to compare with NaN.
 valid-typeof: 202 cases: same 195, missing 6, both-reject 1
 missing: "function f(undefined) {} typeof x === undefined" [script]
     eslint: 1:39 Invalid typeof comparison value.
@@ -185,25 +176,16 @@ eslint-rejects: "switch (a) { case new.target: break; case new.target: break; }"
 moved: "switch (a) { case a: break;\n  case // case\n a: break; }" [script]
     eslint: 2:3 Duplicate case label.
     bun:    3:2 Duplicate case label.
-no-self-assign: 493 cases: same 481, merged 3, moved 1, extra 2, eslint-rejects 2, both-reject 4
+no-self-assign: 493 cases: same 484, moved 1, extra 2, eslint-rejects 2, both-reject 4
 moved: "a.b = (\na).b" [script]
     eslint: 1:7 '(a).b' is assigned to itself.
     bun:    2:1 '(a).b' is assigned to itself.
-merged: "({a, a} = {a})" [script]
-    eslint: 1:12 'a' is assigned to itself. | 1:12 'a' is assigned to itself.
-    bun:    1:12 'a' is assigned to itself.
 extra: "a.b = ( /* c */ a).b" [script]
     eslint: 1:7 '(/*c*/a).b' is assigned to itself.
     bun:    1:17 '(a).b' is assigned to itself.
 extra: "a.b = (// c\na).b" [script]
     eslint: 1:7 '(//ca).b' is assigned to itself.
     bun:    2:1 '(a).b' is assigned to itself.
-merged: "({a, 'a': a} = {a})" [script]
-    eslint: 1:17 'a' is assigned to itself. | 1:17 'a' is assigned to itself.
-    bun:    1:17 'a' is assigned to itself.
-merged: "({a: b.c, a: b.c} = {a: b.c})" [script]
-    eslint: 1:25 'b.c' is assigned to itself. | 1:25 'b.c' is assigned to itself.
-    bun:    1:25 'b.c' is assigned to itself.
 eslint-rejects: "a?.b.c = a.b.c" [script]
     eslint: FATAL Parsing error: Optional chaining cannot appear in left-hand side
     bun:    1:10 'a.b.c' is assigned to itself.

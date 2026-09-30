@@ -3,9 +3,9 @@
 use bun_ast::flags::Property as Flag;
 use bun_ast::{E, Expr, G};
 
+use crate::lint::ast_utils::{self, Name};
 use crate::lint::context::Context;
 use crate::lint::rule::{Rule, RuleCategory};
-use crate::lint::rules::ast_utils::{self, Name};
 use crate::lint::rules::text;
 
 static RULE: Rule = Rule {

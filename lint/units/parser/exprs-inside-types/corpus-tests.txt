@@ -1,0 +1,17 @@
+/workspace/wt/parser/node_modules/.bun/typescript@6.0.2/node_modules/typescript/lib/typescript.js:30794
+  return node.kind === 80 /* Identifier */;
+              ^
+
+TypeError: Cannot read properties of undefined (reading 'kind')
+    at Object.isIdentifier (/workspace/wt/parser/node_modules/.bun/typescript@6.0.2/node_modules/typescript/lib/typescript.js:30794:15)
+    at v (/workspace/notes/lint/units/parser/exprs-inside-types/corpus.cjs:60:15)
+    at visitNodes (/workspace/wt/parser/node_modules/.bun/typescript@6.0.2/node_modules/typescript/lib/typescript.js:32559:22)
+    at forEachChildInJSDocFunctionType (/workspace/wt/parser/node_modules/.bun/typescript@6.0.2/node_modules/typescript/lib/typescript.js:32951:12)
+    at Object.forEachChild (/workspace/wt/parser/node_modules/.bun/typescript@6.0.2/node_modules/typescript/lib/typescript.js:33072:35)
+    at v (/workspace/notes/lint/units/parser/exprs-inside-types/corpus.cjs:71:8)
+    at visitNode2 (/workspace/wt/parser/node_modules/.bun/typescript@6.0.2/node_modules/typescript/lib/typescript.js:32551:18)
+    at forEachChildInParameter (/workspace/wt/parser/node_modules/.bun/typescript@6.0.2/node_modules/typescript/lib/typescript.js:32601:177)
+    at Object.forEachChild (/workspace/wt/parser/node_modules/.bun/typescript@6.0.2/node_modules/typescript/lib/typescript.js:33072:35)
+    at v (/workspace/notes/lint/units/parser/exprs-inside-types/corpus.cjs:71:8)
+
+Node.js v26.3.0

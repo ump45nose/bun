@@ -2,7 +2,8 @@
 # The whole proof of the merged foundation, from the reference clone and the notes alone. No network.
 # 1. builds the ground-truth programs with the local Go toolchain and checks the merged set against them,
 # 2. copies the notes twice, once unchanged and once with every copy of a foundation module replaced by the merged set,
-# 3. runs every verifier of the upper prototypes in both copies and compares what they print.
+# 3. runs every verifier of the upper prototypes in both copies and compares what they print,
+# 4. runs the parts of the assembly against what the other passes recorded from the reference.
 # usage: prove.sh [work directory, default /tmp/sfm-proof]
 set -e
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -20,8 +21,9 @@ cmp "$W/unicode_tables.ts" "$TOP/runner/unicode_tables.ts" && echo "runner/unico
 zcat "$TOP/vectors/gotab.txt.gz" | cmp - "$W/gotab.txt" && zcat "$TOP/vectors/govec.jsonl.gz" | cmp - "$W/govec.jsonl" && echo "the stored tables and vectors are what this toolchain gives"
 bun "$TOP/groundtruth/make_test_vectors.ts" "$W/govec.jsonl" "$W/govec-test.jsonl" 40 > /dev/null
 zcat "$TOP/vectors/govec-test.jsonl.gz" | cmp - "$W/govec-test.jsonl" && echo "the stored vectors of the fast test are every 40th row of them"
-bun "$HERE/verify_foundation.ts" "$W/gotab.txt" "$W/govec.jsonl" | tail -12
+bun "$HERE/verify_foundation.ts" "$W/gotab.txt" "$W/govec.jsonl" | tail -13
 bun "$HERE/foundation_test_cost.ts" "$TOP/vectors/govec-test.jsonl.gz"
+bun "$HERE/foundation_test_cost.ts" "$TOP/vectors/govec-test.jsonl.gz" small
 bun "$HERE/comment_runs.ts" "$TOP"/runner/*.ts | tail -1
 
 python3 "$NOTES/error-baseline-format/groundtruth/build.py" "$REF" "$W/ebf-gt"
@@ -45,4 +47,8 @@ for t in orig overlay; do
 done
 bun "$HERE/crosscheck_roots.ts" "$W/overlay" | head -3
 bun "$HERE/crosscheck_vectors.ts" "$W/overlay" | grep "^=="
+bun "$HERE/crosscheck_directives.ts" "$W/overlay" "$REF" | head -4
+for t in orig overlay; do
+  echo "names that are not ASCII through the writer, $t: $(bun "$HERE/nonascii_names.ts" "$W/$t" "$EBGT" | head -1)"
+done
 bun "$HERE/corpus_invariants.ts" "$W/overlay" "$REF" | head -3

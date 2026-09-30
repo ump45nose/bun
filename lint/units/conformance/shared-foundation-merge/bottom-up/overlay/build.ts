@@ -6,7 +6,7 @@ import { dirname, join, relative } from "node:path";
 
 const [notes, out, flag] = process.argv.slice(2);
 const withPatches = flag !== "--no-patches";
-// --without=<group> leaves one group of patches out: rename, decode-paths, go-case, compare-once.
+// --without=<group> leaves one group of patches out: rename, decode-paths, go-case, go-atoi, compare-once.
 const without = flag?.startsWith("--without=") ? flag.slice("--without=".length) : undefined;
 const merged = join(import.meta.dir, "..", "runner");
 
@@ -361,6 +361,23 @@ group("go-case", [
       d + "/harnessutil.ts",
       `// strings.EqualFold on ASCII names\nfunction equalFold(a: string, b: string): boolean {\n  return a.length === b.length && a.toLowerCase() === b.toLowerCase();\n}\n`,
       `import { equalFold } from "${m(d + "/harnessutil.ts", "gostrings")}";\n`,
+      1,
+    ],
+  ]),
+]);
+// strconv.Atoi of the merged set in place of the local test of the form.
+group("go-atoi", [
+  ...["enumerator/prototype", "instance-materialisation/prototype", "instance-materialisation/bottom-up/prototype"].flatMap((d): Patch[] => [
+    [
+      d + "/harnessutil.ts",
+      `// strconv.Atoi accepts an optional sign and decimal digits, with underscores rejected in base 10\nfunction atoiOk(s: string): boolean {\n  return /^[+-]?[0-9]+$/.test(s);\n}\n`,
+      `import { atoi } from "${m(d + "/harnessutil.ts", "gostrings")}";\n`,
+      1,
+    ],
+    [
+      d + "/harnessutil.ts",
+      "    case \"number\":\n      if (!atoiOk(value)) throw new HarnessFatal(`Value for option '${option.name}' must be a number, got: ${value}`);\n      return Number(value);\n",
+      "    case \"number\": {\n      const numVal = atoi(value);\n      if (numVal === undefined) throw new HarnessFatal(`Value for option '${option.name}' must be a number, got: ${value}`);\n      return numVal;\n    }\n",
       1,
     ],
   ]),

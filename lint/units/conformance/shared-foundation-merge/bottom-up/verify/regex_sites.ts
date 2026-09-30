@@ -1,5 +1,6 @@
-// Every regexp of the assembled runner that ports a regexp of Go has the source that re2.ts composes from the proven classes.
-// usage: bun regex_sites.ts <assembled tree>      exit code 1 when a place differs
+// Every regexp of the assembled runner that ports a regexp of Go has the source that re2.ts composes from the proven classes,
+// and every other regexp with a class or a flag that Go reads in another way is a known place that ports no regexp of Go.
+// usage: bun regex_sites.ts <assembled tree>      exit code 1 when a place differs or is not known
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { sites } from "./re2";
@@ -25,32 +26,40 @@ for (const [file, before, source, flags] of sites) {
   }
 }
 
-// A class of JavaScript that is not the class of Go may stand only where the rules of TypeScript's own harness are ported.
-const allowed: Record<string, RegExp> = {
-  // ts.formatCodeSpan of program.ts and the rules "tsc" of harnessIO.ts are JavaScript: their classes are the ones of JavaScript.
-  "diagnosticwriter.ts": /\.replace\(\/\\S\/g, " "\)|\.replace\(\/\.\/g, "~"\)/,
-  "text_model.ts": /blankNonWhitespace: slice => slice\.replace\(\/\\S\/g, " "\)|squigglePattern: \/\^\\s\*~\*\$\//,
-  "error_baseline.ts": /const diagnosticsLocation(Prefix|Pattern)Tsc = /,
-  // Readers of text that the runner or a linter wrote, not ports of a regexp of Go.
-  "reader.ts": /^const (plainHead|globalHead|sectionHead|relatedLine|summaryHead|locationPattern|prettyHead|prettyRelatedHeadGo|prettyRelatedHeadTsc|gutterLine|gutterSquiggle) = |^  `\^\(\?:\$\{locationPattern\} - \)\?/,
-  "plain.ts": /^const (globalHead|head) =|^  \/\^\(\\S\.\*\?\)/,
-  "checks.ts": /const head = /,
-  "run.ts": /const sectionHead = |lines\.findIndex\(/,
-  "sweep_args.ts": /new RegExp\("\^" \+ selector/,
-};
-const suspect = /\\s|\\S|\\w|\\W|\\b|\\B|\(\?i\)|\/[dgsuy]*[im][dgimsuy]*[;,.)\s]/;
-const literalLine = /(^|[=(,:!&|?]\s*|return\s+)\/(?![/*])(?:\\.|\[(?:\\.|[^\]\\\n])*\]|[^/\\\n[])+\/[dgimsuvy]*|new RegExp\(/;
-let notes = 0;
+// Lines with \s, \S, \w, \W, \b, \B or a literal with the flag i or m: [file, text of the line, why it is no port of a regexp of Go].
+const known: [file: string, part: string, why: string][] = [
+  ["diagnosticwriter.ts", `.replace(/\\S/g, " ")`, "formatCodeSpan of TypeScript's program.ts, rules tsc, on a JavaScript string"],
+  ["error_baseline.ts", "const diagnosticsLocationPrefixTsc = /^(lib.*\\.d\\.ts)\\(\\d+,\\d+\\)/gim;", "harnessIO.ts of TypeScript, rules tsc"],
+  ["error_baseline.ts", "const diagnosticsLocationPatternTsc = /(lib.*\\.d\\.ts):\\d+:\\d+/i;", "harnessIO.ts of TypeScript, rules tsc"],
+  ["text_model.ts", `blankNonWhitespace: slice => slice.replace(/\\S/g, " "),`, "harnessIO.ts of TypeScript, the model of rules tsc"],
+  ["text_model.ts", "squigglePattern: /^\\s*~*$/,", "the reader's inverse of the line above, the model of rules tsc"],
+  ["reader.ts", "const plainHead = /^(\\S.*?)\\(", "reader of a baseline; on a byte string no first byte of a name is a space of JavaScript"],
+  ["reader.ts", "const gutterSquiggle = new RegExp(", "reader of a pretty baseline; the writers put spaces (tsgo) or the spaces of JavaScript (tsc) there"],
+  ["plain.ts", "/^(\\S.*?)\\((\\d+),(\\d+)\\): (error|warning|suggestion|message) (?:TS", "reader of the lines that a linter prints, a JavaScript string"],
+  ["checks.ts", "const head = /^(\\S.*?)\\(", "reader of the first section of a baseline, a JavaScript string"],
+  ["checks.ts", "/^[a-z]:\\//i.test(m[1])", "a drive letter, ASCII"],
+  ["checks.ts", "/^\\/[a-z]:\\//i.test(p.slice(root.length))", "a drive letter, ASCII"],
+  ["check.ts", "/^[a-z][a-z0-9+.-]*:\\/\\//i.test(p.path)", "a scheme of a URL, ASCII"],
+  ["shape.ts", "/(^|\\/)[tj]sconfig\\.json$/i.test(name)", "a config name on text of the model; without the flag u no rune outside ASCII folds to a letter"],
+  ["materialize.ts", "const reserved = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\\..*)?$/i;", "names that Windows reserves, ASCII"],
+];
+const suspect = /\\s|\\S|\\w|\\W|\\b|\\B|\/[dgsuvy]*[im][dgimsuvy]*[;,.) ]/;
+let unknown = 0;
+const used = new Set<number>();
 for (const file of readdirSync(runner).filter(f => f.endsWith(".ts")).sort()) {
-  const lines = readFileSync(join(runner, file), "utf8").split("\n");
-  lines.forEach((line, k) => {
-    if (line.trimStart().startsWith("//")) return;
-    if (!literalLine.test(line) && !/^\s*`[^`]*\\\\[sSwWbB]/.test(line)) return;
-    if (!suspect.test(line)) return;
-    if (allowed[file]?.test(line)) return;
-    console.log(`FAIL ${file}:${k + 1}: a class, a word boundary or a flag of JavaScript that Go reads in another way: ${line.trim().slice(0, 160)}`);
-    notes++;
+  if (file === "gostrings.ts") continue;
+  readFileSync(join(runner, file), "utf8").split("\n").forEach((line, k) => {
+    if (line.trimStart().startsWith("//") || !suspect.test(line)) return;
+    const at = known.findIndex(([f, part]) => f === file && line.includes(part));
+    if (at >= 0) {
+      used.add(at);
+      return;
+    }
+    console.log(`FAIL ${file}:${k + 1}: a class or a flag that Go reads in another way, at a place that is not known: ${line.trim().slice(0, 170)}`);
+    unknown++;
   });
 }
-console.log(`${sites.length} places, ${bad} differ; ${notes} other regexps with a class or flag whose meaning differs between Go and JavaScript`);
-process.exit(bad + notes === 0 ? 0 : 1);
+const stale = known.filter((_, k) => !used.has(k));
+for (const [file, part] of stale) console.log(`FAIL ${file}: the known place is gone: ${part}`);
+console.log(`${sites.length} ported regexps, ${bad} differ; ${known.length} known places with a class or flag of JavaScript, ${unknown} not known, ${stale.length} gone`);
+process.exit(bad + unknown + stale.length === 0 ? 0 : 1);

@@ -1,5 +1,5 @@
 // Port of internal/tspath (path.go, extension.go) of typescript-go 89d5d5b: the functions that the runner reaches.
-import { toLower, unicodeToLower, utf8Bytes, utf8String } from "./gostrings";
+import { isAscii, toLower, unicodeToLower, utf8Bytes, utf8String } from "./gostrings";
 import {
   compareStringsCaseInsensitive,
   equateStringCaseInsensitive,
@@ -347,14 +347,7 @@ export function getCanonicalFileName(fileName: string, useCaseSensitiveFileNames
 
 // U+0130 stays, every other rune takes unicode.ToLower.
 export function toFileNameLowerCase(fileName: string): string {
-  let ascii = true;
-  for (let i = 0; i < fileName.length; i++) {
-    if (fileName.charCodeAt(i) >= 0x80) {
-      ascii = false;
-      break;
-    }
-  }
-  if (ascii) return toLower(fileName);
+  if (isAscii(fileName)) return toLower(fileName);
   let out = "";
   for (let i = 0; i < fileName.length; ) {
     const c = fileName.codePointAt(i)!;
@@ -448,11 +441,6 @@ function getAnyExtensionFromPathWorker(
     if (result !== "") return result;
   }
   return "";
-}
-
-function isAscii(s: string): boolean {
-  for (let i = 0; i < s.length; i++) if (s.charCodeAt(i) >= 0x80) return false;
-  return true;
 }
 
 // Upstream cuts the path at a count of bytes: text that is not ASCII takes that cut on its UTF-8 form.

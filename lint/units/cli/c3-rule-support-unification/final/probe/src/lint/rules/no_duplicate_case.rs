@@ -1,8 +1,6 @@
 //! Ported from ESLint lib/rules/no-duplicate-case.js.
 
-use std::borrow::Cow;
-
-use bun_ast::{Case, Expr, S};
+use bun_ast::S;
 
 use crate::lint::context::Context;
 use crate::lint::rule::{Rule, RuleCategory};
@@ -13,26 +11,27 @@ static RULE: Rule = Rule {
 };
 
 pub(crate) fn s_switch(context: &mut Context<'_, '_>, node: &S::Switch) {
-    let mut tests: Vec<(Vec<u8>, &Case, &Expr)> = Vec::new();
-    for case in node.cases.slice() {
-        let Some(value) = &case.value else {
-            continue;
-        };
-        // A test whose text does not read is not compared.
-        if let Some(key) = context.case_test(value) {
-            tests.push((key, case, value));
+    let cases = node.cases.slice();
+    // Each test by what ESLint compares of it, with its place. A test whose text does not read is not compared.
+    let mut tests: Vec<(Vec<u8>, usize)> = Vec::new();
+    for (index, case) in cases.iter().enumerate() {
+        if let Some(key) = case
+            .value
+            .as_ref()
+            .and_then(|value| context.case_test(value))
+        {
+            tests.push((key, index));
         }
     }
-    if tests.len() < 2 {
-        return;
-    }
-    // A stable sort: equal tests stay in the order they were written, and all but the first are duplicates.
-    tests.sort_by(|a, b| a.0.cmp(&b.0));
+    tests.sort_unstable();
+    // Equal tests are neighbours now, the first one written first: every later one is a duplicate.
     let mut previous: Option<&[u8]> = None;
-    for (key, case, value) in &tests {
+    for (key, index) in &tests {
         if previous == Some(key.as_slice()) {
-            let start = context.case_start(case, value);
-            context.report(&RULE, start, Cow::Borrowed(b"Duplicate case label."));
+            if let Some(value) = cases.get(*index).and_then(|case| case.value.as_ref()) {
+                let start = context.case_start(value);
+                context.report(&RULE, start, b"Duplicate case label.");
+            }
         }
         previous = Some(key);
     }

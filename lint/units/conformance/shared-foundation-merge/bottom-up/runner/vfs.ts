@@ -13,7 +13,7 @@ export function readFile(path: string): ReadFileResult {
     return { ok: false };
   }
   if (b.length === 0) return { ok: true, contents: "" };
-  return { ok: true, contents: utf8String(decodeBytes(b)) };
+  return { ok: true, contents: utf8String(decodeBytes(b), path) };
 }
 
 // The UTF-8 bytes of the contents: UTF-16 by its byte order mark, else one UTF-8 byte order mark is dropped.

@@ -5,6 +5,7 @@ import {
   compareStrings,
   decodeRune,
   fromByteString,
+  isAscii,
   replaceNonWhitespace,
   runeCount,
   toByteString,
@@ -65,14 +66,12 @@ function computeLineStarts(text: string): number[] {
   return result;
 }
 
-const ascii = /^[\x00-\x7f]*$/;
-
 export const utf8Model: TextModel = {
   name: "utf8",
   fromBytes: toByteString,
   toBytes: fromByteString,
-  fromString: text => (ascii.test(text) ? text : utf8ToByteString(text)),
-  toString: text => (ascii.test(text) ? text : byteStringToUtf8(text)),
+  fromString: text => (isAscii(text) ? text : utf8ToByteString(text)),
+  toString: text => (isAscii(text) ? text : byteStringToUtf8(text)),
   lineStarts: computeECMALineStarts,
   contentLines: content => content.split(/\r?\n/),
   utf16Length: (text, from, to) => utf16Len(text.slice(from, to)),

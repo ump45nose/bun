@@ -40,7 +40,7 @@ for (const root of roots) {
         code = readFileSync(path, "utf8");
       } catch { bump("unreadable"); continue; }
       files++;
-      for (const [j, t] of [["js", "ts"], ["jsx", "tsx"]]) {
+      for (const [j, t] of [["js", "ts"], ["jsx", "tsx"], ["js", "jsx"]]) {
         const a = run(j, code), b = run(t, code);
         let cls, detail;
         if (a.ok && b.ok) {

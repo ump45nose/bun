@@ -39,5 +39,31 @@ One-line measurements that have no script:
 The probes of the top-down pass (../top-down/probes/run.sh) were run again here and gave the numbers that
 needs-draft.txt marks (td).
 
+Second check of the draft against the code (2026-09-30, 00:20 to 01:10 UTC). Added probes:
+  bun comment_runs_more.ts       nine more ways to define a run of `//` lines: 8162 to 8424, none gives 8238; 642 files with two
+                                 `//` lines in a row that are no directives; markers 29; names that the test discovery takes: 0
+  python3 harness_gate.py        typecheck's manifest of the reference's programs: 691 run instances with a syntactic diagnostic,
+                                 406 lose another diagnostic at program.go:1970, 61 more at :1979, pre-emit count = post-emit
+                                 count in all 12,797, 10,639 programs with one file beside the libraries, noEmit true in 988
+  python3 case_collisions.py <scratch of ../top-down/probes/run.sh>/split.tsv
+                                 whole names that differ only by case: 0; a leading part: compiler/commonSourceDir3.ts, commonSourceDir4.ts
+  (cd ../../error-baseline-format/top-down && bun ties.ts)
+                                 22 baselines, 36 pairs tie on file, start, end, code and category; all 36 ascend by text
+  python3 /workspace/notes/lint/units/cli/c2-seam-arbitration/probes/order_probe.py <typescript-go baselines>
+                                 1212 pairs at one line and column, 77 with the codes in descending order
+One-line measurements of the second check:
+  LeakSanitizer runs on a path that parses and exits (debug build of the cli worktree, e3566be88):
+    ASAN_OPTIONS=allow_user_segv_handler=1:disable_coredump=0:detect_leaks=1 \
+    LSAN_OPTIONS=use_stacks=0:use_registers=0:use_globals=0:use_tls=0:use_root_regions=0:max_leaks=2 \
+    BUN_DEBUG_QUIET_LOGS=1 bun-debug build --no-bundle ok.ts     -> "LeakSanitizer: detected memory leaks", 185563 bytes in 1034 blocks, exit 1
+    the same without LSAN_OPTIONS and without detect_leaks=1     -> no line, exit 0
+  BUN_FEATURE_FLAG_EXPERIMENTAL_LINT=1 bun --lint probe.ts         the release binary (1.4.3-canary.1+367d939d9) and bun-debug of the cli
+                                                                   worktree (1.4.3-debug+e3566be88) run probe.ts: exit 0, the mark is written
+  grep -rlP '\r$' tests/cases/{conformance,compiler} | wc -l       9247 (line_ends.ts: 8879 + 362 = 9241 with CR LF)
+  case files with a unit bunfig.toml, jsconfig.json or .env        0; with tsconfig.json 130; with package.json 242; with a debugger statement 15
+  run instances with a tsconfig.json                               73: 72 in split.tsv and compiler/tsconfigExtendsPackageJsonExportsWildcard.ts, which it lacks
+  node_modules/typescript in /workspace/wt/conformance             not installed (bun install was not run there); /workspace/bun has 6.0.2
+  windows-x64, windows-aarch64 (00:40 UTC)                          "not available in this session"
+
 Not verified: anything on Windows or macOS (no machine), a real `bun --lint` (no binary has it), the limit of
-3,000 files of GitHub's file list, and whether LeakSanitizer reports at all on the three exit paths.
+3,000 files of GitHub's file list and the order of that list.

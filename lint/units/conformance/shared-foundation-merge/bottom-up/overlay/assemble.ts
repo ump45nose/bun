@@ -225,8 +225,37 @@ const edits: Edit[] = [
   [r("test_case_parser.ts"), "const bytes = encoder.encode(currentFileContent);", "const bytes = utf8ToByteString(currentFileContent);", 1],
   [r("test_case_parser.ts"), `export const counters = { reachedSkipTrivia: 0 };\n\n`, "", 1],
   [r("test_case_parser.ts"), `          counters.reachedSkipTrivia++;\n`, "", 1],
-  // harnessutil.ts: strings.EqualFold and strings.Compare of the merged set in place of the local copies.
-  [r("harnessutil.ts"), `import { toLower, trimSpace } from "./gostrings";`, `import { compareStrings, equalFold, toLower, trimFunc, trimSpace } from "./gostrings";`, 1],
+  // test_case_parser.ts: strings.ToLower where upstream calls it (test_case_parser.go:172 and :285); the names are ASCII, so nothing changes.
+  [r("test_case_parser.ts"), "const metaDataName = testMetaData[1].toLowerCase();", "const metaDataName = toLower(testMetaData[1]);", 1],
+  [r("test_case_parser.ts"), "opts.set(match[1].toLowerCase(), ", "opts.set(toLower(match[1]), ", 1],
+  // harnessutil.ts: strings.EqualFold, strings.Compare and strconv.Atoi of the merged set in place of the local copies.
+  [r("harnessutil.ts"), `import { toLower, trimSpace } from "./gostrings";`, `import { atoi, compareStrings, equalFold, toLower, trimFunc, trimSpace } from "./gostrings";`, 1],
+  [
+    r("harnessutil.ts"),
+    `// strconv.Atoi accepts an optional sign and decimal digits, with underscores rejected in base 10\nfunction atoiOk(s: string): boolean {\n  return /^[+-]?[0-9]+$/.test(s);\n}\n\n`,
+    "",
+    1,
+  ],
+  [
+    r("harnessutil.ts"),
+    "    case \"number\":\n      if (!atoiOk(value)) throw new HarnessFatal(`Value for option '${option.name}' must be a number, got: ${value}`);\n      return Number(value);\n",
+    "    case \"number\": {\n      const numVal = atoi(value);\n      if (numVal === undefined) throw new HarnessFatal(`Value for option '${option.name}' must be a number, got: ${value}`);\n      return numVal;\n    }\n",
+    1,
+  ],
+  // run.ts: the regexp of error_baseline.go:31 has one place, in error_baseline.ts.
+  [r("error_baseline.ts"), "const diagnosticsLocationPrefixGo =\n", "export const diagnosticsLocationPrefixGo =\n", 1],
+  [
+    r("run.ts"),
+    "// error_baseline.go:31, as the writer has it.\n" + String.raw`const diagnosticsLocationPrefixGo = /(?<![^\n])([lL][iI][bB][^\n]*\.[dD]\.[tT](?:[sS]|\xc5\xbf))\(\d+,\d+\)/g;` + "\n",
+    "",
+    1,
+  ],
+  [
+    r("run.ts"),
+    `import { formatOpts, getErrorBaseline, removeTestPathPrefixes } from "./error_baseline";`,
+    `import { diagnosticsLocationPrefixGo, formatOpts, getErrorBaseline, removeTestPathPrefixes } from "./error_baseline";`,
+    1,
+  ],
   [
     r("harnessutil.ts"),
     `function trimFunc(s: string, f: (ch: number) => boolean): string {\n  const cps = [...s];\n  let start = 0;\n  let end = cps.length;\n  while (start < end && f(cps[start].codePointAt(0)!)) start++;\n  while (end > start && f(cps[end - 1].codePointAt(0)!)) end--;\n  return cps.slice(start, end).join("");\n}\n`,
@@ -244,6 +273,26 @@ const edits: Edit[] = [
   [r("tsconfig.ts"), `while (i < n && /[\\s\\uFEFF]/.test(text[i])) i++;`, "while (i < n && isWhiteSpaceLike(text.charCodeAt(i))) i++;", 1],
   [r("tsconfig.ts"), `if (/[\\s\\uFEFF]/.test(text[i])) i++;`, "if (isWhiteSpaceLike(text.charCodeAt(i))) i++;", 1],
   [r("tsconfig.ts"), `while (i < n && text[i] !== "\\n" && text[i] !== "\\r") i++;`, "while (i < n && !isLineBreak(text.charCodeAt(i))) i++;", 2],
+  // tsconfigparsing.go:436 and :1797 have one place, in tsconfig.ts, with the parameter of upstream (any value).
+  [
+    r("tsconfig.ts"),
+    "function startsWithConfigDirTemplate(value: string): boolean {\n  return toLower(value).startsWith(toLower(configDirTemplate));\n}\n",
+    "// tsconfigparsing.go:436\nexport function startsWithConfigDirTemplate(value: unknown): boolean {\n  return typeof value === \"string\" && toLower(value).startsWith(toLower(configDirTemplate));\n}\n",
+    1,
+  ],
+  [r("tsconfig.ts"), "function getSubstitutedPathWithConfigDirTemplate(", "export function getSubstitutedPathWithConfigDirTemplate(", 1],
+  [
+    r("config_files.ts"),
+    "const configDirTemplate = \"${configDir}\";\nfunction startsWithConfigDirTemplate(value: unknown): boolean {\n  return typeof value === \"string\" && toLower(value).startsWith(toLower(configDirTemplate));\n}\nfunction getSubstitutedPathWithConfigDirTemplate(value: string, basePath: string): string {\n  return getNormalizedAbsolutePath(value.replace(configDirTemplate, \"./\"), basePath);\n}\n",
+    "",
+    1,
+  ],
+  [
+    r("config_files.ts"),
+    `import { isBlankJsonc, parseJsonc, type JsonNode } from "./tsconfig";`,
+    `import { getSubstitutedPathWithConfigDirTemplate, isBlankJsonc, parseJsonc, startsWithConfigDirTemplate, type JsonNode } from "./tsconfig";`,
+    1,
+  ],
   // The two functions of tspath that had a short form take the arguments of upstream.
   [r("tsconfig.ts"), "toPath(configFileName, basePath)", "toPath(configFileName, basePath, true)", 1],
   [r("compiler_runner.ts"), "getAnyExtensionFromPath(basename)", "getAnyExtensionFromPath(basename, undefined, false)", 1],
@@ -256,7 +305,7 @@ const edits: Edit[] = [
   [r("compiler_test.ts"), "encoder.encode(", "utf8Bytes(", 3],
   [r("compiler_test.ts"), `import { Undecided, getConfigFileNames } from "./config_files";\n`, `import { Undecided, getConfigFileNames } from "./config_files";\nimport { utf8Bytes } from "./gostrings";\n`, 1],
   // baseline.ts: the two lists are decoded with the conversion that throws.
-  [r("baseline.ts"), `readFileNameSet(readFileSync(p, "utf8"))`, "readFileNameSet(utf8String(readFileSync(p)))", 1],
+  [r("baseline.ts"), `readFileNameSet(readFileSync(p, "utf8"))`, "readFileNameSet(utf8String(readFileSync(p), p))", 1],
   [r("baseline.ts"), `import { trimSpace } from "./gostrings";`, `import { trimSpace, utf8String } from "./gostrings";`, 1],
   // The baseline modules: the name of the line split, and names decoded before tspath compares them.
   [r("error_baseline.ts"), "model.splitLines(", "model.contentLines(", 1],

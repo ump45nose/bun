@@ -1,12 +1,11 @@
 //! Ported from ESLint lib/rules/use-isnan.js, with its defaults: `switch` is checked, `indexOf` is not.
 
-use std::borrow::Cow;
-
 use bun_ast::{E, Expr, ExprData, Loc, OpCode, S};
 
+use crate::lint::ast_utils;
 use crate::lint::context::{Context, Globals};
 use crate::lint::rule::{Rule, RuleCategory};
-use crate::lint::rules::{ast_utils, is_comparison};
+use crate::lint::rules::is_comparison;
 
 static RULE: Rule = Rule {
     name: "use-isnan",
@@ -50,11 +49,11 @@ pub(crate) fn e_binary(context: &mut Context<'_, '_>, node: &E::Binary, loc: Loc
     if names.is_none() {
         return;
     }
-    let (start, _) = context.start_of(loc, node.right.loc, &[&node.left]);
+    let start = context.binary_start(node, loc);
     context.report_if_global(
         &RULE,
         start,
-        Cow::Borrowed(b"Use the isNaN function to compare with NaN."),
+        b"Use the isNaN function to compare with NaN.",
         names,
     );
 }
@@ -65,9 +64,7 @@ pub(crate) fn s_switch(context: &mut Context<'_, '_>, node: &S::Switch, loc: Loc
         context.report_if_global(
             &RULE,
             loc,
-            Cow::Borrowed(
-                b"'switch(NaN)' can never match a case clause. Use Number.isNaN instead of the switch.",
-            ),
+            b"'switch(NaN)' can never match a case clause. Use Number.isNaN instead of the switch.",
             names,
         );
     }
@@ -79,11 +76,11 @@ pub(crate) fn s_switch(context: &mut Context<'_, '_>, node: &S::Switch, loc: Loc
         if names.is_none() {
             continue;
         }
-        let start = context.case_start(case, value);
+        let start = context.case_start(value);
         context.report_if_global(
             &RULE,
             start,
-            Cow::Borrowed(b"'case NaN' can never match. Use Number.isNaN before the switch."),
+            b"'case NaN' can never match. Use Number.isNaN before the switch.",
             names,
         );
     }

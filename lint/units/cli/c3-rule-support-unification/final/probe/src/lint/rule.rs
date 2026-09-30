@@ -1,6 +1,6 @@
 //! What a rule is to the rest of the crate.
 
-use super::Category;
+use super::Severity;
 
 pub(crate) struct Rule {
     /// ESLint's name of the rule: the code of its diagnostics.
@@ -15,10 +15,10 @@ pub(crate) enum RuleCategory {
 }
 
 impl RuleCategory {
-    /// The level of a rule that no configuration names: `None` is off.
-    pub(crate) const fn default_level(self) -> Option<Category> {
+    /// The level of a rule that no configuration names.
+    pub(crate) const fn default_level(self) -> Option<Severity> {
         match self {
-            RuleCategory::Correctness => Some(Category::Error),
+            RuleCategory::Correctness => Some(Severity::Error),
         }
     }
 }

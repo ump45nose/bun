@@ -15,11 +15,11 @@ export class IllFormedStringError extends Error {}
 
 const utf8Fatal = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
 
-export function utf8String(bytes: Uint8Array): string {
+export function utf8String(bytes: Uint8Array, what = "the text"): string {
   try {
     return utf8Fatal.decode(bytes);
   } catch {
-    throw new InvalidUtf8Error("the bytes are not valid UTF-8");
+    throw new InvalidUtf8Error(what + " is not valid UTF-8");
   }
 }
 
@@ -231,7 +231,7 @@ export function foldKey(r: number): number {
   return lookup(FOLD_RUNS, r);
 }
 
-function isAscii(s: string): boolean {
+export function isAscii(s: string): boolean {
   for (let i = 0; i < s.length; i++) if (s.charCodeAt(i) >= RuneSelf) return false;
   return true;
 }

@@ -23,7 +23,7 @@ pub(crate) fn e_binary(context: &mut Context<'_, '_>, node: &E::Binary, loc: Loc
     if !is_comparison(node.op) || !(is_neg_zero(&node.left) || is_neg_zero(&node.right)) {
         return;
     }
-    let (start, _) = context.start_of(loc, node.right.loc, &[&node.left]);
+    let start = context.binary_start(node, loc);
     let op = bun_ast::Op::TABLE.get_ptr_const(node.op).text;
     context.report(
         &RULE,

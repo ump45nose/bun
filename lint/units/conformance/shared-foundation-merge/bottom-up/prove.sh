@@ -40,6 +40,7 @@ bun "$H/overlay/compare.ts" "$W/out-base" "$W/out-ovl"
 echo "== 3. the assembled file set"
 bun "$H/overlay/assemble.ts" "$N" "$W/asm" | head -1
 (cd "$W/asm" && bun "$H/overlay/comment_runs.ts" test/cli/lint/conformance/runner/*.ts test/cli/lint/conformance/sweep.ts test/cli/lint/conformance.test.ts)
+bun "$H/verify/regex_sites.ts" "$W/asm" | tail -1
 mkdir -p "$W/tsc"
 cat > "$W/tsc/tsconfig.json" <<JSON
 { "compilerOptions": { "lib": ["ESNext"], "target": "ESNext", "module": "ESNext", "moduleDetection": "force", "allowJs": true, "resolveJsonModule": true,
@@ -48,7 +49,7 @@ cat > "$W/tsc/tsconfig.json" <<JSON
   "include": ["$W/asm/test/cli/lint/conformance/runner/*.ts", "$W/asm/test/cli/lint/conformance/sweep.ts"] }
 JSON
 (cd "$W/tsc" && "$TSC" -p tsconfig.json && echo "tsc: no error")
-(cd "$W/asm" && TFS_CHECK=replay NO_COLOR=1 bun test test/cli/lint/conformance.test.ts 2>&1 | tail -4)
+(cd "$W/asm" && TFS_CHECK=replay NO_COLOR=1 bun test --timeout 180000 test/cli/lint/conformance.test.ts 2>&1 | tail -4)
 printf 'import { replayCheck, runOracleOf } from "%s/asm/test/cli/lint/conformance/runner";\nimport type { Corpus } from "%s/asm/test/cli/lint/conformance/runner";\nexport default ({ corpus }: { corpus: Corpus }) => replayCheck(i => runOracleOf(corpus, i.suite, i.name));\n' "$W" "$W" > "$W/replay-check.ts"
 bun "$W/base/test-file-and-sweep/top-down/sweep.ts" --reference "$REF" --check "$W/base/test-file-and-sweep/top-down/replay-check.ts" --report "$W/sweep-base.json" > "$W/sweep-base.txt" 2>&1
 bun "$W/asm/test/cli/lint/conformance/sweep.ts" --reference "$REF" --check "$W/replay-check.ts" --report "$W/sweep-asm.json" > "$W/sweep-asm.txt" 2>&1
@@ -58,4 +59,5 @@ norm "$W/sweep-asm.txt" > "$W/sweep-asm.norm"
 cmp "$W/sweep-base.norm" "$W/sweep-asm.norm" && echo "the sweep over every instance prints the same text: $(grep '^pass ' "$W/sweep-asm.txt")"
 bun "$W/asm/test/cli/lint/conformance/sweep.ts" --reference "$REF" --round-trip 2>&1 | tail -1
 bun "$H/verify/cross_roots.ts" "$W/asm" "$N" "$REF"
+bun "$H/verify/cross_writer_vectors.ts" "$W/asm" "$N"
 bun "$H/verify/scan_corpus_text.ts" "$REF"

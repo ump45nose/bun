@@ -1,17 +1,12 @@
-//! The one reader of source text for the rules: Bun's lexer, seated at an offset that the tree gives.
-
-use core::marker::PhantomData;
+//! The one re-scan of source text: Bun's lexer seated at an offset, told by the tree where a regular expression or JSX is.
 
 use bun_ast::lexer_tables::T;
 use bun_ast::walk::{self, Visitor};
-use bun_ast::{Binding, E, Expr, Loc, Log, Source, Stmt};
+use bun_ast::{E, Expr, Loc, Log, Source};
 use bun_core::StackCheck;
 use bun_js_parser::lexer::Lexer;
 
-/// A stretch of text longer than this is not read to find parentheses.
-pub(crate) const MAX_SCAN: u32 = 1 << 16;
-
-/// A regular expression or a JSX element, which the lexer cannot tell alone: one token for every reader.
+/// A regular expression or a JSX element: one token for every reader.
 #[derive(Clone, Copy)]
 pub(crate) struct Span {
     start: u32,
@@ -27,7 +22,7 @@ pub(crate) struct Token {
     pub(crate) opaque: bool,
 }
 
-/// The spans under `roots`, sorted. `None`: nested too deeply to collect, or a span has no end.
+/// The spans under `roots`, sorted. `None`: nested too deeply to collect.
 pub(crate) fn spans_under(
     source: &[u8],
     roots: &[&Expr],
@@ -65,7 +60,7 @@ impl<'ast> Visitor<'ast> for Collector<'_> {
         walk::walk_expr(self, expr);
     }
 
-    fn visit_stmt(&mut self, stmt: &'ast Stmt) {
+    fn visit_stmt(&mut self, stmt: &'ast bun_ast::Stmt) {
         if !self.stack_check.is_safe_to_recurse() {
             self.cut = true;
             return;
@@ -73,25 +68,14 @@ impl<'ast> Visitor<'ast> for Collector<'_> {
         walk::walk_stmt(self, stmt);
     }
 
-    fn visit_binding(&mut self, binding: &'ast Binding) {
-        if !self.stack_check.is_safe_to_recurse() {
-            self.cut = true;
-            return;
-        }
-        walk::walk_binding(self, binding);
-    }
-
     fn visit_e_reg_exp(&mut self, node: &'ast E::RegExp, loc: Loc) {
-        let (Ok(start), Ok(len)) = (
-            u32::try_from(loc.start),
-            u32::try_from(node.value.slice().len()),
-        ) else {
+        let Ok(start) = u32::try_from(loc.start) else {
             self.cut = true;
             return;
         };
         self.spans.push(Span {
             start,
-            end: start.saturating_add(len),
+            end: start.saturating_add(node.value.slice().len() as u32),
         });
     }
 
@@ -141,31 +125,28 @@ fn template_text_end(source: &[u8], mut at: usize) -> Option<(u32, bool)> {
     }
 }
 
-pub(crate) struct Tokens<'l, 'c, 's> {
+pub(crate) struct Tokens<'c, 's> {
     lexer: Lexer<'s>,
     source: &'s [u8],
     spans: &'c [Span],
     /// One entry per template substitution that is open: the `{` inside it that wait for their `}`.
     templates: Vec<u32>,
-    /// The lexer writes to the log through a pointer: this borrow keeps the log alive and unused meanwhile.
-    log: PhantomData<&'l mut Log>,
 }
 
-impl<'l, 'c, 's> Tokens<'l, 'c, 's> {
-    /// `from` is where a token starts, or blank space or a comment before one. Nobody prints what `log` takes.
+impl<'c, 's> Tokens<'c, 's> {
+    /// `log` takes what the lexer says about text it cannot read: nobody prints it.
     pub(crate) fn new(
-        log: &'l mut Log,
+        log: &mut Log,
         source: &'s Source,
         arena: &'s bun_alloc::Arena,
         spans: &'c [Span],
         from: u32,
-    ) -> Self {
+    ) -> Tokens<'c, 's> {
         let mut tokens = Tokens {
             lexer: Lexer::init_without_reading(log, source, arena),
-            source: source.contents(),
+            source: &source.contents,
             spans,
             templates: Vec::new(),
-            log: PhantomData,
         };
         tokens.seat(from);
         tokens
@@ -256,12 +237,13 @@ impl<'l, 'c, 's> Tokens<'l, 'c, 's> {
     }
 }
 
-/// Reads the test of a `case` from its first own token to the `:` of its clause: its tokens as one key.
-pub(crate) fn case_test_key(tokens: &mut Tokens<'_, '_, '_>, source: &[u8]) -> Option<Vec<u8>> {
+/// What ESLint compares of a `case` test, its tokens, as bytes: read from its first own token to the `:` of its clause.
+pub(crate) fn case_key(tokens: &mut Tokens<'_, '_>, source: &[u8]) -> Option<Vec<u8>> {
     let mut out: Vec<Token> = Vec::new();
     // One entry per open bracket: the token that closes it, and the `?` of the level around it that wait.
     let mut stack: Vec<(T, u32)> = Vec::new();
     let mut waiting = 0u32;
+    // The `)` that no `(` of the test opens: all of them, and those at the end of what is read.
     let mut leading = 0u32;
     let mut trailing = 0u32;
     loop {
@@ -302,9 +284,7 @@ pub(crate) fn case_test_key(tokens: &mut Tokens<'_, '_, '_>, source: &[u8]) -> O
                     if waiting > 0 {
                         waiting -= 1;
                     } else if stack.is_empty() {
-                        // A `)` at the end closes a `(` around the whole test: ESLint's node has neither.
-                        out.truncate(out.len().saturating_sub(trailing as usize));
-                        return key_of(&out, leading - trailing, source);
+                        break;
                     }
                 }
                 _ => {}
@@ -326,31 +306,39 @@ pub(crate) fn case_test_key(tokens: &mut Tokens<'_, '_, '_>, source: &[u8]) -> O
         trailing = 0;
         out.push(token);
     }
-}
-
-/// ESLint's `equalTokens` as a key: the `(` before the test that belong to it, then each token by length, kind and text.
-fn key_of(tokens: &[Token], opens: u32, source: &[u8]) -> Option<Vec<u8>> {
-    let mut key = opens.to_le_bytes().to_vec();
-    for token in tokens {
+    // The `)` at the end close parentheses around the whole test: ESLint's node has neither.
+    out.truncate(out.len().saturating_sub(trailing as usize));
+    // `(a).b`: the `(` before the first token that the test closes are part of it.
+    let mut key = (leading - trailing).to_le_bytes().to_vec();
+    for token in &out {
         let raw = source.get(token.start as usize..token.end as usize)?;
-        let spelled = if token.opaque { None } else { spelled(raw) };
+        let spelled = if token.opaque {
+            None
+        } else {
+            spelled_word(raw)
+        };
         let text = spelled.as_deref().unwrap_or(raw);
-        key.extend_from_slice(&u32::try_from(text.len()).ok()?.to_le_bytes());
         key.push(u8::from(token.opaque));
+        key.extend_from_slice(&u32::try_from(text.len()).ok()?.to_le_bytes());
         key.extend_from_slice(text);
     }
     Some(key)
 }
 
-/// What a word or a private name with `\u` escapes spells: `\u0061` is `a`. `None`: not such a word.
-fn spelled(name: &[u8]) -> Option<Vec<u8>> {
-    let first = *name.first()?;
-    let is_word =
-        first.is_ascii_alphabetic() || matches!(first, b'_' | b'$' | b'\\' | b'#') || first >= 0x80;
-    if !is_word {
+/// What a word or a private name with a `\u` escape spells: `\u0061` is `a`. A string with that escape is another string.
+fn spelled_word(raw: &[u8]) -> Option<Vec<u8>> {
+    let first = raw.first()?;
+    if !(first.is_ascii_alphabetic()
+        || matches!(first, b'_' | b'$' | b'\\' | b'#')
+        || *first >= 0x80)
+    {
         return None;
     }
-    bun_core::strings::index_of_char(name, b'\\')?;
+    bun_core::strings::index_of_char(raw, b'\\')?;
+    spelled(raw)
+}
+
+fn spelled(name: &[u8]) -> Option<Vec<u8>> {
     let mut out = Vec::with_capacity(name.len());
     let mut at = 0;
     while let Some(&byte) = name.get(at) {
@@ -382,8 +370,8 @@ fn spelled(name: &[u8]) -> Option<Vec<u8>> {
     Some(out)
 }
 
-/// How many `)` before the token at `to` close a `(` that stands before the first token read.
-pub(crate) fn closes_between(tokens: &mut Tokens<'_, '_, '_>, to: u32) -> Option<u32> {
+/// How many `)` between `from` and `to` close a `(` that stands before `from`. `to` is where a token starts.
+pub(crate) fn closes_between(tokens: &mut Tokens<'_, '_>, to: u32) -> Option<u32> {
     let mut depth = 0i32;
     let mut lowest = 0i32;
     loop {
@@ -405,8 +393,8 @@ pub(crate) fn closes_between(tokens: &mut Tokens<'_, '_, '_>, to: u32) -> Option
     }
 }
 
-/// The offset after the `]` that closes a `[` standing before the first token read.
-pub(crate) fn close_bracket(tokens: &mut Tokens<'_, '_, '_>) -> Option<u32> {
+/// The `]` that closes a `[` standing before the first token read.
+pub(crate) fn close_bracket(tokens: &mut Tokens<'_, '_>) -> Option<u32> {
     let mut depth = 0u32;
     loop {
         let token = tokens.next()?;
@@ -417,13 +405,28 @@ pub(crate) fn close_bracket(tokens: &mut Tokens<'_, '_, '_>) -> Option<u32> {
             T::TOpenBracket => depth += 1,
             T::TCloseBracket => {
                 if depth == 0 {
-                    return Some(token.end);
+                    return Some(token.start);
                 }
                 depth -= 1;
             }
             _ => {}
         }
     }
+}
+
+/// Back from `own` over blanks and one `(`, up to `closes` times: where that ends, and how many `(` were not found.
+pub(crate) fn before_opens(source: &[u8], own: u32, closes: u32) -> (u32, u32) {
+    let mut at = own as usize;
+    let mut missing = closes;
+    while missing > 0 {
+        let open = before_blanks(source, at);
+        if open == 0 || source.get(open - 1) != Some(&b'(') {
+            break;
+        }
+        at = open - 1;
+        missing -= 1;
+    }
+    (u32::try_from(at).unwrap_or(own), missing)
 }
 
 fn before_blanks(source: &[u8], mut at: usize) -> usize {
@@ -433,24 +436,9 @@ fn before_blanks(source: &[u8], mut at: usize) -> usize {
     at
 }
 
-/// `closes` times back over blanks and one `(`, all on the line of `own`. `None`: the text before `own` is not so.
-pub(crate) fn before_opens(source: &[u8], own: Loc, closes: u32) -> Option<Loc> {
-    let mut at = usize::try_from(own.start).ok()?;
-    for _ in 0..closes {
-        at = before_blanks(source, at);
-        if at == 0 || source.get(at - 1) != Some(&b'(') {
-            return None;
-        }
-        at -= 1;
-    }
-    Some(Loc {
-        start: i32::try_from(at).ok()?,
-    })
-}
-
 /// The `case` that stands before the test whose first own token is at `own`, with blanks and `(` between them only.
-pub(crate) fn case_before(source: &[u8], own: Loc) -> Option<Loc> {
-    let mut at = usize::try_from(own.start).ok()?;
+pub(crate) fn case_before(source: &[u8], own: u32) -> Option<u32> {
+    let mut at = own as usize;
     loop {
         at = before_blanks(source, at);
         if at > 0 && source.get(at - 1) == Some(&b'(') {
@@ -471,7 +459,5 @@ pub(crate) fn case_before(source: &[u8], own: Loc) -> Option<Loc> {
             return None;
         }
     }
-    Some(Loc {
-        start: i32::try_from(start).ok()?,
-    })
+    u32::try_from(start).ok()
 }

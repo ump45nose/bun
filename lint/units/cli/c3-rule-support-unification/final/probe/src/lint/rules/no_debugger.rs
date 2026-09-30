@@ -1,7 +1,5 @@
 //! Ported from ESLint lib/rules/no-debugger.js.
 
-use std::borrow::Cow;
-
 use bun_ast::Loc;
 
 use crate::lint::context::Context;
@@ -13,9 +11,5 @@ static RULE: Rule = Rule {
 };
 
 pub(crate) fn s_debugger(context: &mut Context<'_, '_>, loc: Loc) {
-    context.report(
-        &RULE,
-        loc,
-        Cow::Borrowed(b"Unexpected 'debugger' statement."),
-    );
+    context.report(&RULE, loc, b"Unexpected 'debugger' statement.");
 }

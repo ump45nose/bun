@@ -18,7 +18,8 @@ for (const file of files) {
   const rec = { file, bytes: text.length, sha: Bun.hash(text).toString(16) };
   for (const loader of ["js", "jsx", "ts", "tsx"]) {
     try {
-      const out = transpilers[loader].transformSync(text);
+      // The transpiler names its input "input.<loader>": the name reaches the output through __filename.
+      const out = transpilers[loader].transformSync(text).replaceAll(/input\.(jsx|tsx|js|ts)\b/g, "input");
       rec[loader] = { ok: true, h: Bun.hash(out).toString(16), n: out.length };
     } catch (e) {
       const errs = e && e.errors ? e.errors : [e];
