@@ -7,7 +7,7 @@
 //! own copy.
 
 use core::alloc::Layout;
-use core::hash::{BuildHasherDefault, Hash, Hasher};
+use core::cmp::Ordering as Order;
 use core::mem::size_of;
 use core::ptr::{self, NonNull};
 use core::slice;
@@ -47,21 +47,10 @@ impl EntryPtr {
         unsafe { entry_bytes(self.0.as_ptr()) }
     }
 }
-impl PartialEq for EntryPtr {
-    fn eq(&self, other: &Self) -> bool {
-        self.bytes() == other.bytes()
-    }
-}
-impl Eq for EntryPtr {}
-impl Hash for EntryPtr {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.bytes().hash(state);
-    }
-}
-impl hashbrown::Equivalent<EntryPtr> for [u8] {
-    fn equivalent(&self, entry: &EntryPtr) -> bool {
-        entry.bytes() == self
-    }
+
+/// The order of `State::visited`: by length, then by bytes.
+fn order(a: &[u8], b: &[u8]) -> Order {
+    a.len().cmp(&b.len()).then_with(|| a.cmp(b))
 }
 
 #[repr(C)]
@@ -76,11 +65,12 @@ static EMPTY: Empty = Empty { len: 0, nul: 0 };
 static CWD: AtomicPtr<Entry> = AtomicPtr::new(ptr::addr_of!(EMPTY) as *mut Entry);
 
 struct State {
-    /// Every directory recorded so far, one entry per distinct path, never
-    /// freed: paths derived from an earlier one may still be in use after a
-    /// `chdir`, and returning to a directory reuses its entry. Grows only with
-    /// the number of different directories the process changes into.
-    visited: Option<hashbrown::HashSet<EntryPtr, BuildHasherDefault<bun_wyhash::Wyhash>>>,
+    /// Every directory recorded so far, sorted by [`order`], one entry per
+    /// distinct path, never freed: paths derived from an earlier one may
+    /// still be in use after a `chdir`, and returning to a directory reuses
+    /// its entry. Grows only with the number of different directories the
+    /// process changes into.
+    visited: Vec<EntryPtr>,
     /// Why [`startup`] could not read the working directory, until a `chdir`
     /// records one.
     unread: Option<Unread>,
@@ -93,7 +83,7 @@ struct Unread {
     os_error: u32,
 }
 static STATE: Mutex<State> = Mutex::new(State {
-    visited: None,
+    visited: Vec::new(),
     unread: None,
 });
 
@@ -193,10 +183,9 @@ pub fn unread_os_error() -> Option<u32> {
 /// nothing else should need this.
 pub fn set(path: &[u8]) {
     let mut state = STATE.lock();
-    let visited = state.visited.get_or_insert_with(Default::default);
-    let entry: EntryPtr = match visited.get(path) {
-        Some(e) => *e,
-        None => {
+    let entry: EntryPtr = match state.visited.binary_search_by(|e| order(e.bytes(), path)) {
+        Ok(at) => state.visited[at],
+        Err(at) => {
             let layout =
                 Layout::from_size_align(size_of::<Entry>() + path.len() + 1, align_of::<Entry>())
                     .unwrap();
@@ -214,8 +203,7 @@ pub fn set(path: &[u8]) {
                 bytes.add(path.len()).write(0);
                 EntryPtr(entry)
             };
-            let inserted = visited.insert(entry);
-            debug_assert!(inserted, "cwd entry lookup and insert disagree");
+            state.visited.insert(at, entry);
             entry
         }
     };
