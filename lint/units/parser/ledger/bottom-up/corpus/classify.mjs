@@ -1,7 +1,9 @@
 // One classifier for the merged corpus: the bun binary that runs this file, tsc 6.0.2 and typescript-go.
 //
 // usage (the binary that runs the file is the binary under test; use the BASE build, not the installed bun):
-//   <bun> classify.mjs stage1 <corpus.jsonl> <work dir> [--jobs N] [--tsgo <parsediag binary>]
+//   <bun> classify.mjs stage1 <corpus.jsonl> <work dir> [--jobs N] [--tsgo <parsediag binary>] [--only bun]
+//         --only bun: the bun side alone. Use it with a debug build (tsc under a debug build is about 100 times
+//         slower) and compare with the saved table of the base: progress.mjs.
 //   <bun> classify.mjs stage2 <corpus.jsonl> <work dir> [--jobs N]
 //   then: bun report.mjs <corpus.jsonl> <work dir> <out dir>
 //
@@ -279,7 +281,7 @@ function readShards(work, mode, jobs) {
   return out;
 }
 
-async function parent(stage, corpusPath, work, jobs, tsgo) {
+async function parent(stage, corpusPath, work, jobs, tsgo, only) {
   mkdirSync(work, { recursive: true });
   const corpus = readCorpus(corpusPath);
   const info = {
@@ -298,7 +300,7 @@ async function parent(stage, corpusPath, work, jobs, tsgo) {
   if (stage === "stage1") {
     const t0 = performance.now();
     const tasks = [];
-    for (const mode of ["bun", "tsc"]) for (let s = 0; s < jobs; s++) tasks.push(runShard(mode, corpusPath, work, s, jobs, shardIndexes(s)));
+    for (const mode of only ? [only] : ["bun", "tsc"]) for (let s = 0; s < jobs; s++) tasks.push(runShard(mode, corpusPath, work, s, jobs, shardIndexes(s)));
     if (tsgo) {
       info.tsgo = tsgo;
       info.tsgoSha256 = createHash("sha256").update(readFileSync(tsgo)).digest("hex");
@@ -349,5 +351,5 @@ if (args[0] === "--worker") {
     const at = args.indexOf(name);
     return at >= 0 ? args[at + 1] : dflt;
   };
-  await parent(args[0], args[1], args[2], Number(flag("--jobs", "6")), flag("--tsgo", null));
+  await parent(args[0], args[1], args[2], Number(flag("--jobs", "6")), flag("--tsgo", null), flag("--only", null));
 }
