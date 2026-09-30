@@ -10,6 +10,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) > Parenthesized(c));
    tsc .ts parse-clean  Call(a TypeReference(b) c);
    tsc .tsx parse-clean  Call(a TypeReference(b) c);
+   go  .js parse-clean
 ## g02  "a < b > c"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -20,6 +21,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) > c);
    tsc .ts parse-clean  ((a < b) > c);
    tsc .tsx parse-clean  ((a < b) > c);
+   go  .js parse-clean
 ## g03  "a<b>\nc"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -30,6 +32,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) > c);
    tsc .ts parse-clean  ExpressionWithTypeArguments(a TypeReference(b)); c;
    tsc .tsx parse-clean  ExpressionWithTypeArguments(a TypeReference(b)); c;
+   go  .js parse-clean
 ## g04  "f(a<b,c>(d))"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -40,6 +43,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Call(f (a < b) (c > Parenthesized(d)));
    tsc .ts parse-clean  Call(f Call(a TypeReference(b) TypeReference(c) d));
    tsc .tsx parse-clean  Call(f Call(a TypeReference(b) TypeReference(c) d));
+   go  .js parse-clean
 ## g05  "a<b>`t`"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -50,6 +54,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) > TemplateToken);
    tsc .ts parse-clean  TaggedTemplate(a TypeReference(b) TemplateToken);
    tsc .tsx parse-clean  TaggedTemplate(a TypeReference(b) TemplateToken);
+   go  .js parse-clean
 ## g06  "new a<b>(c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -60,6 +65,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((New(a) < b) > Parenthesized(c));
    tsc .ts parse-clean  New(a TypeReference(b) c);
    tsc .tsx parse-clean  New(a TypeReference(b) c);
+   go  .js parse-clean
 ## g07  "a<b<c>>(d)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -70,6 +76,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) < (c >> Parenthesized(d)));
    tsc .ts parse-clean  Call(a TypeReference(b TypeReference(c)) d);
    tsc .tsx parse-clean  Call(a TypeReference(b TypeReference(c)) d);
+   go  .js parse-clean
 ## g08  "a < b > /re/.test(c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -80,6 +87,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) > Call(PropertyAccess(RegularExpressionLiteral test) c));
    tsc .ts parse[TS1109@12+1]  ((ExpressionWithTypeArguments(a TypeReference(b)) / re) / Call(PropertyAccess( test) c));
    tsc .tsx parse[TS1109@12+1]  ((ExpressionWithTypeArguments(a TypeReference(b)) / re) / Call(PropertyAccess( test) c));
+   go  .js parse-clean
 ## g09  "async<T>(x)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -90,6 +98,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((async < T) > Parenthesized(x));
    tsc .ts parse-clean  Call(async TypeReference(T) x);
    tsc .tsx parse-clean  Call(async TypeReference(T) x);
+   go  .js parse-clean
 ## g10  "a<b>>(c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -100,6 +109,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (a < (b >> Parenthesized(c)));
    tsc .ts parse-clean  (a < (b >> Parenthesized(c)));
    tsc .tsx parse-clean  (a < (b >> Parenthesized(c)));
+   go  .js parse-clean
 ## g11  "a<<b>(c)>(d)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -110,6 +120,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (((a << b) > Parenthesized(c)) > Parenthesized(d));
    tsc .ts parse[TS1005@8+1]  Call(a FunctionType(TypeParameter(b) Parameter(c) TypeReference()) d);
    tsc .tsx parse[TS1005@8+1]  Call(a FunctionType(TypeParameter(b) Parameter(c) TypeReference()) d);
+   go  .js parse-clean
 ## g12  "a?.b<c>(d)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -120,6 +131,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((PropertyAccess(a QuestionDotToken b) < c) > Parenthesized(d));
    tsc .ts parse-clean  Call(PropertyAccess(a QuestionDotToken b) TypeReference(c) d);
    tsc .tsx parse-clean  Call(PropertyAccess(a QuestionDotToken b) TypeReference(c) d);
+   go  .js parse-clean
 ## g14  "a<b>=c"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -130,6 +142,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) >= c);
    tsc .ts parse-clean  ((a < b) >= c);
    tsc .tsx parse-clean  ((a < b) >= c);
+   go  .js parse-clean
 ## g15  "a<b>>=c"
    [v8:invalid] [bun-js:err] [bun-jsx:err]
    v8      script=ERR Invalid left-hand side in assignment  module=ERR Invalid left-hand side in assignment
@@ -140,6 +153,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1005@3+3]  (a < b); c;
    tsc .ts parse[TS1005@3+3]  (a < b); c;
    tsc .tsx parse[TS1005@3+3]  (a < b); c;
+   go  .js parse[TS1005@3+3]
       js-parse TS1005@3+3 ';' expected.
 ## g16  "if (a < b && c > (d)) {}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
@@ -151,6 +165,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  If(((a < b) && (c > Parenthesized(d))) Block)
    tsc .ts parse-clean  If(((a < b) && (c > Parenthesized(d))) Block)
    tsc .tsx parse-clean  If(((a < b) && (c > Parenthesized(d))) Block)
+   go  .js parse-clean
 ## g17  "a < b, c > (d)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -161,6 +176,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) , (c > Parenthesized(d)));
    tsc .ts parse-clean  Call(a TypeReference(b) TypeReference(c) d);
    tsc .tsx parse-clean  Call(a TypeReference(b) TypeReference(c) d);
+   go  .js parse-clean
 ## g19  "a < b > -c"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -171,6 +187,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) > PrefixUnary(c));
    tsc .ts parse-clean  ((a < b) > PrefixUnary(c));
    tsc .tsx parse-clean  ((a < b) > PrefixUnary(c));
+   go  .js parse-clean
 ## g21  "a < b > [c]"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -181,6 +198,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) > ArrayLiteral(c));
    tsc .ts parse-clean  ((a < b) > ArrayLiteral(c));
    tsc .tsx parse-clean  ((a < b) > ArrayLiteral(c));
+   go  .js parse-clean
 ## g22  "x = a < b > {}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -191,6 +209,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (x = ((a < b) > ObjectLiteral));
    tsc .ts parse-clean  (x = ((a < b) > ObjectLiteral));
    tsc .tsx parse-clean  (x = ((a < b) > ObjectLiteral));
+   go  .js parse-clean
 ## g24  "a<b>;"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ERR Unexpected token ';'  module=ERR Unexpected token ';'
@@ -201,6 +220,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1109@4+1]  ((a < b) > );
    tsc .ts parse-clean  ExpressionWithTypeArguments(a TypeReference(b));
    tsc .tsx parse-clean  ExpressionWithTypeArguments(a TypeReference(b));
+   go  .js parse[TS1109@4+1]
       js-parse TS1109@4+1 Expression expected.
 ## g27  "a < typeof b > (c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
@@ -212,6 +232,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < TypeOf(b)) > Parenthesized(c));
    tsc .ts parse-clean  Call(a TypeQuery(b) c);
    tsc .tsx parse-clean  Call(a TypeQuery(b) c);
+   go  .js parse-clean
 ## g29  "a < this > (c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -222,6 +243,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < ThisKeyword) > Parenthesized(c));
    tsc .ts parse-clean  Call(a ThisType c);
    tsc .tsx parse-clean  Call(a ThisType c);
+   go  .js parse-clean
 ## g30  "a < 's' > (c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -232,6 +254,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < "s") > Parenthesized(c));
    tsc .ts parse-clean  Call(a LiteralType("s") c);
    tsc .tsx parse-clean  Call(a LiteralType("s") c);
+   go  .js parse-clean
 ## g31  "a < 1 > (c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -242,6 +265,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < "1") > Parenthesized(c));
    tsc .ts parse-clean  Call(a LiteralType("1") c);
    tsc .tsx parse-clean  Call(a LiteralType("1") c);
+   go  .js parse-clean
 ## g32  "a < -1 > (c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -252,6 +276,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < PrefixUnary("1")) > Parenthesized(c));
    tsc .ts parse-clean  Call(a LiteralType(PrefixUnary("1")) c);
    tsc .tsx parse-clean  Call(a LiteralType(PrefixUnary("1")) c);
+   go  .js parse-clean
 ## g33  "a < [b] > (c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -262,6 +287,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < ArrayLiteral(b)) > Parenthesized(c));
    tsc .ts parse-clean  Call(a TupleType(TypeReference(b)) c);
    tsc .tsx parse-clean  Call(a TupleType(TypeReference(b)) c);
+   go  .js parse-clean
 ## g33b  "a < {b} > (c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -272,6 +298,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < ObjectLiteral(ShorthandPropertyAssignment(b))) > Parenthesized(c));
    tsc .ts parse-clean  Call(a TypeLiteral(PropertySignature(b)) c);
    tsc .tsx parse-clean  Call(a TypeLiteral(PropertySignature(b)) c);
+   go  .js parse-clean
 ## g34  "a < b | c > (d)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -282,6 +309,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) | (c > Parenthesized(d)));
    tsc .ts parse-clean  Call(a UnionType(TypeReference(b) TypeReference(c)) d);
    tsc .tsx parse-clean  Call(a UnionType(TypeReference(b) TypeReference(c)) d);
+   go  .js parse-clean
 ## g36  "a < b.c > (d)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -292,6 +320,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < PropertyAccess(b c)) > Parenthesized(d));
    tsc .ts parse-clean  Call(a TypeReference(Node(b c)) d);
    tsc .tsx parse-clean  Call(a TypeReference(Node(b c)) d);
+   go  .js parse-clean
 ## g37  "a < b[c] > (d)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -302,6 +331,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < ElementAccess(b c)) > Parenthesized(d));
    tsc .ts parse-clean  Call(a IndexedAccessType(TypeReference(b) TypeReference(c)) d);
    tsc .tsx parse-clean  Call(a IndexedAccessType(TypeReference(b) TypeReference(c)) d);
+   go  .js parse-clean
 ## g39  "a < !b > (c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -312,6 +342,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < PrefixUnary(b)) > Parenthesized(c));
    tsc .ts parse-clean  Call(a JSDocNonNullableType(TypeReference(b)) c);
    tsc .tsx parse-clean  Call(a JSDocNonNullableType(TypeReference(b)) c);
+   go  .js parse-clean
 ## g42  "a < (b) > (c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -322,6 +353,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < Parenthesized(b)) > Parenthesized(c));
    tsc .ts parse-clean  Call(a ParenthesizedType(TypeReference(b)) c);
    tsc .tsx parse-clean  Call(a ParenthesizedType(TypeReference(b)) c);
+   go  .js parse-clean
 ## g43  "a < b > (c) > (d)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -332,6 +364,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (((a < b) > Parenthesized(c)) > Parenthesized(d));
    tsc .ts parse-clean  (Call(a TypeReference(b) c) > Parenthesized(d));
    tsc .tsx parse-clean  (Call(a TypeReference(b) c) > Parenthesized(d));
+   go  .js parse-clean
 ## g44  "a?.<b>(c)"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -342,6 +375,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1003@3+1]  ((PropertyAccess(a QuestionDotToken ) < b) > Parenthesized(c));
    tsc .ts parse-clean  Call(a QuestionDotToken TypeReference(b) c);
    tsc .tsx parse-clean  Call(a QuestionDotToken TypeReference(b) c);
+   go  .js parse[TS1003@3+1]
       js-parse TS1003@3+1 Identifier expected.
 ## g45  "class A extends B<C> {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -353,6 +387,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8011@18+1]  Class(A HeritageClause(ExpressionWithTypeArguments(B TypeReference(C))))
    tsc .ts parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(B TypeReference(C))))
    tsc .tsx parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(B TypeReference(C))))
+   go  .js parse-clean js[TS8011@18+1]
       js-diag TS8011@18+1 Type arguments can only be used in TypeScript files.
 ## g46  "a < b >\n(c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
@@ -364,6 +399,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ((a < b) > Parenthesized(c));
    tsc .ts parse-clean  Call(a TypeReference(b) c);
    tsc .tsx parse-clean  Call(a TypeReference(b) c);
+   go  .js parse-clean
 ## g47  "for (var i = 0; i < n > (0); i++) {}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -374,6 +410,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  For(VariableDeclarationList(Variable(i "0")) ((i < n) > Parenthesized("0")) PostfixUnary(i) Block)
    tsc .ts parse-clean  For(VariableDeclarationList(Variable(i "0")) Call(i TypeReference(n) "0") PostfixUnary(i) Block)
    tsc .tsx parse-clean  For(VariableDeclarationList(Variable(i "0")) Call(i TypeReference(n) "0") PostfixUnary(i) Block)
+   go  .js parse-clean
 ## g48  "x = a<b>(c) ? d : e"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ok  module=ok
@@ -384,6 +421,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (x = Conditional(((a < b) > Parenthesized(c)) QuestionToken d ColonToken e));
    tsc .ts parse-clean  (x = Conditional(Call(a TypeReference(b) c) QuestionToken d ColonToken e));
    tsc .tsx parse-clean  (x = Conditional(Call(a TypeReference(b) c) QuestionToken d ColonToken e));
+   go  .js parse-clean
 ## g49  "a<b>>>(c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -394,6 +432,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (a < (b >>> Parenthesized(c)));
    tsc .ts parse-clean  (a < (b >>> Parenthesized(c)));
    tsc .tsx parse-clean  (a < (b >>> Parenthesized(c)));
+   go  .js parse-clean
 ## g50  "a<b>\n.c"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ERR Unexpected token '.'  module=ERR Unexpected token '.'
@@ -404,6 +443,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1109@5+1]  ((a < b) > PropertyAccess( c));
    tsc .ts parse[TS1477@1+3]  PropertyAccess(ExpressionWithTypeArguments(a TypeReference(b)) c);
    tsc .tsx parse[TS1477@1+3]  PropertyAccess(ExpressionWithTypeArguments(a TypeReference(b)) c);
+   go  .js parse[TS1109@5+1]
       js-parse TS1109@5+1 Expression expected.
 ## c01  "class A { public\n x = 1 }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
@@ -415,6 +455,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(public) Property(x "1"))
    tsc .ts parse-clean  Class(A Property(public) Property(x "1"))
    tsc .tsx parse-clean  Class(A Property(public) Property(x "1"))
+   go  .js parse-clean
 ## c02  "class A { readonly\n *gen() {} }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ok  module=ok
@@ -425,6 +466,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(readonly) Method(AsteriskToken gen Block))
    tsc .ts parse-clean  Class(A Property(readonly) Method(AsteriskToken gen Block))
    tsc .tsx parse-clean  Class(A Property(readonly) Method(AsteriskToken gen Block))
+   go  .js parse-clean
 ## c03  "class A { declare\n x }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -435,6 +477,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(declare) Property(x))
    tsc .ts parse-clean  Class(A Property(declare) Property(x))
    tsc .tsx parse-clean  Class(A Property(declare) Property(x))
+   go  .js parse-clean
 ## c04  "class A { abstract\n x }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -445,6 +488,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(abstract) Property(x))
    tsc .ts parse-clean  Class(A Property(abstract) Property(x))
    tsc .tsx parse-clean  Class(A Property(abstract) Property(x))
+   go  .js parse-clean
 ## c05  "class A { override\n ['x']() {} }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ok  module=ok
@@ -455,6 +499,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(override) Method(ComputedPropertyName("x") Block))
    tsc .ts parse-clean  Class(A Property(override) Method(ComputedPropertyName("x") Block))
    tsc .tsx parse-clean  Class(A Property(override) Method(ComputedPropertyName("x") Block))
+   go  .js parse-clean
 ## c06  "class A { private\n #x = 1 }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ok  module=ok
@@ -465,6 +510,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(private) Property(#x "1"))
    tsc .ts parse-clean  Class(A Property(private) Property(#x "1"))
    tsc .tsx parse-clean  Class(A Property(private) Property(#x "1"))
+   go  .js parse-clean
 ## c07  "class A { protected\n 0 = 1 }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ok  module=ok
@@ -475,6 +521,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(protected) Property("0" "1"))
    tsc .ts parse-clean  Class(A Property(protected) Property("0" "1"))
    tsc .tsx parse-clean  Class(A Property(protected) Property("0" "1"))
+   go  .js parse-clean
 ## c08  "class A { static\n x = 1 }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -485,6 +532,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(StaticKeyword x "1"))
    tsc .ts parse-clean  Class(A Property(StaticKeyword x "1"))
    tsc .tsx parse-clean  Class(A Property(StaticKeyword x "1"))
+   go  .js parse-clean
 ## c09  "class A { accessor\n x = 1 }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -495,6 +543,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(accessor) Property(x "1"))
    tsc .ts parse-clean  Class(A Property(accessor) Property(x "1"))
    tsc .tsx parse-clean  Class(A Property(accessor) Property(x "1"))
+   go  .js parse-clean
 ## c10  "class A { accessor x = 1 }"
    [v8:invalid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Unexpected identifier 'x'  module=ERR Unexpected identifier 'x'
@@ -505,6 +554,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(AccessorKeyword x "1"))
    tsc .ts parse-clean  Class(A Property(AccessorKeyword x "1"))
    tsc .tsx parse-clean  Class(A Property(AccessorKeyword x "1"))
+   go  .js parse-clean
 ## c11  "class A { public = 1; readonly; override() {}; declare = 2; abstract() {} }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -515,6 +565,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(public "1") Property(readonly) Method(override Block) SemicolonClassElement Property(declare "2") Method(abstract Block))
    tsc .ts parse-clean  Class(A Property(public "1") Property(readonly) Method(override Block) SemicolonClassElement Property(declare "2") Method(abstract Block))
    tsc .tsx parse-clean  Class(A Property(public "1") Property(readonly) Method(override Block) SemicolonClassElement Property(declare "2") Method(abstract Block))
+   go  .js parse-clean
 ## c12  "class A { get\n x() { return 1 } }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -525,6 +576,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A GetAccessor(x Block(Return("1"))))
    tsc .ts parse-clean  Class(A GetAccessor(x Block(Return("1"))))
    tsc .tsx parse-clean  Class(A GetAccessor(x Block(Return("1"))))
+   go  .js parse-clean
 ## c13  "class A { async\n x() {} }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -535,6 +587,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(async) Method(x Block))
    tsc .ts parse-clean  Class(A Property(async) Method(x Block))
    tsc .tsx parse-clean  Class(A Property(async) Method(x Block))
+   go  .js parse-clean
 ## c15  "class A { public\n static x = 1 }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ok  module=ok
@@ -545,6 +598,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(public) Property(StaticKeyword x "1"))
    tsc .ts parse-clean  Class(A Property(public) Property(StaticKeyword x "1"))
    tsc .tsx parse-clean  Class(A Property(public) Property(StaticKeyword x "1"))
+   go  .js parse-clean
 ## c16  "class A { readonly\n; x }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -555,6 +609,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(readonly) Property(x))
    tsc .ts parse-clean  Class(A Property(readonly) Property(x))
    tsc .tsx parse-clean  Class(A Property(readonly) Property(x))
+   go  .js parse-clean
 ## c17  "class A { declare; static; accessor; abstract }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -565,6 +620,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(declare) Property(static) Property(accessor) Property(abstract))
    tsc .ts parse-clean  Class(A Property(declare) Property(static) Property(accessor) Property(abstract))
    tsc .tsx parse-clean  Class(A Property(declare) Property(static) Property(accessor) Property(abstract))
+   go  .js parse-clean
 ## c19  "(class implements {})"
    [v8:invalid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ERR Unexpected strict mode reserved word  module=ERR Unexpected strict mode reserved word
@@ -575,6 +631,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Parenthesized(Class(implements));
    tsc .ts parse-clean  Parenthesized(Class(implements));
    tsc .tsx parse-clean  Parenthesized(Class(implements));
+   go  .js parse-clean
 ## c20  "class A { public\n 'x' = 1 }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ok  module=ok
@@ -585,6 +642,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(public) Property("x" "1"))
    tsc .ts parse-clean  Class(A Property(public) Property("x" "1"))
    tsc .tsx parse-clean  Class(A Property(public) Property("x" "1"))
+   go  .js parse-clean
 ## c21  "class A { static accessor x = 1 }"
    [v8:invalid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Unexpected identifier 'x'  module=ERR Unexpected identifier 'x'
@@ -595,6 +653,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(StaticKeyword AccessorKeyword x "1"))
    tsc .ts parse-clean  Class(A Property(StaticKeyword AccessorKeyword x "1"))
    tsc .tsx parse-clean  Class(A Property(StaticKeyword AccessorKeyword x "1"))
+   go  .js parse-clean
 ## c22  "class A { public x = 1 }"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ERR Unexpected identifier 'x'  module=ERR Unexpected identifier 'x'
@@ -605,6 +664,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8009@10+6]  Class(A Property(PublicKeyword x "1"))
    tsc .ts parse-clean  Class(A Property(PublicKeyword x "1"))
    tsc .tsx parse-clean  Class(A Property(PublicKeyword x "1"))
+   go  .js parse-clean js[TS8009@10+6]
       js-diag TS8009@10+6 The 'public' modifier can only be used in TypeScript files.
 ## c23  "class A { private\n get x() { return 1 } }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
@@ -616,6 +676,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(private) GetAccessor(x Block(Return("1"))))
    tsc .ts parse-clean  Class(A Property(private) GetAccessor(x Block(Return("1"))))
    tsc .tsx parse-clean  Class(A Property(private) GetAccessor(x Block(Return("1"))))
+   go  .js parse-clean
 ## c24  "class A { override\n static\n x = 1 }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ok  module=ok
@@ -626,6 +687,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Property(override) Property(StaticKeyword x "1"))
    tsc .ts parse-clean  Class(A Property(override) Property(StaticKeyword x "1"))
    tsc .tsx parse-clean  Class(A Property(override) Property(StaticKeyword x "1"))
+   go  .js parse-clean
 ## c25  "x = { public\n, readonly: 1, get declare() { return 1 }, async override() {}, static: 2 }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ERR Unexpected strict mode reserved word
@@ -636,6 +698,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (x = ObjectLiteral(ShorthandPropertyAssignment(public) PropertyAssignment(readonly "1") GetAccessor(declare Block(Return("1"))) Method(AsyncKeyword override Block) PropertyAssignment(static "2")));
    tsc .ts parse-clean  (x = ObjectLiteral(ShorthandPropertyAssignment(public) PropertyAssignment(readonly "1") GetAccessor(declare Block(Return("1"))) Method(AsyncKeyword override Block) PropertyAssignment(static "2")));
    tsc .tsx parse-clean  (x = ObjectLiteral(ShorthandPropertyAssignment(public) PropertyAssignment(readonly "1") GetAccessor(declare Block(Return("1"))) Method(AsyncKeyword override Block) PropertyAssignment(static "2")));
+   go  .js parse-clean
 ## s01  "type\nFoo = 1"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -646,6 +709,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  type; (Foo = "1");
    tsc .ts parse-clean  type; (Foo = "1");
    tsc .tsx parse-clean  type; (Foo = "1");
+   go  .js parse-clean
 ## s03  "namespace\nfoo\n{}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -656,6 +720,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  namespace; foo; Block
    tsc .ts parse-clean  namespace; foo; Block
    tsc .tsx parse-clean  namespace; foo; Block
+   go  .js parse-clean
 ## s04  "module\nfoo\n{}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -666,6 +731,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  module; foo; Block
    tsc .ts parse-clean  module; foo; Block
    tsc .tsx parse-clean  module; foo; Block
+   go  .js parse-clean
 ## s05  "abstract\nclass A {}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -676,6 +742,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  abstract; Class(A)
    tsc .ts parse-clean  abstract; Class(A)
    tsc .tsx parse-clean  abstract; Class(A)
+   go  .js parse-clean
 ## s06  "declare\nclass A {}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -686,6 +753,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  declare; Class(A)
    tsc .ts parse-clean  declare; Class(A)
    tsc .tsx parse-clean  declare; Class(A)
+   go  .js parse-clean
 ## s07  "interface\nFoo\n{}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ERR Unexpected strict mode reserved word
@@ -696,8 +764,9 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  interface; Foo; Block
    tsc .ts parse-clean  interface; Foo; Block
    tsc .tsx parse-clean  interface; Foo; Block
+   go  .js parse-clean
 ## s08  "global\n{}"
-   [v8:valid] [bun-js:ok] [bun-jsx:ok]
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [GO!=TSC js-diag]
    v8      script=ok  module=ok
    bun js  OK  global;\n;
    bun jsx OK  global;\n;
@@ -706,9 +775,10 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@0+6]  Module(global ModuleBlock)
    tsc .ts parse-clean  Module(global ModuleBlock)
    tsc .tsx parse-clean  Module(global ModuleBlock)
+   go  .js parse-clean
       js-diag TS8006@0+6 'module' declarations can only be used in TypeScript files.
 ## s09  "declare\nglobal\n{}"
-   [v8:valid] [bun-js:ok] [bun-jsx:ok]
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [GO!=TSC js-diag]
    v8      script=ok  module=ok
    bun js  OK  declare;\nglobal;\n;
    bun jsx OK  declare;\nglobal;\n;
@@ -717,6 +787,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@8+6]  declare; Module(global ModuleBlock)
    tsc .ts parse-clean  declare; Module(global ModuleBlock)
    tsc .tsx parse-clean  declare; Module(global ModuleBlock)
+   go  .js parse-clean
       js-diag TS8006@8+6 'module' declarations can only be used in TypeScript files.
 ## s10  "type = 1; type(1); type.x; type\n= 2"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
@@ -728,6 +799,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (type = "1"); Call(type "1"); PropertyAccess(type x); (type = "2");
    tsc .ts parse-clean  (type = "1"); Call(type "1"); PropertyAccess(type x); (type = "2");
    tsc .tsx parse-clean  (type = "1"); Call(type "1"); PropertyAccess(type x); (type = "2");
+   go  .js parse-clean
 ## s11  "namespace.x = 1; module.exports = 1; declare(x); abstract = 2"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -738,6 +810,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (PropertyAccess(namespace x) = "1"); (PropertyAccess(module exports) = "1"); Call(declare x); (abstract = "2");
    tsc .ts parse-clean  (PropertyAccess(namespace x) = "1"); (PropertyAccess(module exports) = "1"); Call(declare x); (abstract = "2");
    tsc .tsx parse-clean  (PropertyAccess(namespace x) = "1"); (PropertyAccess(module exports) = "1"); Call(declare x); (abstract = "2");
+   go  .js parse-clean
 ## s12  "module\n'x'"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -748,6 +821,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  module; "x";
    tsc .ts parse-clean  module; "x";
    tsc .tsx parse-clean  module; "x";
+   go  .js parse-clean
 ## s13  "type: for (;;) break type;"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -758,6 +832,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Labeled(type For(Break(type)))
    tsc .ts parse-clean  Labeled(type For(Break(type)))
    tsc .tsx parse-clean  Labeled(type For(Break(type)))
+   go  .js parse-clean
 ## s14  "declare: x; namespace: y; abstract: z; module: w; global: u;"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -768,6 +843,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Labeled(declare x;) Labeled(namespace y;) Labeled(abstract z;) Labeled(module w;) Labeled(global u;)
    tsc .ts parse-clean  Labeled(declare x;) Labeled(namespace y;) Labeled(abstract z;) Labeled(module w;) Labeled(global u;)
    tsc .tsx parse-clean  Labeled(declare x;) Labeled(namespace y;) Labeled(abstract z;) Labeled(module w;) Labeled(global u;)
+   go  .js parse-clean
 ## s18  "export default abstract\nclass A {}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Unexpected token 'export'  module=ok
@@ -778,6 +854,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  ExportAssignment(abstract) Class(A)
    tsc .ts parse-clean  ExportAssignment(abstract) Class(A)
    tsc .tsx parse-clean  ExportAssignment(abstract) Class(A)
+   go  .js parse-clean
 ## s19  "import type from 'x'; type;"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Cannot use import statement outside a module  module=ok
@@ -788,6 +865,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Import(ImportClause(type) "x") type;
    tsc .ts parse-clean  Import(ImportClause(type) "x") type;
    tsc .tsx parse-clean  Import(ImportClause(type) "x") type;
+   go  .js parse-clean
 ## s20  "import type, { a } from 'x'; import typ, * as ns from 'y';"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Cannot use import statement outside a module  module=ok
@@ -798,6 +876,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Import(ImportClause(type NamedImports(ImportSpecifier(a))) "x") Import(ImportClause(typ NamespaceImport(ns)) "y")
    tsc .ts parse-clean  Import(ImportClause(type NamedImports(ImportSpecifier(a))) "x") Import(ImportClause(typ NamespaceImport(ns)) "y")
    tsc .tsx parse-clean  Import(ImportClause(type NamedImports(ImportSpecifier(a))) "x") Import(ImportClause(typ NamespaceImport(ns)) "y")
+   go  .js parse-clean
 ## s21  "import { type } from 'x'; import { type as t } from 'x'; import { type as as } from 'x';"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Cannot use import statement outside a module  module=ok
@@ -808,6 +887,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(type))) "x") Import(ImportClause(NamedImports(ImportSpecifier(type t))) "x") Import(ImportClause(NamedImports(ImportSpecifier(type as))) "x")
    tsc .ts parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(type))) "x") Import(ImportClause(NamedImports(ImportSpecifier(type t))) "x") Import(ImportClause(NamedImports(ImportSpecifier(type as))) "x")
    tsc .tsx parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(type))) "x") Import(ImportClause(NamedImports(ImportSpecifier(type t))) "x") Import(ImportClause(NamedImports(ImportSpecifier(type as))) "x")
+   go  .js parse-clean
 ## s22  "var type; export { type }; export { type as t };"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Unexpected token 'export'  module=ok
@@ -818,6 +898,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type))) Export(NamedExports(ExportSpecifier(type t)))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type))) Export(NamedExports(ExportSpecifier(type t)))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(type))) Export(NamedExports(ExportSpecifier(type))) Export(NamedExports(ExportSpecifier(type t)))
+   go  .js parse-clean
 ## s24  "import { as } from 'x'; import { as as as2 } from 'x';"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Cannot use import statement outside a module  module=ok
@@ -828,6 +909,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(as))) "x") Import(ImportClause(NamedImports(ImportSpecifier(as as2))) "x")
    tsc .ts parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(as))) "x") Import(ImportClause(NamedImports(ImportSpecifier(as as2))) "x")
    tsc .tsx parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(as))) "x") Import(ImportClause(NamedImports(ImportSpecifier(as as2))) "x")
+   go  .js parse-clean
 ## s25  "export * as type from 'x'"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Unexpected token 'export'  module=ok
@@ -838,6 +920,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Export(NamespaceExport(type) "x")
    tsc .ts parse-clean  Export(NamespaceExport(type) "x")
    tsc .tsx parse-clean  Export(NamespaceExport(type) "x")
+   go  .js parse-clean
 ## s29  "var as = 1, satisfies = 2, x, y; x\nas\ny; x\nsatisfies\ny"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -848,6 +931,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(as "1") Variable(satisfies "2") Variable(x) Variable(y))) x; as; y; x; satisfies; y;
    tsc .ts parse-clean  (VariableDeclarationList(Variable(as "1") Variable(satisfies "2") Variable(x) Variable(y))) x; as; y; x; satisfies; y;
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(as "1") Variable(satisfies "2") Variable(x) Variable(y))) x; as; y; x; satisfies; y;
+   go  .js parse-clean
 ## s32  "var any, unknown, never, string, number, keyof, infer, is, asserts, readonly, unique, out, override, accessor, satisfies, type, declare, abstract, namespace, module, global;"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -858,6 +942,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(any) Variable(unknown) Variable(never) Variable(string) Variable(number) Variable(keyof) Variable(infer) Variable(is) Variable(asserts) Variable(readonly) Variable(unique) Variable(out) Variable(override) Variable(accessor) Variable(satisfies) Variable(type) Variable(declare) Variable(abstract) Variable(namespace) Variable(module) Variable(global)))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(any) Variable(unknown) Variable(never) Variable(string) Variable(number) Variable(keyof) Variable(infer) Variable(is) Variable(asserts) Variable(readonly) Variable(unique) Variable(out) Variable(override) Variable(accessor) Variable(satisfies) Variable(type) Variable(declare) Variable(abstract) Variable(namespace) Variable(module) Variable(global)))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(any) Variable(unknown) Variable(never) Variable(string) Variable(number) Variable(keyof) Variable(infer) Variable(is) Variable(asserts) Variable(readonly) Variable(unique) Variable(out) Variable(override) Variable(accessor) Variable(satisfies) Variable(type) Variable(declare) Variable(abstract) Variable(namespace) Variable(module) Variable(global)))
+   go  .js parse-clean
 ## s33  "function f(readonly, override, declare, abstract, type, of, async) {}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -868,6 +953,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Function(f Parameter(readonly) Parameter(override) Parameter(declare) Parameter(abstract) Parameter(type) Parameter(of) Parameter(async) Block)
    tsc .ts parse-clean  Function(f Parameter(readonly) Parameter(override) Parameter(declare) Parameter(abstract) Parameter(type) Parameter(of) Parameter(async) Block)
    tsc .tsx parse-clean  Function(f Parameter(readonly) Parameter(override) Parameter(declare) Parameter(abstract) Parameter(type) Parameter(of) Parameter(async) Block)
+   go  .js parse-clean
 ## s34  "function f(public, private, protected, static, interface, implements, package) {}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ERR Unexpected strict mode reserved word
@@ -878,6 +964,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Function(f Parameter(public) Parameter(private) Parameter(protected) Parameter(static) Parameter(interface) Parameter(implements) Parameter(package) Block)
    tsc .ts parse-clean  Function(f Parameter(public) Parameter(private) Parameter(protected) Parameter(static) Parameter(interface) Parameter(implements) Parameter(package) Block)
    tsc .tsx parse-clean  Function(f Parameter(public) Parameter(private) Parameter(protected) Parameter(static) Parameter(interface) Parameter(implements) Parameter(package) Block)
+   go  .js parse-clean
 ## s35  "async\nfunction f() {}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -888,6 +975,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  async; Function(f Block)
    tsc .ts parse-clean  async; Function(f Block)
    tsc .tsx parse-clean  async; Function(f Block)
+   go  .js parse-clean
 ## s36  "let async; async\nx => 1"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -898,6 +986,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(async))) async; ArrowFunction(Parameter(x) EqualsGreaterThanToken "1");
    tsc .ts parse-clean  (VariableDeclarationList(Variable(async))) async; ArrowFunction(Parameter(x) EqualsGreaterThanToken "1");
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(async))) async; ArrowFunction(Parameter(x) EqualsGreaterThanToken "1");
+   go  .js parse-clean
 ## s37  "x = async y => 1; z = async (y) => 1; w = async(y)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -908,6 +997,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (x = ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken "1")); (z = ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken "1")); (w = Call(async y));
    tsc .ts parse-clean  (x = ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken "1")); (z = ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken "1")); (w = Call(async y));
    tsc .tsx parse-clean  (x = ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken "1")); (z = ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken "1")); (w = Call(async y));
+   go  .js parse-clean
 ## s38  "import { a } from 'x'; class a {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err]
    v8      script=ERR Cannot use import statement outside a module  module=ERR Identifier 'a' has already been declared
@@ -918,6 +1008,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(a))) "x") Class(a)
    tsc .ts parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(a))) "x") Class(a)
    tsc .tsx parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(a))) "x") Class(a)
+   go  .js parse-clean
 ## s39  "try {} catch (e) {} finally {}"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -928,6 +1019,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Try(Block CatchClause(Variable(e) Block) Block)
    tsc .ts parse-clean  Try(Block CatchClause(Variable(e) Block) Block)
    tsc .tsx parse-clean  Try(Block CatchClause(Variable(e) Block) Block)
+   go  .js parse-clean
 ## s40  "var x = 1; export { x as default }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Unexpected token 'export'  module=ok
@@ -938,6 +1030,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x "1"))) Export(NamedExports(ExportSpecifier(x default)))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(x "1"))) Export(NamedExports(ExportSpecifier(x default)))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x "1"))) Export(NamedExports(ExportSpecifier(x default)))
+   go  .js parse-clean
 ## s41  "interface\n= 1"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ERR Unexpected strict mode reserved word
@@ -948,8 +1041,9 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (interface = "1");
    tsc .ts parse-clean  (interface = "1");
    tsc .tsx parse-clean  (interface = "1");
+   go  .js parse-clean
 ## s42  "enum = 1"
-   [v8:invalid] [bun-js:err] [bun-jsx:err]
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [GO!=TSC js-diag]
    v8      script=ERR Unexpected reserved word  module=ERR Unexpected reserved word
    bun js  ERR 1:1 Unexpected enum
    bun jsx ERR 1:1 Unexpected enum
@@ -958,6 +1052,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1003@5+1] js[TS8006@4+0]  Enum() "1";
    tsc .ts parse[TS1003@5+1]  Enum() "1";
    tsc .tsx parse[TS1003@5+1]  Enum() "1";
+   go  .js parse[TS1003@5+1] js[TS8006@5+-1]
       js-diag TS8006@4+0 'enum' declarations can only be used in TypeScript files.
       js-parse TS1003@5+1 Identifier expected.
 ## s43  "declare\nconst x = 1"
@@ -970,6 +1065,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  declare; (VariableDeclarationList(Variable(x "1")))
    tsc .ts parse-clean  declare; (VariableDeclarationList(Variable(x "1")))
    tsc .tsx parse-clean  declare; (VariableDeclarationList(Variable(x "1")))
+   go  .js parse-clean
 ## s44  "abstract\n(class {})"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -980,6 +1076,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Call(abstract Class);
    tsc .ts parse-clean  Call(abstract Class);
    tsc .tsx parse-clean  Call(abstract Class);
+   go  .js parse-clean
 ## a01  "a ? (b) : c => d"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -990,6 +1087,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
    tsc .ts parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
    tsc .tsx parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
+   go  .js parse-clean
 ## a02  "a ? (b, c) : d"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1000,6 +1098,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Parenthesized((b , c)) ColonToken d);
    tsc .ts parse-clean  Conditional(a QuestionToken Parenthesized((b , c)) ColonToken d);
    tsc .tsx parse-clean  Conditional(a QuestionToken Parenthesized((b , c)) ColonToken d);
+   go  .js parse-clean
 ## a03  "a ? b ? (c) : d => e : f"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ok  module=ok
@@ -1010,6 +1109,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1005@24+0] js[TS8010@14+1]  Conditional(a QuestionToken Conditional(b QuestionToken ArrowFunction(Parameter(c) TypeReference(d) EqualsGreaterThanToken e) ColonToken f) ColonToken );
    tsc .ts parse[TS1005@24+0]  Conditional(a QuestionToken Conditional(b QuestionToken ArrowFunction(Parameter(c) TypeReference(d) EqualsGreaterThanToken e) ColonToken f) ColonToken );
    tsc .tsx parse[TS1005@24+0]  Conditional(a QuestionToken Conditional(b QuestionToken ArrowFunction(Parameter(c) TypeReference(d) EqualsGreaterThanToken e) ColonToken f) ColonToken );
+   go  .js parse[TS1005@24+0] js[TS8010@14+1]
       js-diag TS8010@14+1 Type annotations can only be used in TypeScript files.
       js-parse TS1005@24+0 ':' expected.
 ## a04  "switch (x) { case (a): b => c; }"
@@ -1022,6 +1122,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1005@29+1] js[TS8010@23+1]  Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(a) TypeReference(b) EqualsGreaterThanToken c) Empty)))
    tsc .ts parse[TS1005@29+1]  Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(a) TypeReference(b) EqualsGreaterThanToken c) Empty)))
    tsc .tsx parse[TS1005@29+1]  Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(a) TypeReference(b) EqualsGreaterThanToken c) Empty)))
+   go  .js parse[TS1005@29+1] js[TS8010@23+1]
       js-diag TS8010@23+1 Type annotations can only be used in TypeScript files.
       js-parse TS1005@29+1 ':' expected.
 ## a05  "a ? (b) : c => d ? e : f"
@@ -1034,6 +1135,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken Conditional(d QuestionToken e ColonToken f)));
    tsc .ts parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken Conditional(d QuestionToken e ColonToken f)));
    tsc .tsx parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken Conditional(d QuestionToken e ColonToken f)));
+   go  .js parse-clean
 ## a06  "a ? (b = 1) : c => d"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1044,6 +1146,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Parenthesized((b = "1")) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
    tsc .ts parse-clean  Conditional(a QuestionToken Parenthesized((b = "1")) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
    tsc .tsx parse-clean  Conditional(a QuestionToken Parenthesized((b = "1")) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
+   go  .js parse-clean
 ## a07  "a ? ({b}) : c => d"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1054,6 +1157,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(b))) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
    tsc .ts parse-clean  Conditional(a QuestionToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(b))) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
    tsc .tsx parse-clean  Conditional(a QuestionToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(b))) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
+   go  .js parse-clean
 ## a08  "a ? async (b) : c => d"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1064,6 +1168,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Call(async b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
    tsc .ts parse-clean  Conditional(a QuestionToken Call(async b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
    tsc .tsx parse-clean  Conditional(a QuestionToken Call(async b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
+   go  .js parse-clean
 ## a10  "a ? (b) : (c) => d"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1074,6 +1179,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
    tsc .ts parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
    tsc .tsx parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken d));
+   go  .js parse-clean
 ## a12  "a ? (b) => c : d"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1084,6 +1190,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken c) ColonToken d);
    tsc .ts parse-clean  Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken c) ColonToken d);
    tsc .tsx parse-clean  Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken c) ColonToken d);
+   go  .js parse-clean
 ## a14  "a ? (b) : c => (d) : e => f"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ERR Unexpected token ':'  module=ERR Unexpected token ':'
@@ -1094,6 +1201,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8010@10+1]  Conditional(a QuestionToken ArrowFunction(Parameter(b) TypeReference(c) EqualsGreaterThanToken Parenthesized(d)) ColonToken ArrowFunction(Parameter(e) EqualsGreaterThanToken f));
    tsc .ts parse-clean  Conditional(a QuestionToken ArrowFunction(Parameter(b) TypeReference(c) EqualsGreaterThanToken Parenthesized(d)) ColonToken ArrowFunction(Parameter(e) EqualsGreaterThanToken f));
    tsc .tsx parse-clean  Conditional(a QuestionToken ArrowFunction(Parameter(b) TypeReference(c) EqualsGreaterThanToken Parenthesized(d)) ColonToken ArrowFunction(Parameter(e) EqualsGreaterThanToken f));
+   go  .js parse-clean js[TS8010@10+1]
       js-diag TS8010@10+1 Type annotations can only be used in TypeScript files.
 ## a15  "a ? b ? (c) : (d) => e : f"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
@@ -1105,6 +1213,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Conditional(b QuestionToken Parenthesized(c) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e)) ColonToken f);
    tsc .ts parse-clean  Conditional(a QuestionToken Conditional(b QuestionToken Parenthesized(c) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e)) ColonToken f);
    tsc .tsx parse-clean  Conditional(a QuestionToken Conditional(b QuestionToken Parenthesized(c) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e)) ColonToken f);
+   go  .js parse-clean
 ## a16  "a ? (b ? (c) : d => e) : f"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1115,6 +1224,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Parenthesized(Conditional(b QuestionToken Parenthesized(c) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e))) ColonToken f);
    tsc .ts parse-clean  Conditional(a QuestionToken Parenthesized(Conditional(b QuestionToken Parenthesized(c) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e))) ColonToken f);
    tsc .tsx parse-clean  Conditional(a QuestionToken Parenthesized(Conditional(b QuestionToken Parenthesized(c) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e))) ColonToken f);
+   go  .js parse-clean
 ## a19  "switch (x) { case (a): (b); }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1125,6 +1235,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Switch(x CaseBlock(CaseClause(Parenthesized(a) Parenthesized(b);)))
    tsc .ts parse-clean  Switch(x CaseBlock(CaseClause(Parenthesized(a) Parenthesized(b);)))
    tsc .tsx parse-clean  Switch(x CaseBlock(CaseClause(Parenthesized(a) Parenthesized(b);)))
+   go  .js parse-clean
 ## a21  "switch (x) { case (a): (b) => c; }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1135,6 +1246,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Switch(x CaseBlock(CaseClause(Parenthesized(a) ArrowFunction(Parameter(b) EqualsGreaterThanToken c);)))
    tsc .ts parse-clean  Switch(x CaseBlock(CaseClause(Parenthesized(a) ArrowFunction(Parameter(b) EqualsGreaterThanToken c);)))
    tsc .tsx parse-clean  Switch(x CaseBlock(CaseClause(Parenthesized(a) ArrowFunction(Parameter(b) EqualsGreaterThanToken c);)))
+   go  .js parse-clean
 ## a23  "x = { a: (b) }; y = a ? (b) : (c)"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1145,6 +1257,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (x = ObjectLiteral(PropertyAssignment(a Parenthesized(b)))); (y = Conditional(a QuestionToken Parenthesized(b) ColonToken Parenthesized(c)));
    tsc .ts parse-clean  (x = ObjectLiteral(PropertyAssignment(a Parenthesized(b)))); (y = Conditional(a QuestionToken Parenthesized(b) ColonToken Parenthesized(c)));
    tsc .tsx parse-clean  (x = ObjectLiteral(PropertyAssignment(a Parenthesized(b)))); (y = Conditional(a QuestionToken Parenthesized(b) ColonToken Parenthesized(c)));
+   go  .js parse-clean
 ## a24  "a ? b ? (c) : d => (e) : f"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ok  module=ok
@@ -1155,6 +1268,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1005@26+0] js[TS8010@14+1]  Conditional(a QuestionToken Conditional(b QuestionToken ArrowFunction(Parameter(c) TypeReference(d) EqualsGreaterThanToken Parenthesized(e)) ColonToken f) ColonToken );
    tsc .ts parse[TS1005@26+0]  Conditional(a QuestionToken Conditional(b QuestionToken ArrowFunction(Parameter(c) TypeReference(d) EqualsGreaterThanToken Parenthesized(e)) ColonToken f) ColonToken );
    tsc .tsx parse[TS1005@26+0]  Conditional(a QuestionToken Conditional(b QuestionToken ArrowFunction(Parameter(c) TypeReference(d) EqualsGreaterThanToken Parenthesized(e)) ColonToken f) ColonToken );
+   go  .js parse[TS1005@26+0] js[TS8010@14+1]
       js-diag TS8010@14+1 Type annotations can only be used in TypeScript files.
       js-parse TS1005@26+0 ':' expected.
 ## a25  "a ? (b) : c => { d } "
@@ -1167,6 +1281,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken Block(d;)));
    tsc .ts parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken Block(d;)));
    tsc .tsx parse-clean  Conditional(a QuestionToken Parenthesized(b) ColonToken ArrowFunction(Parameter(c) EqualsGreaterThanToken Block(d;)));
+   go  .js parse-clean
 ## a26  "a ? b ? c : (d) : e => f"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1177,6 +1292,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Conditional(a QuestionToken Conditional(b QuestionToken c ColonToken Parenthesized(d)) ColonToken ArrowFunction(Parameter(e) EqualsGreaterThanToken f));
    tsc .ts parse-clean  Conditional(a QuestionToken Conditional(b QuestionToken c ColonToken Parenthesized(d)) ColonToken ArrowFunction(Parameter(e) EqualsGreaterThanToken f));
    tsc .tsx parse-clean  Conditional(a QuestionToken Conditional(b QuestionToken c ColonToken Parenthesized(d)) ColonToken ArrowFunction(Parameter(e) EqualsGreaterThanToken f));
+   go  .js parse-clean
 ## a27  "switch (x) { case (a): async => c; }"
    [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ok  module=ok
@@ -1187,6 +1303,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1005@33+1] js[TS8010@23+5]  Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(a) TypeReference(async) EqualsGreaterThanToken c) Empty)))
    tsc .ts parse[TS1005@33+1]  Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(a) TypeReference(async) EqualsGreaterThanToken c) Empty)))
    tsc .tsx parse[TS1005@33+1]  Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(a) TypeReference(async) EqualsGreaterThanToken c) Empty)))
+   go  .js parse[TS1005@33+1] js[TS8010@23+5]
       js-diag TS8010@23+5 Type annotations can only be used in TypeScript files.
       js-parse TS1005@33+1 ':' expected.
 ## a28  "a ? b ? async (c) : d => e : f"
@@ -1199,8 +1316,180 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1005@30+0] js[TS8010@20+1]  Conditional(a QuestionToken Conditional(b QuestionToken ArrowFunction(AsyncKeyword Parameter(c) TypeReference(d) EqualsGreaterThanToken e) ColonToken f) ColonToken );
    tsc .ts parse[TS1005@30+0]  Conditional(a QuestionToken Conditional(b QuestionToken ArrowFunction(AsyncKeyword Parameter(c) TypeReference(d) EqualsGreaterThanToken e) ColonToken f) ColonToken );
    tsc .tsx parse[TS1005@30+0]  Conditional(a QuestionToken Conditional(b QuestionToken ArrowFunction(AsyncKeyword Parameter(c) TypeReference(d) EqualsGreaterThanToken e) ColonToken f) ColonToken );
+   go  .js parse[TS1005@30+0] js[TS8010@20+1]
       js-diag TS8010@20+1 Type annotations can only be used in TypeScript files.
       js-parse TS1005@30+0 ':' expected.
+## a30  "x ? y => ({ y }) : z => ({ z })"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ok  module=ok
+   bun js  OK  x ? (y) => ({ y }) : (z) => ({ z });
+   bun jsx OK  x ? (y) => ({ y }) : (z) => ({ z });
+   bun ts  ERR 1:31 Expected ":" but found end of file
+   bun tsx ERR 1:31 Expected ":" but found end of file
+   tsc .js parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(z)))));
+   tsc .ts parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(z)))));
+   tsc .tsx parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(z)))));
+   go  .js parse-clean
+## a31  "a ? (b) => (c): d => e"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ok  module=ok
+   bun js  OK  a ? (b) => c : (d) => e;
+   bun jsx OK  a ? (b) => c : (d) => e;
+   bun ts  ERR 1:22 Expected ":" but found end of file
+   bun tsx ERR 1:22 Expected ":" but found end of file
+   tsc .js parse-clean  Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken Parenthesized(c)) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e));
+   tsc .ts parse-clean  Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken Parenthesized(c)) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e));
+   tsc .tsx parse-clean  Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken Parenthesized(c)) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e));
+   go  .js parse-clean
+## a32  "x ? y => (y) : z => z"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ok  module=ok
+   bun js  OK  x ? (y) => y : (z) => z;
+   bun jsx OK  x ? (y) => y : (z) => z;
+   bun ts  ERR 1:21 Expected ":" but found end of file
+   bun tsx ERR 1:21 Expected ":" but found end of file
+   tsc .js parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .ts parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .tsx parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   go  .js parse-clean
+## a33  "x ? () => (y) : z => z"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ok  module=ok
+   bun js  OK  x ? () => y : (z) => z;
+   bun jsx OK  x ? () => y : (z) => z;
+   bun ts  ERR 1:22 Expected ":" but found end of file
+   bun tsx ERR 1:22 Expected ":" but found end of file
+   tsc .js parse[TS1005@22+0] js[TS8010@16+1]  Conditional(x QuestionToken ArrowFunction(EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) ColonToken );
+   tsc .ts parse[TS1005@22+0]  Conditional(x QuestionToken ArrowFunction(EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) ColonToken );
+   tsc .tsx parse[TS1005@22+0]  Conditional(x QuestionToken ArrowFunction(EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) ColonToken );
+   go  .js parse[TS1005@22+0] js[TS8010@16+1]
+      js-diag TS8010@16+1 Type annotations can only be used in TypeScript files.
+      js-parse TS1005@22+0 ':' expected.
+## a34  "f(x ? y => (y) : z => z)"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ok  module=ok
+   bun js  OK  f(x ? (y) => y : (z) => z);
+   bun jsx OK  f(x ? (y) => y : (z) => z);
+   bun ts  ERR 1:24 Expected ":" but found ")"
+   bun tsx ERR 1:24 Expected ":" but found ")"
+   tsc .js parse-clean  Call(f Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z)));
+   tsc .ts parse-clean  Call(f Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z)));
+   tsc .tsx parse-clean  Call(f Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z)));
+   go  .js parse-clean
+## a35  "x ? y => z => (w) : v => v"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ok  module=ok
+   bun js  OK  x ? (y) => (z) => w : (v) => v;
+   bun jsx OK  x ? (y) => (z) => w : (v) => v;
+   bun ts  ERR 1:26 Expected ":" but found end of file
+   bun tsx ERR 1:26 Expected ":" but found end of file
+   tsc .js parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(w))) ColonToken ArrowFunction(Parameter(v) EqualsGreaterThanToken v));
+   tsc .ts parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(w))) ColonToken ArrowFunction(Parameter(v) EqualsGreaterThanToken v));
+   tsc .tsx parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(w))) ColonToken ArrowFunction(Parameter(v) EqualsGreaterThanToken v));
+   go  .js parse-clean
+## a36  "x ? y => (y) : (z) => z"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok]
+   v8      script=ok  module=ok
+   bun js  OK  x ? (y) => y : (z) => z;
+   bun jsx OK  x ? (y) => y : (z) => z;
+   bun ts  OK  x ? (y) => y : (z) => z;
+   bun tsx OK  x ? (y) => y : (z) => z;
+   tsc .js parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .ts parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .tsx parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   go  .js parse-clean
+## a37  "x ? async y => (y) : z => z"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ok  module=ok
+   bun js  OK  x ? async (y) => y : (z) => z;
+   bun jsx OK  x ? async (y) => y : (z) => z;
+   bun ts  ERR 1:27 Expected ":" but found end of file
+   bun tsx ERR 1:27 Expected ":" but found end of file
+   tsc .js parse-clean  Conditional(x QuestionToken ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .ts parse-clean  Conditional(x QuestionToken ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .tsx parse-clean  Conditional(x QuestionToken ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   go  .js parse-clean
+## a40  "x ? [y => (y)] : z => z"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok]
+   v8      script=ok  module=ok
+   bun js  OK  x ? [(y) => y] : (z) => z;
+   bun jsx OK  x ? [(y) => y] : (z) => z;
+   bun ts  OK  x ? [(y) => y] : (z) => z;
+   bun tsx OK  x ? [(y) => y] : (z) => z;
+   tsc .js parse-clean  Conditional(x QuestionToken ArrayLiteral(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .ts parse-clean  Conditional(x QuestionToken ArrayLiteral(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .tsx parse-clean  Conditional(x QuestionToken ArrayLiteral(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   go  .js parse-clean
+## a41  "x ? y => (y, w) : z => z"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ok  module=ok
+   bun js  OK  x ? (y) => (y, w) : (z) => z;
+   bun jsx OK  x ? (y) => (y, w) : (z) => z;
+   bun ts  ERR 1:24 Expected ":" but found end of file
+   bun tsx ERR 1:24 Expected ":" but found end of file
+   tsc .js parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized((y , w))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .ts parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized((y , w))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .tsx parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized((y , w))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   go  .js parse-clean
+## a42  "x ? y => (y) ? (w) : u => u : z => z"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ok  module=ok
+   bun js  OK  x ? (y) => y ? w : (u) => u : (z) => z;
+   bun jsx OK  x ? (y) => y ? w : (u) => u : (z) => z;
+   bun ts  ERR 1:36 Expected ":" but found end of file
+   bun tsx ERR 1:36 Expected ":" but found end of file
+   tsc .js parse[TS1005@36+0] js[TS8010@21+1]  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Conditional(Parenthesized(y) QuestionToken ArrowFunction(Parameter(w) TypeReference(u) EqualsGreaterThanToken u) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z))) ColonToken );
+   tsc .ts parse[TS1005@36+0]  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Conditional(Parenthesized(y) QuestionToken ArrowFunction(Parameter(w) TypeReference(u) EqualsGreaterThanToken u) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z))) ColonToken );
+   tsc .tsx parse[TS1005@36+0]  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Conditional(Parenthesized(y) QuestionToken ArrowFunction(Parameter(w) TypeReference(u) EqualsGreaterThanToken u) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z))) ColonToken );
+   go  .js parse[TS1005@36+0] js[TS8010@21+1]
+      js-diag TS8010@21+1 Type annotations can only be used in TypeScript files.
+      js-parse TS1005@36+0 ':' expected.
+## a43  "x ? (y => (y)) : z => z"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok]
+   v8      script=ok  module=ok
+   bun js  OK  x ? (y) => y : (z) => z;
+   bun jsx OK  x ? (y) => y : (z) => z;
+   bun ts  OK  x ? (y) => y : (z) => z;
+   bun tsx OK  x ? (y) => y : (z) => z;
+   tsc .js parse-clean  Conditional(x QuestionToken Parenthesized(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .ts parse-clean  Conditional(x QuestionToken Parenthesized(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .tsx parse-clean  Conditional(x QuestionToken Parenthesized(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   go  .js parse-clean
+## a44  "switch (x) { case y => (y): z => z; }"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx]
+   v8      script=ok  module=ok
+   bun js  OK  switch (x) {\n  case ((y) => y):\n    (z) => z;\n}
+   bun jsx OK  switch (x) {\n  case ((y) => y):\n    (z) => z;\n}
+   bun ts  ERR 1:35 Expected ":" but found ";"
+   bun tsx ERR 1:35 Expected ":" but found ";"
+   tsc .js parse[TS1005@34+1] js[TS8010@28+1]  Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) Empty)))
+   tsc .ts parse[TS1005@34+1]  Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) Empty)))
+   tsc .tsx parse[TS1005@34+1]  Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) Empty)))
+   go  .js parse[TS1005@34+1] js[TS8010@28+1]
+      js-diag TS8010@28+1 Type annotations can only be used in TypeScript files.
+      js-parse TS1005@34+1 ':' expected.
+## a45  "x ? y => (y) : z"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok]
+   v8      script=ok  module=ok
+   bun js  OK  x ? (y) => y : z;
+   bun jsx OK  x ? (y) => y : z;
+   bun ts  OK  x ? (y) => y : z;
+   bun tsx OK  x ? (y) => y : z;
+   tsc .js parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken z);
+   tsc .ts parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken z);
+   tsc .tsx parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken z);
+   go  .js parse-clean
+## a46  "x ? y => { return (y) } : z => z"
+   [v8:valid] [bun-js:ok] [bun-jsx:ok]
+   v8      script=ok  module=ok
+   bun js  OK  x ? (y) => {\n  return y;\n} : (z) => z;
+   bun jsx OK  x ? (y) => {\n  return y;\n} : (z) => z;
+   bun ts  OK  x ? (y) => {\n  return y;\n} : (z) => z;
+   bun tsx OK  x ? (y) => {\n  return y;\n} : (z) => z;
+   tsc .js parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Block(Return(Parenthesized(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .ts parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Block(Return(Parenthesized(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   tsc .tsx parse-clean  Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Block(Return(Parenthesized(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));
+   go  .js parse-clean
 ## j01  "const x = <div/>"
    [v8:invalid] [bun-js:err] [bun-jsx:ok] [TSC js!=ts]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -1211,6 +1500,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x JsxSelfClosingElement(div JsxAttributes))))
    tsc .ts parse[TS1005@14+1]  (VariableDeclarationList(Variable(x TypeAssertion(TypeReference(div) RegularExpressionLiteral))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x JsxSelfClosingElement(div JsxAttributes))))
+   go  .js parse-clean
 ## j02  "const x = <A extends b>y</A>"
    [v8:invalid] [bun-js:err] [bun-jsx:ok] [BUN jsx!=tsx] [TSC js!=ts]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -1221,6 +1511,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1005@23+1,TS1005@24+2,TS1005@27+1,TS1109@28+0] js[TS8004@11+11]  (VariableDeclarationList(Variable(x ArrowFunction(TypeParameter(A TypeReference(b)) EqualsGreaterThanToken y)) Variable(A))) ( > );
    tsc .ts parse[TS1005@22+1,TS1161@25+3]  (VariableDeclarationList(Variable(x (TypeAssertion(ConditionalType(TypeReference(A) TypeReference(b) TypeReference() TypeReference()) y) < RegularExpressionLiteral))))
    tsc .tsx parse[TS1005@23+1,TS1005@24+2,TS1005@27+1,TS1109@28+0]  (VariableDeclarationList(Variable(x ArrowFunction(TypeParameter(A TypeReference(b)) EqualsGreaterThanToken y)) Variable(A))) ( > );
+   go  .js parse[TS1005@23+1,TS1005@24+2,TS1005@27+1,TS1109@28+0] js[TS8004@11+11]
       js-diag TS8004@11+11 Type parameter declarations can only be used in TypeScript files.
       js-parse TS1005@23+1 '(' expected.
       js-parse TS1005@24+2 ',' expected.
@@ -1236,6 +1527,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(A JsxAttributes(JsxAttribute(extends))) JsxText JsxClosingElement(A)))))
    tsc .ts parse[TS1110@20+1,TS1161@23+3]  (VariableDeclarationList(Variable(x (TypeAssertion(ConditionalType(TypeReference(A) TypeReference() TypeReference() TypeReference()) y) < RegularExpressionLiteral))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(A JsxAttributes(JsxAttribute(extends))) JsxText JsxClosingElement(A)))))
+   go  .js parse-clean
 ## j04  "const x = <A extends={1}>y</A>"
    [v8:invalid] [bun-js:err] [bun-jsx:ok] [TSC js!=ts]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -1246,6 +1538,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(A JsxAttributes(JsxAttribute(extends Jsx("1")))) JsxText JsxClosingElement(A)))))
    tsc .ts parse[TS1110@20+1,TS1005@23+1,TS1005@24+1,TS1161@27+3]  (VariableDeclarationList(Variable(x TypeAssertion(ConditionalType(TypeReference(A) TypeReference() TypeReference() TypeReference()) )) Variable(ObjectBindingPattern(BindingElement("1" ))))) (( > y) < RegularExpressionLiteral);
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(A JsxAttributes(JsxAttribute(extends Jsx("1")))) JsxText JsxClosingElement(A)))))
+   go  .js parse-clean
 ## j05  "const x = <T,>(y) => y"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -1256,6 +1549,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8004@11+2]  (VariableDeclarationList(Variable(x ArrowFunction(TypeParameter(T) Parameter(y) EqualsGreaterThanToken y))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(x ArrowFunction(TypeParameter(T) Parameter(y) EqualsGreaterThanToken y))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x ArrowFunction(TypeParameter(T) Parameter(y) EqualsGreaterThanToken y))))
+   go  .js parse-clean js[TS8004@11+2]
       js-diag TS8004@11+2 Type parameter declarations can only be used in TypeScript files.
 ## j06  "const x = <A b='1'>{/* c */}</A>"
    [v8:invalid] [bun-js:err] [bun-jsx:ok] [TSC js!=ts]
@@ -1267,6 +1561,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(A JsxAttributes(JsxAttribute(b "1"))) Jsx JsxClosingElement(A)))))
    tsc .ts parse[TS1005@13+1,TS1005@14+1,TS1134@15+3,TS1161@29+3]  (VariableDeclarationList(Variable(x TypeAssertion(TypeReference(A) b)))) (("1" > ObjectLiteral) < RegularExpressionLiteral);
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(A JsxAttributes(JsxAttribute(b "1"))) Jsx JsxClosingElement(A)))))
+   go  .js parse-clean
 ## j08  "const x = <div>{a<b>(c)}</div>"
    [v8:invalid] [bun-js:err] [bun-jsx:ok] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -1277,6 +1572,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(div JsxAttributes) Jsx(((a < b) > Parenthesized(c))) JsxClosingElement(div)))))
    tsc .ts parse[TS1161@25+5]  (VariableDeclarationList(Variable(x (TypeAssertion(TypeReference(div) ObjectLiteral(Method(a TypeParameter(b) Parameter(c)))) < RegularExpressionLiteral))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(div JsxAttributes) Jsx(Call(a TypeReference(b) c)) JsxClosingElement(div)))))
+   go  .js parse-clean
 ## j11  "const x = <T>y</T>"
    [v8:invalid] [bun-js:err] [bun-jsx:ok] [TSC js!=ts]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -1287,6 +1583,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(T JsxAttributes) JsxText JsxClosingElement(T)))))
    tsc .ts parse[TS1161@15+3]  (VariableDeclarationList(Variable(x (TypeAssertion(TypeReference(T) y) < RegularExpressionLiteral))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(T JsxAttributes) JsxText JsxClosingElement(T)))))
+   go  .js parse-clean
 ## j12  "const x = <div\n  // line\n  a='1' /* block */ />"
    [v8:invalid] [bun-js:err] [bun-jsx:ok] [TSC js!=ts]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -1297,6 +1594,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x JsxSelfClosingElement(div JsxAttributes(JsxAttribute(a "1"))))))
    tsc .ts parse[TS1005@27+1,TS1005@28+1,TS1134@29+3,TS1109@46+1,TS1109@47+0]  (VariableDeclarationList(Variable(x TypeAssertion(TypeReference(div) a)))) (("1" / ) > );
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x JsxSelfClosingElement(div JsxAttributes(JsxAttribute(a "1"))))))
+   go  .js parse-clean
 ## j14  "const x = <A<T> b='1' />"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -1307,6 +1605,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1003@12+1,TS1382@23+1,TS17008@13+1,TS1005@24+0,TS2657@10+14]  (VariableDeclarationList(Variable(x (JsxSelfClosingElement(A JsxAttributes) , JsxElement(JsxOpeningElement(T JsxAttributes) JsxText JsxClosingElement())))))
    tsc .ts parse[TS1005@16+1,TS1005@17+1,TS1134@18+3,TS1109@23+1,TS1109@24+0]  (VariableDeclarationList(Variable(x TypeAssertion(TypeReference(A TypeReference(T)) b)))) (("1" / ) > );
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x JsxSelfClosingElement(A TypeReference(T) JsxAttributes(JsxAttribute(b "1"))))))
+   go  .js parse[TS1003@12+1,TS1382@23+1,TS17008@13+1,TS1005@24+0,TS2657@10+14]
       js-parse TS1003@12+1 Identifier expected.
       js-parse TS1382@23+1 Unexpected token. Did you mean `{'>'}` or `&gt;`?
       js-parse TS17008@13+1 JSX element 'T' has no corresponding closing tag.
@@ -1322,6 +1621,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1382@9+1]  Call(f JsxElement(JsxOpeningElement(T JsxAttributes) JsxText JsxClosingElement(T)));
    tsc .ts parse[TS1161@13+3]  Call(f ArrowFunction(TypeParameter(T) EqualsGreaterThanToken (x < RegularExpressionLiteral)));
    tsc .tsx parse[TS1382@9+1]  Call(f JsxElement(JsxOpeningElement(T JsxAttributes) JsxText JsxClosingElement(T)));
+   go  .js parse[TS1382@9+1]
       js-parse TS1382@9+1 Unexpected token. Did you mean `{'>'}` or `&gt;`?
 ## j16  "const x = <T>y"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [TSC js!=ts]
@@ -1333,6 +1633,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS17008@11+1,TS1005@14+0]  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(T JsxAttributes) JsxText JsxClosingElement()))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(x TypeAssertion(TypeReference(T) y))))
    tsc .tsx parse[TS17008@11+1,TS1005@14+0]  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(T JsxAttributes) JsxText JsxClosingElement()))))
+   go  .js parse[TS17008@11+1,TS1005@14+0]
       js-parse TS17008@11+1 JSX element 'T' has no corresponding closing tag.
       js-parse TS1005@14+0 '</' expected.
 ## j17  "const x = <A const>y</A>"
@@ -1345,6 +1646,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(A JsxAttributes(JsxAttribute(const))) JsxText JsxClosingElement(A)))))
    tsc .ts parse[TS1005@13+5,TS1134@18+1,TS1161@21+3]  (VariableDeclarationList(Variable(x TypeAssertion(TypeReference(A) )))) (VariableDeclarationList) (( > y) < RegularExpressionLiteral);
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(A JsxAttributes(JsxAttribute(const))) JsxText JsxClosingElement(A)))))
+   go  .js parse-clean
 ## j18  "const x = <const>y</const>"
    [v8:invalid] [bun-js:err] [bun-jsx:ok] [TSC js!=ts]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -1355,6 +1657,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(const JsxAttributes) JsxText JsxClosingElement(const)))))
    tsc .ts parse[TS1161@19+7]  (VariableDeclarationList(Variable(x (TypeAssertion(TypeReference(const) y) < RegularExpressionLiteral))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x JsxElement(JsxOpeningElement(const JsxAttributes) JsxText JsxClosingElement(const)))))
+   go  .js parse-clean
 ## j19  "const x = <A extends b='1'>y</A>"
    [v8:invalid] [bun-js:err] [bun-jsx:ok] [BUN jsx!=tsx] [TSC js!=ts]
    v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
@@ -1365,6 +1668,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1005@27+1,TS1005@28+2,TS1005@31+1,TS1109@32+0] js[TS8004@11+15]  (VariableDeclarationList(Variable(x ArrowFunction(TypeParameter(A TypeReference(b) LiteralType("1")) EqualsGreaterThanToken y)) Variable(A))) ( > );
    tsc .ts parse[TS1005@22+1,TS1134@23+3,TS1161@29+3]  (VariableDeclarationList(Variable(x TypeAssertion(ConditionalType(TypeReference(A) TypeReference(b) TypeReference() TypeReference()) )))) (("1" > y) < RegularExpressionLiteral);
    tsc .tsx parse[TS1005@27+1,TS1005@28+2,TS1005@31+1,TS1109@32+0]  (VariableDeclarationList(Variable(x ArrowFunction(TypeParameter(A TypeReference(b) LiteralType("1")) EqualsGreaterThanToken y)) Variable(A))) ( > );
+   go  .js parse[TS1005@27+1,TS1005@28+2,TS1005@31+1,TS1109@32+0] js[TS8004@11+15]
       js-diag TS8004@11+15 Type parameter declarations can only be used in TypeScript files.
       js-parse TS1005@27+1 '(' expected.
       js-parse TS1005@28+2 ',' expected.
@@ -1380,6 +1684,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8010@7+6]  (VariableDeclarationList(Variable(x NumberKeyword "1")))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(x NumberKeyword "1")))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x NumberKeyword "1")))
+   go  .js parse-clean js[TS8010@7+6]
       js-diag TS8010@7+6 Type annotations can only be used in TypeScript files.
 ## x02  "function f(a?: number): void {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1391,6 +1696,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8009@12+1,TS8010@15+6,TS8010@24+4]  Function(f Parameter(a QuestionToken NumberKeyword) VoidKeyword Block)
    tsc .ts parse-clean  Function(f Parameter(a QuestionToken NumberKeyword) VoidKeyword Block)
    tsc .tsx parse-clean  Function(f Parameter(a QuestionToken NumberKeyword) VoidKeyword Block)
+   go  .js parse-clean js[TS8009@12+1,TS8010@15+6,TS8010@24+4]
       js-diag TS8009@12+1 The '?' modifier can only be used in TypeScript files.
       js-diag TS8010@15+6 Type annotations can only be used in TypeScript files.
       js-diag TS8010@24+4 Type annotations can only be used in TypeScript files.
@@ -1404,6 +1710,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@10+1]  Interface(I)
    tsc .ts parse-clean  Interface(I)
    tsc .tsx parse-clean  Interface(I)
+   go  .js parse-clean js[TS8006@10+1]
       js-diag TS8006@10+1 'interface' declarations can only be used in TypeScript files.
 ## x04  "type T = number"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1415,6 +1722,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8008@5+1]  TypeAlias(T NumberKeyword)
    tsc .ts parse-clean  TypeAlias(T NumberKeyword)
    tsc .tsx parse-clean  TypeAlias(T NumberKeyword)
+   go  .js parse-clean js[TS8008@5+1]
       js-diag TS8008@5+1 Type aliases can only be used in TypeScript files.
 ## x05  "enum E { A }"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1426,6 +1734,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@5+1]  Enum(E EnumMember(A))
    tsc .ts parse-clean  Enum(E EnumMember(A))
    tsc .tsx parse-clean  Enum(E EnumMember(A))
+   go  .js parse-clean js[TS8006@5+1]
       js-diag TS8006@5+1 'enum' declarations can only be used in TypeScript files.
 ## x06  "namespace N {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1437,6 +1746,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@10+1]  Module(N ModuleBlock)
    tsc .ts parse-clean  Module(N ModuleBlock)
    tsc .tsx parse-clean  Module(N ModuleBlock)
+   go  .js parse-clean js[TS8006@10+1]
       js-diag TS8006@10+1 'namespace' declarations can only be used in TypeScript files.
 ## x06b  "module M {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1448,6 +1758,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@7+1]  Module(M ModuleBlock)
    tsc .ts parse-clean  Module(M ModuleBlock)
    tsc .tsx parse-clean  Module(M ModuleBlock)
+   go  .js parse-clean js[TS8006@7+1]
       js-diag TS8006@7+1 'module' declarations can only be used in TypeScript files.
 ## x07  "declare const x"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1459,6 +1770,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8009@0+7]  (DeclareKeyword VariableDeclarationList(Variable(x)))
    tsc .ts parse-clean  (DeclareKeyword VariableDeclarationList(Variable(x)))
    tsc .tsx parse-clean  (DeclareKeyword VariableDeclarationList(Variable(x)))
+   go  .js parse-clean js[TS8009@0+7]
       js-diag TS8009@0+7 The 'declare' modifier can only be used in TypeScript files.
 ## x08  "x!"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1470,6 +1782,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8013@0+2]  NonNull(x);
    tsc .ts parse-clean  NonNull(x);
    tsc .tsx parse-clean  NonNull(x);
+   go  .js parse-clean js[TS8013@0+2]
       js-diag TS8013@0+2 Non-null assertions can only be used in TypeScript files.
 ## x08b  "x as y"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1481,6 +1794,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8016@5+1]  As(x TypeReference(y));
    tsc .ts parse-clean  As(x TypeReference(y));
    tsc .tsx parse-clean  As(x TypeReference(y));
+   go  .js parse-clean js[TS8016@5+1]
       js-diag TS8016@5+1 Type assertion expressions can only be used in TypeScript files.
 ## x08c  "x satisfies y"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1492,6 +1806,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8037@12+1]  Satisfies(x TypeReference(y));
    tsc .ts parse-clean  Satisfies(x TypeReference(y));
    tsc .tsx parse-clean  Satisfies(x TypeReference(y));
+   go  .js parse-clean js[TS8037@12+1]
       js-diag TS8037@12+1 Type satisfaction expressions can only be used in TypeScript files.
 ## x09  "class A implements B {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1503,6 +1818,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8005@8+12]  Class(A HeritageClause(ExpressionWithTypeArguments(B)))
    tsc .ts parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(B)))
    tsc .tsx parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(B)))
+   go  .js parse-clean js[TS8005@8+12]
       js-diag TS8005@8+12 'implements' clauses can only be used in TypeScript files.
 ## x10  "class A<T> {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1514,6 +1830,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8004@8+1]  Class(A TypeParameter(T))
    tsc .ts parse-clean  Class(A TypeParameter(T))
    tsc .tsx parse-clean  Class(A TypeParameter(T))
+   go  .js parse-clean js[TS8004@8+1]
       js-diag TS8004@8+1 Type parameter declarations can only be used in TypeScript files.
 ## x10b  "function f<T>() {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1525,6 +1842,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8004@11+1]  Function(f TypeParameter(T) Block)
    tsc .ts parse-clean  Function(f TypeParameter(T) Block)
    tsc .tsx parse-clean  Function(f TypeParameter(T) Block)
+   go  .js parse-clean js[TS8004@11+1]
       js-diag TS8004@11+1 Type parameter declarations can only be used in TypeScript files.
 ## x10c  "x = <T,>(y) => y"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1536,6 +1854,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8004@5+2]  (x = ArrowFunction(TypeParameter(T) Parameter(y) EqualsGreaterThanToken y));
    tsc .ts parse-clean  (x = ArrowFunction(TypeParameter(T) Parameter(y) EqualsGreaterThanToken y));
    tsc .tsx parse-clean  (x = ArrowFunction(TypeParameter(T) Parameter(y) EqualsGreaterThanToken y));
+   go  .js parse-clean js[TS8004@5+2]
       js-diag TS8004@5+2 Type parameter declarations can only be used in TypeScript files.
 ## x11  "class A { public x; private y() {}; readonly z; override u() {}; static s }"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1547,6 +1866,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8009@10+6,TS8009@20+7,TS8009@36+8,TS8009@48+8]  Class(A Property(PublicKeyword x) Method(PrivateKeyword y Block) SemicolonClassElement Property(ReadonlyKeyword z) Method(OverrideKeyword u Block) SemicolonClassElement Property(StaticKeyword s))
    tsc .ts parse-clean  Class(A Property(PublicKeyword x) Method(PrivateKeyword y Block) SemicolonClassElement Property(ReadonlyKeyword z) Method(OverrideKeyword u Block) SemicolonClassElement Property(StaticKeyword s))
    tsc .tsx parse-clean  Class(A Property(PublicKeyword x) Method(PrivateKeyword y Block) SemicolonClassElement Property(ReadonlyKeyword z) Method(OverrideKeyword u Block) SemicolonClassElement Property(StaticKeyword s))
+   go  .js parse-clean js[TS8009@10+6,TS8009@20+7,TS8009@36+8,TS8009@48+8]
       js-diag TS8009@10+6 The 'public' modifier can only be used in TypeScript files.
       js-diag TS8009@20+7 The 'private' modifier can only be used in TypeScript files.
       js-diag TS8009@36+8 The 'readonly' modifier can only be used in TypeScript files.
@@ -1561,6 +1881,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8009@10+8,TS8009@22+7]  Class(A Property(ContextualKeyword w) Property(DeclareKeyword v))
    tsc .ts parse-clean  Class(A Property(ContextualKeyword w) Property(DeclareKeyword v))
    tsc .tsx parse-clean  Class(A Property(ContextualKeyword w) Property(DeclareKeyword v))
+   go  .js parse-clean js[TS8009@10+8,TS8009@22+7]
       js-diag TS8009@10+8 The 'abstract' modifier can only be used in TypeScript files.
       js-diag TS8009@22+7 The 'declare' modifier can only be used in TypeScript files.
 ## x12  "class A { constructor(public x) {} }"
@@ -1573,6 +1894,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8012@22+6]  Class(A Constructor(Parameter(PublicKeyword x) Block))
    tsc .ts parse-clean  Class(A Constructor(Parameter(PublicKeyword x) Block))
    tsc .tsx parse-clean  Class(A Constructor(Parameter(PublicKeyword x) Block))
+   go  .js parse-clean js[TS8012@22+6]
       js-diag TS8012@22+6 Parameter modifiers can only be used in TypeScript files.
 ## x13  "import type { A } from 'x'"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1584,6 +1906,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@0+26]  Import(ImportClause(NamedImports(ImportSpecifier(A))) "x")
    tsc .ts parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(A))) "x")
    tsc .tsx parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(A))) "x")
+   go  .js parse-clean js[TS8006@0+26]
       js-diag TS8006@0+26 'import type' declarations can only be used in TypeScript files.
 ## x13b  "export type { A }"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1595,6 +1918,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@0+17]  Export(NamedExports(ExportSpecifier(A)))
    tsc .ts parse-clean  Export(NamedExports(ExportSpecifier(A)))
    tsc .tsx parse-clean  Export(NamedExports(ExportSpecifier(A)))
+   go  .js parse-clean js[TS8006@0+17]
       js-diag TS8006@0+17 'export type' declarations can only be used in TypeScript files.
 ## x13c  "import { type A } from 'x'"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1606,6 +1930,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@9+6]  Import(ImportClause(NamedImports(ImportSpecifier(A))) "x")
    tsc .ts parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(A))) "x")
    tsc .tsx parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(A))) "x")
+   go  .js parse-clean js[TS8006@9+6]
       js-diag TS8006@9+6 'import...type' declarations can only be used in TypeScript files.
 ## x13d  "var A; export { type A }"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1617,6 +1942,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@16+6]  (VariableDeclarationList(Variable(A))) Export(NamedExports(ExportSpecifier(A)))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(A))) Export(NamedExports(ExportSpecifier(A)))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(A))) Export(NamedExports(ExportSpecifier(A)))
+   go  .js parse-clean js[TS8006@16+6]
       js-diag TS8006@16+6 'export...type' declarations can only be used in TypeScript files.
 ## x14  "import x = require('y')"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1628,6 +1954,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8002@0+23]  ImportEquals(x ExternalModuleReference("y"))
    tsc .ts parse-clean  ImportEquals(x ExternalModuleReference("y"))
    tsc .tsx parse-clean  ImportEquals(x ExternalModuleReference("y"))
+   go  .js parse-clean js[TS8002@0+23]
       js-diag TS8002@0+23 'import ... =' can only be used in TypeScript files.
 ## x14b  "export = x"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1639,6 +1966,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8003@0+10]  ExportAssignment(x)
    tsc .ts parse-clean  ExportAssignment(x)
    tsc .tsx parse-clean  ExportAssignment(x)
+   go  .js parse-clean js[TS8003@0+10]
       js-diag TS8003@0+10 'export =' can only be used in TypeScript files.
 ## x14c  "export as namespace X"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1650,8 +1978,9 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  NamespaceExport(X)
    tsc .ts parse-clean  NamespaceExport(X)
    tsc .tsx parse-clean  NamespaceExport(X)
+   go  .js parse-clean
 ## x15  "function f(); function f() {}"
-   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
    v8      script=ERR Unexpected token ';'  module=ERR Unexpected token ';'
    bun js  ERR 1:13 Expected "{" but found ";"
    bun jsx ERR 1:13 Expected "{" but found ";"
@@ -1660,9 +1989,10 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8017@9+1]  Function(f) Function(f Block)
    tsc .ts parse-clean  Function(f) Function(f Block)
    tsc .tsx parse-clean  Function(f) Function(f Block)
+   go  .js parse-clean js[TS8017@0+13]
       js-diag TS8017@9+1 Signature declarations can only be used in TypeScript files.
 ## x16  "class A { m(); m() {} }"
-   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
    v8      script=ERR Unexpected token ';'  module=ERR Unexpected token ';'
    bun js  ERR 1:14 Expected "{" but found ";"
    bun jsx ERR 1:14 Expected "{" but found ";"
@@ -1671,6 +2001,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8017@10+1]  Class(A Method(m) Method(m Block))
    tsc .ts parse-clean  Class(A Method(m) Method(m Block))
    tsc .tsx parse-clean  Class(A Method(m) Method(m Block))
+   go  .js parse-clean js[TS8017@10+4]
       js-diag TS8017@10+1 Signature declarations can only be used in TypeScript files.
 ## x18  "class A extends B<T> {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1682,6 +2013,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8011@18+1]  Class(A HeritageClause(ExpressionWithTypeArguments(B TypeReference(T))))
    tsc .ts parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(B TypeReference(T))))
    tsc .tsx parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(B TypeReference(T))))
+   go  .js parse-clean js[TS8011@18+1]
       js-diag TS8011@18+1 Type arguments can only be used in TypeScript files.
 ## x19  "function f(this: any) {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1693,6 +2025,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8010@17+3]  Function(f Parameter(this AnyKeyword) Block)
    tsc .ts parse-clean  Function(f Parameter(this AnyKeyword) Block)
    tsc .tsx parse-clean  Function(f Parameter(this AnyKeyword) Block)
+   go  .js parse-clean js[TS8010@17+3]
       js-diag TS8010@17+3 Type annotations can only be used in TypeScript files.
 ## x21  "@dec class A {}"
    [v8:invalid] [bun-js:ok] [bun-jsx:ok]
@@ -1704,6 +2037,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(Decorator(dec) A)
    tsc .ts parse-clean  Class(Decorator(dec) A)
    tsc .tsx parse-clean  Class(Decorator(dec) A)
+   go  .js parse-clean
 ## x21b  "class A { @dec m() {} }"
    [v8:invalid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
@@ -1714,6 +2048,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A Method(Decorator(dec) m Block))
    tsc .ts parse-clean  Class(A Method(Decorator(dec) m Block))
    tsc .tsx parse-clean  Class(A Method(Decorator(dec) m Block))
+   go  .js parse-clean
 ## x21c  "@dec export class A {}"
    [v8:invalid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
@@ -1724,6 +2059,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(Decorator(dec) ExportKeyword A)
    tsc .ts parse-clean  Class(Decorator(dec) ExportKeyword A)
    tsc .tsx parse-clean  Class(Decorator(dec) ExportKeyword A)
+   go  .js parse-clean
 ## x21d  "export @dec class A {}"
    [v8:invalid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Unexpected token 'export'  module=ERR Unexpected token 'export'
@@ -1734,6 +2070,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(ExportKeyword Decorator(dec) A)
    tsc .ts parse-clean  Class(ExportKeyword Decorator(dec) A)
    tsc .tsx parse-clean  Class(ExportKeyword Decorator(dec) A)
+   go  .js parse-clean
 ## x21e  "@dec export @dec2 class A {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err]
    v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
@@ -1744,9 +2081,10 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8038@12+5]  Class(Decorator(dec) ExportKeyword Decorator(dec2) A)
    tsc .ts parse-clean  Class(Decorator(dec) ExportKeyword Decorator(dec2) A)
    tsc .tsx parse-clean  Class(Decorator(dec) ExportKeyword Decorator(dec2) A)
+   go  .js parse-clean js[TS8038@12+5]
       js-diag TS8038@12+5 Decorators may not appear after 'export' or 'export default' if they also appear before 'export'.
 ## x21f  "function f(@dec x) {}"
-   [v8:invalid] [bun-js:err] [bun-jsx:err]
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [GO!=TSC js-diag]
    v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
    bun js  ERR 1:12 Expected identifier but found "@"
    bun jsx ERR 1:12 Expected identifier but found "@"
@@ -1755,6 +2093,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS1206@11+4]  Function(f Parameter(Decorator(dec) x) Block)
    tsc .ts parse-clean  Function(f Parameter(Decorator(dec) x) Block)
    tsc .tsx parse-clean  Function(f Parameter(Decorator(dec) x) Block)
+   go  .js parse-clean
       js-diag TS1206@11+4 Decorators are not valid here.
 ## x22  "var v = function f<T>() {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1766,6 +2105,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8004@19+1]  (VariableDeclarationList(Variable(v Function(f TypeParameter(T) Block))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(v Function(f TypeParameter(T) Block))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(v Function(f TypeParameter(T) Block))))
+   go  .js parse-clean js[TS8004@19+1]
       js-diag TS8004@19+1 Type parameter declarations can only be used in TypeScript files.
 ## x23  "try {} catch (e: any) {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1777,6 +2117,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8010@17+3]  Try(Block CatchClause(Variable(e AnyKeyword) Block))
    tsc .ts parse-clean  Try(Block CatchClause(Variable(e AnyKeyword) Block))
    tsc .tsx parse-clean  Try(Block CatchClause(Variable(e AnyKeyword) Block))
+   go  .js parse-clean js[TS8010@17+3]
       js-diag TS8010@17+3 Type annotations can only be used in TypeScript files.
 ## x25  "abstract class A {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1788,6 +2129,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8009@0+8]  Class(ContextualKeyword A)
    tsc .ts parse-clean  Class(ContextualKeyword A)
    tsc .tsx parse-clean  Class(ContextualKeyword A)
+   go  .js parse-clean js[TS8009@0+8]
       js-diag TS8009@0+8 The 'abstract' modifier can only be used in TypeScript files.
 ## x27  "class A { x?: number; y!: string; m?() {} }"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1799,6 +2141,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8009@11+1,TS8010@14+6,TS8010@26+6,TS8009@35+1]  Class(A Property(x QuestionToken NumberKeyword) Property(y ExclamationToken StringKeyword) Method(m QuestionToken Block))
    tsc .ts parse-clean  Class(A Property(x QuestionToken NumberKeyword) Property(y ExclamationToken StringKeyword) Method(m QuestionToken Block))
    tsc .tsx parse-clean  Class(A Property(x QuestionToken NumberKeyword) Property(y ExclamationToken StringKeyword) Method(m QuestionToken Block))
+   go  .js parse-clean js[TS8009@11+1,TS8010@14+6,TS8010@26+6,TS8009@35+1]
       js-diag TS8009@11+1 The '?' modifier can only be used in TypeScript files.
       js-diag TS8010@14+6 Type annotations can only be used in TypeScript files.
       js-diag TS8010@26+6 Type annotations can only be used in TypeScript files.
@@ -1813,9 +2156,10 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@11+1]  Enum(ConstKeyword E)
    tsc .ts parse-clean  Enum(ConstKeyword E)
    tsc .tsx parse-clean  Enum(ConstKeyword E)
+   go  .js parse-clean js[TS8006@11+1]
       js-diag TS8006@11+1 'enum' declarations can only be used in TypeScript files.
 ## x28b  "declare module 'm' {}"
-   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
    v8      script=ERR Unexpected identifier 'module'  module=ERR Unexpected identifier 'module'
    bun js  ERR 1:9 Expected ";" but found "module"
    bun jsx ERR 1:9 Expected ";" but found "module"
@@ -1824,9 +2168,10 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@15+3]  Module(DeclareKeyword "m" ModuleBlock)
    tsc .ts parse-clean  Module(DeclareKeyword "m" ModuleBlock)
    tsc .tsx parse-clean  Module(DeclareKeyword "m" ModuleBlock)
+   go  .js parse-clean
       js-diag TS8006@15+3 'module' declarations can only be used in TypeScript files.
 ## x28c  "declare global {}"
-   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
    v8      script=ERR Unexpected identifier 'global'  module=ERR Unexpected identifier 'global'
    bun js  ERR 1:9 Expected ";" but found "global"
    bun jsx ERR 1:9 Expected ";" but found "global"
@@ -1835,6 +2180,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@8+6]  Module(DeclareKeyword global ModuleBlock)
    tsc .ts parse-clean  Module(DeclareKeyword global ModuleBlock)
    tsc .tsx parse-clean  Module(DeclareKeyword global ModuleBlock)
+   go  .js parse-clean
       js-diag TS8006@8+6 'module' declarations can only be used in TypeScript files.
 ## x29  "export default interface I {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1846,6 +2192,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8006@25+1]  Interface(ExportKeyword DefaultKeyword I)
    tsc .ts parse-clean  Interface(ExportKeyword DefaultKeyword I)
    tsc .tsx parse-clean  Interface(ExportKeyword DefaultKeyword I)
+   go  .js parse-clean js[TS8006@25+1]
       js-diag TS8006@25+1 'interface' declarations can only be used in TypeScript files.
 ## x31  "function f(a: number = 1, ...r: any[]) {}"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1857,6 +2204,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8010@14+6,TS8010@32+5]  Function(f Parameter(a NumberKeyword "1") Parameter(DotDotDotToken r ArrayType(AnyKeyword)) Block)
    tsc .ts parse-clean  Function(f Parameter(a NumberKeyword "1") Parameter(DotDotDotToken r ArrayType(AnyKeyword)) Block)
    tsc .tsx parse-clean  Function(f Parameter(a NumberKeyword "1") Parameter(DotDotDotToken r ArrayType(AnyKeyword)) Block)
+   go  .js parse-clean js[TS8010@14+6,TS8010@32+5]
       js-diag TS8010@14+6 Type annotations can only be used in TypeScript files.
       js-diag TS8010@32+5 Type annotations can only be used in TypeScript files.
 ## x32  "let f = (a: number): string => ''"
@@ -1869,10 +2217,11 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8010@12+6,TS8010@21+6]  (VariableDeclarationList(Variable(f ArrowFunction(Parameter(a NumberKeyword) StringKeyword EqualsGreaterThanToken ""))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(f ArrowFunction(Parameter(a NumberKeyword) StringKeyword EqualsGreaterThanToken ""))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(f ArrowFunction(Parameter(a NumberKeyword) StringKeyword EqualsGreaterThanToken ""))))
+   go  .js parse-clean js[TS8010@12+6,TS8010@21+6]
       js-diag TS8010@12+6 Type annotations can only be used in TypeScript files.
       js-diag TS8010@21+6 Type annotations can only be used in TypeScript files.
 ## x33  "let g = async <T,>(a: T) => a"
-   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
    v8      script=ERR Unexpected token '>'  module=ERR Unexpected token '>'
    bun js  ERR 1:18 Expected identifier but found ">"
    bun jsx ERR 1:18 Expected identifier but found ">"
@@ -1881,6 +2230,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8004@15+2,TS8010@22+1]  (VariableDeclarationList(Variable(g ArrowFunction(AsyncKeyword TypeParameter(T) Parameter(a TypeReference(T)) EqualsGreaterThanToken a))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(g ArrowFunction(AsyncKeyword TypeParameter(T) Parameter(a TypeReference(T)) EqualsGreaterThanToken a))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(g ArrowFunction(AsyncKeyword TypeParameter(T) Parameter(a TypeReference(T)) EqualsGreaterThanToken a))))
+   go  .js parse-clean js[TS8010@22+1,TS8004@15+2]
       js-diag TS8004@15+2 Type parameter declarations can only be used in TypeScript files.
       js-diag TS8010@22+1 Type annotations can only be used in TypeScript files.
 ## x34  "let h = <T>y"
@@ -1893,6 +2243,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS17008@9+1,TS1005@12+0]  (VariableDeclarationList(Variable(h JsxElement(JsxOpeningElement(T JsxAttributes) JsxText JsxClosingElement()))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(h TypeAssertion(TypeReference(T) y))))
    tsc .tsx parse[TS17008@9+1,TS1005@12+0]  (VariableDeclarationList(Variable(h JsxElement(JsxOpeningElement(T JsxAttributes) JsxText JsxClosingElement()))))
+   go  .js parse[TS17008@9+1,TS1005@12+0]
       js-parse TS17008@9+1 JSX element 'T' has no corresponding closing tag.
       js-parse TS1005@12+0 '</' expected.
 ## x35  "new A<T>()"
@@ -1905,6 +2256,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1109@9+1]  ((New(A) < T) > Parenthesized());
    tsc .ts parse-clean  New(A TypeReference(T));
    tsc .tsx parse-clean  New(A TypeReference(T));
+   go  .js parse[TS1109@9+1]
       js-parse TS1109@9+1 Expression expected.
 ## x36  "f<T>()"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
@@ -1916,6 +2268,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse[TS1109@5+1]  ((f < T) > Parenthesized());
    tsc .ts parse-clean  Call(f TypeReference(T));
    tsc .tsx parse-clean  Call(f TypeReference(T));
+   go  .js parse[TS1109@5+1]
       js-parse TS1109@5+1 Expression expected.
 ## x37  "let x = y as const"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
@@ -1927,9 +2280,10 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8016@13+5]  (VariableDeclarationList(Variable(x As(y TypeReference(const)))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(x As(y TypeReference(const)))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x As(y TypeReference(const)))))
+   go  .js parse-clean js[TS8016@13+5]
       js-diag TS8016@13+5 Type assertion expressions can only be used in TypeScript files.
 ## x38  "class A { [k: string]: number }"
-   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
    v8      script=ERR Unexpected token ':'  module=ERR Unexpected token ':'
    bun js  ERR 1:13 Expected "]" but found ":"
    bun jsx ERR 1:13 Expected "]" but found ":"
@@ -1938,6 +2292,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8010@14+6]  Class(A IndexSignature(Parameter(k StringKeyword) NumberKeyword))
    tsc .ts parse-clean  Class(A IndexSignature(Parameter(k StringKeyword) NumberKeyword))
    tsc .tsx parse-clean  Class(A IndexSignature(Parameter(k StringKeyword) NumberKeyword))
+   go  .js parse-clean js[TS8017@10+19]
       js-diag TS8010@14+6 Type annotations can only be used in TypeScript files.
 ## x39  "import { a } from 'x'; var a;"
    [v8:invalid] [bun-js:err] [bun-jsx:err]
@@ -1949,6 +2304,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(a))) "x") (VariableDeclarationList(Variable(a)))
    tsc .ts parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(a))) "x") (VariableDeclarationList(Variable(a)))
    tsc .tsx parse-clean  Import(ImportClause(NamedImports(ImportSpecifier(a))) "x") (VariableDeclarationList(Variable(a)))
+   go  .js parse-clean
 ## x40  "var v: typeof import('y')"
    [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx]
    v8      script=ERR Unexpected token ':'  module=ERR Unexpected token ':'
@@ -1959,6 +2315,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean js[TS8010@7+18]  (VariableDeclarationList(Variable(v TypeNode(LiteralType("y")))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(v TypeNode(LiteralType("y")))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(v TypeNode(LiteralType("y")))))
+   go  .js parse-clean js[TS8010@7+18]
       js-diag TS8010@7+18 Type annotations can only be used in TypeScript files.
 ## p01  "// @ts-check\n/** @type {number} */\nvar x = /** @type {any} */ (y);"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
@@ -1970,6 +2327,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x Parenthesized(y))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(x Parenthesized(y))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x Parenthesized(y))))
+   go  .js parse-clean
 ## p02  "// @ts-nocheck\nvar x = (1, 2);"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1980,6 +2338,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x Parenthesized(("1" , "2")))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(x Parenthesized(("1" , "2")))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x Parenthesized(("1" , "2")))))
+   go  .js parse-clean
 ## p03  "/// <reference path='a.d.ts' />\n/// <reference types='node' />\nvar x;"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -1990,6 +2349,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x)))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(x)))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x)))
+   go  .js parse-clean
 ## p04  "#!/usr/bin/env node\n// @ts-check\nvar x = ((a)), y = (a) => (b), z = typeof (a), w = (a).b, v = (a, b);"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -2000,6 +2360,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (VariableDeclarationList(Variable(x Parenthesized(Parenthesized(a))) Variable(y ArrowFunction(Parameter(a) EqualsGreaterThanToken Parenthesized(b))) Variable(z TypeOf(Parenthesized(a))) Variable(w PropertyAccess(Parenthesized(a) b)) Variable(v Parenthesized((a , b)))))
    tsc .ts parse-clean  (VariableDeclarationList(Variable(x Parenthesized(Parenthesized(a))) Variable(y ArrowFunction(Parameter(a) EqualsGreaterThanToken Parenthesized(b))) Variable(z TypeOf(Parenthesized(a))) Variable(w PropertyAccess(Parenthesized(a) b)) Variable(v Parenthesized((a , b)))))
    tsc .tsx parse-clean  (VariableDeclarationList(Variable(x Parenthesized(Parenthesized(a))) Variable(y ArrowFunction(Parameter(a) EqualsGreaterThanToken Parenthesized(b))) Variable(z TypeOf(Parenthesized(a))) Variable(w PropertyAccess(Parenthesized(a) b)) Variable(v Parenthesized((a , b)))))
+   go  .js parse-clean
 ## p05  "delete (a.b); (a) = 1; (a.b)++; [(a)] = b; ({ x: (a) } = b); for ((a) of b) ; (a)?.b; (a?.b).c; new (a.b()); (function(){})(); (() => 1)(); (a, b) => 1; async (a) => 1;"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -2010,6 +2371,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Delete(Parenthesized(PropertyAccess(a b))); (Parenthesized(a) = "1"); PostfixUnary(Parenthesized(PropertyAccess(a b))); (ArrayLiteral(Parenthesized(a)) = b); Parenthesized((ObjectLiteral(PropertyAssignment(x Parenthesized(a))) = b)); ForOf(Parenthesized(a) b Empty) PropertyAccess(Parenthesized(a) QuestionDotToken b); PropertyAccess(Parenthesized(PropertyAccess(a QuestionDotToken b)) c); New(Parenthesized(Call(PropertyAccess(a b)))); Call(Parenthesized(Function(Block))); Call(Parenthesized(ArrowFunction(EqualsGreaterThanToken "1"))); ArrowFunction(Parameter(a) Parameter(b) EqualsGreaterThanToken "1"); ArrowFunction(AsyncKeyword Parameter(a) EqualsGreaterThanToken "1");
    tsc .ts parse-clean  Delete(Parenthesized(PropertyAccess(a b))); (Parenthesized(a) = "1"); PostfixUnary(Parenthesized(PropertyAccess(a b))); (ArrayLiteral(Parenthesized(a)) = b); Parenthesized((ObjectLiteral(PropertyAssignment(x Parenthesized(a))) = b)); ForOf(Parenthesized(a) b Empty) PropertyAccess(Parenthesized(a) QuestionDotToken b); PropertyAccess(Parenthesized(PropertyAccess(a QuestionDotToken b)) c); New(Parenthesized(Call(PropertyAccess(a b)))); Call(Parenthesized(Function(Block))); Call(Parenthesized(ArrowFunction(EqualsGreaterThanToken "1"))); ArrowFunction(Parameter(a) Parameter(b) EqualsGreaterThanToken "1"); ArrowFunction(AsyncKeyword Parameter(a) EqualsGreaterThanToken "1");
    tsc .tsx parse-clean  Delete(Parenthesized(PropertyAccess(a b))); (Parenthesized(a) = "1"); PostfixUnary(Parenthesized(PropertyAccess(a b))); (ArrayLiteral(Parenthesized(a)) = b); Parenthesized((ObjectLiteral(PropertyAssignment(x Parenthesized(a))) = b)); ForOf(Parenthesized(a) b Empty) PropertyAccess(Parenthesized(a) QuestionDotToken b); PropertyAccess(Parenthesized(PropertyAccess(a QuestionDotToken b)) c); New(Parenthesized(Call(PropertyAccess(a b)))); Call(Parenthesized(Function(Block))); Call(Parenthesized(ArrowFunction(EqualsGreaterThanToken "1"))); ArrowFunction(Parameter(a) Parameter(b) EqualsGreaterThanToken "1"); ArrowFunction(AsyncKeyword Parameter(a) EqualsGreaterThanToken "1");
+   go  .js parse-clean
 ## p06  "if ((a)) (b); while ((a)) ; do ; while ((a)); for ((a); (b); (c)) ; switch ((a)) { case (b): } with ((a)) ; throw (a);"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ERR Strict mode code may not include a with statement
@@ -2020,6 +2382,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  If(Parenthesized(a) Parenthesized(b);) While(Parenthesized(a) Empty) Do(Empty Parenthesized(a)) For(Parenthesized(a) Parenthesized(b) Parenthesized(c) Empty) Switch(Parenthesized(a) CaseBlock(CaseClause(Parenthesized(b)))) With(Parenthesized(a) Empty) Throw(Parenthesized(a))
    tsc .ts parse-clean  If(Parenthesized(a) Parenthesized(b);) While(Parenthesized(a) Empty) Do(Empty Parenthesized(a)) For(Parenthesized(a) Parenthesized(b) Parenthesized(c) Empty) Switch(Parenthesized(a) CaseBlock(CaseClause(Parenthesized(b)))) With(Parenthesized(a) Empty) Throw(Parenthesized(a))
    tsc .tsx parse-clean  If(Parenthesized(a) Parenthesized(b);) While(Parenthesized(a) Empty) Do(Empty Parenthesized(a)) For(Parenthesized(a) Parenthesized(b) Parenthesized(c) Empty) Switch(Parenthesized(a) CaseBlock(CaseClause(Parenthesized(b)))) With(Parenthesized(a) Empty) Throw(Parenthesized(a))
+   go  .js parse-clean
 ## p07  "x = a ? (b) : (c); y = `${(a)}`; z = [(a), ...(b)]; w = { ...(a), [(b)]: (c) }; f((a), ...(b)); new A((a));"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -2030,6 +2393,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  (x = Conditional(a QuestionToken Parenthesized(b) ColonToken Parenthesized(c))); (y = Template(TemplateHead TemplateSpan(Parenthesized(a) TemplateToken))); (z = ArrayLiteral(Parenthesized(a) SpreadElement(Parenthesized(b)))); (w = ObjectLiteral(SpreadAssignment(Parenthesized(a)) PropertyAssignment(ComputedPropertyName(Parenthesized(b)) Parenthesized(c)))); Call(f Parenthesized(a) SpreadElement(Parenthesized(b))); New(A Parenthesized(a));
    tsc .ts parse-clean  (x = Conditional(a QuestionToken Parenthesized(b) ColonToken Parenthesized(c))); (y = Template(TemplateHead TemplateSpan(Parenthesized(a) TemplateToken))); (z = ArrayLiteral(Parenthesized(a) SpreadElement(Parenthesized(b)))); (w = ObjectLiteral(SpreadAssignment(Parenthesized(a)) PropertyAssignment(ComputedPropertyName(Parenthesized(b)) Parenthesized(c)))); Call(f Parenthesized(a) SpreadElement(Parenthesized(b))); New(A Parenthesized(a));
    tsc .tsx parse-clean  (x = Conditional(a QuestionToken Parenthesized(b) ColonToken Parenthesized(c))); (y = Template(TemplateHead TemplateSpan(Parenthesized(a) TemplateToken))); (z = ArrayLiteral(Parenthesized(a) SpreadElement(Parenthesized(b)))); (w = ObjectLiteral(SpreadAssignment(Parenthesized(a)) PropertyAssignment(ComputedPropertyName(Parenthesized(b)) Parenthesized(c)))); Call(f Parenthesized(a) SpreadElement(Parenthesized(b))); New(A Parenthesized(a));
+   go  .js parse-clean
 ## p08  "class A extends (B) { [(a)] = (b); static { (c); } } export default (a);"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ERR Unexpected token 'export'  module=ok
@@ -2040,6 +2404,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
    tsc .js parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(Parenthesized(B))) Property(ComputedPropertyName(Parenthesized(a)) Parenthesized(b)) ClassStaticBlock(Block(Parenthesized(c);))) ExportAssignment(Parenthesized(a))
    tsc .ts parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(Parenthesized(B))) Property(ComputedPropertyName(Parenthesized(a)) Parenthesized(b)) ClassStaticBlock(Block(Parenthesized(c);))) ExportAssignment(Parenthesized(a))
    tsc .tsx parse-clean  Class(A HeritageClause(ExpressionWithTypeArguments(Parenthesized(B))) Property(ComputedPropertyName(Parenthesized(a)) Parenthesized(b)) ClassStaticBlock(Block(Parenthesized(c);))) ExportAssignment(Parenthesized(a))
+   go  .js parse-clean
 
 # summary by group
 {
@@ -2069,16 +2434,17 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
   "v8:valid": 32,
   "bun-js:ok": 32,
   "bun-jsx:ok": 32,
+  "GO!=TSC js-diag": 3,
   "v8:invalid": 2,
   "bun-js:err": 2,
   "bun-jsx:err": 2
  },
  "a": {
-  "v8:valid": 20,
-  "bun-js:ok": 20,
-  "bun-jsx:ok": 20,
-  "BUN js!=ts": 6,
-  "BUN jsx!=tsx": 6,
+  "v8:valid": 35,
+  "bun-js:ok": 35,
+  "bun-jsx:ok": 35,
+  "BUN js!=ts": 16,
+  "BUN jsx!=tsx": 16,
   "v8:invalid": 1,
   "bun-js:err": 1,
   "bun-jsx:err": 1
@@ -2099,6 +2465,7 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
   "bun-jsx:err": 49,
   "BUN js!=ts": 46,
   "BUN jsx!=tsx": 45,
+  "GO!=TSC js-diag": 7,
   "bun-js:ok": 4,
   "bun-jsx:ok": 4,
   "TSC js!=ts": 3,

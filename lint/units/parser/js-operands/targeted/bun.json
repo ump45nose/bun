@@ -2216,6 +2216,318 @@
     ]
    }
   },
+  "a30": {
+   "js": {
+    "ok": true,
+    "out": "x ? (y) => ({ y }) : (z) => ({ z });\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? (y) => ({ y }) : (z) => ({ z });\n"
+   },
+   "ts": {
+    "ok": false,
+    "err": [
+     "1:31 Expected \":\" but found end of file"
+    ]
+   },
+   "tsx": {
+    "ok": false,
+    "err": [
+     "1:31 Expected \":\" but found end of file"
+    ]
+   }
+  },
+  "a31": {
+   "js": {
+    "ok": true,
+    "out": "a ? (b) => c : (d) => e;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "a ? (b) => c : (d) => e;\n"
+   },
+   "ts": {
+    "ok": false,
+    "err": [
+     "1:22 Expected \":\" but found end of file"
+    ]
+   },
+   "tsx": {
+    "ok": false,
+    "err": [
+     "1:22 Expected \":\" but found end of file"
+    ]
+   }
+  },
+  "a32": {
+   "js": {
+    "ok": true,
+    "out": "x ? (y) => y : (z) => z;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? (y) => y : (z) => z;\n"
+   },
+   "ts": {
+    "ok": false,
+    "err": [
+     "1:21 Expected \":\" but found end of file"
+    ]
+   },
+   "tsx": {
+    "ok": false,
+    "err": [
+     "1:21 Expected \":\" but found end of file"
+    ]
+   }
+  },
+  "a33": {
+   "js": {
+    "ok": true,
+    "out": "x ? () => y : (z) => z;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? () => y : (z) => z;\n"
+   },
+   "ts": {
+    "ok": false,
+    "err": [
+     "1:22 Expected \":\" but found end of file"
+    ]
+   },
+   "tsx": {
+    "ok": false,
+    "err": [
+     "1:22 Expected \":\" but found end of file"
+    ]
+   }
+  },
+  "a34": {
+   "js": {
+    "ok": true,
+    "out": "f(x ? (y) => y : (z) => z);\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "f(x ? (y) => y : (z) => z);\n"
+   },
+   "ts": {
+    "ok": false,
+    "err": [
+     "1:24 Expected \":\" but found \")\"",
+     "1:24 Unexpected end of file"
+    ]
+   },
+   "tsx": {
+    "ok": false,
+    "err": [
+     "1:24 Expected \":\" but found \")\"",
+     "1:24 Unexpected end of file"
+    ]
+   }
+  },
+  "a35": {
+   "js": {
+    "ok": true,
+    "out": "x ? (y) => (z) => w : (v) => v;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? (y) => (z) => w : (v) => v;\n"
+   },
+   "ts": {
+    "ok": false,
+    "err": [
+     "1:26 Expected \":\" but found end of file"
+    ]
+   },
+   "tsx": {
+    "ok": false,
+    "err": [
+     "1:26 Expected \":\" but found end of file"
+    ]
+   }
+  },
+  "a36": {
+   "js": {
+    "ok": true,
+    "out": "x ? (y) => y : (z) => z;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? (y) => y : (z) => z;\n"
+   },
+   "ts": {
+    "ok": true,
+    "out": "x ? (y) => y : (z) => z;\n"
+   },
+   "tsx": {
+    "ok": true,
+    "out": "x ? (y) => y : (z) => z;\n"
+   }
+  },
+  "a37": {
+   "js": {
+    "ok": true,
+    "out": "x ? async (y) => y : (z) => z;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? async (y) => y : (z) => z;\n"
+   },
+   "ts": {
+    "ok": false,
+    "err": [
+     "1:27 Expected \":\" but found end of file"
+    ]
+   },
+   "tsx": {
+    "ok": false,
+    "err": [
+     "1:27 Expected \":\" but found end of file"
+    ]
+   }
+  },
+  "a40": {
+   "js": {
+    "ok": true,
+    "out": "x ? [(y) => y] : (z) => z;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? [(y) => y] : (z) => z;\n"
+   },
+   "ts": {
+    "ok": true,
+    "out": "x ? [(y) => y] : (z) => z;\n"
+   },
+   "tsx": {
+    "ok": true,
+    "out": "x ? [(y) => y] : (z) => z;\n"
+   }
+  },
+  "a41": {
+   "js": {
+    "ok": true,
+    "out": "x ? (y) => (y, w) : (z) => z;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? (y) => (y, w) : (z) => z;\n"
+   },
+   "ts": {
+    "ok": false,
+    "err": [
+     "1:24 Expected \":\" but found end of file"
+    ]
+   },
+   "tsx": {
+    "ok": false,
+    "err": [
+     "1:24 Expected \":\" but found end of file"
+    ]
+   }
+  },
+  "a42": {
+   "js": {
+    "ok": true,
+    "out": "x ? (y) => y ? w : (u) => u : (z) => z;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? (y) => y ? w : (u) => u : (z) => z;\n"
+   },
+   "ts": {
+    "ok": false,
+    "err": [
+     "1:36 Expected \":\" but found end of file"
+    ]
+   },
+   "tsx": {
+    "ok": false,
+    "err": [
+     "1:36 Expected \":\" but found end of file"
+    ]
+   }
+  },
+  "a43": {
+   "js": {
+    "ok": true,
+    "out": "x ? (y) => y : (z) => z;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? (y) => y : (z) => z;\n"
+   },
+   "ts": {
+    "ok": true,
+    "out": "x ? (y) => y : (z) => z;\n"
+   },
+   "tsx": {
+    "ok": true,
+    "out": "x ? (y) => y : (z) => z;\n"
+   }
+  },
+  "a44": {
+   "js": {
+    "ok": true,
+    "out": "switch (x) {\n  case ((y) => y):\n    (z) => z;\n}\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "switch (x) {\n  case ((y) => y):\n    (z) => z;\n}\n"
+   },
+   "ts": {
+    "ok": false,
+    "err": [
+     "1:35 Expected \":\" but found \";\""
+    ]
+   },
+   "tsx": {
+    "ok": false,
+    "err": [
+     "1:35 Expected \":\" but found \";\""
+    ]
+   }
+  },
+  "a45": {
+   "js": {
+    "ok": true,
+    "out": "x ? (y) => y : z;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? (y) => y : z;\n"
+   },
+   "ts": {
+    "ok": true,
+    "out": "x ? (y) => y : z;\n"
+   },
+   "tsx": {
+    "ok": true,
+    "out": "x ? (y) => y : z;\n"
+   }
+  },
+  "a46": {
+   "js": {
+    "ok": true,
+    "out": "x ? (y) => {\n  return y;\n} : (z) => z;\n"
+   },
+   "jsx": {
+    "ok": true,
+    "out": "x ? (y) => {\n  return y;\n} : (z) => z;\n"
+   },
+   "ts": {
+    "ok": true,
+    "out": "x ? (y) => {\n  return y;\n} : (z) => z;\n"
+   },
+   "tsx": {
+    "ok": true,
+    "out": "x ? (y) => {\n  return y;\n} : (z) => z;\n"
+   }
+  },
   "j01": {
    "js": {
     "ok": false,

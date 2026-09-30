@@ -21,7 +21,7 @@ cmp "$W/unicode_tables.ts" "$TOP/runner/unicode_tables.ts" && echo "runner/unico
 zcat "$TOP/vectors/gotab.txt.gz" | cmp - "$W/gotab.txt" && zcat "$TOP/vectors/govec.jsonl.gz" | cmp - "$W/govec.jsonl" && echo "the stored tables and vectors are what this toolchain gives"
 bun "$TOP/groundtruth/make_test_vectors.ts" "$W/govec.jsonl" "$W/govec-test.jsonl" 40 > /dev/null
 zcat "$TOP/vectors/govec-test.jsonl.gz" | cmp - "$W/govec-test.jsonl" && echo "the stored vectors of the fast test are every 40th row of them"
-bun "$HERE/verify_foundation.ts" "$W/gotab.txt" "$W/govec.jsonl" | tail -13
+bun "$HERE/verify_foundation.ts" "$W/gotab.txt" "$W/govec.jsonl" | tail -14
 bun "$HERE/foundation_test_cost.ts" "$TOP/vectors/govec-test.jsonl.gz"
 bun "$HERE/foundation_test_cost.ts" "$TOP/vectors/govec-test.jsonl.gz" small
 bun "$HERE/comment_runs.ts" "$TOP"/runner/*.ts | tail -1
@@ -49,6 +49,8 @@ bun "$HERE/crosscheck_roots.ts" "$W/overlay" | head -3
 bun "$HERE/crosscheck_vectors.ts" "$W/overlay" | grep "^=="
 bun "$HERE/crosscheck_directives.ts" "$W/overlay" "$REF" | head -4
 for t in orig overlay; do
-  echo "names that are not ASCII through the writer, $t: $(bun "$HERE/nonascii_names.ts" "$W/$t" "$EBGT" | head -1)"
+  echo "names that are not ASCII through the writer, $t: $(bun "$HERE/nonascii_names.ts" "$W/$t" "$EBGT" "$W/writer-names-$t.jsonl" | head -1)"
 done
+zcat "$TOP/vectors/writer-names.jsonl.gz" | cmp - "$W/writer-names-overlay.jsonl" && echo "the stored vectors of the names are what the reference gives"
+echo "the same from the stored vectors, without Go: $(bun "$HERE/nonascii_names.ts" "$W/overlay" "$TOP/vectors/writer-names.jsonl.gz" | head -1)"
 bun "$HERE/corpus_invariants.ts" "$W/overlay" "$REF" | head -3

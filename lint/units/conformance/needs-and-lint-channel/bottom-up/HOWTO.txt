@@ -67,6 +67,20 @@ One-line measurements of the second check:
   run instances with a tsconfig.json                               73: 72 in split.tsv and compiler/tsconfigExtendsPackageJsonExportsWildcard.ts, which it lacks
   node_modules/typescript in /workspace/wt/conformance             not installed (bun install was not run there); /workspace/bun has 6.0.2
   windows-x64, windows-aarch64 (00:40 UTC)                          "not available in this session"
+  a real checker, one process for each run (/tmp/e2e/k4real, typescript-go's command line built by the typecheck research):
+    ten runs of `k4real min.ts --noEmit --skipDefaultLibCheck --noErrorTruncation --target es2015`   user 1.07 s, sys 0.31 s
+    the same with `--lib es5`                                                                        user 0.19 s, sys 0.10 s
+    with an empty tsconfig.json beside min.ts                                                        error TS5112, exit code 1
+  a scratch repository with the root .gitignore and .gitattributes of the worktree:
+    corpus/.gitignore `!*` and corpus/.gitattributes `* -text`, then git add <directory>             the *.generated.ts case is added, blob = git hash-object --no-filters
+    the same CR LF file below test/cli/lint/typecheck/fixtures                                       another blob, "CRLF will be replaced by LF"
+    without the nested .gitignore                                                                    git add <directory> leaves the case out and prints nothing
+  read in the code for the entries that came from the second edition of the top-down draft:
+    REVIEW.md:15; .claude/docs/landing-prs.md:48, :66, :67; src/js/internal-for-testing.ts:3-8; src/bun_core/output.rs:841, :2257, :398-438;
+    src/bun_core/Global.rs:691-727; src/runtime/bin_entry/mod.rs:80-92; scripts/rust-miri.ts:39-57; .github/workflows/rust-lints.yml:76-96, :98-123;
+    scripts/runner.node.ts:543-565 (test/parallel-allowlist.json); internal/execute/tsc.go:180-188, :269-281; internal/tsoptions/declscompiler.go:319;
+    internal/testutil/harnessutil/harnessutil.go:493-530, :661-691, :699; test-file-and-sweep/top-down/sweep.ts:117-121
+  not measured again: the size of the corpus (22,186 files, 7.97 MiB packed: validate.sh of the sync prototype)
 
 Not verified: anything on Windows or macOS (no machine), a real `bun --lint` (no binary has it), the limit of
 3,000 files of GitHub's file list and the order of that list.

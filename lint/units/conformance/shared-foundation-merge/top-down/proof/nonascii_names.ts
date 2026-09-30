@@ -1,11 +1,13 @@
 // Names that are not ASCII through the writer of the assembly (error-baseline-format/top-down) against the reference's
 // own writer (the ground-truth program of error-baseline-format): the fuzzers of the upper prototypes use ASCII names only.
 // Each case has units and diagnostics whose file names are equal, equal but for the case, or different under Go's rules.
-// usage: bun nonascii_names.ts <tree: a copy of notes/lint/units/conformance> <gt binary of error-baseline-format>
+// usage: bun nonascii_names.ts <tree: a copy of notes/lint/units/conformance> <gt binary of error-baseline-format | stored vectors .jsonl.gz> [file to write the vectors to]
+// With the binary the answers are taken from it; with stored vectors no Go is needed, which is the form of a test.
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { gunzipSync } from "node:zlib";
 
 const tree = process.argv[2];
 const gt = process.argv[3];
@@ -95,30 +97,43 @@ const conv = (c: Case, d: any): unknown => ({
   chain: d.messageChain.map((x: any) => conv(c, x)),
   related: d.relatedInformation.map((x: any) => conv(c, x)),
 });
-const input = join(mkdtempSync(join(tmpdir(), "sfm-names-")), "cases.jsonl");
-writeFileSync(
-  input,
-  cases
-    .map(c =>
-      JSON.stringify({
-        name: c.name,
-        pretty: c.pretty,
-        files: c.files.map(f => ({ name: b64(f.fileName), text: b64(f.text) })),
-        inputs: c.inputs.map(f => ({ name: b64(f.unitName), text: b64(f.content) })),
-        diagnostics: c.diagnostics.map(d => conv(c, d)),
-      }),
-    )
-    .join("\n") + "\n",
-);
-const run = spawnSync(gt, [input], { maxBuffer: 1 << 30, encoding: "utf8" });
-if (run.status !== 0) {
-  console.log("ground truth failed:", run.status, run.stderr.slice(0, 2000));
-  process.exit(1);
+type Result = { name: string; text: string; failed: string[] | null; panic: string };
+const records = cases.map(c => ({
+  name: c.name,
+  pretty: c.pretty,
+  files: c.files.map(f => ({ name: b64(f.fileName), text: b64(f.text) })),
+  inputs: c.inputs.map(f => ({ name: b64(f.unitName), text: b64(f.content) })),
+  diagnostics: c.diagnostics.map(d => conv(c, d)),
+}));
+let results: Result[];
+if (gt.endsWith(".gz")) {
+  const stored = gunzipSync(readFileSync(gt))
+    .toString("utf8")
+    .split("\n")
+    .filter(l => l !== "")
+    .map(l => JSON.parse(l));
+  // The stored inputs are the ones that this file makes: a change of the cases asks for new answers of the reference.
+  if (JSON.stringify(stored.map(({ expected, ...rest }) => rest)) !== JSON.stringify(records)) {
+    console.log("the stored vectors are not the cases of this file");
+    process.exit(1);
+  }
+  results = stored.map(v => v.expected);
+} else {
+  const input = join(mkdtempSync(join(tmpdir(), "sfm-names-")), "cases.jsonl");
+  writeFileSync(input, records.map(r => JSON.stringify(r)).join("\n") + "\n");
+  const run = spawnSync(gt, [input], { maxBuffer: 1 << 30, encoding: "utf8" });
+  if (run.status !== 0) {
+    console.log("ground truth failed:", run.status, run.stderr.slice(0, 2000));
+    process.exit(1);
+  }
+  results = run.stdout
+    .split("\n")
+    .filter(l => l !== "")
+    .map(l => JSON.parse(l) as Result);
+  if (process.argv[4] !== undefined) {
+    writeFileSync(process.argv[4], records.map((r, k) => JSON.stringify({ ...r, expected: results[k] })).join("\n") + "\n");
+  }
 }
-const results = run.stdout
-  .split("\n")
-  .filter(l => l !== "")
-  .map(l => JSON.parse(l) as { name: string; text: string; failed: string[] | null; panic: string });
 
 let same = 0;
 let inSection = 0;

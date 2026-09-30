@@ -14,7 +14,10 @@ same=0
 differ=0
 for f in $(ls "$A"/*.out | xargs -n1 basename); do
   code=$(tail -1 "$B/$f")
-  if diff <(norm "$A/$f") <(norm "$B/$f") > /dev/null 2>&1; then
+  # The tests of one file run side by side: the order of their lines is no difference.
+  order=cat
+  case "$f" in *.test.out) order=sort ;; esac
+  if diff <(norm "$A/$f" | $order) <(norm "$B/$f" | $order) > /dev/null 2>&1; then
     same=$((same + 1))
     echo "same       ${f%.out}: $code"
   else

@@ -156,6 +156,7 @@ const counts: Record<string, number> = {};
 let splitDiffersFromSplitLines = 0;
 let cutByUnitsDiffers = 0;
 let foldOnByteStringsDiffers = 0;
+let rootFoldOnByteStringsDiffers = 0;
 let validTexts = 0;
 function seqLine(s: ByteString): string {
   const [r, size] = decodeRune(s, 0);
@@ -329,8 +330,8 @@ for (const line of load(vecPath).split("\n")) {
     eq("EnsureTrailingDirectorySeparator of a ByteString", hex(tspath.ensureTrailingDirectorySeparator(bn)), hex(b(v.ensureTrailingDirectorySeparator)), id);
     eq("HasTrailingDirectorySeparator of a ByteString", tspath.hasTrailingDirectorySeparator(bn), v.hasTrailingDirectorySeparator, id);
     eq("NormalizeSlashes of a ByteString", hex(tspath.normalizeSlashes(bn)), hex(utf8ToByteString(tspath.normalizeSlashes(name))), id);
-    eq("ComparePaths case sensitive of ByteStrings", tspath.comparePaths(bn, bd, plainCS), v.comparePathsCaseSensitive, id);
-    // The two that fold take decoded names: on ByteStrings they are another function.
+    // ComparePaths folds the root in both modes and the rest in one: it takes decoded names, on ByteStrings it is another function.
+    if (tspath.comparePaths(bn, bd, plainCS) !== v.comparePathsCaseSensitive) rootFoldOnByteStringsDiffers++;
     if (tspath.comparePaths(bn, bd, plainCI) !== v.comparePathsCaseInsensitive) foldOnByteStringsDiffers++;
   } else if (k === "ext") {
     const name = byteStringToUtf8(b(v.name));
@@ -383,7 +384,7 @@ for (const e of engineLowerExamples) console.log("   " + e);
 console.log("vectors:", JSON.stringify(counts), "valid texts:", validTexts);
 console.log(`texts where lineDelimiter.Split and stringutil.SplitLines differ: ${splitDiffersFromSplitLines} of ${counts.text}`);
 console.log(`extension rows where a cut by code units gives another answer than the reference: ${cutByUnitsDiffers} of ${counts.ext}`);
-console.log(`path rows where the case insensitive ComparePaths of ByteStrings gives another answer than the reference: ${foldOnByteStringsDiffers} of ${counts.path}`);
+console.log(`path rows where ComparePaths of ByteStrings gives another answer than the reference: case sensitive ${rootFoldOnByteStringsDiffers}, case insensitive ${foldOnByteStringsDiffers} of ${counts.path}`);
 console.log(`checks ${checks}, failures ${failures}`);
 for (const [what, n] of shown) console.log(`   ${n}  ${what}`);
 process.exit(failures === 0 ? 0 : 1);

@@ -6702,6 +6702,912 @@
     "module": "ok"
    }
   },
+  "a30": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(z)))));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(z)))));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(z)))));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(z)))));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(z)))));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(ObjectLiteral(ShorthandPropertyAssignment(z)))));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a31": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken Parenthesized(c)) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken Parenthesized(c)) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken Parenthesized(c)) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken Parenthesized(c)) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken Parenthesized(c)) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(a QuestionToken ArrowFunction(Parameter(b) EqualsGreaterThanToken Parenthesized(c)) ColonToken ArrowFunction(Parameter(d) EqualsGreaterThanToken e));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a32": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a33": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@22+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@16+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Conditional(x QuestionToken ArrowFunction(EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) ColonToken );"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@22+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@16+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Conditional(x QuestionToken ArrowFunction(EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) ColonToken );"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@22+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@16+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Conditional(x QuestionToken ArrowFunction(EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) ColonToken );"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@22+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@16+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Conditional(x QuestionToken ArrowFunction(EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) ColonToken );"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [
+     "TS1005@22+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) ColonToken );"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [
+     "TS1005@22+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) ColonToken );"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a34": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Call(f Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z)));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Call(f Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z)));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Call(f Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z)));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Call(f Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z)));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Call(f Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z)));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Call(f Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z)));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a35": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(w))) ColonToken ArrowFunction(Parameter(v) EqualsGreaterThanToken v));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(w))) ColonToken ArrowFunction(Parameter(v) EqualsGreaterThanToken v));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(w))) ColonToken ArrowFunction(Parameter(v) EqualsGreaterThanToken v));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(w))) ColonToken ArrowFunction(Parameter(v) EqualsGreaterThanToken v));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(w))) ColonToken ArrowFunction(Parameter(v) EqualsGreaterThanToken v));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(z) EqualsGreaterThanToken Parenthesized(w))) ColonToken ArrowFunction(Parameter(v) EqualsGreaterThanToken v));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a36": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a37": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(AsyncKeyword Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a40": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrayLiteral(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrayLiteral(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrayLiteral(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrayLiteral(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrayLiteral(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrayLiteral(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a41": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized((y , w))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized((y , w))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized((y , w))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized((y , w))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized((y , w))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized((y , w))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a42": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@36+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@21+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Conditional(Parenthesized(y) QuestionToken ArrowFunction(Parameter(w) TypeReference(u) EqualsGreaterThanToken u) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z))) ColonToken );"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@36+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@21+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Conditional(Parenthesized(y) QuestionToken ArrowFunction(Parameter(w) TypeReference(u) EqualsGreaterThanToken u) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z))) ColonToken );"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@36+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@21+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Conditional(Parenthesized(y) QuestionToken ArrowFunction(Parameter(w) TypeReference(u) EqualsGreaterThanToken u) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z))) ColonToken );"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@36+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@21+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Conditional(Parenthesized(y) QuestionToken ArrowFunction(Parameter(w) TypeReference(u) EqualsGreaterThanToken u) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z))) ColonToken );"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [
+     "TS1005@36+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Conditional(Parenthesized(y) QuestionToken ArrowFunction(Parameter(w) TypeReference(u) EqualsGreaterThanToken u) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z))) ColonToken );"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [
+     "TS1005@36+0"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Conditional(Parenthesized(y) QuestionToken ArrowFunction(Parameter(w) TypeReference(u) EqualsGreaterThanToken u) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z))) ColonToken );"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a43": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken Parenthesized(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken Parenthesized(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken Parenthesized(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken Parenthesized(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken Parenthesized(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken Parenthesized(ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a44": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@34+1"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@28+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) Empty)))"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@34+1"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@28+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) Empty)))"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@34+1"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@28+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) Empty)))"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [
+     "TS1005@34+1"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [
+     "TS8010@28+1 Type annotations can only be used in TypeScript files."
+    ],
+    "tree": "Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) Empty)))"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [
+     "TS1005@34+1"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [],
+    "tree": "Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) Empty)))"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [
+     "TS1005@34+1"
+    ],
+    "parseText": [
+     "':' expected."
+    ],
+    "js": [],
+    "tree": "Switch(x CaseBlock(CaseClause(ArrowFunction(Parameter(y) EqualsGreaterThanToken ArrowFunction(Parameter(y) TypeReference(z) EqualsGreaterThanToken z)) Empty)))"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a45": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken z);"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken z);"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken z);"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken z);"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken z);"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Parenthesized(y)) ColonToken z);"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
+  "a46": {
+   "a.js": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Block(Return(Parenthesized(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.jsx": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Block(Return(Parenthesized(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.mjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Block(Return(Parenthesized(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.cjs": {
+    "jsx": true,
+    "jsFile": true,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Block(Return(Parenthesized(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.ts": {
+    "jsx": false,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Block(Return(Parenthesized(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "a.tsx": {
+    "jsx": true,
+    "jsFile": false,
+    "parse": [],
+    "parseText": [],
+    "js": [],
+    "tree": "Conditional(x QuestionToken ArrowFunction(Parameter(y) EqualsGreaterThanToken Block(Return(Parenthesized(y)))) ColonToken ArrowFunction(Parameter(z) EqualsGreaterThanToken z));"
+   },
+   "v8": {
+    "script": "ok",
+    "module": "ok"
+   }
+  },
   "j01": {
    "a.js": {
     "jsx": true,

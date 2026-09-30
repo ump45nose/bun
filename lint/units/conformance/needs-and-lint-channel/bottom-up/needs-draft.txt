@@ -93,7 +93,8 @@ Why (d), from the code:
   to write for each instance. If the maintainers want one variable, the payloads of CH-2 and CH-3 move into the
   request file unchanged.
 
-What (d) costs, measured. This is its weak side and the reason why the top-down draft chooses (c):
+What (d) costs, measured. This is its weak side and the reason why the first edition of the top-down draft
+chose (c):
 - One process for each instance. Wall time for each instance of 200 (release) and 64 (debug) runs of
   `--revision` on this machine, 16 threads, load average above 600: release 64 ms with 1 process at a time,
   40 ms with 8, 24 ms with 16; debug 270 ms with 1, 57 ms with 8 and with 16. On a lighter machine the earlier
@@ -160,16 +161,18 @@ Ask. For `bun --lint <files>` when stdout and stderr are no terminal:
     compares the text where the reference compares the message key and then the arguments. No baseline of the
     oracle is decided by that difference: 36 pairs in 22 baselines tie on file, start, end, code and category,
     and all 36 are in ascending order of their text (error-baseline-format/top-down/ties.ts, run again now).
- 7. A lint run reads and prints nothing about bunfig.toml, package.json, tsconfig.json or jsconfig.json of the
-    current directory. 130 case files have a unit named tsconfig.json (73 run instances) and 242 one named
-    package.json (504 run instances), some broken on purpose; none has a bunfig.toml, a jsconfig.json or a
-    .env file.
+ 7. A lint run prints nothing of its own about a bunfig.toml, a package.json or a jsconfig.json in or above the
+    current directory, and about a tsconfig.json only what point 8 says. Whatever the run reads, stderr holds
+    only lines of point 2. 130 case files have a unit named tsconfig.json (73 run instances) and 242 one named
+    package.json (504 run instances), some broken on purpose (19 of the 493 such units are no strict JSON);
+    none has a bunfig.toml, a jsconfig.json or a .env file.
  8. Configuration files and operands. The reference refuses operands beside a configuration file: with file
     names on the command line it looks for a tsconfig.json in the current directory and in every directory
     above it, prints TS5112 and checks nothing (internal/execute/tsc.go:180-188, :269-281; measured with
     typescript-go's command line: `error TS5112: tsconfig.json is present but will not be loaded if files are
-    specified on commandline. Use '--ignoreConfig' to skip this error.`, exit code 1). The plan of this work
-    has `bun --lint` follow that. Then a conformance run needs the way out: a run with
+    specified on commandline. Use '--ignoreConfig' to skip this error.`, exit code 1). The design report of
+    this work has `bun --lint` follow that (its row 15, as an earlier finding quotes it; the file is not on
+    the disk now). If it does, a conformance run needs the way out: a run with
     BUN_INTERNAL_LINT_OPTIONS set looks for no configuration file and loads none (CH-3 point 1). Without that
     variable the runner can only keep its scratch directory where no directory above holds a tsconfig.json
     (the temporary directory of the system), and the 73 run instances that bring their own cannot run.
@@ -181,11 +184,12 @@ Ask. For `bun --lint <files>` when stdout and stderr are no terminal:
     stand-in) and ends with exit code 2: a check that was not complete never looks like a clean run, with or
     without a report. (typecheck gives the data: CH-3 point 4.)
 Unlocks: the probe of the default check, three steps of one process each: (1) a file that would leave a mark
-if it ran: no mark, exit code 0, nothing printed; (2) a file with `const x: number = "s";` and
-BUN_INTERNAL_LINT_REPORT: exit code 2, the line of TS2322 on stderr, and the report with start 6 and length 1
-decides the level "report" or "plain"; (3) BUN_INTERNAL_LINT_OPTIONS with an option name that does not exist:
-exit code 1 and the name on stderr decide "options are read". Alone CH-1 lets no instance be listed: see
-"Until then" of CH-2.
+if it ran: no mark, exit code 0, nothing printed: "a linter"; (2) a file with a syntax error and
+BUN_INTERNAL_LINT_REPORT: exit code 2, one diagnostic on stderr, and a report that holds the same diagnostic
+with its start and length: the level "report", else "plain"; (3) BUN_INTERNAL_LINT_OPTIONS with an option name
+that does not exist: exit code 1 and the name on stderr: "options are read", else "unsupported: options not
+applied". Whether a checker ran is not a matter of the probe: each report says it (`checked`, CH-2).
+Alone CH-1 lets no instance be listed: see "Until then" of CH-2.
 Until then: the probe refuses the binary and no instance is handed to it. Measured again for this draft: with
 BUN_FEATURE_FLAG_EXPERIMENTAL_LINT=1 the release binary (1.4.3-canary.1+367d939d9) and the debug build of the cli
 worktree (1.4.3-debug+e3566be88) both run the operand of `bun --lint probe.ts`: the mark is written, exit code 0.
