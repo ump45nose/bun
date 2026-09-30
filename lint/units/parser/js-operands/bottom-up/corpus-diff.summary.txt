@@ -1,1 +1,20 @@
 ## test + src/js (no node_modules), default identifiers
+{
+ "files": 7389,
+ "counts": {
+  "js/ts same": 6680,
+  "jsx/tsx same": 7283,
+  "js/jsx same": 6680,
+  "js/ts both-reject-same": 44,
+  "jsx/tsx both-reject-same": 48,
+  "js/jsx both-reject-same": 100,
+  "skipped-large": 1,
+  "js/ts both-reject-differently": 652,
+  "js/jsx js-rejects-ts-accepts": 603,
+  "js/ts js-rejects-ts-accepts": 13,
+  "jsx/tsx js-rejects-ts-accepts": 27,
+  "jsx/tsx both-reject-differently": 31,
+  "js/jsx both-reject-differently": 6
+ }
+}
+## node_modules under test, default identifiers
