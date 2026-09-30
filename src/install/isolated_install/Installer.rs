@@ -2249,8 +2249,9 @@ impl<'a> Installer<'a> {
         let dep_id = self.store.nodes.items_dep_id()[node_id.get() as usize];
         let pkg_res = &pkg_resolutions[pkg_id as usize];
 
+        let cwd = bun_core::cwd::get();
         let entry_node_modules_name =
-            self.entry_store_node_modules_package_name(dep_id, pkg_id, pkg_res, pkg_names);
+            self.entry_store_node_modules_package_name(&cwd, dep_id, pkg_id, pkg_res, pkg_names);
         let uses_global_store = self.entry_uses_global_store(entry_id);
 
         let mut dest = AutoPath::init_top_level_dir();
@@ -2740,7 +2741,7 @@ impl<'a> Installer<'a> {
                     ));
                     buf.append(b"node_modules");
                     if pkg_name.is_empty() {
-                        buf.append(paths::basename(bun_core::cwd::get()));
+                        buf.append(paths::basename(&bun_core::cwd::get()));
                     } else {
                         buf.append(pkg_name.slice(string_buf));
                     }
@@ -2789,6 +2790,7 @@ impl<'a> Installer<'a> {
     /// with the same name as the package.
     pub(crate) fn entry_store_node_modules_package_name<'b>(
         &'b self,
+        cwd: &'b [u8],
         dep_id: DependencyID,
         pkg_id: PackageID,
         pkg_res: &Resolution,
@@ -2800,7 +2802,7 @@ impl<'a> Installer<'a> {
             ResolutionTag::Root => {
                 if dep_id != invalid_dependency_id {
                     if pkg_names[pkg_id as usize].is_empty() {
-                        return Some(paths::basename(bun_core::cwd::get()));
+                        return Some(paths::basename(cwd));
                     }
                     return Some(pkg_names[pkg_id as usize].slice(string_buf));
                 }

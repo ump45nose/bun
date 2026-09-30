@@ -620,9 +620,7 @@ impl<U: PathUnit, const KIND: u8, const SEP_OPT: u8, const CHECK: u8>
 
     // `deinit` → impl Drop (below). Body returns the buffer to the pool.
 
-    fn trimmed_top_level_dir() -> &'static [u8] {
-        let top_level_dir = bun_core::cwd::get();
-
+    fn trimmed_top_level_dir(top_level_dir: &[u8]) -> &[u8] {
         match Kind::from_u8(KIND) {
             Kind::Abs => {
                 debug_assert!(is_input_absolute(top_level_dir));
@@ -634,7 +632,8 @@ impl<U: PathUnit, const KIND: u8, const SEP_OPT: u8, const CHECK: u8>
     }
 
     pub fn init_top_level_dir() -> Self {
-        let trimmed = Self::trimmed_top_level_dir();
+        let cwd = bun_core::cwd::get();
+        let trimmed = Self::trimmed_top_level_dir(&cwd);
         let mut this = Self::init();
         // top_level_dir is &[u8]; `buf_append_input` routes it through
         // `append_other` (transcoding) when U == u16.
@@ -643,7 +642,8 @@ impl<U: PathUnit, const KIND: u8, const SEP_OPT: u8, const CHECK: u8>
     }
 
     pub fn init_top_level_dir_long_path() -> Self {
-        let trimmed = Self::trimmed_top_level_dir();
+        let cwd = bun_core::cwd::get();
+        let trimmed = Self::trimmed_top_level_dir(&cwd);
         let mut this = Self::init();
 
         #[cfg(windows)]

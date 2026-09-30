@@ -392,7 +392,8 @@ impl InitCommand {
             }
         }
 
-        let pathname = Fs::PathName::init(bun_core::cwd::require()?);
+        let cwd = bun_core::cwd::require()?;
+        let pathname = Fs::PathName::init(&cwd);
         let destination_dir = Fd::cwd();
 
         let mut fields = PackageJSONFields::default();
@@ -1456,7 +1457,7 @@ impl Template {
             return false;
         };
         let top_level_dir = bun_core::cwd::get();
-        bun_which::which(&mut *pathbuffer, path, top_level_dir, b"claude").is_some()
+        bun_which::which(&mut *pathbuffer, path, &top_level_dir, b"claude").is_some()
     }
 
     fn create_agent_rule() {

@@ -267,7 +267,7 @@ Learn more about these at <magenta>https://bun.com/docs/cli/pm<r>.\n";
                 if err == bun_install::Error::MissingPackageJSON {
                     Output::err_generic(
                         "No package.json was found for directory \"{s}\"",
-                        (bstr::BStr::new(bun_core::cwd::get()),),
+                        (bstr::BStr::new(&bun_core::cwd::get()),),
                     );
                     bun_core::note!("Run \"bun init\" to initialize a project");
                     Global::exit(1);
@@ -307,7 +307,7 @@ Learn more about these at <magenta>https://bun.com/docs/cli/pm<r>.\n";
         }
 
         if strings::eql_comptime(subcommand, b"scan") {
-            ScanCommand::exec_with_manager(&mut *ctx, pm, cwd)?;
+            ScanCommand::exec_with_manager(&mut *ctx, pm, &cwd)?;
             Global::exit(0);
         } else if strings::eql_comptime(subcommand, b"pack") {
             PackCommand::exec_with_manager(ctx, pm)?;
@@ -351,7 +351,7 @@ Learn more about these at <magenta>https://bun.com/docs/cli/pm<r>.\n";
             PmViewCommand::view(pm, spec, property_path, json_output)?;
             Global::exit(0);
         } else if strings::eql_comptime(subcommand, b"bin") {
-            let top_level_dir: &[u8] = bun_core::cwd::get();
+            let top_level_dir: &[u8] = &bun_core::cwd::get();
             let output_path = Path::resolve_path::join_abs::<Path::platform::Auto>(
                 top_level_dir,
                 pm.options.bin_path.as_bytes(),
@@ -617,7 +617,7 @@ Learn more about these at <magenta>https://bun.com/docs/cli/pm<r>.\n";
 
                 Output::println(format_args!(
                     "{} node_modules ({} installed)",
-                    bstr::BStr::new(path),
+                    bstr::BStr::new(&path),
                     lockfile.buffers.hoisted_dependencies.len(),
                 ));
                 let string_bytes = lockfile.buffers.string_bytes.as_slice();
@@ -740,7 +740,7 @@ Learn more about these at <magenta>https://bun.com/docs/cli/pm<r>.\n";
             Global::exit(0);
         } else if strings::eql_comptime(subcommand, b"version") {
             let positionals: &[&[u8]] = pm.options.positionals;
-            PmVersionCommand::exec(ctx, pm, positionals, cwd)?;
+            PmVersionCommand::exec(ctx, pm, positionals, &cwd)?;
             Global::exit(0);
         } else if strings::eql_comptime(subcommand, b"why") {
             let positionals: &[&[u8]] = pm.options.positionals;
@@ -748,15 +748,15 @@ Learn more about these at <magenta>https://bun.com/docs/cli/pm<r>.\n";
             Global::exit(0);
         } else if strings::eql_comptime(subcommand, b"diff") {
             let positionals: Vec<&[u8]> = pm.options.positionals.to_vec();
-            PmDiffCommand::exec(pm, &positionals, &diff_args, diff_flags, cwd)?;
+            PmDiffCommand::exec(pm, &positionals, &diff_args, diff_flags, &cwd)?;
             Global::exit(0);
         } else if strings::eql_comptime(subcommand, b"licenses") {
             let positionals: &[&[u8]] = pm.options.positionals;
-            PmLicensesCommand::exec(pm, positionals, cwd, licenses_flags)?;
+            PmLicensesCommand::exec(pm, positionals, &cwd, licenses_flags)?;
             Global::exit(0);
         } else if strings::eql_comptime(subcommand, b"pkg") {
             let positionals: &[&[u8]] = pm.options.positionals;
-            PmPkgCommand::exec(&&mut *ctx, pm, positionals, cwd)?;
+            PmPkgCommand::exec(&&mut *ctx, pm, positionals, &cwd)?;
             Global::exit(0);
         }
 
@@ -837,7 +837,7 @@ fn print_node_modules_folder_structure(
         } else {
             Output::println(format_args!(
                 "{} node_modules",
-                bstr::BStr::new(bun_core::cwd::get())
+                bstr::BStr::new(&bun_core::cwd::get())
             ));
         }
     }
@@ -957,7 +957,7 @@ fn print_trusted_dependencies_flat(
 ) {
     Output::println(format_args!(
         "{} node_modules",
-        bstr::BStr::new(bun_core::cwd::get())
+        bstr::BStr::new(&bun_core::cwd::get())
     ));
 
     let dependencies = lockfile.buffers.dependencies.as_slice();

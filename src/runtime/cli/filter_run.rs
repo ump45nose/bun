@@ -818,7 +818,7 @@ pub(crate) fn run_scripts_with_filter(
     let mut this_transpiler = unsafe { this_transpiler.assume_init() };
 
     let selected =
-        FilterArg::select_packages(&*ctx, &mut this_transpiler.resolver, bun_core::cwd::get())?;
+        FilterArg::select_packages(&*ctx, &mut this_transpiler.resolver, &bun_core::cwd::get())?;
 
     let mut scripts: Vec<ScriptConfig> = Vec::new();
     for package in &selected.packages {
@@ -935,7 +935,7 @@ pub(crate) fn run_scripts_with_filter(
             RunCommand::find_shell(
                 // SAFETY: env_ptr is the live process-lifetime DotEnv loader.
                 unsafe { (*env_ptr).get(b"PATH") }.unwrap_or(b""),
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
             )
             .ok_or(crate::Error::MissingShell)?
         }

@@ -640,7 +640,7 @@ impl RuntimeTranspilerCache {
         if let Some(dir) = env_var::XDG_CACHE_HOME.get() {
             let parts: &[&[u8]] = &[dir, b"bun", b"@t@"];
             return path_handler::join_abs_string_buf_z::<platform::Loose>(
-                top,
+                &top,
                 &mut buf[..],
                 parts,
             )
@@ -654,7 +654,7 @@ impl RuntimeTranspilerCache {
             if let Some(home) = env_var::HOME.get() {
                 let parts: &[&[u8]] = &[home, b"Library/", b"Caches/", b"bun", b"@t@"];
                 return path_handler::join_abs_string_buf_z::<platform::Loose>(
-                    top,
+                    &top,
                     &mut buf[..],
                     parts,
                 )
@@ -665,7 +665,7 @@ impl RuntimeTranspilerCache {
         if let Some(dir) = env_var::HOME.get() {
             let parts: &[&[u8]] = &[dir, b".bun", b"install", b"cache", b"@t@"];
             return path_handler::join_abs_string_buf_z::<platform::Loose>(
-                top,
+                &top,
                 &mut buf[..],
                 parts,
             )

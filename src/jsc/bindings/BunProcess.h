@@ -32,9 +32,9 @@ class Process : public WebCore::JSEventEmitter {
     WriteBarrier<JSObject> m_nextTickFunction;
     // https://github.com/nodejs/node/blob/2eff28fb7a93d3f672f80b582f664a7c701569fb/lib/internal/bootstrap/switches/does_own_process_state.js#L113-L116
     WriteBarrier<JSString> m_cachedCwd;
-    // The process-wide working-directory record `m_cachedCwd` was read under;
-    // a `chdir` on any thread changes it.
-    const void* m_cachedCwdVersion { nullptr };
+    // The generation of the process-wide working directory `m_cachedCwd` was
+    // read under; a `chdir` on any thread changes it.
+    uint64_t m_cachedCwdGeneration { 0 };
     WriteBarrier<Unknown> m_argv;
     WriteBarrier<Unknown> m_execArgv;
     // The JS warning printer (ProcessObjectInternals createOnWarning), built on the first warning.
@@ -90,11 +90,11 @@ public:
     static JSValue emitWarningErrorInstance(JSC::JSGlobalObject* lexicalGlobalObject, JSValue errorInstance);
     static JSValue emitWarning(JSC::JSGlobalObject* lexicalGlobalObject, JSValue warning, JSValue type, JSValue code, JSValue ctor);
 
-    JSString* cachedCwd(const void* version) { return m_cachedCwdVersion == version ? m_cachedCwd.get() : nullptr; }
-    void setCachedCwd(JSC::VM& vm, JSString* cwd, const void* version)
+    JSString* cachedCwd(uint64_t generation) { return m_cachedCwdGeneration == generation ? m_cachedCwd.get() : nullptr; }
+    void setCachedCwd(JSC::VM& vm, JSString* cwd, uint64_t generation)
     {
         m_cachedCwd.set(vm, this, cwd);
-        m_cachedCwdVersion = version;
+        m_cachedCwdGeneration = generation;
     }
     void clearCachedCwd() { m_cachedCwd.clear(); }
 

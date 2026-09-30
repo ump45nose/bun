@@ -852,7 +852,7 @@ pub(crate) fn migrate_pnpm_lockfile<'a>(
 
         let mut pkg_map: StringArrayHashMap<PackageID> = StringArrayHashMap::new();
 
-        pkg_map.put(bun_core::cwd::get(), 0)?;
+        pkg_map.put(&bun_core::cwd::get(), 0)?;
 
         let workspace_pkgs_off = lockfile.packages.len();
 

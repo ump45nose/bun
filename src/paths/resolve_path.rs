@@ -690,7 +690,7 @@ pub fn relative_platform_buf<'a, P: PlatformT, const ALWAYS_COPY: bool>(
         // afterwards (overwrites relative_to_buf anyway).
         let norm_len = normalize_string_buf::<true, P, true>(from, &mut relative_to_buf[..]).len();
         join_abs_string_buf::<P>(
-            bun_core::cwd::get(),
+            &bun_core::cwd::get(),
             relative_from_buf,
             &[&relative_to_buf[..norm_len]],
         )
@@ -721,7 +721,7 @@ pub fn relative_platform_buf<'a, P: PlatformT, const ALWAYS_COPY: bool>(
         // output buffer, untouched until the final relative_normalized_buf call
         // and disjoint from both threadlocals), then join into relative_to_buf.
         let norm_len = normalize_string_buf::<true, P, true>(to, buf).len();
-        join_abs_string_buf::<P>(bun_core::cwd::get(), relative_to_buf, &[&buf[..norm_len]])
+        join_abs_string_buf::<P>(&bun_core::cwd::get(), relative_to_buf, &[&buf[..norm_len]])
     };
 
     relative_normalized_buf::<P, ALWAYS_COPY>(buf, normalized_from, normalized_to)
@@ -1364,7 +1364,7 @@ fn normalize_string_buf_t<
     }
 }
 
-pub fn join_abs<'a, P: PlatformT>(cwd: &'a [u8], part: &[u8]) -> &'a [u8] {
+pub fn join_abs<P: PlatformT>(cwd: &[u8], part: &[u8]) -> &'static [u8] {
     join_abs_string::<P>(cwd, &[part])
 }
 
@@ -1373,16 +1373,14 @@ pub fn join_abs<'a, P: PlatformT>(cwd: &'a [u8], part: &[u8]) -> &'a [u8] {
 /// This is the equivalent of path.resolve
 ///
 /// Returned path is stored in a temporary buffer. It must be copied if it needs to be stored.
-// result borrows the thread-local buffer ('static) OR returns `cwd`
-// directly when `parts.is_empty()`. Return tied to `cwd`'s lifetime ('static: 'a).
-pub fn join_abs_string<'a, P: PlatformT>(cwd: &'a [u8], parts: &[&[u8]]) -> &'a [u8] {
+pub fn join_abs_string<P: PlatformT>(cwd: &[u8], parts: &[&[u8]]) -> &'static [u8] {
     PARSER_JOIN_INPUT_BUFFER.with(|b| join_abs_string_buf::<P>(cwd, tl_buf_mut(b), parts))
 }
 
 /// [`join_abs_string`] (thread-local buffer) when the result fits, otherwise
 /// into `spill` (grown as needed). `spill` is untouched in the common case.
 pub fn join_abs_string_spill<'a, P: PlatformT>(
-    cwd: &'a [u8],
+    cwd: &[u8],
     spill: &'a mut Vec<u8>,
     parts: &[&[u8]],
 ) -> &'a [u8] {
@@ -1402,7 +1400,7 @@ pub fn join_abs_string_spill<'a, P: PlatformT>(
 /// This is the equivalent of path.resolve
 ///
 /// Returned path is stored in a temporary buffer. It must be copied if it needs to be stored.
-pub fn join_abs_string_z<'a, P: PlatformT>(cwd: &'a [u8], parts: &[&[u8]]) -> &'a ZStr {
+pub fn join_abs_string_z<P: PlatformT>(cwd: &[u8], parts: &[&[u8]]) -> &'static ZStr {
     PARSER_JOIN_INPUT_BUFFER.with(|b| join_abs_string_buf_z::<P>(cwd, tl_buf_mut(b), parts))
 }
 
@@ -1660,7 +1658,7 @@ impl JoinScratch {
 }
 
 pub fn join_abs_string_buf<'a, P: PlatformT>(
-    cwd: &'a [u8],
+    cwd: &[u8],
     buf: &'a mut [u8],
     parts: &[&[u8]],
 ) -> &'a [u8] {
@@ -1673,7 +1671,7 @@ pub fn join_abs_string_buf<'a, P: PlatformT>(
 /// whose unnormalized length exceeds `buf.len` but normalizes down will still
 /// succeed.
 pub fn join_abs_string_buf_checked<'a, P: PlatformT>(
-    cwd: &'a [u8],
+    cwd: &[u8],
     buf: &'a mut [u8],
     parts: &[&[u8]],
 ) -> Option<&'a [u8]> {
@@ -1699,7 +1697,7 @@ pub fn join_abs_string_buf_checked<'a, P: PlatformT>(
 }
 
 pub fn join_abs_string_buf_z<'a, P: PlatformT>(
-    cwd: &'a [u8],
+    cwd: &[u8],
     buf: &'a mut [u8],
     parts: &[&[u8]],
 ) -> &'a ZStr {
@@ -1711,7 +1709,7 @@ pub fn join_abs_string_buf_z<'a, P: PlatformT>(
 // We always return `&[u8]`; when `IS_SENTINEL` a NUL is written
 // at `result.len()` and callers (e.g. `join_abs_string_buf_z`) re-wrap as `ZStr`.
 fn _join_abs_string_buf<'a, const IS_SENTINEL: bool, P: PlatformT>(
-    _cwd: &'a [u8],
+    _cwd: &[u8],
     buf: &'a mut [u8],
     _parts: &[&[u8]],
 ) -> &'a [u8] {
@@ -1734,7 +1732,8 @@ fn _join_abs_string_buf<'a, const IS_SENTINEL: bool, P: PlatformT>(
         if IS_SENTINEL {
             unreachable!();
         }
-        return _cwd;
+        buf[.._cwd.len()].copy_from_slice(_cwd);
+        return &buf[.._cwd.len()];
     }
 
     if matches!(P::P, Platform::Loose | Platform::Posix)
@@ -1830,7 +1829,7 @@ fn _join_abs_string_buf<'a, const IS_SENTINEL: bool, P: PlatformT>(
 }
 
 fn join_abs_string_buf_windows<'a, const IS_SENTINEL: bool>(
-    cwd: &'a [u8],
+    cwd: &[u8],
     buf: &'a mut [u8],
     parts: &[&[u8]],
 ) -> &'a [u8] {
@@ -1840,7 +1839,8 @@ fn join_abs_string_buf_windows<'a, const IS_SENTINEL: bool>(
         if IS_SENTINEL {
             unreachable!();
         }
-        return cwd;
+        buf[..cwd.len()].copy_from_slice(cwd);
+        return &buf[..cwd.len()];
     }
 
     // path.resolve is a bit different on Windows, as there are multiple possible filesystem roots.
@@ -2278,7 +2278,8 @@ impl PosixToWinNormalizer {
             if root.len() == 1 {
                 debug_assert!(is_sep_any(root[0]));
                 if strings::is_windows_absolute_path_missing_drive_letter::<u8>(maybe_posix_path) {
-                    let cwd_root = windows_filesystem_root(bun_core::cwd::get());
+                    let cwd = bun_core::cwd::get();
+                    let cwd_root = windows_filesystem_root(&cwd);
                     let sr_len = cwd_root.len();
                     // The cwd root (arbitrarily long for UNC cwds) plus the
                     // path must fit `buf` with one byte of headroom: the
@@ -2322,7 +2323,8 @@ impl PosixToWinNormalizer {
             if root.len() == 1 {
                 debug_assert!(is_sep_any(root[0]));
                 if strings::is_windows_absolute_path_missing_drive_letter::<u8>(maybe_posix_path) {
-                    let cwd_root = windows_filesystem_root(bun_core::cwd::get());
+                    let cwd = bun_core::cwd::get();
+                    let cwd_root = windows_filesystem_root(&cwd);
                     let sr_len = cwd_root.len();
                     // The cwd root (arbitrarily long for UNC cwds) plus the
                     // path and its NUL must fit `buf`; such a combination

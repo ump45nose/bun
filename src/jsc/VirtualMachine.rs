@@ -382,7 +382,7 @@ pub struct VirtualMachine {
 
 #[derive(Default)]
 pub struct TestIsolationState {
-    pub saved_cwd: Option<&'static bun_core::ZStr>,
+    pub saved_cwd: Option<bun_core::cwd::Cwd>,
     /// The time zone the test runner applied at startup (`TZ`, default
     /// `Etc/UTC`). Empty means no override (local time). Re-applied after
     /// every file so a `process.env.TZ` write stays with the file that made it.
@@ -5095,7 +5095,7 @@ impl VirtualMachine {
                 unsafe { bun_ptr::detach_lifetime(source) }
             }
         } else {
-            top_level_dir
+            &top_level_dir
         };
 
         // A `loop`
@@ -5159,7 +5159,7 @@ impl VirtualMachine {
                         ];
                         bun_paths::resolve_path::join_abs_string_buf_z::<
                             bun_paths::resolve_path::platform::Auto,
-                        >(top_level_dir, buf, &parts)
+                        >(&top_level_dir, buf, &parts)
                         .as_bytes()
                     };
 
@@ -5659,7 +5659,7 @@ impl VirtualMachine {
         Zig__GlobalObject__stopActiveDOMObjectsForTestIsolation(self.global());
 
         if let Some(cwd) = self.test_isolation_state.saved_cwd.take() {
-            let _ = bun_sys::chdir(cwd);
+            let _ = bun_sys::chdir(cwd.as_zstr());
         }
 
         let _ = self.event_loop_mut().drain_microtasks();
@@ -5980,7 +5980,7 @@ impl VirtualMachine {
                 }
                 if let Some(list) = exception_list {
                     let origin = self.is_from_devserver.then_some(&self.origin);
-                    zig_exception.add_to_error_list(list, bun_core::cwd::get(), origin);
+                    zig_exception.add_to_error_list(list, &bun_core::cwd::get(), origin);
                 }
                 holder.deinit(self);
             }
@@ -6136,12 +6136,22 @@ impl VirtualMachine {
                 pretty_write!(
                     "<r>      <d>at <r>{}<d> (<r>{}<d>)<r>\n",
                     frame.name_formatter(allow_ansi_colors),
-                    frame.source_url_formatter(dir, origin, LineColumn::Include, allow_ansi_colors)
+                    frame.source_url_formatter(
+                        &dir,
+                        origin,
+                        LineColumn::Include,
+                        allow_ansi_colors
+                    )
                 )?;
             } else if !frame.position.is_invalid() {
                 pretty_write!(
                     "<r>      <d>at <r>{}\n",
-                    frame.source_url_formatter(dir, origin, LineColumn::Include, allow_ansi_colors)
+                    frame.source_url_formatter(
+                        &dir,
+                        origin,
+                        LineColumn::Include,
+                        allow_ansi_colors
+                    )
                 )?;
             } else if has_name {
                 pretty_write!(
@@ -6151,7 +6161,12 @@ impl VirtualMachine {
             } else {
                 pretty_write!(
                     "<r>      <d>at <r>{}<d>\n",
-                    frame.source_url_formatter(dir, origin, LineColumn::Include, allow_ansi_colors)
+                    frame.source_url_formatter(
+                        &dir,
+                        origin,
+                        LineColumn::Include,
+                        allow_ansi_colors
+                    )
                 )?;
             }
         }
@@ -6292,7 +6307,7 @@ impl VirtualMachine {
                 }
                 if let Some(list) = self.exception_list.take() {
                     let origin = this.is_from_devserver.then_some(&this.origin);
-                    exception.add_to_error_list(list, bun_core::cwd::get(), origin);
+                    exception.add_to_error_list(list, &bun_core::cwd::get(), origin);
                 }
             }
         }
@@ -7319,8 +7334,14 @@ impl VirtualMachine {
         let message = &exception.message;
         let frames = exception.stack.frames();
         let top_frame = frames.first();
-        let dir =
-            bun_core::env_var::GITHUB_WORKSPACE::get().unwrap_or_else(|| bun_core::cwd::get());
+        let cwd;
+        let dir = match bun_core::env_var::GITHUB_WORKSPACE::get() {
+            Some(workspace) => workspace,
+            None => {
+                cwd = bun_core::cwd::get();
+                &cwd
+            }
+        };
         bun_core::Output::flush();
 
         let writer = bun_core::Output::error_writer();

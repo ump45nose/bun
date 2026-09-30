@@ -212,7 +212,7 @@ pub fn load_config(
             None
         }
     } else {
-        join_config_path(bun_core::cwd::get(), config_path_, &mut config_buf)
+        join_config_path(&bun_core::cwd::get(), config_path_, &mut config_buf)
     };
     let Some(config_path) = config_path else {
         return unreadable_config(

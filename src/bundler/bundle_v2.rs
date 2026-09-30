@@ -1005,7 +1005,7 @@ pub mod bv2_impl {
                             {
                                 b"/"
                             } else {
-                                bun_core::cwd::get()
+                                &bun_core::cwd::get()
                             }
                         } else {
                             source_dir
@@ -2851,7 +2851,7 @@ pub mod bv2_impl {
                 let rel = bun_paths::resolve_path::relative_platform::<
                     bun_paths::resolve_path::platform::Loose,
                     false,
-                >(bun_core::cwd::get(), path.text);
+                >(&bun_core::cwd::get(), path.text);
                 // SAFETY: arena outlives the bundle pass; raw-pointer detour erases the
                 // `&self` lifetime so the resulting `&'static [u8]` doesn't pin `self`.
                 path.pretty =
@@ -6268,7 +6268,7 @@ pub mod bv2_impl {
             let bump: &'static bun_alloc::Arena =
                 unsafe { bun_ptr::detach_lifetime_ref::<bun_alloc::Arena>(self.arena()) };
             let out =
-                generic_path_with_pretty_initialized(path, target, bun_core::cwd::get(), bump)?;
+                generic_path_with_pretty_initialized(path, target, &bun_core::cwd::get(), bump)?;
             Ok(out)
         }
 
@@ -6883,7 +6883,7 @@ pub mod bv2_impl {
                                         let mut buf = bun_paths::path_buffer_pool::get();
                                         let top_level_dir = bun_core::cwd::get();
                                         let specifier_to_use: &[u8] = if loader == Loader::Html
-                                            && import_record.path.text.starts_with(top_level_dir)
+                                            && import_record.path.text.starts_with(&top_level_dir)
                                         {
                                             let specifier_to_use =
                                                 &import_record.path.text[top_level_dir.len()..];
@@ -7003,10 +7003,11 @@ pub mod bv2_impl {
                         import_record.source_index = Index::INVALID;
 
                         if let Some(entry) = dev_server.is_file_cached(path.text, bake_graph) {
-                            let rel = bun_paths::resolve_path::relative_platform::<
-                                bun_paths::resolve_path::platform::Loose,
-                                false,
-                            >(bun_core::cwd::get(), path.text);
+                            let rel =
+                                bun_paths::resolve_path::relative_platform::<
+                                    bun_paths::resolve_path::platform::Loose,
+                                    false,
+                                >(&bun_core::cwd::get(), path.text);
                             if loader == Loader::Html && entry.kind == bake_types::CacheKind::Asset
                             {
                                 // Overload `path.text` to point to the final URL

@@ -489,7 +489,7 @@ impl EditorContext {
                     editor_,
                     // SAFETY: see note above — exclusive per-call reborrow.
                     unsafe { &mut *buf_ptr },
-                    bun_core::cwd::get(),
+                    &bun_core::cwd::get(),
                     &mut out,
                 ) {
                     self.editor = Some(editor_);
@@ -520,7 +520,7 @@ impl EditorContext {
                 editor_,
                 // SAFETY: see note above — exclusive per-call reborrow.
                 unsafe { &mut *buf_ptr },
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
                 &mut out,
             ) {
                 self.editor = Some(editor_);
@@ -548,7 +548,7 @@ impl EditorContext {
             env,
             // SAFETY: see note above — exclusive per-call reborrow.
             unsafe { &mut *buf_ptr },
-            bun_core::cwd::get(),
+            &bun_core::cwd::get(),
             &mut out,
         ) {
             self.editor = Some(editor_);

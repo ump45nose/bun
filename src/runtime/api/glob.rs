@@ -70,7 +70,7 @@ impl ScanOpts {
             // Convert to an absolute path
             let cwd_str = join_string_buf::<platform::Auto>(
                 &mut path_buf2,
-                &[bun_core::cwd::get(), cwd_utf8.slice()],
+                &[&bun_core::cwd::get(), cwd_utf8.slice()],
             );
             break 'cwd_str Box::<[u8]>::from(cwd_str);
         };

@@ -1852,7 +1852,7 @@ impl Package<u64> {
                 let folder = *dependency_version.folder();
                 let mut folder_buf = bun_paths::path_buffer_pool::get();
                 let Some(joined) = resolve_path::join_abs_string_buf_checked::<path::platform::Auto>(
-                    bun_core::cwd::get(),
+                    &bun_core::cwd::get(),
                     &mut folder_buf.0,
                     &[source.path.name().dir, folder.slice(buf)],
                 ) else {
@@ -1866,7 +1866,7 @@ impl Package<u64> {
                     );
                     return Err(crate::Error::InstallFailed);
                 };
-                let relative: &[u8] = resolve_path::relative(bun_core::cwd::get(), joined);
+                let relative: &[u8] = resolve_path::relative(&bun_core::cwd::get(), joined);
                 #[cfg(windows)]
                 let relative: &[u8] = {
                     let len = relative.len();
@@ -1971,9 +1971,9 @@ impl Package<u64> {
                                 let mut buf2 = bun_paths::path_buffer_pool::get();
                                 let rel =
                                     resolve_path::relative_platform::<path::platform::Auto, false>(
-                                        bun_core::cwd::get(),
+                                        &bun_core::cwd::get(),
                                         resolve_path::join_abs_string_buf::<path::platform::Auto>(
-                                            bun_core::cwd::get(),
+                                            &bun_core::cwd::get(),
                                             &mut buf2.0,
                                             &[source.path.name().dir, workspace],
                                         ),
@@ -2830,7 +2830,7 @@ impl Package<u64> {
                                 if strings::eql_long(&value.name, &entry.name, true) {
                                     let note_abs_path = bun_core::ZBox::from_bytes(
                                         resolve_path::join_abs_string_z::<path::platform::Auto>(
-                                            cwd,
+                                            &cwd,
                                             &[note_path, b"package.json"],
                                         )
                                         .as_bytes(),
@@ -2870,7 +2870,7 @@ impl Package<u64> {
 
                         let abs_path = bun_core::ZBox::from_bytes(
                             resolve_path::join_abs_string_z::<path::platform::Auto>(
-                                cwd,
+                                &cwd,
                                 &[path_, b"package.json"],
                             )
                             .as_bytes(),

@@ -467,7 +467,6 @@ impl Cmd {
         let event_loop = interp.event_loop;
 
         let arena = bun_alloc::Arena::new();
-        let mut spawn_args = SpawnArgs::default::<false>(&arena, interp.as_ctx_ptr(), event_loop);
         // Cache the raw `*mut ShellExecEnv` and deref it directly so the
         // `cwd: &[u8]` stored in `spawn_args` is decoupled from any borrow of
         // `*interp` — `Base::shell()` would tie the slice's lifetime to
@@ -476,7 +475,9 @@ impl Cmd {
         // outlives this Cmd, so the slice remains valid across reborrows.
         let shell_ptr: *mut ShellExecEnv = interp.as_cmd(this).base.shell;
         // SAFETY: `shell_ptr` is the live env owned by this Cmd's scope chain.
-        spawn_args.cwd = unsafe { &*shell_ptr }.cwd();
+        let cwd = unsafe { &*shell_ptr }.cwd();
+        let mut spawn_args =
+            SpawnArgs::default::<false>(&arena, interp.as_ctx_ptr(), event_loop, cwd);
 
         // Fill env from export_env + cmd_local_env.
         {

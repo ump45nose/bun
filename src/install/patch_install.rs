@@ -42,7 +42,7 @@ pub struct PatchTask {
     pub(crate) manager: bun_ptr::BackRef<PackageManager, bun_ptr::Mut>,
     /// Borrowed view of the manager's temp directory fd (see comment at top of file).
     pub(crate) tempdir: Fd,
-    pub(crate) project_dir: &'static [u8],
+    pub(crate) project_dir: bun_core::cwd::Cwd,
     pub(crate) callback: Callback,
     pub(crate) task: ThreadPoolTask,
     pub(crate) pre: bool,
@@ -389,7 +389,7 @@ impl PatchTask {
         bun_output::scoped_log!(InstallPatch, "apply patch task");
         // bun.assert(this.callback == .apply) — enforced by the match above.
 
-        let dir = self.project_dir;
+        let dir: &[u8] = &self.project_dir;
         let patchfile_path = &patch.patchfilepath;
 
         let mut absolute_patchfile_path_buf = bun_paths::path_buffer_pool::get();
@@ -604,7 +604,7 @@ impl PatchTask {
         };
         let log = &mut calc_hash.logger;
 
-        let dir = self.project_dir;
+        let dir: &[u8] = &self.project_dir;
         let patchfile_path = &calc_hash.patchfile_path;
 
         let mut absolute_patchfile_path_buf = bun_paths::path_buffer_pool::get();

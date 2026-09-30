@@ -497,7 +497,7 @@ impl<'a> LinkerContext<'a> {
         arena: &Bump,
     ) -> Result<bun_paths::fs::Path<'static>, BunError> {
         let top_level_dir = bun_core::cwd::get();
-        generic_path_with_pretty_initialized(path, self.options.target, top_level_dir, arena)
+        generic_path_with_pretty_initialized(path, self.options.target, &top_level_dir, arena)
     }
 
     pub(crate) fn should_include_part(&self, source_index: crate::IndexInt, part: &Part) -> bool {

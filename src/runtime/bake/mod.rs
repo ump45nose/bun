@@ -365,7 +365,7 @@ impl Framework {
             let top_level_dir = bun_core::cwd::get();
             fsr.root = Cow::Owned(
                 bun_paths::resolve_path::join_abs::<bun_paths::platform::Auto>(
-                    top_level_dir,
+                    &top_level_dir,
                     &fsr.root,
                 )
                 .to_vec(),
@@ -409,7 +409,7 @@ impl Framework {
             return;
         }
         let top_level_dir = bun_core::cwd::get();
-        match r.resolve(top_level_dir, path, bun_ast::ImportKind::Stmt) {
+        match r.resolve(&top_level_dir, path, bun_ast::ImportKind::Stmt) {
             Ok(mut result) => {
                 let p = result.path().expect("just resolved");
                 *path = Cow::Owned(p.text.to_vec());

@@ -2132,7 +2132,7 @@ fn enqueue_local_tarball(
             None => (path, true),
             Some(base_dir) => (
                 Path::resolve_path::join_abs_string_buf::<Path::platform::Auto>(
-                    bun_core::cwd::get(),
+                    &bun_core::cwd::get(),
                     &mut abs_buf,
                     &[base_dir, path],
                 ),
@@ -2904,7 +2904,7 @@ fn get_or_put_resolved_package(
                         folder_path
                     } else {
                         Path::resolve_path::join_abs_string_buf::<Path::platform::Auto>(
-                            bun_core::cwd::get(),
+                            &bun_core::cwd::get(),
                             &mut buf2,
                             &[folder_path],
                         )
@@ -3009,7 +3009,7 @@ fn get_or_put_resolved_package(
                 workspace_path
             } else {
                 Path::resolve_path::join_abs_string_buf::<Path::platform::Auto>(
-                    bun_core::cwd::get(),
+                    &bun_core::cwd::get(),
                     &mut buf2,
                     &[workspace_path],
                 )

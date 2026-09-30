@@ -276,13 +276,13 @@ pub mod fs {
         /// the absolute path slice.
         pub fn abs_buf<'b>(&self, parts: &[&[u8]], buf: &'b mut [u8]) -> &'b [u8] {
             use bun_paths::resolve_path::{join_abs_string_buf, platform};
-            join_abs_string_buf::<platform::Loose>(bun_core::cwd::get(), buf, parts)
+            join_abs_string_buf::<platform::Loose>(&bun_core::cwd::get(), buf, parts)
         }
 
         /// Returns `None` on overflow.
         pub fn abs_buf_checked<'b>(&self, parts: &[&[u8]], buf: &'b mut [u8]) -> Option<&'b [u8]> {
             use bun_paths::resolve_path::{join_abs_string_buf_checked, platform};
-            join_abs_string_buf_checked::<platform::Loose>(bun_core::cwd::get(), buf, parts)
+            join_abs_string_buf_checked::<platform::Loose>(&bun_core::cwd::get(), buf, parts)
         }
 
         /// Normalizes `str` (separators, `.`/`..` segments) into `buf`.
@@ -295,7 +295,7 @@ pub mod fs {
         /// threadlocal join buffer.
         pub fn abs(&self, parts: &[&[u8]]) -> &[u8] {
             use bun_paths::resolve_path::{join_abs_string, platform};
-            join_abs_string::<platform::Loose>(bun_core::cwd::get(), parts)
+            join_abs_string::<platform::Loose>(&bun_core::cwd::get(), parts)
         }
 
         /// Like `abs`, but interns the joined path into `DirnameStore` and
@@ -305,7 +305,7 @@ pub mod fs {
             parts: &[&[u8]],
         ) -> core::result::Result<&'static [u8], bun_alloc::AllocError> {
             use bun_paths::resolve_path::{join_abs_string, platform};
-            let joined = join_abs_string::<platform::Loose>(bun_core::cwd::get(), parts);
+            let joined = join_abs_string::<platform::Loose>(&bun_core::cwd::get(), parts);
             // Route through DirnameStore so
             // the resolver's `&'static [u8]` storage contract holds.
             DirnameStore::instance()
@@ -1270,7 +1270,7 @@ pub mod fs {
             let mut outpath = bun_paths::path_buffer_pool::get();
             let join_capacity = outpath.len() - 2;
             let Some(entry_path) = join_abs_string_buf_checked::<platform::Auto>(
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
                 &mut outpath[..join_capacity],
                 &combo,
             ) else {
@@ -1575,8 +1575,8 @@ pub mod fs {
                             >(profile, &mut buf[..], &parts);
                             return out.to_vec();
                         }
-                        let root =
-                            bun_paths::resolve_path::windows_filesystem_root(bun_core::cwd::get());
+                        let cwd = bun_core::cwd::get();
+                        let root = bun_paths::resolve_path::windows_filesystem_root(&cwd);
                         let mut out = bun_core::strings::without_trailing_slash(root).to_vec();
                         out.extend_from_slice(b"\\Windows\\Temp");
                         out

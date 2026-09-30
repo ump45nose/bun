@@ -164,7 +164,7 @@ pub(crate) struct TestFailure {
 /// root when inside it, else as given.
 pub(crate) fn junit_file_name(path: &[u8]) -> &[u8] {
     let top = bun_core::cwd::get();
-    if strings::has_prefix(path, top) {
+    if strings::has_prefix(path, &top) {
         without_leading_path_separator(&path[top.len()..])
     } else {
         path
@@ -341,7 +341,7 @@ impl TestFailure {
         let dir = bun_core::cwd::get();
         for frame in exception.stack.frames() {
             let source_url = frame.source_url.to_utf8();
-            let file = jsc::ZigStackFrame::relative_source_url(dir, source_url.slice());
+            let file = jsc::ZigStackFrame::relative_source_url(&dir, source_url.slice());
             let func = frame.function_name.to_utf8();
             if file.is_empty() && func.slice().is_empty() {
                 continue;
@@ -1476,7 +1476,7 @@ impl CommandLineReporter {
         let relative_dir = bun_core::cwd::get();
         let mut byte_ranges: Vec<&mut ByteRangeMapping> = Vec::with_capacity(map.len());
         for entry in map.values_mut() {
-            if !coverage::is_ignored(opts, relative_dir, entry.source_url.slice()) {
+            if !coverage::is_ignored(opts, &relative_dir, entry.source_url.slice()) {
                 byte_ranges.push(entry);
             }
         }
@@ -1539,10 +1539,10 @@ fn print_coverage_reports_<const COLORS: bool>(
     opts.fractions.failing = failing;
 
     if opts.reporters.text {
-        print_coverage_table::<COLORS>(relative_dir, &thresholds, reports, &fractions, failing);
+        print_coverage_table::<COLORS>(&relative_dir, &thresholds, reports, &fractions, failing);
     }
     if opts.reporters.lcov {
-        write_lcov_report(opts, relative_dir, reports)?;
+        write_lcov_report(opts, &relative_dir, reports)?;
     }
     Ok(())
 }
@@ -2049,7 +2049,7 @@ impl TestCommand {
                                 pretty_errorln!(
                                     "Test filter <b>{}<r> had no matches in --cwd={}",
                                     bun_fmt::quote(arg),
-                                    bun_fmt::quote(bun_core::cwd::get())
+                                    bun_fmt::quote(&bun_core::cwd::get())
                                 );
                             } else {
                                 pretty_errorln!(
@@ -2125,17 +2125,19 @@ impl TestCommand {
 
             // Own the joined path in a hoisted buffer and borrow from it.
             let dir_to_scan_owned: Vec<u8>;
+            let cwd;
             let dir_to_scan: &[u8] = 'brk: {
                 if !ctx.debug.test_directory.is_empty() {
                     dir_to_scan_owned = resolve_path::join_abs::<bun_path::platform::Auto>(
-                        bun_core::cwd::get(),
+                        &bun_core::cwd::get(),
                         &ctx.debug.test_directory,
                     )
                     .into();
                     break 'brk &dir_to_scan_owned;
                 }
 
-                break 'brk bun_core::cwd::get();
+                cwd = bun_core::cwd::get();
+                break 'brk &cwd;
             };
 
             match scanner.scan(dir_to_scan) {
@@ -2146,7 +2148,7 @@ impl TestCommand {
                         pretty_errorln!(
                             "<red>Failed to scan non-existent root directory for tests:<r> {} in --cwd={}",
                             bun_fmt::quote(dir_to_scan),
-                            bun_fmt::quote(bun_core::cwd::get())
+                            bun_fmt::quote(&bun_core::cwd::get())
                         );
                     } else {
                         pretty_errorln!(
@@ -2440,7 +2442,7 @@ impl TestCommand {
                     // Be very clear to ai.
                     Output::err_generic(
                         "0 test files matching **{{.test,.spec,_test_,_spec_}}.{{js,ts,jsx,tsx}} in --cwd={}",
-                        (bun_fmt::quote(bun_core::cwd::get()),),
+                        (bun_fmt::quote(&bun_core::cwd::get()),),
                     );
                 } else {
                     // Be friendlier to humans.
@@ -2452,7 +2454,7 @@ impl TestCommand {
                 if Output::is_ai_agent() {
                     pretty_errorln!(
                         "<yellow>The following filters did not match any test files in --cwd={}:<r>",
-                        bun_fmt::quote(bun_core::cwd::get())
+                        bun_fmt::quote(&bun_core::cwd::get())
                     );
                 } else {
                     pretty_errorln!(
@@ -2847,7 +2849,7 @@ impl TestCommand {
             .filename_store
             .append_slice(resolution.path_pair.primary.text)
             .expect("oom");
-        let file_title = resolve_path::relative(bun_core::cwd::get(), file_path);
+        let file_title = resolve_path::relative(&bun_core::cwd::get(), file_path);
         let file_id = jest::Jest::runner()
             .unwrap()
             .get_or_put_file(file_path)

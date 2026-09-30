@@ -4729,8 +4729,8 @@ JSC_DEFINE_CUSTOM_SETTER(setProcessTitle, (JSC::JSGlobalObject * globalObject, J
 #endif
 }
 
-extern "C" const void* Bun__cwdVersion();
-extern "C" JSC::EncodedJSValue Bun__Process__getCwdForCache(JSC::JSGlobalObject*, const void** version);
+extern "C" uint64_t Bun__cwdGeneration();
+extern "C" JSC::EncodedJSValue Bun__Process__getCwdForCache(JSC::JSGlobalObject*, uint64_t* generation);
 
 JSValue getCachedCwd(JSC::JSGlobalObject* globalObject)
 {
@@ -4739,17 +4739,17 @@ JSValue getCachedCwd(JSC::JSGlobalObject* globalObject)
 
     // https://github.com/nodejs/node/blob/2eff28fb7a93d3f672f80b582f664a7c701569fb/lib/internal/bootstrap/switches/does_own_process_state.js#L142-L146
     auto* processObject = defaultGlobalObject(globalObject)->processObject();
-    if (auto* cached = processObject->cachedCwd(Bun__cwdVersion())) {
+    if (auto* cached = processObject->cachedCwd(Bun__cwdGeneration())) {
         return cached;
     }
 
-    // The record this directory belongs to; none while a chdir on another thread is in flight.
-    const void* version = nullptr;
-    auto cwd = Bun__Process__getCwdForCache(globalObject, &version);
+    // The generation this directory belongs to; zero while a chdir on another thread is in flight.
+    uint64_t generation = 0;
+    auto cwd = Bun__Process__getCwdForCache(globalObject, &generation);
     RETURN_IF_EXCEPTION(scope, {});
     JSString* cwdStr = uncheckedDowncast<JSString>(JSValue::decode(cwd));
-    if (version)
-        processObject->setCachedCwd(vm, cwdStr, version);
+    if (generation)
+        processObject->setCachedCwd(vm, cwdStr, generation);
     RELEASE_AND_RETURN(scope, cwdStr);
 }
 
@@ -4758,11 +4758,10 @@ extern "C" EncodedJSValue Process__getCachedCwd(JSC::JSGlobalObject* globalObjec
     return JSValue::encode(getCachedCwd(globalObject));
 }
 
-// The record process.cwd() has a string cached for, if it is the current one.
-extern "C" const void* Process__cachedCwdVersion(JSC::JSGlobalObject* globalObject)
+// Whether process.cwd() has a string cached for the current working directory.
+extern "C" bool Process__hasCachedCwd(JSC::JSGlobalObject* globalObject)
 {
-    const void* version = Bun__cwdVersion();
-    return defaultGlobalObject(globalObject)->processObject()->cachedCwd(version) ? version : nullptr;
+    return defaultGlobalObject(globalObject)->processObject()->cachedCwd(Bun__cwdGeneration());
 }
 
 JSC_DEFINE_HOST_FUNCTION(Process_functionCwd, (JSC::JSGlobalObject * globalObject, JSC::CallFrame* callFrame))

@@ -1660,7 +1660,7 @@ impl<'a> Printer<'a> {
 
         let lockfile_path: &ZStr = if !bun_paths::is_absolute(path) {
             resolve_path::join_abs_string_buf_z::<platform::Auto>(
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
                 &mut lockfile_path_buf1.0,
                 &[path],
             )
@@ -1753,7 +1753,7 @@ impl<'a> Printer<'a> {
         // Erase to raw so the `entries_mutex` reborrow below doesn't conflict
         // with the `&mut self` borrow `read_directory` took.
         let entries_option: *const Fs::EntriesOption =
-            fs.fs.read_directory(top_level_dir, None, 0, true)?;
+            fs.fs.read_directory(&top_level_dir, None, 0, true)?;
         // Copy the listing's basenames out under `entries_mutex`; `.data` must
         // only be probed while the lock is held.
         let entries = {

@@ -193,7 +193,7 @@ pub fn generate_code_for_file_in_chunk_js<'r, 'src>(
                 let new_path = bun_core::handle_oom(generic_path_with_pretty_initialized(
                     &source_ref.path,
                     c.options.target,
-                    top_level_dir,
+                    &top_level_dir,
                     arena,
                 ));
                 source_storage = bun_ast::Source {

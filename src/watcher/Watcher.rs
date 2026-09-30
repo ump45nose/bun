@@ -111,7 +111,7 @@ pub struct Watcher {
     /// by `start`/`shutdown` on the main thread. The actual `ThreadId` value
     /// was never read — only `is_some()`/`is_none()` — so this is a `bool`.
     pub(crate) watchloop_handle: bun_core::AtomicCell<bool>,
-    pub(crate) cwd: &'static [u8],
+    pub(crate) cwd: bun_core::cwd::Cwd,
     pub(crate) thread: Option<std::thread::JoinHandle<()>>,
     /// Main thread clears this in `shutdown`; watcher thread polls it in
     /// `watch_loop` and the platform `watch_loop_cycle`.
@@ -156,7 +156,7 @@ impl Watcher {
     /// actually start the watcher thread.
     ///
     /// ```ignore
-    /// let watcher = Watcher::init(instance_of_t, fs)?;
+    /// let watcher = Watcher::init(instance_of_t)?;
     /// // on error: watcher.shutdown(false);
     /// watcher.start()?;
     ///
@@ -166,10 +166,7 @@ impl Watcher {
     /// // To integrate a started watcher into bundle_v2:
     /// bundle_v2.bun_watcher = watcher;
     /// ```
-    pub fn init<T: WatcherContext>(
-        ctx: *mut T,
-        top_level_dir: &'static [u8],
-    ) -> Result<Box<Watcher>, crate::Error> {
+    pub fn init<T: WatcherContext>(ctx: *mut T) -> Result<Box<Watcher>, crate::Error> {
         fn on_file_update_wrapped<T: WatcherContext>(
             ctx_opaque: *mut (),
             events: &mut [WatchEvent],
@@ -186,14 +183,15 @@ impl Watcher {
             unsafe { (*ctx_opaque.cast::<T>()).on_watch_error(err) }
         }
 
+        let cwd = bun_core::cwd::get();
         let this = Box::new(Watcher {
             watchlist: WatchList::default(),
             mutex: Mutex::default(),
-            cwd: top_level_dir,
             ctx: ctx.cast::<()>(),
             on_file_update: on_file_update_wrapped::<T>,
             on_error: on_error_wrapped::<T>,
-            platform: Platform::new(top_level_dir)?,
+            platform: Platform::new(&cwd)?,
+            cwd,
             watch_events: vec![WatchEvent::default(); MAX_COUNT].into_boxed_slice(),
             changed_filepaths: [const { None }; MAX_COUNT],
             watchloop_handle: bun_core::AtomicCell::new(false),
@@ -754,7 +752,7 @@ impl Watcher {
             self.cwd.len() + 1
         };
         let display_path =
-            if file_path.len() > cwd_len_with_slash && file_path.starts_with(self.cwd) {
+            if file_path.len() > cwd_len_with_slash && file_path.starts_with(&self.cwd) {
                 &file_path[cwd_len_with_slash..]
             } else {
                 file_path
@@ -774,7 +772,7 @@ impl Watcher {
 
     #[inline]
     fn top_level_dir(&self) -> &[u8] {
-        self.cwd
+        &self.cwd
     }
 
     pub fn add_directory<const CLONE_FILE_PATH: bool>(

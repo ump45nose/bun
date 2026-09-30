@@ -24,6 +24,7 @@ pub(crate) fn view(
     json_output: bool,
 ) -> Result<(), crate::Error> {
     let bump = Bump::new();
+    let cwd;
     let (name, mut version) = dependency::split_name_and_version_or_latest('brk: {
         // Extremely best effort.
         if spec_ == b"." || spec_ == b"" {
@@ -70,7 +71,8 @@ pub(crate) fn view(
                 }
             }
 
-            break 'brk bun_paths::basename(bun_core::cwd::get());
+            cwd = bun_core::cwd::get();
+            break 'brk bun_paths::basename(&cwd);
         }
 
         break 'brk spec_;

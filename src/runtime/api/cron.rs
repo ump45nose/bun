@@ -2182,7 +2182,7 @@ fn spawn_cmd_prepare<T: SpawnCmdTarget>(
         stderr: spawn::Stdio::Buffer(stderr_pipe_ptr),
         #[cfg(not(windows))]
         stderr: spawn::Stdio::Ignore,
-        cwd: cwd.into(),
+        cwd: cwd.as_bytes().into(),
         argv0: resolved_argv0,
         #[cfg(windows)]
         windows: spawn::WindowsOptions {

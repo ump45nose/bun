@@ -1214,7 +1214,7 @@ where
 
         let bb = DevErrorPage {
             message,
-            cwd: bun_core::cwd::get(),
+            cwd: &bun_core::cwd::get(),
             exceptions,
             log: Some(log),
         }
@@ -3047,7 +3047,7 @@ where
 
         let bb = DevErrorPage {
             message: b"Stream error during server-side rendering",
-            cwd: bun_core::cwd::get(),
+            cwd: &bun_core::cwd::get(),
             exceptions: &exception_list,
             log: None,
         }

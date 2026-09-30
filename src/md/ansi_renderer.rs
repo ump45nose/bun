@@ -2702,7 +2702,14 @@ fn resolve_local_image_path(src: &[u8], base_dir: Option<&[u8]>) -> Option<Box<[
     // Prefer the markdown file's directory when provided; otherwise fall
     // back to cwd so `Bun.markdown.ansi()` callers without a source path
     // still work.
-    let base: &[u8] = base_dir.unwrap_or_else(|| bun_core::cwd::get());
+    let cwd;
+    let base: &[u8] = match base_dir {
+        Some(base_dir) => base_dir,
+        None => {
+            cwd = bun_core::cwd::get();
+            &cwd
+        }
+    };
     let joined =
         bun_paths::resolve_path::join_abs_string::<bun_paths::platform::Auto>(base, &[&decoded]);
     let abs = Box::<[u8]>::from(joined);

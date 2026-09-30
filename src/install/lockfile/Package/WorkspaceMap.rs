@@ -368,7 +368,7 @@ impl WorkspaceMap {
                                 "{} reading package.json for workspace package \"{}\" from \"{}\"",
                                 err.name(),
                                 BStr::new(input_path),
-                                BStr::new(bun_core::cwd::get()),
+                                BStr::new(&bun_core::cwd::get()),
                             ),
                         );
                     }
@@ -426,9 +426,11 @@ impl WorkspaceMap {
                     ))
                 };
 
+                let process_cwd;
                 let mut cwd = resolve_path::dirname::<path::platform::Auto>(source.path.text);
                 if cwd.is_empty() {
-                    cwd = bun_core::cwd::get();
+                    process_cwd = bun_core::cwd::get();
+                    cwd = &process_cwd;
                 }
                 // GlobWalker::init_with_cwd is now an associated constructor
                 // returning `Result<Maybe<Self>>`; arena param dropped (heap-backed),

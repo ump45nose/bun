@@ -1977,7 +1977,7 @@ impl<'a> PackageInstall<'a> {
                 //     1.45 ± 0.02 times faster than bun-1.1.2 install --ignore-scripts
                 //
                 let absolute_path = path::resolve_path::join_abs_string::<path::platform::Auto>(
-                    bun_core::cwd::get(),
+                    &bun_core::cwd::get(),
                     &[&self.node_modules.path, temp_path.as_bytes()],
                 );
                 let task = bun_core::heap::into_raw(Box::new(UninstallTask {

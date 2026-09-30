@@ -614,7 +614,7 @@ Full documentation is available at <magenta>https://bun.com/docs/cli/run<r>
 
         let top_level_dir = bun_core::cwd::get();
         let root_dir_info: bun_resolver::DirInfoRef =
-            match this_transpiler.resolver.read_dir_info(top_level_dir) {
+            match this_transpiler.resolver.read_dir_info(&top_level_dir) {
                 Err(err) => {
                     if !opts.log_errors {
                         return Err(crate::Error::CouldntReadCurrentDirectory);
@@ -628,7 +628,7 @@ Full documentation is available at <magenta>https://bun.com/docs/cli/run<r>
                         "<r><red>error<r><d>:<r> <b>{}<r> loading directory {}",
                         bstr::BStr::new(err.name()),
                         bun_core::fmt::QuotedFormatter {
-                            text: top_level_dir
+                            text: &top_level_dir
                         },
                     );
                     Output::flush();
@@ -675,7 +675,7 @@ Full documentation is available at <magenta>https://bun.com/docs/cli/run<r>
 
         env_loader
             .map
-            .put_default(b"npm_config_local_prefix", top_level_dir)
+            .put_default(b"npm_config_local_prefix", &top_level_dir)
             .expect("unreachable");
 
         // Propagate --no-orphans / [run] noOrphans to the script's env so any
@@ -1021,7 +1021,7 @@ Full documentation is available at <magenta>https://bun.com/docs/cli/run<r>
             // entry_path must end with /[eval] for the transpiler to use eval_source
             let cwd_bytes = bun_core::cwd::get();
             let mut eval_path: Vec<u8> = Vec::with_capacity(cwd_bytes.len() + EVAL_TRIGGER.len());
-            eval_path.extend_from_slice(cwd_bytes);
+            eval_path.extend_from_slice(&cwd_bytes);
             eval_path.extend_from_slice(EVAL_TRIGGER);
             let heap_entry: &'static [u8] = runner_arena().alloc_slice_copy(&eval_path);
 
@@ -1404,8 +1404,10 @@ impl Run<'_> {
             _ => {}
         }
 
+        let cwd;
         if entry == b"." {
-            entry = bun_core::cwd::get();
+            cwd = bun_core::cwd::get();
+            entry = &cwd;
         }
 
         match vm.load_entry_point(entry) {
@@ -2478,7 +2480,7 @@ impl RunCommand {
             RUN_LOG,
             "Try resolve `{}` in `{}`",
             bstr::BStr::new(target_name),
-            bstr::BStr::new(top_level_dir),
+            bstr::BStr::new(&top_level_dir),
         );
         // Temporarily honor `--preserve-symlinks-main` / NODE_PRESERVE_SYMLINKS_MAIN
         // for this one resolve.
@@ -2490,7 +2492,7 @@ impl RunCommand {
                         .get()
                         .unwrap_or(false);
             let resolved = match this_transpiler.resolver.resolve(
-                top_level_dir,
+                &top_level_dir,
                 target_name,
                 bun_ast::ImportKind::EntryPointRun,
             ) {
@@ -2499,7 +2501,7 @@ impl RunCommand {
                     // Retry with explicit `./` prefix.
                     let prefixed: Vec<u8> = [b"./".as_slice(), target_name].concat();
                     this_transpiler.resolver.resolve(
-                        top_level_dir,
+                        &top_level_dir,
                         &prefixed,
                         bun_ast::ImportKind::EntryPointRun,
                     )
@@ -2565,7 +2567,7 @@ impl RunCommand {
             buf[..root.len()].copy_from_slice(root);
             let cwd_len = strings::convert_utf8_to_utf16_in_buffer(
                 &mut buf[root.len()..],
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
             )
             .len();
             let mut ptr = root.len() + cwd_len;
@@ -2604,7 +2606,7 @@ impl RunCommand {
             if !path_for_which.is_empty() {
                 let mut path_buf = bun_paths::path_buffer_pool::get();
                 if let Some(destination) =
-                    which(&mut path_buf, path_for_which, top_level_dir, target_name)
+                    which(&mut path_buf, path_for_which, &top_level_dir, target_name)
                 {
                     let out = destination.as_bytes();
                     let stored = fs.dirname_store.append_slice(out)?;
@@ -2613,7 +2615,7 @@ impl RunCommand {
                         ctx,
                         stored,
                         destination,
-                        top_level_dir,
+                        &top_level_dir,
                         env_loader,
                         &passthrough,
                         Some(target_name),
@@ -2718,7 +2720,7 @@ impl RunCommand {
         } else {
             // `..foo` / `~foo` — resolve against cwd via joinAbsStringBuf.
             let joined = paths::resolve_path::join_abs_string_buf::<paths::platform::Auto>(
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
                 &mut script_name_buf.0,
                 &[target],
             );
@@ -2803,7 +2805,7 @@ impl RunCommand {
         let mut entry_point_buf = [0u8; MAX_PATH_BYTES + STDIN_TRIGGER.len()];
         let cwd_bytes = bun_core::cwd::get();
         let cwd_len = cwd_bytes.len();
-        entry_point_buf[..cwd_len].copy_from_slice(cwd_bytes);
+        entry_point_buf[..cwd_len].copy_from_slice(&cwd_bytes);
         entry_point_buf[cwd_len..cwd_len + STDIN_TRIGGER.len()].copy_from_slice(STDIN_TRIGGER);
         let entry_path = &entry_point_buf[..cwd_len + STDIN_TRIGGER.len()];
 
@@ -2863,7 +2865,7 @@ impl RunCommand {
         let mut entry_point_buf = [0u8; MAX_PATH_BYTES + EVAL_TRIGGER.len()];
         let cwd_bytes = bun_core::cwd::get();
         let cwd_len = cwd_bytes.len();
-        entry_point_buf[..cwd_len].copy_from_slice(cwd_bytes);
+        entry_point_buf[..cwd_len].copy_from_slice(&cwd_bytes);
         entry_point_buf[cwd_len..cwd_len + EVAL_TRIGGER.len()].copy_from_slice(EVAL_TRIGGER);
         let entry: Box<[u8]> = entry_point_buf[..cwd_len + EVAL_TRIGGER.len()]
             .to_vec()
@@ -2896,7 +2898,7 @@ impl RunCommand {
             let mut entry_point_buf = [0u8; MAX_PATH_BYTES + EVAL_TRIGGER.len()];
             let cwd_bytes = bun_core::cwd::get();
             let cwd_len = cwd_bytes.len();
-            entry_point_buf[..cwd_len].copy_from_slice(cwd_bytes);
+            entry_point_buf[..cwd_len].copy_from_slice(&cwd_bytes);
             entry_point_buf[cwd_len..cwd_len + EVAL_TRIGGER.len()].copy_from_slice(EVAL_TRIGGER);
             let entry: Box<[u8]> = entry_point_buf[..cwd_len + EVAL_TRIGGER.len()]
                 .to_vec()
@@ -2924,7 +2926,7 @@ impl RunCommand {
         } else {
             let mut out_buf = bun_paths::path_buffer_pool::get();
             let joined = paths::resolve_path::join_abs_string_buf::<paths::platform::Loose>(
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
                 &mut out_buf.0,
                 &[&filename],
             );
@@ -3378,7 +3380,7 @@ impl RunCommand {
             path
         } else {
             paths::resolve_path::join_abs_string_buf::<paths::platform::Auto>(
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
                 &mut base_buf.0,
                 &[path],
             )
@@ -3462,7 +3464,7 @@ impl RunCommand {
         let top_level_dir = bun_core::cwd::get();
         let Some(root_dir_info) = this_transpiler
             .resolver
-            .read_dir_info(top_level_dir)
+            .read_dir_info(&top_level_dir)
             .ok()
             .flatten()
         else {
@@ -3571,7 +3573,7 @@ impl RunCommand {
         if FILTER == Filter::AllPlusBunJs || FILTER == Filter::BunJs {
             if let Some(dir_info) = this_transpiler
                 .resolver
-                .read_dir_info(top_level_dir)
+                .read_dir_info(&top_level_dir)
                 .ok()
                 .flatten()
             {

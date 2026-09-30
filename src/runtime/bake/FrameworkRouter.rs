@@ -1780,7 +1780,7 @@ impl JSFrameworkRouter {
         let abs_root: Box<[u8]> = strings::without_trailing_slash(paths::resolve_path::join_abs::<
             paths::platform::Auto,
         >(
-            bun_core::cwd::get(),
+            &bun_core::cwd::get(),
             root.slice(),
         ))
         .into();

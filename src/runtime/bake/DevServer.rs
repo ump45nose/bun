@@ -595,7 +595,7 @@ pub(crate) fn init(options: Options) -> JsResult<Box<DevServer>> {
     // not dereference it until `start()` spawns the watcher thread, by which point
     // every `DevServer` field is initialized (`assume_init` below precedes
     // `bun_watcher.start()`).
-    let bun_watcher = match Watcher::init::<DevServer>(p, bun_core::cwd::get()) {
+    let bun_watcher = match Watcher::init::<DevServer>(p) {
         Ok(w) => w,
         Err(err) => {
             return Err(global.throw_error(

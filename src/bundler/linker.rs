@@ -613,7 +613,7 @@ impl Linker {
 
                     let top_level_dir = bun_core::cwd::get();
                     let mut base: &[u8] =
-                        bun_paths::resolve_path::relative(top_level_dir, source_path);
+                        bun_paths::resolve_path::relative(&top_level_dir, source_path);
                     if let Some(dot) = strings::last_index_of_char(base, b'.') {
                         base = &base[0..dot];
                     }
@@ -647,7 +647,7 @@ impl Linker {
         let mut hash_key = path.text;
 
         // Shorter hash key is faster to hash
-        if strings::starts_with(path.text, top_level_dir) {
+        if strings::starts_with(path.text, &top_level_dir) {
             hash_key = &path.text[top_level_dir.len()..];
         }
 

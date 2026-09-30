@@ -57,7 +57,7 @@ impl ExecCommand {
         // sound for the single CLI dispatch thread.
         let env = unsafe { &mut *bundle.env };
         let mini = bun_event_loop::MiniEventLoop::init_global(Some(env));
-        let parts: [&[u8]; 2] = [cwd, b"[eval]"];
+        let parts: [&[u8]; 2] = [&cwd, b"[eval]"];
         let script_path = bun_paths::resolve_path::join::<bun_paths::platform::Auto>(&parts);
 
         // SAFETY: `init_global` returns the thread-local singleton raw pointer;

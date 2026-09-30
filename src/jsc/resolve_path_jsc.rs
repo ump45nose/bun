@@ -11,7 +11,7 @@ extern "C" fn ResolvePath__joinAbsStringBufCurrentPlatformBunString(
 ) -> BunString {
     let str = input.to_utf8();
 
-    let cwd: &[u8] = bun_core::cwd::get();
+    let cwd: &[u8] = &bun_core::cwd::get();
 
     // The input is user-controlled and may be arbitrarily long. The
     // threadlocal `join_buf` is only 4096 bytes, so allocate a buffer sized

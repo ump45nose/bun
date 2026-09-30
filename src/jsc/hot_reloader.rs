@@ -713,7 +713,7 @@ where
             _event_loop: PhantomData,
         }));
 
-        let watcher = match Watcher::init(reloader, bun_core::cwd::get()) {
+        let watcher = match Watcher::init(reloader) {
             Ok(w) => w,
             Err(err) => {
                 bun_core::handle_error_return_trace(&err);
@@ -874,7 +874,7 @@ where
                         Self::debug(format_args!(
                             "File changed: {}",
                             bstr::BStr::new(bun_paths::resolve_path::relative(
-                                bun_core::cwd::get(),
+                                &bun_core::cwd::get(),
                                 file_path
                             ))
                         ));
@@ -1223,7 +1223,7 @@ where
                                         Self::debug(format_args!(
                                             "File change: {}",
                                             bstr::BStr::new(bun_paths::resolve_path::relative(
-                                                bun_core::cwd::get(),
+                                                &bun_core::cwd::get(),
                                                 abs_path,
                                             ))
                                         ));
@@ -1236,7 +1236,7 @@ where
                             Self::debug(format_args!(
                                 "Dir change: {} (affecting {})",
                                 bstr::BStr::new(bun_paths::resolve_path::relative(
-                                    bun_core::cwd::get(),
+                                    &bun_core::cwd::get(),
                                     file_path
                                 )),
                                 affected_len

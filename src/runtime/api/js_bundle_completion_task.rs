@@ -246,7 +246,7 @@ fn executable_path(config: &JSBundlerConfig, compile: &CompileOptions) -> Box<[u
     let outfile_slice = &compile.outfile.list;
     let joined: &[u8] = if !outdir_slice.is_empty() {
         join_abs_string_buf::<platform::Auto>(
-            top_level_dir,
+            &top_level_dir,
             &mut outbuf[..],
             &[outdir_slice, outfile_slice],
         )
@@ -254,7 +254,7 @@ fn executable_path(config: &JSBundlerConfig, compile: &CompileOptions) -> Box<[u
         outfile_slice
     } else {
         // For relative paths, ensure we make them absolute relative to the current working directory
-        join_abs_string_buf::<platform::Auto>(top_level_dir, &mut outbuf[..], &[outfile_slice])
+        join_abs_string_buf::<platform::Auto>(&top_level_dir, &mut outbuf[..], &[outfile_slice])
     };
     if compile.compile_target.os == OperatingSystem::Windows && !joined.ends_with(b".exe") {
         let mut v = Vec::with_capacity(joined.len() + 4);
@@ -773,7 +773,7 @@ impl JSBundleCompletionTask {
                             ))
                         } else {
                             Box::from(join_abs_string::<platform::Auto>(
-                                top_level_dir,
+                                &top_level_dir,
                                 &[&dir, &outdir, &output_file.dest_path],
                             ))
                         }

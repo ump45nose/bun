@@ -421,7 +421,7 @@ pub fn select_lockfile_workspaces(
                 _ => b".",
             };
             strings::without_trailing_slash(join_abs_string_buf::<platform::Posix>(
-                top_level_dir,
+                &top_level_dir,
                 &mut path_buf.0,
                 &[rel],
             ))

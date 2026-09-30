@@ -824,10 +824,10 @@ pub fn update_package_json_and_install_and_cli(
     }
 
     if subcommand == Subcommand::Update {
-        crate::update_scope::expand_positionals(manager, original_cwd, update_groups);
+        crate::update_scope::expand_positionals(manager, &original_cwd, update_groups);
     }
 
-    update_package_json_and_install_with_manager(manager, ctx, original_cwd)?;
+    update_package_json_and_install_with_manager(manager, ctx, &original_cwd)?;
 
     if matches!(manager.options.patch_features, PatchFeatures::Patch) {
         patch_package::prepare_patch(manager)?;
@@ -870,7 +870,7 @@ pub fn update_package_json_and_install_and_cli(
                         // have a binary called "esbuild" in /tmp/TeST and you
                         // install esbuild, it will not detect that case if we naively
                         // just checked for "esbuild" in $PATH where "$PATH" is /tmp/test
-                        bun_which::which(&mut path_buf, path_env, bun_core::cwd::get(), basename)
+                        bun_which::which(&mut path_buf, path_env, &bun_core::cwd::get(), basename)
                             .is_none()
                     } else {
                         true

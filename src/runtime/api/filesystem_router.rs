@@ -121,7 +121,7 @@ impl FileSystemRouter {
         let vm = global_this.bun_vm().as_mut();
 
         let mut out_buf = [0u8; MAX_PATH_BYTES * 2];
-        let mut root_dir_path = Utf8Bytes::Borrowed(bun_core::cwd::get());
+        let mut root_dir_path = Utf8Bytes::Borrowed(&bun_core::cwd::get());
         let mut origin_str = Utf8Bytes::EMPTY;
         let mut asset_prefix_slice = Utf8Bytes::EMPTY;
         if let Some(style_val) = argument.get(global_this, "style")? {
@@ -156,7 +156,7 @@ impl FileSystemRouter {
                         Utf8Bytes::Borrowed(path::resolve_path::join_abs_string_buf::<
                             path::platform::Auto,
                         >(
-                            bun_core::cwd::get(), &mut out_buf, &parts
+                            &bun_core::cwd::get(), &mut out_buf, &parts
                         ));
                 }
             }
@@ -901,12 +901,13 @@ impl MatchedRoute {
         } else {
             URL::default()
         };
+        let cwd = bun_core::cwd::get();
         bun_object::get_public_path_with_asset_prefix(
             this.route().file_path,
             if let Some(ref base_dir) = this.base_dir {
                 base_dir.leak()
             } else {
-                bun_core::cwd::get()
+                &cwd
             },
             &origin_url,
             if let Some(ref prefix) = this.asset_prefix {

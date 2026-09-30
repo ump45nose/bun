@@ -360,7 +360,7 @@ impl File {
         let dir = dir.as_fd();
         let mut buf = bun_paths::path_buffer_pool::get();
         let normalized = bun_paths::resolve_path::join_abs_string_buf_z::<bun_paths::platform::Loose>(
-            bun_core::cwd::get(),
+            &bun_core::cwd::get(),
             &mut buf[..],
             &[input_path],
         );

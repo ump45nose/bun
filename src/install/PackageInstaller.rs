@@ -357,7 +357,7 @@ fn abs_node_modules_path(
         &mut rel_buf,
         &mut depth_buf,
     );
-    let mut abs = AbsPath::from(bun_core::cwd::get()).unwrap_or_oom();
+    let mut abs = AbsPath::from(bun_core::cwd::get().as_bytes()).unwrap_or_oom();
     abs.append(rel.as_bytes()).unwrap_or_oom();
     abs
 }

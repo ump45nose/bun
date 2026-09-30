@@ -415,7 +415,7 @@ impl<'a> Transpiler<'a> {
     fn _resolve_entry_point(&mut self, entry_point: &[u8]) -> crate::Result<resolver::Result> {
         let top_level_dir = bun_core::cwd::get();
         let first = match self.resolver.resolve_with_framework(
-            top_level_dir,
+            &top_level_dir,
             entry_point,
             bun_ast::ImportKind::EntryPointBuild,
         ) {
@@ -440,7 +440,7 @@ impl<'a> Transpiler<'a> {
             // `Resolver::resolve` interns the path internally,
             // so the heap buffer can drop after the call.
             if let Ok(r) = self.resolver.resolve(
-                top_level_dir,
+                &top_level_dir,
                 &prefixed,
                 bun_ast::ImportKind::EntryPointBuild,
             ) {
@@ -497,7 +497,7 @@ impl<'a> Transpiler<'a> {
 
                     let buster_name = bun_paths::resolve_path::join_abs_string_buf_z::<
                         bun_paths::platform::Auto,
-                    >(cwd, &mut cache_bust_buf[..], &parts);
+                    >(&cwd, &mut cache_bust_buf[..], &parts);
                     self.resolver.bust_dir_cache(
                         bun_paths::string_paths::without_trailing_slash_windows_path(
                             buster_name.as_bytes(),
@@ -719,7 +719,7 @@ impl<'a> Transpiler<'a> {
         if auto_jsx {
             // Most of the time, this will already be cached
             let top_level_dir = bun_core::cwd::get();
-            if let Ok(Some(root_dir)) = self.resolver.read_dir_info(top_level_dir) {
+            if let Ok(Some(root_dir)) = self.resolver.read_dir_info(&top_level_dir) {
                 if let Some(tsconfig) = root_dir.tsconfig_json() {
                     // If we don't explicitly pass JSX, try to get it from the root tsconfig
                     if self.options.transform_options.jsx.is_none() {
@@ -776,7 +776,7 @@ impl<'a> Transpiler<'a> {
                 // bail out of .env file loading in that case, but process
                 // env vars were already loaded above.
                 let top_level_dir = bun_core::cwd::get();
-                let dir_info = match self.resolver.read_dir_info(top_level_dir) {
+                let dir_info = match self.resolver.read_dir_info(&top_level_dir) {
                     Ok(Some(d)) => d,
                     _ => return Ok(()),
                 };
@@ -2604,7 +2604,7 @@ impl<'a> Transpiler<'a> {
             return crate::linker::dupe(_entry);
         }
 
-        let entry = bun_paths::resolve_path::relative(bun_core::cwd::get(), entry);
+        let entry = bun_paths::resolve_path::relative(&bun_core::cwd::get(), entry);
 
         if !strings::starts_with(entry, b"./") {
             // Entry point paths without a leading "./" are interpreted as package
@@ -2647,7 +2647,7 @@ impl<'a> Transpiler<'a> {
             let _reset = bun_ast::StoreResetGuard::new();
 
             let result = match self.resolver.resolve(
-                top_level_dir,
+                &top_level_dir,
                 entry,
                 bun_ast::ImportKind::EntryPointBuild,
             ) {
@@ -2871,7 +2871,7 @@ impl<'a> Transpiler<'a> {
         let mut file_path = Fs::Path::init(file_path_text);
 
         let top_level_dir = bun_core::cwd::get();
-        let rel = bun_paths::resolve_path::relative(top_level_dir, file_path_text);
+        let rel = bun_paths::resolve_path::relative(&top_level_dir, file_path_text);
         file_path.pretty = crate::linker::dupe(rel);
 
         let mut output_file = options::OutputFile::zero_value();

@@ -893,18 +893,18 @@ fn cwd_changed() -> Maybe<()> {
             Ok(())
         }
         Err(err) => {
-            let _ = chdir_os(bun_core::cwd::get_z());
+            let _ = chdir_os(bun_core::cwd::get().as_zstr());
             Err(err)
         }
     }
 }
 
-/// [`bun_core::cwd::get_z`], or the error `getcwd` gave at startup if the
+/// [`bun_core::cwd::get`], or the error `getcwd` gave at startup if the
 /// process was started from a directory the OS cannot name and has not moved
 /// since — for operations that would otherwise act on the stand-in directory.
-pub fn require_cwd() -> Maybe<&'static ZStr> {
+pub fn require_cwd() -> Maybe<bun_core::cwd::Cwd> {
     let Some(os_error) = bun_core::cwd::unread_os_error() else {
-        return Ok(bun_core::cwd::get_z());
+        return Ok(bun_core::cwd::get());
     };
     #[cfg(not(windows))]
     return Err(Error::from_code_int(os_error as _, Tag::getcwd));

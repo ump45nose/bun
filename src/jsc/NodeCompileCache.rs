@@ -407,7 +407,7 @@ fn enable_with_dir(dir: &[u8], portable: bool) -> EnableResult {
         dir
     } else {
         bun_paths::resolve_path::join_abs_string_buf_z::<bun_paths::resolve_path::platform::Auto>(
-            bun_core::cwd::get(),
+            &bun_core::cwd::get(),
             &mut abs_buf[..],
             &[dir],
         )

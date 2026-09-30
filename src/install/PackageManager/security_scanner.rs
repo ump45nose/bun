@@ -820,7 +820,7 @@ fn attempt_security_scan_with_retry(
         );
         bun_core::pretty_errorln!(
             "<d>[SecurityProvider]<r> top_level_dir: '{}'",
-            BStr::new(bun_core::cwd::get())
+            BStr::new(&bun_core::cwd::get())
         );
         bun_core::pretty_errorln!(
             "<d>[SecurityProvider]<r> original_cwd: '{}'",
@@ -1078,7 +1078,7 @@ impl<'a> SecurityScanSubprocess<'a> {
             stdout: Stdio::Inherit,
             stderr: Stdio::Inherit,
             stdin: Stdio::Inherit,
-            cwd: Box::from(bun_core::cwd::get()),
+            cwd: Box::from(bun_core::cwd::get().as_bytes()),
             extra_fds,
             ..Default::default()
         };
@@ -1186,7 +1186,7 @@ impl<'a> SecurityScanSubprocess<'a> {
             stdout: Stdio::Inherit,
             stderr: Stdio::Inherit,
             stdin: Stdio::Inherit,
-            cwd: Box::from(bun_core::cwd::get()),
+            cwd: Box::from(bun_core::cwd::get().as_bytes()),
             extra_fds,
             windows: spawn::WindowsOptions {
                 loop_: EventLoopHandle::from_any(&mut self.manager.event_loop),

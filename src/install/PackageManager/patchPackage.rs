@@ -447,7 +447,7 @@ pub fn do_patch_commit(
             }
         }
 
-        let cwd = bun_core::cwd::get_z();
+        let cwd = bun_core::cwd::get();
         let mut gitbuf = bun_paths::path_buffer_pool::get();
         let git = match bun_which::which(
             &mut gitbuf,
@@ -464,8 +464,13 @@ pub fn do_patch_commit(
             }
         };
         let paths = bun_patch::git_diff_preprocess_paths(old_folder, new_folder);
-        let (opts, _envp_guard) =
-            bun_patch::spawn_opts(&paths[0], &paths[1], cwd, git, &mut manager.event_loop);
+        let (opts, _envp_guard) = bun_patch::spawn_opts(
+            &paths[0],
+            &paths[1],
+            cwd.as_zstr(),
+            git,
+            &mut manager.event_loop,
+        );
 
         let mut spawn_result = match bun_spawn::sync::spawn(&opts) {
             Err(e) => {
@@ -961,14 +966,14 @@ pub fn prepare_patch(manager: &mut PackageManager) -> Result<(), crate::Error> {
             bstr::BStr::new(pkg_name),
             bstr::BStr::new(resolve_path::join_string_buf::<platform::Posix>(
                 &mut bufn[..],
-                &[bun_core::cwd::get(), module_folder]
+                &[&bun_core::cwd::get(), module_folder]
             )),
         );
         bun_core::pretty!(
             "\nOnce you're done with your changes, run:\n\n  <cyan>bun patch --commit '{}'<r>\n",
             bstr::BStr::new(resolve_path::join_string_buf::<platform::Posix>(
                 &mut bufn[..],
-                &[bun_core::cwd::get(), module_folder]
+                &[&bun_core::cwd::get(), module_folder]
             )),
         );
     } else {

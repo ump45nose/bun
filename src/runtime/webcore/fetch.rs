@@ -95,7 +95,7 @@ fn parse_unix(global: &JSGlobalObject, value: JSValue) -> JsResult<Option<Box<[u
         return Ok(None);
     }
     Ok(Some(absolute_unix_socket_path(
-        bun_core::cwd::get(),
+        &bun_core::cwd::get(),
         value.to_bun_string(global)?.to_owned_slice(),
     )))
 }
@@ -1383,7 +1383,7 @@ fn fetch_impl<const ALLOW_GET_BODY: bool>(
                 let main = global_this.bun_vm().as_mut().main();
                 let fullpath =
                     bun_paths::resolve_path::join_abs_string_buf::<bun_paths::platform::Auto>(
-                        bun_core::cwd::get(),
+                        &bun_core::cwd::get(),
                         &mut path_buf,
                         &[main, b"../", url_path_decoded],
                     );

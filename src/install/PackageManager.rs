@@ -741,7 +741,7 @@ impl PackageManager {
         ctx: Command::Context,
         cli: CommandLineArguments,
         subcommand: Subcommand,
-    ) -> Result<(&'static mut PackageManager, &'static [u8]), Error> {
+    ) -> Result<(&'static mut PackageManager, bun_core::cwd::Cwd), Error> {
         init(ctx, cli, subcommand)
     }
 }
@@ -1081,7 +1081,7 @@ fn configure_env_for_scripts_run(
     let init_cwd_entry = this.env_mut().map.get_or_put_without_value(b"INIT_CWD")?;
     if !init_cwd_entry.found_existing {
         *init_cwd_entry.value_ptr = dot_env::HashTableValue {
-            value: Box::<[u8]>::from(bun_core::cwd::get()),
+            value: Box::<[u8]>::from(bun_core::cwd::get().as_bytes()),
         };
     }
 
@@ -1275,7 +1275,7 @@ fn http_thread_on_init_error(err: http::InitError, opts: &http::http_thread::Ini
     match err {
         http::InitError::LoadCAFile => {
             let mut normalizer = PosixToWinNormalizer::default();
-            let normalized = normalizer.resolve_z(bun_core::cwd::get(), abs_ca_z);
+            let normalized = normalizer.resolve_z(&bun_core::cwd::get(), abs_ca_z);
             if !bun_sys::exists_z(normalized) {
                 Output::err(
                     "HTTPThread",
@@ -1481,7 +1481,7 @@ pub fn init(
     ctx: Command::Context,
     cli: CommandLineArguments,
     subcommand: Subcommand,
-) -> Result<(&'static mut PackageManager, &'static [u8]), Error> {
+) -> Result<(&'static mut PackageManager, bun_core::cwd::Cwd), Error> {
     if cli.global {
         // Non-consuming peek: `ctx.install` is
         // `Option<Box<BunInstall>>` borrowed via `&mut ContextData`; reborrow with
@@ -1495,7 +1495,7 @@ pub fn init(
         bun_sys::fchdir(global_dir)?;
     }
 
-    let original_cwd: &'static [u8] = bun_core::cwd::require()?;
+    let original_cwd = bun_core::cwd::require()?;
     bun_resolver::fs::FileSystem::init();
     let fs = FileSystem::instance();
 
@@ -1517,7 +1517,7 @@ pub fn init(
         &[u8],
         bun_sys::File,
     ) = 'root_package_json_file: {
-        let mut this_cwd: &[u8] = original_cwd;
+        let mut this_cwd: &[u8] = &original_cwd;
         let mut created_package_json = false;
         let child_json: bun_sys::File = 'child: {
             // if we are only doing `bun install` (no args), then we can open as read_only
@@ -1593,14 +1593,14 @@ pub fn init(
                     //
                     // create the package.json instead of returning an error so that
                     // `bun add <pkg>` works in an empty directory.
-                    this_cwd = original_cwd;
+                    this_cwd = &original_cwd;
                     created_package_json = true;
                     break 'child attempt_to_create_package_json_and_open()?;
                 }
             }
             if cli.no_project_ok {
                 // Registry-only commands (`bun pm diff a b`) run fine from any folder: no root file, no workspaces.
-                this_cwd = original_cwd;
+                this_cwd = &original_cwd;
                 no_project = true;
                 break 'child bun_sys::File::from_fd(bun_sys::Fd::INVALID);
             }
@@ -1763,7 +1763,7 @@ pub fn init(
         break 'root_package_json_file (child_cwd, child_cwd, child_json);
     };
 
-    if root_dir != bun_core::cwd::get() {
+    if root_dir != bun_core::cwd::get().as_bytes() {
         bun_sys::chdir(&ZBox::from_bytes(root_dir))?;
     }
     // `loadConfig` was moved down into `bun_bunfig`
@@ -1774,11 +1774,11 @@ pub fn init(
         cli.config,
         ctx,
     )?;
-    let root_package_json_path = package_json_path(bun_core::cwd::get()).into_boxed_slice();
+    let root_package_json_path = package_json_path(&bun_core::cwd::get()).into_boxed_slice();
 
     // Returns the resolver's BSSMap-owned
     // `*EntriesOption` slot.
-    let entries_option = match fs.read_directory(bun_core::cwd::get(), 0, true)? {
+    let entries_option = match fs.read_directory(&bun_core::cwd::get(), 0, true)? {
         fs::EntriesOption::Entries(e) => {
             // SAFETY: the BSSMap singleton owns `*e` for the process
             // lifetime, and `init()` runs single-threaded before any other
@@ -2205,7 +2205,7 @@ pub fn init(
                 let mut path_buf = bun_paths::path_buffer_pool::get();
                 abs_ca_file_name =
                     ZBox::from_bytes(resolve_path::join_abs_string_buf::<platform::Auto>(
-                        original_cwd,
+                        &original_cwd,
                         &mut path_buf,
                         &[options.ca_file_name],
                     ));
@@ -2335,7 +2335,7 @@ fn init_with_runtime_once(
     // leaves `holder::RAW_PTR` null rather than pointing at an uninitialized
     // manager. Returns the resolver's BSSMap-owned `*EntriesOption` slot.
     let fs_instance = FileSystem::instance();
-    let root_dir = match fs_instance.read_directory(bun_core::cwd::get(), 0, true)? {
+    let root_dir = match fs_instance.read_directory(&bun_core::cwd::get(), 0, true)? {
         // SAFETY: the BSSMap singleton owns `*e` for the process lifetime,
         // and runtime init runs once on the main thread before any other access.
         fs::EntriesOption::Entries(e) => unsafe { &mut *std::ptr::from_mut::<fs::DirEntry>(*e) },
@@ -2356,7 +2356,7 @@ fn init_with_runtime_once(
 
     // var progress = Progress{};
     // var node = progress.start(name: []const u8, estimated_total_items: usize)
-    let original_package_json_path = ZBox::from_vec(package_json_path(bun_core::cwd::get()));
+    let original_package_json_path = ZBox::from_vec(package_json_path(&bun_core::cwd::get()));
 
     // SAFETY: manager_ptr points to uninitialized memory; fully initialize
     // field-by-field via `addr_of_mut!((*p).field).write(..)`. See the PERF

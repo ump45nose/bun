@@ -1143,7 +1143,7 @@ impl FSWatcher {
         let cwd = bun_core::cwd::get();
         let joined_buf_len = joined_buf.len();
         let Some(joined) = Path::join_abs_string_buf_checked::<platform::Auto>(
-            cwd,
+            &cwd,
             &mut joined_buf[..joined_buf_len - 1],
             &[slice],
         ) else {

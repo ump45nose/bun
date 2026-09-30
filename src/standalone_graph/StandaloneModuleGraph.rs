@@ -2347,7 +2347,7 @@ pub(crate) fn inject<'a>(
             }
             return Some(Injected::new(
                 cloned_executable_fd,
-                cwd,
+                &cwd,
                 zname,
                 temp_path_buf,
             ));
@@ -2413,7 +2413,7 @@ pub(crate) fn inject<'a>(
             }
             return Some(Injected::new(
                 cloned_executable_fd,
-                cwd,
+                &cwd,
                 zname,
                 temp_path_buf,
             ));
@@ -2476,7 +2476,7 @@ pub(crate) fn inject<'a>(
             }
             return Some(Injected::new(
                 cloned_executable_fd,
-                cwd,
+                &cwd,
                 zname,
                 temp_path_buf,
             ));
@@ -2560,7 +2560,7 @@ pub(crate) fn inject<'a>(
 
             return Some(Injected::new(
                 cloned_executable_fd,
-                cwd,
+                &cwd,
                 zname,
                 temp_path_buf,
             ));
@@ -2907,7 +2907,7 @@ pub fn to_executable(
             outfile
         } else {
             path::resolve_path::join_abs_string::<path::platform::Auto>(
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
                 &[outfile],
             )
         };

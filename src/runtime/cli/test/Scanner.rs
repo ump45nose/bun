@@ -113,7 +113,7 @@ impl<'a> Scanner<'a> {
     pub(crate) fn scan(&mut self, path_literal: &[u8]) -> Result<(), ScanError> {
         let mut scan_dir_buf = bun_paths::path_buffer_pool::get();
         let Some(path) = join_abs_string_buf_checked::<platform::Loose>(
-            bun_core::cwd::get(),
+            &bun_core::cwd::get(),
             &mut scan_dir_buf,
             &[path_literal],
         ) else {
@@ -275,7 +275,7 @@ impl<'a> Scanner<'a> {
         if self.path_ignore_patterns.is_empty() {
             return false;
         }
-        let rel_path = bun_paths::resolve_path::relative(bun_core::cwd::get(), abs_path);
+        let rel_path = bun_paths::resolve_path::relative(&bun_core::cwd::get(), abs_path);
 
         // Build rel_path + '/' once. rel_path is a relative path from the project
         // root; 4096 bytes covers any sane test directory depth (POSIX PATH_MAX).
@@ -339,7 +339,7 @@ impl<'a> Scanner<'a> {
                 if !self.path_ignore_patterns.is_empty() {
                     let parts: [&[u8]; 2] = [entry.dir, entry.base()];
                     let Some(dir_path_len) = join_abs_string_buf_checked::<platform::Loose>(
-                        bun_core::cwd::get(),
+                        &bun_core::cwd::get(),
                         &mut self.open_dir_buf,
                         &parts,
                     )
@@ -375,7 +375,7 @@ impl<'a> Scanner<'a> {
 
                 let parts: [&[u8]; 2] = [entry.dir, entry.base()];
                 let Some(path_len) = join_abs_string_buf_checked::<platform::Loose>(
-                    bun_core::cwd::get(),
+                    &bun_core::cwd::get(),
                     &mut self.open_dir_buf,
                     &parts,
                 )
@@ -385,7 +385,7 @@ impl<'a> Scanner<'a> {
                 let path = &self.open_dir_buf[..path_len];
 
                 if !self.does_absolute_path_match_filter(path) {
-                    let rel_path = bun_paths::resolve_path::relative(bun_core::cwd::get(), path);
+                    let rel_path = bun_paths::resolve_path::relative(&bun_core::cwd::get(), path);
                     if !self.does_path_match_filter(rel_path) {
                         return;
                     }

@@ -112,7 +112,7 @@ fn target_for(manager: &PackageManager, owner: PackageID) -> Option<WorkspaceTar
                 name: Box::from(lockfile.packages.items_name()[owner as usize].slice(buf)),
                 name_hash: Some(lockfile.packages.items_name_hash()[owner as usize]),
                 package_json_path: join_abs_string_buf::<platform::Auto>(
-                    top_level,
+                    &top_level,
                     &mut path_buf.0,
                     &[res.workspace().slice(buf), b"package.json"],
                 )

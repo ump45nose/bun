@@ -746,7 +746,7 @@ unsafe fn load_preloads(vm: *mut VirtualMachine) -> bun_jsc::CrateResult<*mut JS
             // SAFETY: per fn contract.
             let mut result = match unsafe {
                 (*vm).transpiler.resolver.resolve_and_auto_install(
-                    top_level_dir,
+                    &top_level_dir,
                     normalized,
                     ImportKind::Stmt,
                     global_cache,
@@ -3389,7 +3389,7 @@ fn transpile_source_code_inner(
                 let top_level_dir = bun_core::cwd::get();
                 crate::api::bun_object::get_public_path_with_asset_prefix(
                     specifier,
-                    top_level_dir,
+                    &top_level_dir,
                     origin,
                     b"",
                     &mut public_path,

@@ -271,7 +271,7 @@ fn posix_cwd_t<'b, T: PathCharCwd>(
 
 unsafe extern "C" {
     safe fn Process__getCachedCwd(global: &JSGlobalObject) -> JSValue;
-    safe fn Process__cachedCwdVersion(global: &JSGlobalObject) -> *const ();
+    safe fn Process__hasCachedCwd(global: &JSGlobalObject) -> bool;
 }
 
 /// `process.cwd()` through its cache, which is what Node's `path` resolves
@@ -280,9 +280,9 @@ fn get_cwd_t<'b, T: PathCharCwd>(
     global_object: &JSGlobalObject,
     buf: &'b mut [T],
 ) -> JsResult<&'b mut [T]> {
-    // A string is only cached under the record whose bytes it has.
-    if let Some(cwd) = bun_core::cwd::get_at(Process__cachedCwdVersion(global_object)) {
-        return Ok(T::from_utf8(buf, cwd));
+    // A string is only cached while it is what the record holds.
+    if Process__hasCachedCwd(global_object) {
+        return Ok(T::from_utf8(buf, &bun_core::cwd::get()));
     }
     let cwd =
         crate::jsc::call_zero_is_throw(global_object, || Process__getCachedCwd(global_object))?;

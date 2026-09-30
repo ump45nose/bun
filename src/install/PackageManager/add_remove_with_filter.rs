@@ -165,7 +165,7 @@ pub(crate) fn select_targets(
 
     let root_subject: Box<[u8]> =
         strings::without_trailing_slash(join_abs_string_buf::<platform::Posix>(
-            top_level,
+            &top_level,
             &mut path_buf.0,
             &[b"."],
         ))
@@ -185,7 +185,7 @@ pub(crate) fn select_targets(
         let rel: &[u8] = rel;
         let subject: Box<[u8]> =
             strings::without_trailing_slash(join_abs_string_buf::<platform::Posix>(
-                top_level,
+                &top_level,
                 &mut path_buf.0,
                 &[rel],
             ))
@@ -195,7 +195,7 @@ pub(crate) fn select_targets(
                 name: entry.name.clone(),
                 name_hash: Some(bun_semver::string::Builder::string_hash(&entry.name)),
                 package_json_path: join_abs_string_buf::<platform::Auto>(
-                    top_level,
+                    &top_level,
                     &mut package_json_buf.0,
                     &[rel, b"package.json"],
                 )

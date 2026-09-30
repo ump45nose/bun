@@ -293,7 +293,7 @@ impl CreateCommand {
                 .dirname_store
                 .append_slice(bun_paths::resolve_path::join_abs::<
                     bun_paths::platform::Loose,
-                >(bun_core::cwd::get(), dirname))?;
+                >(&bun_core::cwd::get(), dirname))?;
 
         let mut progress = Progress {
             supports_ansi_escape_codes: Output::enable_ansi_colors_stderr(),
@@ -1227,7 +1227,7 @@ impl CreateCommand {
             );
         }
 
-        let rel_destination = bun_paths::resolve_path::relative(bun_core::cwd::get(), destination);
+        let rel_destination = bun_paths::resolve_path::relative(&bun_core::cwd::get(), destination);
         let is_empty_destination = rel_destination.is_empty();
 
         if is_empty_destination {

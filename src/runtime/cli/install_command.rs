@@ -171,7 +171,7 @@ fn install_with_cli(ctx: &mut ContextData, cli: CommandLineArguments) -> Result<
             );
             Output::flush();
         }
-        return update_package_json_and_install_with_manager(manager, &mut *ctx, original_cwd)
+        return update_package_json_and_install_with_manager(manager, &mut *ctx, &original_cwd)
             .map_err(Into::into);
     }
 
@@ -183,7 +183,7 @@ fn install_with_cli(ctx: &mut ContextData, cli: CommandLineArguments) -> Result<
         Output::flush();
     }
 
-    install_with_manager(manager, &mut *ctx, original_cwd)?;
+    install_with_manager(manager, &mut *ctx, &original_cwd)?;
 
     if manager.any_failed_to_install {
         Global::exit(1);

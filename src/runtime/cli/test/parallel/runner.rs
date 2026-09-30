@@ -152,7 +152,7 @@ pub(crate) fn run_as_coordinator(
         reporter,
         files: sorted,
         costs,
-        cwd: bun_core::cwd::get(),
+        cwd: &bun_core::cwd::get(),
         argv,
         envps,
         // Coordinator borrows the workers slice while each Worker holds a raw

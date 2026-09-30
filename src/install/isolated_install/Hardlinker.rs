@@ -62,7 +62,7 @@ impl Hardlinker {
             let mut cwd_buf = bun_paths::w_path_buffer_pool::get();
             let dest_cwd_len = bun_core::strings::convert_utf8_to_utf16_in_buffer(
                 &mut cwd_buf[..],
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
             )
             .len();
 

@@ -343,7 +343,7 @@ fn member_targets(ws: &WorkspaceMembers) -> Vec<WorkspaceTarget> {
                 name: entry.name.clone(),
                 name_hash: Some(bun_semver::string::Builder::string_hash(&entry.name)),
                 package_json_path: join_abs_string_buf::<platform::Auto>(
-                    top_level,
+                    &top_level,
                     &mut buf.0,
                     &[rel, b"package.json"],
                 )

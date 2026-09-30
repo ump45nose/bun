@@ -214,7 +214,7 @@ impl InstallCompletionsCommand {
     pub(crate) fn exec() -> Result<(), crate::Error> {
         let cwd = bun_core::cwd::get();
 
-        let _ = Self::install_bunx_symlink(cwd);
+        let _ = Self::install_bunx_symlink(&cwd);
 
         #[cfg(windows)]
         {
@@ -284,7 +284,7 @@ impl InstallCompletionsCommand {
 
                             if !bun_paths::is_absolute(input) {
                                 completions_dir =
-                                    resolve_path::join_abs::<platform::Auto>(cwd, input);
+                                    resolve_path::join_abs::<platform::Auto>(&cwd, input);
                             } else {
                                 completions_dir = input;
                             }
@@ -319,7 +319,7 @@ impl InstallCompletionsCommand {
                         if let Some(config_dir) = env_var::XDG_CONFIG_HOME.get() {
                             let paths: [&[u8]; 2] = [config_dir, b"./fish/completions"];
                             completions_dir =
-                                resolve_path::join_abs_string::<platform::Auto>(cwd, &paths);
+                                resolve_path::join_abs_string::<platform::Auto>(&cwd, &paths);
                             if let Ok(d) = bun_sys::open_dir_absolute(completions_dir) {
                                 break 'found d;
                             }
@@ -328,7 +328,7 @@ impl InstallCompletionsCommand {
                         if let Some(data_dir) = env_var::XDG_DATA_HOME.get() {
                             let paths: [&[u8]; 2] = [data_dir, b"./fish/completions"];
                             completions_dir =
-                                resolve_path::join_abs_string::<platform::Auto>(cwd, &paths);
+                                resolve_path::join_abs_string::<platform::Auto>(&cwd, &paths);
                             if let Ok(d) = bun_sys::open_dir_absolute(completions_dir) {
                                 break 'found d;
                             }
@@ -337,7 +337,7 @@ impl InstallCompletionsCommand {
                         if let Some(home_dir) = env_var::HOME.get() {
                             let paths: [&[u8]; 2] = [home_dir, b"./.config/fish/completions"];
                             completions_dir =
-                                resolve_path::join_abs_string::<platform::Auto>(cwd, &paths);
+                                resolve_path::join_abs_string::<platform::Auto>(&cwd, &paths);
                             if let Ok(d) = bun_sys::open_dir_absolute(completions_dir) {
                                 break 'found d;
                             }
@@ -387,7 +387,7 @@ impl InstallCompletionsCommand {
                         if let Some(data_dir) = env_var::XDG_DATA_HOME.get() {
                             let paths: [&[u8]; 2] = [data_dir, b"./zsh-completions"];
                             completions_dir =
-                                resolve_path::join_abs_string::<platform::Auto>(cwd, &paths);
+                                resolve_path::join_abs_string::<platform::Auto>(&cwd, &paths);
                             if let Ok(d) = bun_sys::open_dir_absolute(completions_dir) {
                                 break 'found d;
                             }
@@ -404,7 +404,7 @@ impl InstallCompletionsCommand {
                             {
                                 let paths: [&[u8]; 2] = [home_dir, b"./.oh-my-zsh/completions"];
                                 completions_dir =
-                                    resolve_path::join_abs_string::<platform::Auto>(cwd, &paths);
+                                    resolve_path::join_abs_string::<platform::Auto>(&cwd, &paths);
                                 if let Ok(d) = bun_sys::open_dir_absolute(completions_dir) {
                                     break 'found d;
                                 }
@@ -413,7 +413,7 @@ impl InstallCompletionsCommand {
                             {
                                 let paths: [&[u8]; 2] = [home_dir, b"./.bun"];
                                 completions_dir =
-                                    resolve_path::join_abs_string::<platform::Auto>(cwd, &paths);
+                                    resolve_path::join_abs_string::<platform::Auto>(&cwd, &paths);
                                 if let Ok(d) = bun_sys::open_dir_absolute(completions_dir) {
                                     break 'found d;
                                 }
@@ -438,7 +438,7 @@ impl InstallCompletionsCommand {
                         if let Some(data_dir) = env_var::XDG_DATA_HOME.get() {
                             let paths: [&[u8]; 2] = [data_dir, b"./bash-completion/completions"];
                             completions_dir =
-                                resolve_path::join_abs_string::<platform::Auto>(cwd, &paths);
+                                resolve_path::join_abs_string::<platform::Auto>(&cwd, &paths);
                             if let Ok(d) = bun_sys::open_dir_absolute(completions_dir) {
                                 break 'found d;
                             }
@@ -447,7 +447,7 @@ impl InstallCompletionsCommand {
                         if let Some(config_dir) = env_var::XDG_CONFIG_HOME.get() {
                             let paths: [&[u8]; 2] = [config_dir, b"./bash-completion/completions"];
                             completions_dir =
-                                resolve_path::join_abs_string::<platform::Auto>(cwd, &paths);
+                                resolve_path::join_abs_string::<platform::Auto>(&cwd, &paths);
                             if let Ok(d) = bun_sys::open_dir_absolute(completions_dir) {
                                 break 'found d;
                             }
@@ -458,7 +458,7 @@ impl InstallCompletionsCommand {
                                 let paths: [&[u8]; 2] =
                                     [home_dir, b"./.oh-my-bash/custom/completions"];
                                 completions_dir =
-                                    resolve_path::join_abs_string::<platform::Auto>(cwd, &paths);
+                                    resolve_path::join_abs_string::<platform::Auto>(&cwd, &paths);
                                 if let Ok(d) = bun_sys::open_dir_absolute(completions_dir) {
                                     break 'found d;
                                 }
@@ -466,7 +466,7 @@ impl InstallCompletionsCommand {
                             {
                                 let paths: [&[u8]; 2] = [home_dir, b"./.bash_completion.d"];
                                 completions_dir =
-                                    resolve_path::join_abs_string::<platform::Auto>(cwd, &paths);
+                                    resolve_path::join_abs_string::<platform::Auto>(&cwd, &paths);
                                 if let Ok(d) = bun_sys::open_dir_absolute(completions_dir) {
                                     break 'found d;
                                 }

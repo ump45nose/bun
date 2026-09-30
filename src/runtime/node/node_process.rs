@@ -454,33 +454,33 @@ mod _impl {
     // shim instead of `#[bun_jsc::host_fn]` (caller is not a JSHostFunction).
     #[unsafe(no_mangle)]
     extern "C" fn Bun__Process__getCwd(global_object: &JSGlobalObject) -> JSValue {
-        let mut version = core::ptr::null();
-        bun_jsc::to_js_host_fn_result(global_object, get_cwd(global_object, &mut version))
+        let mut generation = 0;
+        bun_jsc::to_js_host_fn_result(global_object, get_cwd(global_object, &mut generation))
     }
 
-    /// `version` is the record the result may be cached under, or null.
+    /// `generation` is the one the result may be cached under, or zero.
     #[unsafe(no_mangle)]
     extern "C" fn Bun__Process__getCwdForCache(
         global_object: &JSGlobalObject,
-        version: &mut *const (),
+        generation: &mut u64,
     ) -> JSValue {
-        bun_jsc::to_js_host_fn_result(global_object, get_cwd(global_object, version))
+        bun_jsc::to_js_host_fn_result(global_object, get_cwd(global_object, generation))
     }
 
     #[unsafe(no_mangle)]
-    extern "C" fn Bun__cwdVersion() -> *const () {
-        bun_core::cwd::version()
+    extern "C" fn Bun__cwdGeneration() -> u64 {
+        bun_core::cwd::generation()
     }
 
-    fn get_cwd(global_object: &JSGlobalObject, version: &mut *const ()) -> JsResult<JSValue> {
-        *version = core::ptr::null();
+    fn get_cwd(global_object: &JSGlobalObject, generation: &mut u64) -> JsResult<JSValue> {
+        *generation = 0;
         // Real syscall (not `bun_core::cwd`): Node's process.cwd() calls
         // uv_cwd(), so a deleted cwd must surface here.
         let mut buf = bun_paths::path_buffer_pool::get();
         match bun_sys::getcwd(&mut buf[..]) {
             bun_sys::Result::Ok(len) => {
-                if let Some(record) = bun_core::cwd::version_of(&buf[..len]) {
-                    *version = record;
+                if let Some(current) = bun_core::cwd::generation_of(&buf[..len]) {
+                    *generation = current;
                 }
                 bun_string_jsc::create_utf8_for_js(global_object, &buf[..len])
             }
@@ -532,13 +532,13 @@ mod _impl {
             return Err(global_object.throw(format_args!("Invalid path")));
         };
 
-        let prev_cwd = bun_core::cwd::get_z();
+        let prev_cwd = bun_core::cwd::get();
         match bun_sys::chdir(slice) {
             bun_sys::Result::Ok(()) => {
                 vm.test_isolation_scope(|state| {
                     state.saved_cwd.get_or_insert(prev_cwd);
                 });
-                bun_string_jsc::create_utf8_for_js(global_object, bun_core::cwd::get())
+                bun_string_jsc::create_utf8_for_js(global_object, &bun_core::cwd::get())
             }
             bun_sys::Result::Err(e) => {
                 // path=cwd, dest=target so the resulting Node SystemError

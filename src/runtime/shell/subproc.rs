@@ -1401,6 +1401,7 @@ impl<'a> SpawnArgs<'a> {
         arena: &'a Arena,
         interp: *mut crate::shell::interpreter::Interpreter,
         event_loop: EventLoopHandle,
+        cwd: &'a [u8],
     ) -> SpawnArgs<'a> {
         let mut out = SpawnArgs {
             arena,
@@ -1409,7 +1410,7 @@ impl<'a> SpawnArgs<'a> {
 
             override_env: false,
             env_array: Vec::new(),
-            cwd: bun_core::cwd::get(),
+            cwd,
             stdio: [Stdio::Ignore, Stdio::Pipe, Stdio::Inherit],
             redirect_stdout: None,
             redirect_stderr: None,

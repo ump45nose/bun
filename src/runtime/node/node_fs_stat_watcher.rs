@@ -816,7 +816,7 @@ impl StatWatcher {
         let top_level_dir = bun_core::cwd::get();
         let parts: [&[u8]; 1] = [slice];
         let file_path =
-            Path::join_abs_string_buf::<platform::Auto>(top_level_dir, &mut buf[..], &parts);
+            Path::join_abs_string_buf::<platform::Auto>(&top_level_dir, &mut buf[..], &parts);
 
         // allocSentinel + memcpy → owned NUL-terminated copy (ZBox)
         let alloc_file_path = ZBox::from_bytes(file_path);

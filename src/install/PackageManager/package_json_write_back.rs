@@ -131,7 +131,7 @@ fn edit_update_targets(
                 name: Box::from(name),
                 name_hash,
                 package_json_path: join_abs_string_buf::<platform::Auto>(
-                    top_level,
+                    &top_level,
                     &mut path_buf.0,
                     &[rel, b"package.json"],
                 )

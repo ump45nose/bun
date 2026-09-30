@@ -7622,7 +7622,7 @@ impl NodeFS {
             let inbuf_len = inbuf.len();
             let Some(joined) =
                 bun_paths::resolve_path::join_abs_string_buf_checked::<bun_paths::platform::Loose>(
-                    bun_core::cwd::get(),
+                    &bun_core::cwd::get(),
                     &mut inbuf[..inbuf_len - 1],
                     &[path_slice],
                 )
@@ -7842,7 +7842,7 @@ impl NodeFS {
                     let dir = bun_core::dirname(new_path).unwrap_or(new_path);
                     let src_len =
                         paths::resolve_path::join_abs_string_buf::<paths::platform::Windows>(
-                            bun_core::cwd::get(),
+                            &bun_core::cwd::get(),
                             &mut self.sync_error_buf[..],
                             &[dir, target_path],
                         )
@@ -7872,7 +7872,7 @@ impl NodeFS {
                     let dir = bun_core::dirname(new_path).unwrap_or(new_path);
                     let target_len =
                         paths::resolve_path::join_abs_string_buf::<paths::platform::Windows>(
-                            bun_core::cwd::get(),
+                            &bun_core::cwd::get(),
                             &mut self.sync_error_buf[4..],
                             &[dir, target_path],
                         )
@@ -8418,7 +8418,7 @@ impl NodeFS {
         let resolved_buf_len = resolved_buf.len();
         let Some(resolved) =
             paths::resolve_path::join_abs_string_buf_checked::<paths::platform::Posix>(
-                bun_core::cwd::get(),
+                &bun_core::cwd::get(),
                 &mut resolved_buf[..resolved_buf_len - 1],
                 &[src_dir, link_target.as_bytes()],
             )

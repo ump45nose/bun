@@ -1309,6 +1309,7 @@ impl<'a> Resolver<'a> {
         //
         // ...unless you pass a relative path that exists in the standalone module graph executable.
         let mut source_dir_resolver = bun_paths::PosixToWinNormalizer::default();
+        let cwd;
         let source_dir_normalized: &[u8] = 'brk: {
             if let Some(graph) = self.standalone_module_graph {
                 let specifier_is_embedded_path =
@@ -1333,7 +1334,8 @@ impl<'a> Resolver<'a> {
                         self.extension_order = original_order;
                         return ResultUnion::NotFound;
                     }
-                    break 'brk bun_core::cwd::get();
+                    cwd = bun_core::cwd::get();
+                    break 'brk &cwd;
                 }
             }
 
@@ -1350,7 +1352,8 @@ impl<'a> Resolver<'a> {
                 //     let _ = self.flush_debug_logs(FlushMode::Fail);
                 // }
                 // return ResultUnion::Failure(crate::Error::MissingResolveDir);
-                break 'brk bun_core::cwd::get();
+                cwd = bun_core::cwd::get();
+                break 'brk &cwd;
             }
 
             // This can also be hit if you use plugins with non-file namespaces,
@@ -1362,7 +1365,8 @@ impl<'a> Resolver<'a> {
                 //     let _ = self.flush_debug_logs(FlushMode::Fail);
                 // }
                 // return ResultUnion::Failure(crate::Error::InvalidResolveDir);
-                break 'brk bun_core::cwd::get();
+                cwd = bun_core::cwd::get();
+                break 'brk &cwd;
             }
 
             break 'brk source_dir_resolver
@@ -1520,7 +1524,7 @@ impl<'a> Resolver<'a> {
                         let path: &'static [u8] =
                             unsafe { &*std::ptr::from_ref::<[u8]>(path.as_ref()) };
                         let top = bun_core::cwd::get();
-                        return self.resolve(top, path, ast::ImportKind::EntryPointBuild);
+                        return self.resolve(&top, path, ast::ImportKind::EntryPointBuild);
                     }
                 }
             }
@@ -2878,7 +2882,7 @@ impl<'a> Resolver<'a> {
                             bun_ast::Range::NONE,
                             format_args!(
                                 "Cannot read directory \"{}\": {} while resolving \"{}\"",
-                                bstr::BStr::new(top_level_dir),
+                                bstr::BStr::new(&top_level_dir),
                                 bstr::BStr::new(err.name()),
                                 bstr::BStr::new(import_path)
                             ),
@@ -4154,8 +4158,10 @@ impl<'a> Resolver<'a> {
         let _unlock = self.mutex.lock_guard();
         let mut input_path = raw_input_path;
 
+        let cwd;
         if is_dot_slash(input_path) || input_path == b"." {
-            input_path = bun_core::cwd::get();
+            cwd = bun_core::cwd::get();
+            input_path = &cwd;
         }
 
         // A path longer than MAX_PATH_BYTES cannot name a real directory.

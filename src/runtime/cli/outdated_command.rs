@@ -88,7 +88,7 @@ impl OutdatedCommand {
                     Global::crash();
                 }
             };
-        Self::outdated(ctx, original_cwd, manager)
+        Self::outdated(ctx, &original_cwd, manager)
     }
 
     fn outdated(

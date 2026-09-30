@@ -189,7 +189,7 @@ pub(crate) fn write<W: Write + ?Sized>(
     let root_dir: &[u8] = if !options.root_dir.is_empty() {
         &options.root_dir[..]
     } else {
-        bun_core::cwd::get()
+        &bun_core::cwd::get()
     };
 
     writer.write_all(b"{")?;
