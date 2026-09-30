@@ -1,5 +1,3 @@
-# TS8xxx (and TS1206, TS8038) that tsc 6.0.2 or typescript-go reports for a targeted input as a.js, and what
-# bun's JavaScript instantiation (base e3566be889, loader js) says about the same input.
 
 TS1206: 5 inputs
      2  bun js: accepts
@@ -121,19 +119,19 @@ TS8009: 28 inputs
      1  bun js: Expected ";" but found "readonly"
           "class A { public readonly x }"
 
-TS8010: 46 inputs
-    18  bun js: accepts
+TS8010: 49 inputs
+    20  bun js: accepts
           "x = a ? b ? (c) : d => e : f"
           "x = a ? b ? (c) : d => {} : f"
           "x = a ? b ? (c, d) : e => f : g"
           "x = a ? b ? ({c}) : d => e : f"
-          ... 14 more
-    10  bun js: Expected ";" but found ":"
+          ... 16 more
+    11  bun js: Expected ";" but found ":"
           "x = a ? (b) : c => d : e"
+          "x = a ? (b) => (c) : d => e : f"
           "let x: number = 1"
           "class A { x: number }"
-          "class A { static x: number }"
-          ... 6 more
+          ... 7 more
      6  bun js: Expected "{" but found ":"
           "function f(): void {}"
           "class A { foo(): void {} }"
@@ -195,3 +193,5 @@ TS8017: 5 inputs
 TS8037: 1 inputs
      1  bun js: Expected ";" but found "satisfies"
           "x = y satisfies z"
+
+48 distinct messages of bun's JavaScript instantiation stand for these codes
