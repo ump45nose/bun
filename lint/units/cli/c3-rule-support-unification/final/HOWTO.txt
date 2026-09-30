@@ -22,6 +22,9 @@ oracle/extract.cjs     the cases of ESLint's own test of a rule; oracle/mark-ori
 make-vectors.sh        every case list on disk (the earlier units' and cases/) -> vectors/<rule>.json and DIFFERENCES.txt
 make-fixtures.cjs      vectors -> fixtures/<rule>.json, what ships as test/cli/lint/rules/<rule>.json
 rules.test.ts.draft    the test that reads the fixtures. NOT RUN: `bun --lint` does not exist in the build yet.
+simulate-test.cjs      the body of that test over the probe's reports printed as the plain format: 2677 cases, 0 wrong
+src-lint/              the same text as probe/src/lint with the paths of a crate root (crate:: for crate::lint::) and a
+                       lib.rs; probe/build-lib.py checks it as a library (see the end of this file for whether that ran)
 UPSTREAM_PORTED        the text of src/lint/UPSTREAM_PORTED.  LICENSE.eslint  the text of src/lint/LICENSE.eslint.
 deep/make.py           inputs of the depth and cost runs (logs/deep.log)
 
@@ -50,6 +53,10 @@ RESULTS (debug build with ASAN; ESLint 4618052e, espree 11.2.0, acorn 8.18.0, es
     a comment), 20 that both parsers reject, 21 that only ESLint's rejects, 1 that only Bun's rejects. DIFFERENCES.txt.
   real files: 16159 (9813 of node_modules, 12 large ones, 6334 of ESLint, Node's tests and Bun's tests): 16067 with the
     same reports, 0 different, 92 that ESLint's parser rejects, 445 reports. logs/corpus*.log.
-  tokens: logs/tokens-diff.log.
+  tokens against espree (the probe of probe-tokens/, PROBE_TOKENS=1): 34,203,837 tokens with 27,664 regular expressions
+    and 1,960 JSX elements over five corpora (the first two overlap): every file that both parsers take has the same
+    tokens, 18,228 of 18,228. logs/tokens-diff.log.
   depth and cost: logs/deep.log, logs/times-big.log (typescript.js, 9.1 MB: parse 8.5 s, walk and rules 0.22 s).
   clippy with the lints of the workspace: clean. rustfmt: clean. Comment runs of two lines: none.
+  src-lint/ as a library: rustfmt follows its modules and is clean. The rustc and clippy check (probe/build-lib.py) was
+    queued behind the build lock, which had an hour of waiters: /tmp/c3final/blib.log and clippylib.log say whether it ran.
