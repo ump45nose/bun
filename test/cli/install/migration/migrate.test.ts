@@ -2077,8 +2077,15 @@ overrides:
       "new-dependency": "new-dependency@1.0.0",
     };
 
-    // This is the same before and after the migration stopped to register aliases.
-    test.concurrent("package-lock.json", async () => {
+    // These are the same before and after the migration stopped to register aliases. The
+    // migration of package-lock.json takes a row with a space in front of `npm:`.
+    test.concurrent.each([
+      ["", aliases],
+      [
+        " with a space in front",
+        Object.fromEntries(Object.entries(aliases).map(([name, alias]) => [name, " " + alias])),
+      ],
+    ])("package-lock.json%s", async (_, rows) => {
       using registry = await aliasRegistry(aliases, [hasAliases, newDependency]);
       const { stderr, ...result } = await resolve(
         registry,
@@ -2087,7 +2094,7 @@ overrides:
           "package-lock.json": packageLock(
             registry,
             { dependencies: { "has-aliases": "1.0.0" } },
-            { "has-aliases": { dependencies: aliases } },
+            { "has-aliases": { dependencies: rows } },
           ),
         },
         "add",

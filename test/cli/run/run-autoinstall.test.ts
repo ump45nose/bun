@@ -179,28 +179,24 @@ describe("auto-install with npm: aliases in the lockfile", () => {
   let textLockfile: ReturnType<typeof tempDir>;
   beforeAll(async () => {
     registry = await aliasRegistry(aliases, [hasAliases, notInLockfile]);
-    const files = (saveTextLockfile: boolean) => ({
-      "package.json": JSON.stringify(packageJson),
+    const files = (saveTextLockfile: boolean, manifest: object) => ({
+      "package.json": JSON.stringify(manifest),
       "bunfig.toml": Bun.TOML.stringify({ install: { registry: registry.url, saveTextLockfile } }),
       "index.js": `console.log(JSON.stringify(require("not-in-lockfile")));`,
     });
-    kept = tempDir("autoinstall-npm-alias-kept-", files(false));
-    failsToLoad = tempDir("autoinstall-npm-alias-fails-", files(false));
-    textLockfile = tempDir("autoinstall-npm-alias-text-", files(true));
-    expect(
-      await Promise.all([
-        run(String(kept), "install"),
-        run(String(failsToLoad), "install", "--lockfile-only"),
-        run(String(textLockfile), "install"),
-      ]),
-    ).toMatchObject([{ exitCode: 0 }, { exitCode: 0 }, { exitCode: 0 }]);
+    kept = tempDir("autoinstall-npm-alias-kept-", files(false, packageJson));
+    failsToLoad = tempDir("autoinstall-npm-alias-fails-", files(false, { name: "app" }));
+    textLockfile = tempDir("autoinstall-npm-alias-text-", files(true, packageJson));
+    expect(await Promise.all([run(String(kept), "install"), run(String(textLockfile), "install")])).toMatchObject([
+      { exitCode: 0 },
+      { exitCode: 0 },
+    ]);
 
     const lockb = await Bun.file(join(String(kept), "bun.lockb")).bytes();
     await Promise.all([
       rm(join(String(kept), "node_modules"), { recursive: true }),
       rm(join(String(textLockfile), "node_modules"), { recursive: true }),
       Bun.write(join(String(failsToLoad), "bun.lockb"), failAfterDependencyRows(Buffer.from(lockb))),
-      Bun.write(join(String(failsToLoad), "package.json"), JSON.stringify({ name: "app" })),
       // bun reads bun.lock and not the bun.lockb next to it.
       Bun.write(join(String(textLockfile), "bun.lockb"), lockb),
     ]);
