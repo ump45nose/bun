@@ -16,6 +16,8 @@ def norm(s):
     s = re.sub(r'\.llvm\.\d+', '', s)
     # a rip-relative operand: the displacement moves with the layout of the binary, the comment names the nearest data symbol
     s = RIP.sub(lambda m: '<rip>' + m.group(1).rstrip(), s)
+    # an absolute address of static data as an immediate (the binary is not position independent)
+    s = re.sub(r'\$0x[0-9a-f]{6,}\b', '$<abs>', s)
     return ANON.sub('anon', s)
 def st(e):
     L = e['text'].splitlines()

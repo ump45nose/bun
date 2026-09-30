@@ -65,6 +65,10 @@ export interface Def {
   primaryKind: string;
   kindAliases: string[];
   kindParam: boolean;
+  // The kind is a type parameter of the definition (Token, KeywordExpression, KeywordTypeNode).
+  kindIsTypeParameter: boolean;
+  multiKind: boolean;
+  kindTypes: string[];
   slots: Field[];
   lates: Field[];
   params: Param[];
@@ -228,6 +232,9 @@ export function buildDef(node: NodeType): Def {
     primaryKind: node.syntaxKindName,
     kindAliases: node.kindAliases,
     kindParam: !!kindMember,
+    kindIsTypeParameter: node.kindType.kind === "typeParameter",
+    multiKind: node.isMultiKind(),
+    kindTypes: node.kindTypes().map(k => k.name),
     slots,
     lates,
     params,
@@ -248,6 +255,9 @@ export function flowDefs(): Def[] {
     primaryKind: "Unknown",
     kindAliases: [],
     kindParam: false,
+    kindIsTypeParameter: false,
+    multiKind: false,
+    kindTypes: [],
     slots: fields.map(([goName, slot], index) => ({ goName, rust: field(goName), slot, index, optional: false })),
     lates: [],
     params: [],

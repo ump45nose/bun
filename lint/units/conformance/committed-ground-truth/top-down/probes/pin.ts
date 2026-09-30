@@ -1,20 +1,26 @@
-// Writes reference_counts.json and reference_skips.tsv for a corpus in the committed layout: the prototype of the script that runs after sync.sh.
-// usage: bun pin.ts <assembled runner root> <conformance directory with UPSTREAM and corpus/> <out directory>
+// Prototype of the script that pins the constants of the runner after sync.sh: it writes reference_counts.json and reference_skips.tsv for the corpus in the committed layout.
+// usage: bun pin.ts <assembled runner root> <conformance directory with UPSTREAM, post-emit-order.txt and corpus/> <out directory> [--reference <typescript-go clone>] [--reference-log <output of go test -v of TestSubmodule>]
+// No Go and no network. --reference adds the counts that the baseline directories of the clone give; --reference-log adds the digests of the reference's own run and fails when the enumeration differs from it.
 import { createHash } from "node:crypto";
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-const [asm, home, out] = process.argv.slice(2);
+const argv = process.argv.slice(2);
+const flag = (name: string) => (argv.includes(name) ? argv[argv.indexOf(name) + 1] : undefined);
+const [asm, home, out] = argv;
+const clone = flag("--reference");
+const log = flag("--reference-log");
 const runner = join(asm, "test/cli/lint/conformance/runner");
 const R = await import(join(runner, "index.ts"));
 const B = await import(join(runner, "baseline.ts"));
 const G = await import(join(runner, "gostrings.ts"));
 const cmp = G.compareStrings as (a: string, b: string) => number;
 const sha = (x: string | Uint8Array) => createHash("sha256").update(x).digest("hex");
-// The digest of a set of rows: sha256 of the rows in byte order, each with its line feed.
+// The digest of a set of rows: sha256 of the rows in the byte order of their UTF-8 text, each row with its line feed.
 const digestOf = (rows: string[]) => sha(rows.slice().sort(cmp).join(""));
-export const buckets = 40;
-export const bucketOf = (casePath: string) => Bun.hash.crc32(casePath) % buckets;
+// The bucket of a case: the rule of every sample of the test file. Bucket 0 is what a debug build enumerates.
+const buckets = 40;
+const bucketOf = (casePath: string) => Bun.hash.crc32(casePath) % buckets;
 
 const c = home + "/corpus";
 const layout = {
@@ -32,32 +38,55 @@ const e = R.enumerateInstances({ casesRoot: layout.casesRoot });
 const facts: any[] = e.instances.map((i: any) => R.factsOf(corpus, i));
 const n = (f: (x: any) => boolean) => facts.filter(f).length;
 const inSuite = (s: string) => (f: any) => f.casePath.startsWith(s + "/");
-
-const shortReason = (r: string) => r.replace(/^(unsupported (?:baseUrl|outFile)) .*/s, "$1");
-const reasons = new Map<string, number>();
-for (const f of facts) if (f.status === "skipped") reasons.set(shortReason(f.reason), (reasons.get(shortReason(f.reason)) ?? 0) + 1);
-
-const tags = new Map<string, number>();
-e.instances.forEach((i: any, k: number) => {
-  for (const t of [...i.tags, ...facts[k].tags]) tags.set(t, (tags.get(t) ?? 0) + 1);
+const suite = (s: string) => ({
+  instances: n(inSuite(s)),
+  run: n(f => inSuite(s)(f) && f.status === "run"),
+  skipped: n(f => inSuite(s)(f) && f.status === "skipped"),
+  E: n(f => inSuite(s)(f) && f.kind === "E"),
+  C: n(f => inSuite(s)(f) && f.kind === "C"),
 });
+const byCount = (m: Map<string, number>) => Object.fromEntries([...m].sort((a, b) => b[1] - a[1] || cmp(a[0], b[0])));
+const tally = (keys: Iterable<string>) => {
+  const m = new Map<string, number>();
+  for (const k of keys) m.set(k, (m.get(k) ?? 0) + 1);
+  return m;
+};
 
-const sources = new Map<string, number>();
+// The text of a skip without the path that two of the reasons end with.
+const shortReason = (r: string) => r.replace(/^(unsupported (?:baseUrl|outFile)) .*/s, "$1");
+const goName = (testName: string) => testName.replaceAll(" ", "_");
+const subtestRows = e.instances.map((i: any) => `${i.status === "run" ? "PASS" : i.status === "skipped" ? "SKIP" : i.status}\t${goName(i.testName)}\n`);
+const skipRowsOfGo = e.instances.filter((i: any) => i.status === "skipped").map((i: any) => `${goName(i.testName)}\t${i.reason}\n`);
+
+// The oracle of every run instance, through the four steps of oracleOf.
+const sources: string[] = [];
 const oracleRows: string[] = [];
 let pretty = 0;
 for (const i of e.instances) {
   if (i.status !== "run") continue;
   const o = B.oracleOf(corpus, i.suite, i.name);
-  sources.set(o.source, (sources.get(o.source) ?? 0) + 1);
+  sources.push(o.source);
   if (o.kind !== "E") continue;
   const bytes = Buffer.from(B.readOracle(o)!);
   oracleRows.push(`${i.name}\t${sha(bytes)}\n`);
   if (bytes.includes("\x1b[")) pretty++;
 }
 
+// What each error baseline of TypeScript in the corpus is, by the instance that has its name.
+const byStem = new Map<string, any>(e.instances.map((i: any) => [B.errorBaselineName(i.name), i]));
+const tsUse: string[] = [];
+for (const file of corpus.ts) {
+  const i = byStem.get(file);
+  if (i === undefined) tsUse.push("noInstance");
+  else if (i.status !== "run") tsUse.push("ofSkippedInstance");
+  else tsUse.push({ "typescript": "oracle", "typescript-go": "behindTypescriptGo", "expects-no-errors": "behindExpectsNoErrors" }[B.oracleOf(corpus, i.suite, i.name).source as string] ?? "other");
+}
+
+// The files of the corpus in the byte order of their paths: path, size and sha256 of each. Own files that start with a dot directly in corpus/ are no part of it.
 const paths: string[] = [];
 const walk = (dir: string, rel: string) => {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (rel === "" && entry.name.startsWith(".")) continue;
     const p = rel === "" ? entry.name : rel + "/" + entry.name;
     if (entry.isDirectory()) walk(dir + "/" + entry.name, p);
     else paths.push(p);
@@ -77,14 +106,13 @@ const row = (f: any) => `${f.name}\t${f.status}\t${f.reason}\t${f.kind ?? ""}\n`
 const bucketRows: (number | string)[][] = [];
 for (let k = 0; k < buckets; k++) {
   const part = facts.filter(f => bucketOf(f.casePath) === k);
-  bucketRows.push([k, part.length, part.filter(f => f.status === "run").length, part.filter(f => f.status === "skipped").length, part.filter(f => f.kind === "E").length, part.filter(f => f.kind === "C").length, digestOf(part.map(row)).slice(0, 16)]);
+  bucketRows.push([k, new Set(part.map(f => f.casePath)).size, part.length, part.filter(f => f.status === "run").length, part.filter(f => f.status === "skipped").length, part.filter(f => f.kind === "E").length, part.filter(f => f.kind === "C").length, digestOf(part.map(row)).slice(0, 16)]);
 }
 
 const skipsText = facts.filter(f => f.status === "skipped").map(f => `${f.name}\t${f.reason}\n`).sort(cmp).join("");
-const upstream = Object.fromEntries(readFileSync(home + "/UPSTREAM", "utf8").split("\n").map(l => l.split(" ")).filter(w => w[0] === "commit").map(w => [w[1], w[2]]));
-const sortedByCount = (m: Map<string, number>) => Object.fromEntries([...m].sort((a, b) => b[1] - a[1] || cmp(a[0], b[0])));
+const upstream = Object.fromEntries(readFileSync(home + "/UPSTREAM", "utf8").split("\n").map(l => l.trim().split(" ")).filter(w => w[0] === "commit").map(w => [w[1], w[2]]));
 
-const pins = {
+const pins: any = {
   upstream,
   corpus: {
     files: paths.length,
@@ -107,32 +135,88 @@ const pins = {
     invalid: n(f => f.status === "invalid"),
     E: n(f => f.kind === "E"),
     C: n(f => f.kind === "C"),
-    compiler: { instances: n(inSuite("compiler")), run: n(f => inSuite("compiler")(f) && f.status === "run"), E: n(f => inSuite("compiler")(f) && f.kind === "E"), C: n(f => inSuite("compiler")(f) && f.kind === "C") },
-    conformance: { instances: n(inSuite("conformance")), run: n(f => inSuite("conformance")(f) && f.status === "run"), E: n(f => inSuite("conformance")(f) && f.kind === "E"), C: n(f => inSuite("conformance")(f) && f.kind === "C") },
-    skippedByReason: sortedByCount(reasons),
-    tags: sortedByCount(tags),
-    oracleSource: sortedByCount(sources),
+    compiler: suite("compiler"),
+    conformance: suite("conformance"),
+    skippedByReason: byCount(tally(facts.filter(f => f.status === "skipped").map(f => shortReason(f.reason)))),
+    tags: byCount(tally(e.instances.flatMap((i: any, k: number) => [...i.tags, ...facts[k].tags]))),
+    oracleSource: byCount(tally(sources)),
     prettyOracles: pretty,
+    tsBaselineUse: byCount(tally(tsUse)),
   },
   digests: {
-    subtests: digestOf(e.instances.map((i: any) => `${i.status === "run" ? "PASS" : i.status === "skipped" ? "SKIP" : i.status}\t${i.testName.replaceAll(" ", "_")}\n`)),
+    subtests: digestOf(subtestRows),
     names: digestOf(facts.map(f => `${f.name}\n`)),
     status: digestOf(facts.map(f => `${f.name}\t${f.status}\t${f.reason}\n`)),
     kinds: digestOf(facts.filter(f => f.status === "run").map(f => `${f.name}\t${f.kind}\n`)),
     oracles: digestOf(oracleRows),
   },
   skips: { rows: n(f => f.status === "skipped"), sha256: sha(skipsText) },
-  buckets: { of: buckets, rows: bucketRows },
+  buckets: { of: buckets, columns: ["bucket", "cases", "instances", "run", "skipped", "E", "C", "digest"], rows: bucketRows },
 };
 
-// One form: two spaces, the rows of the buckets one per line, a line feed at the end.
-export function formatPins(p: typeof pins): string {
+// The baseline files of typescript-go in the clone, of every kind: each is the name of a run instance, and nearly every run instance has one.
+if (clone !== undefined) {
+  const stems = new Map<string, Map<string, any>>([["compiler", new Map()], ["conformance", new Map()]]);
+  for (const i of e.instances) stems.get(i.suite)!.set(i.name.replace(/\.tsx?$/, ""), i);
+  const root = clone + "/testdata/baselines/reference";
+  let files = 0;
+  const bad: string[] = [];
+  const witnessed = new Set<string>();
+  for (const dir of ["submodule", "submoduleAccepted", "submoduleTriaged"]) {
+    for (const s of ["compiler", "conformance"]) {
+      let names: string[] = [];
+      try {
+        names = readdirSync(`${root}/${dir}/${s}`);
+      } catch {}
+      for (const f of names) {
+        files++;
+        let i: any;
+        let cut = f.length;
+        while ((cut = f.lastIndexOf(".", cut - 1)) > 0) if ((i = stems.get(s)!.get(f.slice(0, cut))) !== undefined) break;
+        if (i === undefined || i.status !== "run") bad.push(`${dir}/${s}/${f}`);
+        else if (dir === "submodule" && !f.endsWith(".diff")) witnessed.add(i.name);
+      }
+    }
+  }
+  const silent = e.instances.filter((i: any) => i.status === "run" && !witnessed.has(i.name)).map((i: any) => i.name);
+  pins.referenceBaselines = { files, notOfARunInstance: bad.length, runInstancesWithOne: witnessed.size, runInstancesWithNone: silent.length };
+  if (bad.length > 0) console.error(`baseline files of typescript-go that are not the name of a run instance:\n  ${bad.slice(0, 40).join("\n  ")}`);
+  console.error(`run instances without a baseline file of typescript-go (${silent.length}): ${silent.join(" ")}`);
+}
+
+// The run of the reference itself: the lines "--- PASS" and "--- SKIP" of the subtests of TestSubmodule and the text of every skip.
+if (log !== undefined) {
+  const subtests: string[] = [];
+  const skips: string[] = [];
+  let name = "?";
+  for (const line of readFileSync(log, "utf8").split("\n")) {
+    let m: RegExpExecArray | null;
+    if ((m = /^=== (?:NAME|CONT|RUN) +TestSubmodule\/(.*)$/.exec(line))) name = m[1];
+    else if (line.startsWith("=== ")) name = "?";
+    else if ((m = /^    compiler_runner\.go:\d+: (.*)$/.exec(line)) && !name.includes("/")) skips.push(`${name}\t${m[1]}\n`);
+    else if ((m = /^    --- (PASS|SKIP): TestSubmodule\/(.*) \([0-9.]+s\)$/.exec(line))) subtests.push(`${m[1]}\t${m[2]}\n`);
+  }
+  const run = { "typescript-go": upstream["typescript-go"], subtests: digestOf(subtests), skips: digestOf(skips) };
+  const ours = { subtests: pins.digests.subtests, skips: digestOf(skipRowsOfGo) };
+  if (run.subtests !== ours.subtests || run.skips !== ours.skips) {
+    const a = new Set(subtests.concat(skips));
+    const b = new Set(subtestRows.concat(skipRowsOfGo));
+    console.error(`the enumeration is not the run of the reference (${subtests.length} subtests, ${skips.length} skips in the log):`);
+    for (const x of a) if (!b.has(x)) console.error("  only the reference: " + x.trimEnd());
+    for (const x of b) if (!a.has(x)) console.error("  only the enumeration: " + x.trimEnd());
+    process.exit(1);
+  }
+  pins.referenceRun = run;
+}
+
+// One form: two spaces, one row of the buckets per line, a line feed at the end.
+function formatPins(p: any): string {
   const marker = "@@rows@@";
-  const text = JSON.stringify({ ...p, buckets: { of: p.buckets.of, rows: marker } }, null, 2);
-  const rows = "[\n" + p.buckets.rows.map(r => "      " + JSON.stringify(r).replaceAll(",", ", ")).join(",\n") + "\n    ]";
-  return text.replace(JSON.stringify(marker), rows) + "\n";
+  const text = JSON.stringify({ ...p, buckets: { ...p.buckets, columns: "@@columns@@", rows: marker } }, null, 2);
+  const rows = "[\n" + p.buckets.rows.map((r: unknown[]) => "      " + JSON.stringify(r).replaceAll(",", ", ")).join(",\n") + "\n    ]";
+  return text.replace(JSON.stringify(marker), rows).replace('"@@columns@@"', JSON.stringify(p.buckets.columns).replaceAll(",", ", ")) + "\n";
 }
 mkdirSync(out, { recursive: true });
 writeFileSync(join(out, "reference_counts.json"), formatPins(pins));
 writeFileSync(join(out, "reference_skips.tsv"), skipsText);
-console.log(formatPins(pins));
+console.log(`wrote ${join(out, "reference_counts.json")} (${formatPins(pins).length} bytes) and ${join(out, "reference_skips.tsv")} (${skipsText.length} bytes)`);
