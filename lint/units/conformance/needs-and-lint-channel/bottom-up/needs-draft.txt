@@ -352,13 +352,19 @@ Ask.
  4. K5 says which instances it does not take ("already resolved inputs" only): their status is "unsupported".
  5. The list is guarded by CI only if the check reaches the checker through what a test lane has: the built
     binary (bunExe()), test/node_modules (typescript 6.0.2) and committed files. The lanes run test files with
-    the built binary. The one job that runs the `#[test]`s of crates below src/ is `cargo miri test`
-    (.github/workflows/rust-lints.yml:77-97) for the 17 crates of scripts/rust-miri.ts:39-57; bun_lint and
+    the built binary. The way that REVIEW.md:15 names is `bun:internal-for-testing`
+    (src/js/internal-for-testing.ts:3-8: a binding there, allowed in a debug build and in the tests'
+    environment). It needs a line in that file and a host function outside src/typecheck: files that no unit
+    owns, so it is an entry of typecheck's own NEEDS.
+    The one job that runs the `#[test]`s of crates below src/ is `cargo miri test`
+    (.github/workflows/rust-lints.yml:76-96) for the 17 crates of scripts/rust-miri.ts:39-57; bun_lint and
     bun_typecheck are not in that list, that file has no owner, and Miri cannot run a suite of this size.
     typecheck's research probes a test target of the crate that answers one request for each line
     (units/typecheck/end-to-end-k4-k5/rust/tests_program.rs): a list made through it is a local result.
     The Check interface takes several instances in one call, so a check that keeps one process and speaks one
     line for each instance fits; its line holds what the report of CH-2 holds.
+ 6. The libraries that K5 dumps are the files of LB-2, not those of node_modules/typescript/lib: 7 of the 108
+    differ, 3 of them in declarations.
 Unlocks: the growth of the list during this work. (td) with one file and no configuration file 10,723 run
 instances (E 5,905, C 4,818); by typecheck's count 10,639 programs have one file beside the libraries
 (E 5,868, C 4,771). Until then: both lists are empty and the sweep reports zero passes.
@@ -367,6 +373,9 @@ CH-5. What no unit owns: the program layer
 To: no owner (cli.md:92 and typecheck.md:122-124 put tsconfig, module resolution from disk, the embedding of the
 libraries and declaration emit out of scope).
   piece                                              what needs it
+  the call from lint_command.rs into the checker:    every pass of the default check. No milestone of a unit
+  a program made from the operands                   makes it: cli.md C1 to C3 parse and run rules, K4 checks
+                                                     "through the node table" with a directory "for now"
   default libraries                                  (td) 12,788 run instances, all but the 9 with noLib: LB-2
   module resolution among the files of an instance   (td) 2,073 run instances with more than one file or a configuration file
   parsing of a tsconfig.json                         73 run instances (130 case files have such a unit): (td) 72 in
@@ -399,6 +408,12 @@ Until then: such an instance fails through the binary and can pass through K5.
 
 2. Files of the repository that no unit owns
 --------------------------------------------
+
+The vendoring that the repository has (test/bundler/transpiler/react-compiler-fixtures, 3,614 files) changed one
+such file: .prettierignore:3. It has no entry in test/tsconfig.json, oxlint.json or CODEOWNERS. The review rules
+ask for more (.claude/docs/landing-prs.md:48: "Vendored code (vendor/, WPT fixtures, Node test files) is
+read-only — no style or typo fixes (copies serve as conformance baselines); exclude vendored dirs from
+mechanical rewrites").
 
 RP-1. test/tsconfig.json:39-47 ("exclude")
 To: integrator. Ask: the entries "cli/lint/conformance/corpus" and "cli/lint/typecheck/fixtures".
@@ -456,6 +471,15 @@ RP-6. What the corpus does to the repository
 To: integrator. For information.
  - Cases: 12,445 files (12,114 .ts, 330 .tsx, 1 .js), 8,414,484 bytes. Error baselines: 9,056 of TypeScript in
    the flat directory (20,358,660 bytes, all suites) and 7,027 of typescript-go (17,302,864 bytes).
+ - Size, as the second edition of the top-down draft measured it with the sync prototype
+   (corpus-layout-and-sync/top-down/prototype/validate.sh; not measured again by this pass): 22,186 files,
+   32,485,872 bytes; `git bundle` of the commit 7,737,689 bytes; a fresh clone packs it to 7.97 MiB. That is
+   below the 40 MB of conformance.md T1.4. The 108 library files of LB-2 add 3,785,075 bytes (559 KB as one
+   gzip archive). The repository tracks 19,932 files today.
+ - Two cases are executable upstream (mode 100755: compiler/parserPrivateIdentifierInArrayAssignment.ts,
+   compiler/taggedTemplateWithoutDeclaredHelper.ts) and stay so. No case is a link.
+ - test/cli/lint is in no list of test/parallel-allowlist.json (made by scripts/update-parallel-allowlist.mjs):
+   the new test files run in the serial part of a shard until that file is made again.
  - The longest path: the longest case is 152 characters below tests/cases, so 191 below the repository with the
    layout of corpus-repo-hazards/prove-corpus.sh (today's longest tracked path is 159). (td) 202 with the layout
    that keeps upstream's directories. No two planned paths differ only by case, and none has a name that

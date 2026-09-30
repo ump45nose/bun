@@ -6,7 +6,7 @@ import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { gunzipSync } from "node:zlib";
-import { InvalidUtf8Error, utf8ToByteString } from "../runner/bytestring";
+import { InvalidUtf8Error, utf8String, utf8ToByteString } from "../runner/bytestring";
 import { compareStrings } from "../runner/gostrings";
 import { skipTrivia } from "../runner/scanner";
 import { decodeBytes, readFile } from "../runner/vfs";
@@ -23,7 +23,7 @@ const got = inputs.map(i => {
   const raw = Buffer.from(i.bytes, "base64");
   let content: string;
   try {
-    content = raw.length === 0 ? "" : decodeBytes(raw);
+    content = raw.length === 0 ? "" : utf8String(decodeBytes(raw));
   } catch (e) {
     if (!(e instanceof InvalidUtf8Error)) throw e;
     return { name: i.name, refused: "not valid UTF-8" };

@@ -184,15 +184,9 @@ for (const v of rows) {
     both("tspath", "getAnyExtensionFromPath", [name, list, v.ignoreCase]);
     both("tspath", "changeAnyExtension", [name, ".x", list, v.ignoreCase]);
   } else if (v.k === "decode") {
-    // The other pass gives the UTF-8 bytes of the contents and decodes them in readFile.
-    const bytes = Buffer.from(v.bytes, "base64");
-    compared["vfs.decodeBytes"] = (compared["vfs.decodeBytes"] ?? 0) + 1;
-    const x = call(T.vfs.decodeBytes, [bytes]);
-    const y = call((s: Uint8Array) => B.gostrings.utf8String(B.vfs.decodeBytes(s)), [bytes]);
-    if (x !== y) {
-      different["vfs.decodeBytes"] = (different["vfs.decodeBytes"] ?? 0) + 1;
-      if (examples.length < 12) examples.push(`vfs.decodeBytes(${v.bytes}): this pass ${x}, the other ${y}`);
-    }
+    both("vfs", "decodeBytes", [Buffer.from(v.bytes, "base64")]);
+    both("vfs", "decodeUtf16", [Buffer.from(v.bytes, "base64"), true]);
+    both("vfs", "decodeUtf16", [Buffer.from(v.bytes, "base64"), false]);
   } else if (v.k === "atoi") {
     both("gostrings", "atoi", [b(v.s)]);
   }

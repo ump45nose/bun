@@ -335,13 +335,15 @@ for (const line of load(vecPath).split("\n")) {
     if (byUnits !== byteStringToUtf8(b(v.getAnyExtensionFromPath))) cutByUnitsDiffers++;
   } else if (k === "decode") {
     const bytes = Buffer.from(v.bytes, "base64");
+    const contents = bytes.length === 0 ? bytes : Buffer.from(decodeBytes(bytes));
+    eq("decodeBytes", contents.toString("hex"), hex(b(v.contents)), v.bytes);
     let got: string;
     try {
-      got = bytes.length === 0 ? "" : hex(enc(decodeBytes(bytes)));
+      got = hex(enc(utf8String(contents)));
     } catch (e) {
       got = e instanceof InvalidUtf8Error ? "InvalidUtf8Error" : String(e);
     }
-    eq("decodeBytes", got, v.valid ? hex(b(v.contents)) : "InvalidUtf8Error", v.bytes);
+    eq("utf8String of decodeBytes", got, v.valid ? hex(b(v.contents)) : "InvalidUtf8Error", v.bytes);
   } else if (k === "atoi") {
     eq("strconv.Atoi", atoi(b(v.s)), v.ok ? v.n : undefined, v);
   } else if (k === "sorted") {

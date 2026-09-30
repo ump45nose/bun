@@ -9,6 +9,9 @@ H=$N/shared-foundation-merge/bottom-up
 REF=${TSGO:-/workspace/ref/typescript-go}
 TSC=${TSC:-/workspace/bun/node_modules/.bin/tsc}
 TYPES=${TYPES:-/workspace/bun/packages/bun-types}
+PRETTIER=${PRETTIER:-/workspace/bun/node_modules/.bin/prettier}
+PLUGIN=${PLUGIN:-/workspace/bun/node_modules/prettier-plugin-organize-imports/index.js}
+PRETTIERRC=${PRETTIERRC:-/workspace/wt/conformance/.prettierrc}
 mkdir -p "$W"
 
 echo "== 1. ground truth of Go and the merged bottom layer"
@@ -39,6 +42,14 @@ bun "$H/overlay/compare.ts" "$W/out-base" "$W/out-ovl"
 
 echo "== 3. the assembled file set"
 bun "$H/overlay/assemble.ts" "$N" "$W/asm" | head -1
+# What follows checks the files as they would be committed: in the format that the repository's own prettier setup gives.
+if [ -x "$PRETTIER" ]; then
+  cp "$PRETTIERRC" "$W/asm/.prettierrc"
+  (cd "$W/asm" && "$PRETTIER" --plugin="$PLUGIN" --config .prettierrc --write "test/**/*.ts" | grep -vc unchanged | sed 's/$/ of the assembled files change when the prettier setup of the repository formats them; the checks below run on the formatted files/')
+  rm "$W/asm/.prettierrc"
+else
+  echo "no prettier at $PRETTIER: the assembled files keep the format of the prototypes"
+fi
 (cd "$W/asm" && bun "$H/overlay/comment_runs.ts" test/cli/lint/conformance/runner/*.ts test/cli/lint/conformance/sweep.ts test/cli/lint/conformance.test.ts)
 bun "$H/verify/regex_sites.ts" "$W/asm" | tail -1
 mkdir -p "$W/tsc"

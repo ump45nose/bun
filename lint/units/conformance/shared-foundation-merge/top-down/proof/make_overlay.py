@@ -158,17 +158,19 @@ export interface ReadFileResult {
   ok: boolean;
   lossy: boolean;
 }
+import { utf8String } from "@M/bytestring";
 export function readFile(path: string): ReadFileResult {
-  return { ...vfs.readFile(path), lossy: false };
+  const r = vfs.readFile(path);
+  return r.ok ? { contents: r.contents, ok: true, lossy: false } : { contents: "", ok: false, lossy: false };
 }
 export function decodeBytes(s: Uint8Array): ReadFileResult {
-  return { contents: vfs.decodeBytes(s), ok: true, lossy: false };
+  return { contents: utf8String(vfs.decodeBytes(s)), ok: true, lossy: false };
 }
 export const decodeUtf16 = vfs.decodeUtf16;
 '''
 
 # The copy of the directive grammar refused such a file with a value.
-VFS_RESULT = '''import { InvalidUtf8Error } from "@M/bytestring";
+VFS_RESULT = '''import { InvalidUtf8Error, utf8String } from "@M/bytestring";
 import * as vfs from "@M/vfs";
 import type { Result } from "./result";
 export function readFile(path: string): Result<string> {
@@ -182,7 +184,7 @@ export function readFile(path: string): Result<string> {
 }
 export function decodeBytes(s: Uint8Array): Result<string> {
   try {
-    return { ok: true, value: vfs.decodeBytes(s) };
+    return { ok: true, value: utf8String(vfs.decodeBytes(s)) };
   } catch (e) {
     if (e instanceof InvalidUtf8Error) return { ok: false, reason: "not valid UTF-8" };
     throw e;

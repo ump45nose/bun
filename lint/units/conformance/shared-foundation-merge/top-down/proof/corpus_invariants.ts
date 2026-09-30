@@ -3,7 +3,7 @@
 // point whose fold partners differ in UTF-8 length (there a slice by length and a fold differ from the reference).
 // usage: bun corpus_invariants.ts <tree: a copy of notes/lint/units/conformance> [typescript-go checkout]
 import { readdirSync, readFileSync } from "node:fs";
-import { InvalidUtf8Error, byteStringToUtf8, toByteString } from "../runner/bytestring";
+import { InvalidUtf8Error, utf8String } from "../runner/bytestring";
 import { foldKey, isAscii, unicodeToLower } from "../runner/gostrings";
 import { foldRanges, lowerRanges } from "../runner/unicode_tables";
 import { decodeBytes } from "../runner/vfs";
@@ -65,7 +65,7 @@ const note = (kind: string, where: string, s: string) => {
 for (const f of cases) {
   let text: string;
   try {
-    text = decodeBytes(readFileSync(f), f);
+    text = utf8String(decodeBytes(readFileSync(f)), f);
   } catch (e) {
     if (!(e instanceof InvalidUtf8Error)) throw e;
     invalid++;
@@ -90,8 +90,8 @@ for (const f of cases) {
 }
 for (const f of others) {
   try {
-    if (f.includes("/tests/lib/")) decodeBytes(readFileSync(f), f);
-    else byteStringToUtf8(toByteString(readFileSync(f)), f);
+    if (f.includes("/tests/lib/")) utf8String(decodeBytes(readFileSync(f)), f);
+    else utf8String(readFileSync(f), f);
   } catch (e) {
     if (!(e instanceof InvalidUtf8Error)) throw e;
     invalid++;

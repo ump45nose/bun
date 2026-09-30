@@ -1,12 +1,8 @@
 // Port of ReadFile, decodeBytes and decodeUtf16 of internal/vfs/internal/internal.go of microsoft/typescript-go at 89d5d5b.
 import { readFileSync } from "node:fs";
-import { utf8String } from "./bytestring";
+import { utf8Bytes, utf8String } from "./bytestring";
 
-export interface ReadFileResult {
-  contents: string;
-  // False: the file cannot be read.
-  ok: boolean;
-}
+export type ReadFileResult = { ok: true; contents: string } | { ok: false };
 
 // The reference keeps bytes that are no UTF-8; a JavaScript string cannot, so such a file throws InvalidUtf8Error.
 export function readFile(path: string): ReadFileResult {
@@ -14,24 +10,24 @@ export function readFile(path: string): ReadFileResult {
   try {
     b = readFileSync(path);
   } catch {
-    return { contents: "", ok: false };
+    return { ok: false };
   }
   if (b.length === 0) {
-    return { contents: "", ok: true };
+    return { ok: true, contents: "" };
   }
-  return { contents: decodeBytes(b, path), ok: true };
+  return { ok: true, contents: utf8String(decodeBytes(b), path) };
 }
 
-// UTF-16 by byte order mark, else one UTF-8 byte order mark is dropped.
-export function decodeBytes(s: Uint8Array, what = "the file"): string {
+// The UTF-8 bytes of the contents: UTF-16 by byte order mark, else one UTF-8 byte order mark is dropped.
+export function decodeBytes(s: Uint8Array): Uint8Array {
   if (s.length >= 2) {
-    if (s[0] === 0xff && s[1] === 0xfe) return decodeUtf16(s.subarray(2), true);
-    if (s[0] === 0xfe && s[1] === 0xff) return decodeUtf16(s.subarray(2), false);
+    if (s[0] === 0xff && s[1] === 0xfe) return utf8Bytes(decodeUtf16(s.subarray(2), true));
+    if (s[0] === 0xfe && s[1] === 0xff) return utf8Bytes(decodeUtf16(s.subarray(2), false));
   }
   if (s.length >= 3 && s[0] === 0xef && s[1] === 0xbb && s[2] === 0xbf) {
-    s = s.subarray(3);
+    return s.subarray(3);
   }
-  return utf8String(s, what);
+  return s;
 }
 
 // An odd trailing byte is ignored and a lone surrogate becomes U+FFFD, as utf16.Decode does.

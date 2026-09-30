@@ -42,11 +42,6 @@ export function trimFunc(s: string, f: (r: number) => boolean): string {
   return cps.slice(start, end).join("");
 }
 
-// strings.TrimPrefix
-export function trimPrefix(s: string, prefix: string): string {
-  return s.startsWith(prefix) ? s.slice(prefix.length) : s;
-}
-
 // strings.TrimSuffix
 export function trimSuffix(s: string, suffix: string): string {
   return s.endsWith(suffix) ? s.slice(0, s.length - suffix.length) : s;

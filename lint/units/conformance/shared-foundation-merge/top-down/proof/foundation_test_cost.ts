@@ -4,7 +4,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
-import { type ByteString, InvalidUtf8Error, byteStringToUtf8, decodeLastRune, decodeRune, runeCount, utf8ToByteString, validString } from "../runner/bytestring";
+import { type ByteString, InvalidUtf8Error, byteStringToUtf8, decodeLastRune, decodeRune, runeCount, utf8String, utf8ToByteString, validString } from "../runner/bytestring";
 import { computeECMALineStarts, utf16Len } from "../runner/core";
 import { atoi, compareStrings, equalFold, foldKey, isSpace, padLeft, sortedStrings, toLower, trimSpace, unicodeToLower } from "../runner/gostrings";
 import { skipTrivia } from "../runner/scanner";
@@ -102,7 +102,7 @@ for (const v of rows) {
     const bytes = Buffer.from(v.bytes, "base64");
     let got: string;
     try {
-      got = bytes.length === 0 ? "" : hex(utf8ToByteString(decodeBytes(bytes)));
+      got = bytes.length === 0 ? "" : hex(utf8ToByteString(utf8String(decodeBytes(bytes))));
     } catch (e) {
       got = e instanceof InvalidUtf8Error ? "InvalidUtf8Error" : String(e);
     }

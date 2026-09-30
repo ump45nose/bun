@@ -9,13 +9,15 @@ const runner = join(process.argv[2], "test/cli/lint/conformance/runner");
 let bad = 0;
 for (const [file, before, source, flags] of sites) {
   const text = readFileSync(join(runner, file), "utf8");
-  const at = text.indexOf(before);
+  // The literal stands after the name on the same line or, where the line is long, on the next one.
+  const head = before.trimEnd();
+  const at = text.indexOf(head);
   if (at < 0) {
-    console.log(`FAIL ${file}: no ${JSON.stringify(before)}`);
+    console.log(`FAIL ${file}: no ${JSON.stringify(head)}`);
     bad++;
     continue;
   }
-  const rest = text.slice(at + before.length);
+  const rest = text.slice(at + head.length).trimStart();
   const literal = rest.slice(0, rest.indexOf("\n")).replace(/[;,]$/, "");
   const re = new Function("return " + literal)() as RegExp;
   const same = re instanceof RegExp && re.source === source && re.flags === flags;
