@@ -501,9 +501,9 @@ impl Interpreter {
         };
 
         // ── cwd / cwd_fd ───────────────────────────────────────────────────
-        // A shell must not silently run in the stand-in directory when the
-        // process was started from one the OS cannot name.
-        let cwd = match bun_sys::require_cwd() {
+        // Read again: the directory is opened by name below, and its name
+        // changes without a `chdir` when it or one above it is renamed.
+        let cwd = match bun_sys::reread_cwd() {
             Ok(cwd) => cwd,
             Err(e) => return Err(ShellErr::new_sys(&e)),
         };

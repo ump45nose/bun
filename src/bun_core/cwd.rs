@@ -132,14 +132,7 @@ static GENERATION: AtomicU64 = AtomicU64::new(0);
 
 /// Why [`startup`] could not read the working directory, until a `chdir`
 /// records one. Its lock is also what keeps [`set`] to one caller at a time.
-static UNREAD: Mutex<Option<Unread>> = Mutex::new(None);
-
-#[derive(Clone, Copy)]
-struct Unread {
-    err: crate::Error,
-    /// What `getcwd` left in `errno` (`GetLastError` on Windows).
-    os_error: u32,
-}
+static UNREAD: Mutex<Option<crate::Error>> = Mutex::new(None);
 
 /// The working directory as the OS reports it.
 #[inline]
@@ -188,17 +181,13 @@ pub fn startup() {
             set(cwd.as_bytes());
         }
         Err(err) => {
-            #[cfg(unix)]
-            let os_error = crate::ffi::errno() as u32;
-            #[cfg(windows)]
-            let os_error = bun_windows_sys::kernel32::GetLastError();
             let exe_dir: &[u8] = crate::self_exe_path()
                 .ok()
                 .and_then(|p| crate::dirname(p.as_bytes()))
                 .filter(|d| crate::path_sep::is_absolute_native(d))
                 .unwrap_or(if cfg!(windows) { b"C:\\" } else { b"/" });
             set(exe_dir);
-            *UNREAD.lock() = Some(Unread { err, os_error });
+            *UNREAD.lock() = Some(err);
         }
     }
 }
@@ -209,15 +198,9 @@ pub fn startup() {
 pub fn require() -> crate::CrateResult<Cwd> {
     let unread = *UNREAD.lock();
     match unread {
-        Some(unread) => Err(unread.err),
+        Some(err) => Err(err),
         None => Ok(get()),
     }
-}
-
-/// The OS error code behind a failing [`require`]: `errno`, or
-/// `GetLastError` on Windows.
-pub fn unread_os_error() -> Option<u32> {
-    UNREAD.lock().map(|unread| unread.os_error)
 }
 
 /// Records `path` as the working directory. For [`startup`] and

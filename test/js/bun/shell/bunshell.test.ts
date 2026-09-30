@@ -3489,6 +3489,43 @@ describe("literal digits after an interpolated value", () => {
     .runAsTest("each interpolated value keeps its own slot when followed by a literal digit");
 });
 
+// POSIX-only: Windows refuses to rename a directory that is a process's cwd.
+describe.skipIf(isWindows)("after the working directory is renamed", () => {
+  test.concurrent.each([
+    ["by this process", `require("node:fs").renameSync(before, after);`],
+    ["by another process", `require("node:child_process").execFileSync("/bin/mv", [before, after]);`],
+  ])("%s, a command runs in it", async (_, rename) => {
+    using dir = tempDir("shell-renamed-cwd", { "before/f.txt": "hello" });
+    await using proc = Bun.spawn({
+      cmd: [
+        bunExe(),
+        "-e",
+        `
+          const { $ } = require("bun");
+          const path = require("node:path");
+          const before = path.join(process.cwd(), "before");
+          const after = path.join(process.cwd(), "after");
+          process.chdir(before);
+          ${rename}
+          const cat = (await $\`cat f.txt\`.quiet()).stdout.toString();
+          const pwd = (await $\`pwd\`.quiet()).stdout.toString().trim();
+          console.log(JSON.stringify({ cat, pwd: pwd === after, cwd: Bun.cwd === after }));
+        `,
+      ],
+      env: bunEnv,
+      cwd: String(dir),
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+    expect({ out: JSON.parse(stdout.trim() || "null"), stderr: exitCode === 0 ? "" : stderr }).toEqual({
+      out: { cat: "hello", pwd: true, cwd: true },
+      stderr: "",
+    });
+    expect(exitCode).toBe(0);
+  });
+});
+
 test.skipIf(isWindows)("external command resolution uses the PATH from the shell environment", async () => {
   using dir = tempDir("shell-argv0-path", {
     "onlyintool": "#!/bin/sh\necho from-onlyintool\n",

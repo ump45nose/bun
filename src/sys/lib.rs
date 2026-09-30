@@ -899,20 +899,15 @@ fn cwd_changed() -> Maybe<()> {
     }
 }
 
-/// [`bun_core::cwd::get`], or the error `getcwd` gave at startup if the
-/// process was started from a directory the OS cannot name and has not moved
-/// since — for operations that would otherwise act on the stand-in directory.
-pub fn require_cwd() -> Maybe<bun_core::cwd::Cwd> {
-    let Some(os_error) = bun_core::cwd::unread_os_error() else {
-        return Ok(bun_core::cwd::get());
-    };
-    #[cfg(not(windows))]
-    return Err(Error::from_code_int(os_error as _, Tag::getcwd));
-    #[cfg(windows)]
-    return Err(Error::from_win32(
-        windows::Win32Error::from_u32(os_error),
-        Tag::getcwd,
-    ));
+/// The working directory as the OS names it now, recorded in
+/// [`bun_core::cwd`] if that is not what it holds. Renaming the directory, or
+/// one above it, changes its name without a `chdir`; this is for callers
+/// about to open it by name.
+pub fn reread_cwd() -> Maybe<bun_core::cwd::Cwd> {
+    let mut buf = bun_paths::path_buffer_pool::get();
+    let len = getcwd(&mut buf[..])?;
+    bun_core::cwd::set(&buf[..len]);
+    Ok(bun_core::cwd::get())
 }
 
 /// Change the process working directory; [`bun_core::cwd`] follows. On `Err`
