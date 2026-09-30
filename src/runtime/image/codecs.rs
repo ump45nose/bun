@@ -253,7 +253,7 @@ bun_core::oom_from_alloc!(Error);
 /// cap is ~1 GiB, which is already past where you'd want to be.
 pub(crate) const DEFAULT_MAX_PIXELS: u64 = 0x3FFF * 0x3FFF;
 
-/// Decodes at full size. `PipelineTask::run` decodes a JPEG through `jpeg::open`, to pass a hint.
+/// Decodes at full size. `PipelineTask::run` decodes a JPEG through `jpeg::open`, to pass a floor.
 pub(crate) fn decode(bytes: &[u8], max_pixels: u64) -> Result<Decoded, Error> {
     let fmt = Format::sniff(bytes).ok_or(Error::UnknownFormat)?;
     match fmt {
