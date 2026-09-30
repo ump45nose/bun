@@ -35,7 +35,10 @@ impl Json {
     }
     pub fn get(&self, key: &str) -> Option<&Json> {
         match self {
-            Json::Object(members) => members.iter().find(|member| member.0 == key.as_bytes()).map(|member| &member.1),
+            Json::Object(members) => members
+                .iter()
+                .find(|member| member.0 == key.as_bytes())
+                .map(|member| &member.1),
             _ => None,
         }
     }
@@ -70,7 +73,10 @@ impl Json {
 
 impl Reader<'_> {
     fn error(&self, message: &'static str) -> JsonError {
-        JsonError { offset: self.at, message }
+        JsonError {
+            offset: self.at,
+            message,
+        }
     }
     fn peek(&self) -> u8 {
         self.bytes.get(self.at).copied().unwrap_or(0)
@@ -113,7 +119,9 @@ impl Reader<'_> {
         let mut integer: Option<i64> = Some(0);
         let digits = self.at;
         while let b @ b'0'..=b'9' = self.peek() {
-            integer = integer.and_then(|v| v.checked_mul(10)).and_then(|v| v.checked_add(i64::from(b - b'0')));
+            integer = integer
+                .and_then(|v| v.checked_mul(10))
+                .and_then(|v| v.checked_add(i64::from(b - b'0')));
             self.at += 1;
         }
         if self.at == digits {
@@ -128,7 +136,11 @@ impl Reader<'_> {
         while matches!(self.peek(), b'0'..=b'9' | b'.' | b'e' | b'E' | b'+' | b'-') {
             self.at += 1;
         }
-        let text = self.bytes.get(start..self.at).and_then(|slice| std::str::from_utf8(slice).ok()).unwrap_or("");
+        let text = self
+            .bytes
+            .get(start..self.at)
+            .and_then(|slice| std::str::from_utf8(slice).ok())
+            .unwrap_or("");
         match text.parse::<f64>() {
             Ok(value) => Ok((None, value)),
             Err(_) => Err(self.error("not a number")),
@@ -178,7 +190,9 @@ impl Reader<'_> {
                         b't' => out.push(b'\t'),
                         b'u' => {
                             let mut code = self.hex4()?;
-                            if (0xD800..0xDC00).contains(&code) && self.bytes.get(self.at..self.at + 2) == Some(b"\\u") {
+                            if (0xD800..0xDC00).contains(&code)
+                                && self.bytes.get(self.at..self.at + 2) == Some(b"\\u")
+                            {
                                 let save = self.at;
                                 self.at += 2;
                                 let low = self.hex4()?;

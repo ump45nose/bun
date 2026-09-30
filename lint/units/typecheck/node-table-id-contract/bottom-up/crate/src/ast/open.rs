@@ -106,7 +106,11 @@ pub(crate) fn count<T>(cell: &RefCell<Vec<T>>) -> u32 {
 }
 
 // Reads a field of the object at `index`. The default when the index names nothing.
-pub(crate) fn read<T, R: Default>(cell: &RefCell<Vec<T>>, index: usize, f: impl FnOnce(&T) -> R) -> R {
+pub(crate) fn read<T, R: Default>(
+    cell: &RefCell<Vec<T>>,
+    index: usize,
+    f: impl FnOnce(&T) -> R,
+) -> R {
     match cell.try_borrow() {
         Ok(items) => match items.get(index) {
             Some(item) if index != 0 => f(item),

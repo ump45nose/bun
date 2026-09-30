@@ -1,16 +1,20 @@
 // The context that resolves an id: the published files of a program, or the one file a binder binds, plus an open store.
 use crate::ast::ast_generated::Def;
 use crate::ast::file::{Bound, File, FlowList, FlowNode, NodeRecord};
-use crate::ast::flags_generated::{CheckFlags, FlowFlags, ModifierFlags, NodeFlags, SymbolFlags, TokenFlags};
+use crate::ast::flags_generated::{
+    CheckFlags, FlowFlags, ModifierFlags, NodeFlags, SymbolFlags, TokenFlags,
+};
 use crate::ast::kind_generated::Kind;
 use crate::ast::layout::{
-    ChildSlot, LATE_END_FLOW_NODE, LATE_FALLTHROUGH_FLOW_NODE, LATE_FLOW_NODE, LATE_LOCAL_SYMBOL, LATE_LOCALS, LATE_NEXT_CONTAINER,
-    LATE_RETURN_FLOW_NODE, LATE_SYMBOL, SlotType, VisitTag, late_rank,
+    ChildSlot, LATE_END_FLOW_NODE, LATE_FALLTHROUGH_FLOW_NODE, LATE_FLOW_NODE, LATE_LOCAL_SYMBOL,
+    LATE_LOCALS, LATE_NEXT_CONTAINER, LATE_RETURN_FLOW_NODE, LATE_SYMBOL, SlotType, VisitTag,
+    late_rank,
 };
 use crate::ast::open::{Open, OpenList, OpenNode, Symbol, push, read, write};
 use crate::tscore::golang::{List, OrderedMap, Text};
 use crate::tscore::ids::{
-    FlowListId, FlowNodeId, ModifierListId, NodeId, NodeListId, OPEN_BIT, PAGE_BITS, SymbolId, SymbolTableId, TypeId,
+    FlowListId, FlowNodeId, ModifierListId, NodeId, NodeListId, OPEN_BIT, PAGE_BITS, SymbolId,
+    SymbolTableId, TypeId,
 };
 use crate::tscore::internal::{Fault, FaultKind};
 use crate::tscore::text::TextRange;
@@ -40,7 +44,13 @@ pub enum FrozenError {
 }
 
 impl<'a> Frozen<'a> {
-    fn claim(pages: &mut Vec<PageEntry>, index: usize, base: u32, span: u32, bound: bool) -> Result<(), FrozenError> {
+    fn claim(
+        pages: &mut Vec<PageEntry>,
+        index: usize,
+        base: u32,
+        span: u32,
+        bound: bool,
+    ) -> Result<(), FrozenError> {
         let first = (base >> PAGE_BITS) as usize;
         let end = ((base + span) >> PAGE_BITS) as usize;
         if pages.len() < end {
@@ -48,9 +58,16 @@ impl<'a> Frozen<'a> {
         }
         for page in pages.get_mut(first..end).unwrap_or(&mut []) {
             if page.file != 0 {
-                return Err(FrozenError::Overlap { first: page.file as usize - 1, second: index });
+                return Err(FrozenError::Overlap {
+                    first: page.file as usize - 1,
+                    second: index,
+                });
             }
-            *page = PageEntry { file: index as u32 + 1, base, bound };
+            *page = PageEntry {
+                file: index as u32 + 1,
+                base,
+                bound,
+            };
         }
         Ok(())
     }
@@ -63,16 +80,28 @@ impl<'a> Frozen<'a> {
                 Self::claim(&mut pages, index, bound.base(), bound.span(), true)?;
             }
         }
-        Ok(Self { pages, files: files.to_vec(), binding: false })
+        Ok(Self {
+            pages,
+            files: files.to_vec(),
+            binding: false,
+        })
     }
     // The context of the binder of `file`.
     pub fn of_binding(file: &'a File) -> Self {
         let mut pages: Vec<PageEntry> = Vec::new();
         let _ = Self::claim(&mut pages, 0, file.base(), file.span(), false);
-        Self { pages, files: vec![file], binding: true }
+        Self {
+            pages,
+            files: vec![file],
+            binding: true,
+        }
     }
     pub fn none() -> Self {
-        Self { pages: Vec::new(), files: Vec::new(), binding: false }
+        Self {
+            pages: Vec::new(),
+            files: Vec::new(),
+            binding: false,
+        }
     }
     pub fn files(&self) -> &[&'a File] {
         &self.files
@@ -188,9 +217,14 @@ impl<'a> NodeData<'a> {
                 if mask & bit == 0 {
                     return 0;
                 }
-                cells.get(late_rank(mask, bit)).map_or(0, |cell| cell.load(Ordering::Relaxed))
+                cells
+                    .get(late_rank(mask, bit))
+                    .map_or(0, |cell| cell.load(Ordering::Relaxed))
             }
-            Late::Open { values } => values.get(bit.trailing_zeros() as usize).copied().unwrap_or(0),
+            Late::Open { values } => values
+                .get(bit.trailing_zeros() as usize)
+                .copied()
+                .unwrap_or(0),
         }
     }
     #[inline]
@@ -231,16 +265,28 @@ impl Iterator for Children<'_> {
             }
             let child = self.layout.get(self.next_slot)?;
             self.next_slot += 1;
-            let value = self.slots.get(usize::from(child.slot)).copied().unwrap_or(0);
+            let value = self
+                .slots
+                .get(usize::from(child.slot))
+                .copied()
+                .unwrap_or(0);
             if value == 0 {
                 continue;
             }
             match child.visit {
-                VisitTag::Nodes | VisitTag::Modifiers | VisitTag::RawNodes | VisitTag::Parameters | VisitTag::TopLevelStatements => {
+                VisitTag::Nodes
+                | VisitTag::Modifiers
+                | VisitTag::RawNodes
+                | VisitTag::Parameters
+                | VisitTag::TopLevelStatements => {
                     self.list = self.ast.nodes(NodeListId(value)).as_slice();
                     self.next_item = 0;
                 }
-                VisitTag::Node | VisitTag::Token | VisitTag::EmbeddedStatement | VisitTag::IterationBody | VisitTag::FunctionBody => {
+                VisitTag::Node
+                | VisitTag::Token
+                | VisitTag::EmbeddedStatement
+                | VisitTag::IterationBody
+                | VisitTag::FunctionBody => {
                     return Some(NodeId(value));
                 }
             }
@@ -259,7 +305,12 @@ impl<'a> Ast<'a> {
         self.frozen
     }
     pub fn fault(self, kind: FaultKind, message: &'static str, detail: u32, id: u32) {
-        self.open.faults.record(Fault { kind, message, detail, id });
+        self.open.faults.record(Fault {
+            kind,
+            message,
+            detail,
+            id,
+        });
     }
     // What a method of Node does where upstream panics on a kind it does not handle.
     pub fn unhandled<T: Default>(self, message: &'static str, node: NodeId) -> T {
@@ -293,7 +344,8 @@ impl<'a> Ast<'a> {
         if node.is_open() {
             return self.open_node(node, |n| n.kind);
         }
-        self.record(node).map_or(Kind::Unknown, |record| record.kind)
+        self.record(node)
+            .map_or(Kind::Unknown, |record| record.kind)
     }
     #[inline]
     pub fn def(self, node: NodeId) -> Def {
@@ -307,14 +359,16 @@ impl<'a> Ast<'a> {
         if node.is_open() {
             return self.open_node(node, |n| n.parent);
         }
-        self.record(node).map_or(NodeId::NIL, |record| record.parent)
+        self.record(node)
+            .map_or(NodeId::NIL, |record| record.parent)
     }
     #[inline]
     pub fn loc(self, node: NodeId) -> TextRange {
         if node.is_open() {
             return self.open_node(node, |n| n.loc);
         }
-        self.record(node).map_or_else(TextRange::default, |record| record.loc)
+        self.record(node)
+            .map_or_else(TextRange::default, |record| record.loc)
     }
     #[inline]
     pub fn pos(self, node: NodeId) -> i32 {
@@ -332,7 +386,9 @@ impl<'a> Ast<'a> {
         match self.frozen.locate(node.0) {
             Some((file, local)) => file.node_flags(local),
             None => match self.frozen.locate_bound(node.0) {
-                Some((_, bound, local)) => bound.flags.get(local).copied().unwrap_or(NodeFlags::NONE),
+                Some((_, bound, local)) => {
+                    bound.flags.get(local).copied().unwrap_or(NodeFlags::NONE)
+                }
                 None => NodeFlags::NONE,
             },
         }
@@ -349,7 +405,14 @@ impl<'a> Ast<'a> {
             if n.def == Def::None {
                 return None;
             }
-            return Some((n.def, NodeData { slots: n.slots, texts: Texts::Open(self.open), late: Late::Open { values: n.late } }));
+            return Some((
+                n.def,
+                NodeData {
+                    slots: n.slots,
+                    texts: Texts::Open(self.open),
+                    late: Late::Open { values: n.late },
+                },
+            ));
         }
         let Some((file, _, record)) = self.file_record(node) else {
             let (_, bound, local) = self.frozen.locate_bound(node.0)?;
@@ -357,15 +420,32 @@ impl<'a> Ast<'a> {
             if record.def == Def::None {
                 return None;
             }
-            return Some((record.def, NodeData { slots: bound.node_slots(record), texts: Texts::Bound(bound), late: Late::Open { values: [0; 8] } }));
+            return Some((
+                record.def,
+                NodeData {
+                    slots: bound.node_slots(record),
+                    texts: Texts::Bound(bound),
+                    late: Late::Open { values: [0; 8] },
+                },
+            ));
         };
         if record.def == Def::None {
             return None;
         }
         let mask = record.def.info().late;
         let start = record.late as usize;
-        let cells = file.late.get(start..start + mask.count_ones() as usize).unwrap_or(&[]);
-        Some((record.def, NodeData { slots: file.node_slots(record), texts: Texts::File(file), late: Late::File { cells, mask } }))
+        let cells = file
+            .late
+            .get(start..start + mask.count_ones() as usize)
+            .unwrap_or(&[]);
+        Some((
+            record.def,
+            NodeData {
+                slots: file.node_slots(record),
+                texts: Texts::File(file),
+                late: Late::File { cells, mask },
+            },
+        ))
     }
     // The payload behind a cast. A node of another definition is a fault, as a failed type assertion is upstream.
     pub fn data(self, node: NodeId, def: Def) -> Option<NodeData<'a>> {
@@ -388,7 +468,9 @@ impl<'a> Ast<'a> {
             return List::NIL;
         }
         if list.is_open() {
-            return read(&self.open.lists, list.open_index(), |l: &OpenList<'a>| l.nodes);
+            return read(&self.open.lists, list.open_index(), |l: &OpenList<'a>| {
+                l.nodes
+            });
         }
         match self.frozen.locate(list.0) {
             Some((file, local)) => match file.list(local) {
@@ -404,7 +486,9 @@ impl<'a> Ast<'a> {
             return read(&self.open.lists, list.open_index(), |l| l.loc);
         }
         match self.frozen.locate(list.0) {
-            Some((file, local)) => file.list(local).map_or_else(TextRange::default, |record| record.loc),
+            Some((file, local)) => file
+                .list(local)
+                .map_or_else(TextRange::default, |record| record.loc),
             None => TextRange::default(),
         }
     }
@@ -423,7 +507,9 @@ impl<'a> Ast<'a> {
             return read(&self.open.lists, list.open_index(), |l| l.modifier_flags);
         }
         match self.frozen.locate(list.0) {
-            Some((file, local)) => file.list(local).map_or(ModifierFlags::NONE, |record| record.modifier_flags),
+            Some((file, local)) => file
+                .list(local)
+                .map_or(ModifierFlags::NONE, |record| record.modifier_flags),
             None => ModifierFlags::NONE,
         }
     }
@@ -446,12 +532,30 @@ impl<'a> Ast<'a> {
                 let info = def.info();
                 // JSDocParameterOrPropertyTag: the name comes first when IsNameFirst is set.
                 let name_first = !info.children_alt.is_empty()
-                    && info.slots.iter().position(|slot| slot.name == "IsNameFirst").is_some_and(|index| data.bool(index));
-                (if name_first { info.children_alt } else { info.children }, data.slots)
+                    && info
+                        .slots
+                        .iter()
+                        .position(|slot| slot.name == "IsNameFirst")
+                        .is_some_and(|index| data.bool(index));
+                (
+                    if name_first {
+                        info.children_alt
+                    } else {
+                        info.children
+                    },
+                    data.slots,
+                )
             }
             None => (&[], &[]),
         };
-        Children { ast: self, slots, layout, next_slot: 0, list: &[], next_item: 0 }
+        Children {
+            ast: self,
+            slots,
+            layout,
+            next_slot: 0,
+            list: &[],
+            next_item: 0,
+        }
     }
     // Node.ForEachChild: stops at the first child for which `visit` returns true.
     pub fn for_each_child(self, node: NodeId, visit: &mut dyn FnMut(NodeId) -> bool) -> bool {
@@ -466,11 +570,20 @@ impl<'a> Ast<'a> {
     fn late_value(self, node: NodeId, bit: u8) -> u32 {
         if node.is_open() {
             return self.open_node(node, |n| {
-                if n.def.info().late & bit == 0 { 0 } else { n.late.get(bit.trailing_zeros() as usize).copied().unwrap_or(0) }
+                if n.def.info().late & bit == 0 {
+                    0
+                } else {
+                    n.late
+                        .get(bit.trailing_zeros() as usize)
+                        .copied()
+                        .unwrap_or(0)
+                }
             });
         }
         match self.file_record(node) {
-            Some((file, _, record)) => file.late_cell(record, bit).map_or(0, |cell| cell.load(Ordering::Relaxed)),
+            Some((file, _, record)) => file
+                .late_cell(record, bit)
+                .map_or(0, |cell| cell.load(Ordering::Relaxed)),
             None => 0,
         }
     }
@@ -549,13 +662,23 @@ impl<'a> Ast<'a> {
         self.set_late(node, LATE_SYMBOL, symbol.0, "DeclarationData().Symbol");
     }
     pub fn set_local_symbol(self, node: NodeId, symbol: SymbolId) {
-        self.set_late(node, LATE_LOCAL_SYMBOL, symbol.0, "ExportableData().LocalSymbol");
+        self.set_late(
+            node,
+            LATE_LOCAL_SYMBOL,
+            symbol.0,
+            "ExportableData().LocalSymbol",
+        );
     }
     pub fn set_locals(self, node: NodeId, locals: SymbolTableId) {
         self.set_late(node, LATE_LOCALS, locals.0, "LocalsContainerData().Locals");
     }
     pub fn set_next_container(self, node: NodeId, next: NodeId) {
-        self.set_late(node, LATE_NEXT_CONTAINER, next.0, "LocalsContainerData().NextContainer");
+        self.set_late(
+            node,
+            LATE_NEXT_CONTAINER,
+            next.0,
+            "LocalsContainerData().NextContainer",
+        );
     }
     pub fn set_flow_node(self, node: NodeId, flow: FlowNodeId) {
         self.set_late(node, LATE_FLOW_NODE, flow.0, "FlowNodeData().FlowNode");
@@ -567,7 +690,12 @@ impl<'a> Ast<'a> {
         self.set_late(node, LATE_RETURN_FLOW_NODE, flow.0, "ReturnFlowNode");
     }
     pub fn set_fallthrough_flow_node(self, node: NodeId, flow: FlowNodeId) {
-        self.set_late(node, LATE_FALLTHROUGH_FLOW_NODE, flow.0, "FallthroughFlowNode");
+        self.set_late(
+            node,
+            LATE_FALLTHROUGH_FLOW_NODE,
+            flow.0,
+            "FallthroughFlowNode",
+        );
     }
 
     // node.Flags = flags: a node of the open store, or a node of the file that is being bound.
@@ -613,12 +741,22 @@ impl<'a> Ast<'a> {
     // One slot of a node of the open store, for the setters of MutableNode.
     pub fn set_slot(self, node: NodeId, def: Def, index: u8, value: u32) {
         if !node.is_open() {
-            self.fault(FaultKind::WriteToFrozen, def.info().name, u32::from(index), node.0);
+            self.fault(
+                FaultKind::WriteToFrozen,
+                def.info().name,
+                u32::from(index),
+                node.0,
+            );
             return;
         }
         let current = self.open_node(node, |n| *n);
         if current.def != def || usize::from(index) >= current.slots.len() {
-            self.fault(FaultKind::BadCast, def.info().name, current.def as u32, node.0);
+            self.fault(
+                FaultKind::BadCast,
+                def.info().name,
+                current.def as u32,
+                node.0,
+            );
             return;
         }
         let mut slots = current.slots.to_vec();
@@ -632,7 +770,9 @@ impl<'a> Ast<'a> {
     // Node.Text of the kinds that keep one text. The prototype leaves out the two kinds that build a string.
     pub fn text(self, node: NodeId) -> Text<'a> {
         match self.data_any(node) {
-            Some((def, data)) => match def.info().slots.iter().position(|slot| slot.ty == SlotType::Text && (slot.name == "Text" || slot.name == "text")) {
+            Some((def, data)) => match def.info().slots.iter().position(|slot| {
+                slot.ty == SlotType::Text && (slot.name == "Text" || slot.name == "text")
+            }) {
                 Some(index) => data.text(index),
                 None => self.unhandled("Unhandled case in Node.Text", node),
             },
@@ -658,7 +798,8 @@ impl<'a> Ast<'a> {
     }
     // Node.ParameterList
     pub fn parameter_list(self, node: NodeId) -> NodeListId {
-        self.function_like_data(node).map_or(NodeListId::NIL, |data| data.parameters)
+        self.function_like_data(node)
+            .map_or(NodeListId::NIL, |data| data.parameters)
     }
     // Node.Parameters
     pub fn parameters(self, node: NodeId) -> List<'a, NodeId> {
@@ -693,7 +834,10 @@ impl<'a> Ast<'a> {
     }
     // Node.Decorators
     pub fn decorators(self, node: NodeId) -> Vec<NodeId> {
-        self.modifier_nodes(node).iter().filter(|modifier| self.kind(*modifier) == Kind::Decorator).collect()
+        self.modifier_nodes(node)
+            .iter()
+            .filter(|modifier| self.kind(*modifier) == Kind::Decorator)
+            .collect()
     }
 
     // ast.Symbol behind an id.
@@ -711,7 +855,11 @@ impl<'a> Ast<'a> {
                     flags: record.flags,
                     check_flags: CheckFlags::NONE,
                     name: file.name(bound, record.name),
-                    declarations: if declarations.is_empty() { List::NIL } else { List::from_slice(declarations) },
+                    declarations: if declarations.is_empty() {
+                        List::NIL
+                    } else {
+                        List::from_slice(declarations)
+                    },
                     value_declaration: record.value_declaration,
                     members: record.members,
                     exports: record.exports,
@@ -724,7 +872,14 @@ impl<'a> Ast<'a> {
     }
     // newSymbol of the binder and of the checker.
     pub fn new_symbol(self, flags: SymbolFlags, name: Text<'a>) -> SymbolId {
-        let index = push(&self.open.symbols, Symbol { flags, name, ..Symbol::default() });
+        let index = push(
+            &self.open.symbols,
+            Symbol {
+                flags,
+                name,
+                ..Symbol::default()
+            },
+        );
         push(&self.open.open_symbol_ids, 0);
         if index == 0 {
             self.fault(FaultKind::IdSpaceExhausted, "newSymbol", 0, 0);
@@ -751,7 +906,9 @@ impl<'a> Ast<'a> {
                 return id;
             }
             let id = self.next_symbol_id();
-            write(&self.open.open_symbol_ids, symbol.open_index(), |slot| *slot = id);
+            write(&self.open.open_symbol_ids, symbol.open_index(), |slot| {
+                *slot = id
+            });
             return id;
         }
         if let Some((_, bound, local)) = self.frozen.locate_bound(symbol.0) {
@@ -808,14 +965,23 @@ impl<'a> Ast<'a> {
             return read(&self.open.tables, table.open_index(), |t| t.len());
         }
         match self.frozen.locate_bound(table.0) {
-            Some((_, bound, local)) => bound.tables.get(local).map_or(0, |record| record.len as isize),
+            Some((_, bound, local)) => bound
+                .tables
+                .get(local)
+                .map_or(0, |record| record.len as isize),
             None => 0,
         }
     }
     // The entry at a position of the iteration order, for `for name, symbol := range table`.
-    pub fn table_entry_at(self, table: SymbolTableId, position: usize) -> Option<(Text<'a>, SymbolId)> {
+    pub fn table_entry_at(
+        self,
+        table: SymbolTableId,
+        position: usize,
+    ) -> Option<(Text<'a>, SymbolId)> {
         if table.is_open() {
-            return read(&self.open.tables, table.open_index(), |t| t.entry_at(position));
+            return read(&self.open.tables, table.open_index(), |t| {
+                t.entry_at(position)
+            });
         }
         let (file, bound, local) = self.frozen.locate_bound(table.0)?;
         let record = bound.tables.get(local)?;
@@ -825,11 +991,22 @@ impl<'a> Ast<'a> {
     // table[name] = symbol: only a table of the open store.
     pub fn table_set(self, table: SymbolTableId, name: Text<'a>, symbol: SymbolId) {
         if !table.is_open() {
-            self.fault(if table.is_nil() { FaultKind::NilMapWrite } else { FaultKind::WriteToFrozen }, "SymbolTable", 0, table.0);
+            self.fault(
+                if table.is_nil() {
+                    FaultKind::NilMapWrite
+                } else {
+                    FaultKind::WriteToFrozen
+                },
+                "SymbolTable",
+                0,
+                table.0,
+            );
             return;
         }
         let mut ok = false;
-        write(&self.open.tables, table.open_index(), |t| ok = t.set(name, symbol));
+        write(&self.open.tables, table.open_index(), |t| {
+            ok = t.set(name, symbol)
+        });
         if !ok {
             self.fault(FaultKind::NilMapWrite, "SymbolTable", 0, table.0);
         }
@@ -841,12 +1018,27 @@ impl<'a> Ast<'a> {
             return read(&self.open.flow_nodes, flow.open_index(), |f| *f);
         }
         match self.frozen.locate_bound(flow.0) {
-            Some((_, bound, local)) if local != 0 => bound.flow_nodes.get(local).copied().unwrap_or_default(),
+            Some((_, bound, local)) if local != 0 => {
+                bound.flow_nodes.get(local).copied().unwrap_or_default()
+            }
             _ => FlowNode::default(),
         }
     }
-    pub fn new_flow_node(self, flags: FlowFlags, node: NodeId, antecedent: FlowNodeId) -> FlowNodeId {
-        let index = push(&self.open.flow_nodes, FlowNode { flags, node, antecedent, antecedents: FlowListId::NIL });
+    pub fn new_flow_node(
+        self,
+        flags: FlowFlags,
+        node: NodeId,
+        antecedent: FlowNodeId,
+    ) -> FlowNodeId {
+        let index = push(
+            &self.open.flow_nodes,
+            FlowNode {
+                flags,
+                node,
+                antecedent,
+                antecedents: FlowListId::NIL,
+            },
+        );
         if index == 0 {
             self.fault(FaultKind::IdSpaceExhausted, "FlowNode", 0, 0);
             return FlowNodeId::NIL;
@@ -864,7 +1056,9 @@ impl<'a> Ast<'a> {
             return read(&self.open.flow_lists, list.open_index(), |l| *l);
         }
         match self.frozen.locate_bound(list.0) {
-            Some((_, bound, local)) if local != 0 => bound.flow_lists.get(local).copied().unwrap_or_default(),
+            Some((_, bound, local)) if local != 0 => {
+                bound.flow_lists.get(local).copied().unwrap_or_default()
+            }
             _ => FlowList::default(),
         }
     }

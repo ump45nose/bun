@@ -2,9 +2,10 @@ Research unit "committed-ground-truth", top-down pass (2026-09-30). Nothing was 
 N = /workspace/notes/lint/units/conformance, P = N/committed-ground-truth/top-down, REF = /workspace/ref/typescript-go, W = a scratch directory.
 
 Files of P
-  fixtures/                 the five files to commit as they are: reference_counts.json, reference_skips.tsv (written by probes/pin.ts),
+  fixtures/                 the five files to commit as they are: reference_counts.json, reference_instances.tsv (written by probes/pin.ts),
                             directives-inputs.json, directives-expected.json (copies of N/directive-grammar/vectors/synthetic-*.json),
                             fake-lint-fixture.ts (copy of N/check-contract-default-spawn/top-down/fakes/lints.ts)
+  fixtures-compact/         the other form of the list: reference_counts.json with 256 bucket rows and reference_skips.tsv (pin.ts --compact)
   FIXTURES.tsv              every committed fixture and every vector that stays out, with bytes and packed sizes
   NAMES.tsv                 the two discovery rules and the final name of each prototype
   PROVENANCE.tsv            one row per vector: generator, toolchain, network
@@ -16,7 +17,8 @@ Files of P
   probes/lists.ts           the candidate forms of the reference list, for their sizes
   probes/timing.ts          processor time of each check
   probes/log_lists.sh       subtests and skip reasons out of a `go test -v` log, in awk
-  prototype/pins.test.ts    the blocks of conformance.test.ts that read the two reference files
+  prototype/instances.test.ts  the blocks of conformance.test.ts that read reference_instances.tsv
+  prototype/pins.test.ts    the corpus blocks (both forms) and the blocks of the compact form
 
 Scratch set (about one minute)
   bun N/shared-foundation-merge/bottom-up/overlay/assemble.ts N W/asm                      the runner as it would be committed
@@ -27,6 +29,8 @@ Scratch set (about one minute)
 
 The constants
   bun P/probes/pin.ts W/asm $H P/fixtures --reference REF --reference-log /tmp/oe-research/test.log
+      -> reference_counts.json 2793 bytes, reference_instances.tsv 743026 bytes (14915 rows, sha256 85cbb4e9...8960)
+  bun P/probes/pin.ts W/asm $H P/fixtures-compact --compact --reference REF --reference-log /tmp/oe-research/test.log
       -> reference_counts.json 17239 bytes, reference_skips.tsv 157156 bytes (2118 rows, sha256 933bb51a...c515)
       /tmp/oe-research/test.log is the output of the reference's own TestSubmodule with -test.v (22679650 bytes), left by
       N/oracle-and-expectations/bottom-up/groundtruth/prepost/build.sh. Without it: leave --reference-log out, the block referenceRun is not written.
@@ -40,15 +44,17 @@ The constants
          typescript-go's 45811 baseline files: 0 without a run instance; 12763 of 12797 run instances have one, 34 have none (all without errors)
 
 The test blocks
-  CGT_ASM=W/asm CGT_HOME=$H bun test --timeout 180000 P/prototype/pins.test.ts                                         -> 12 pass (release)
-  BUN_DEBUG_QUIET_LOGS=1 CGT_ASM=W/asm CGT_HOME=$H /workspace/wt/cli/build/debug/bun-debug test --timeout 900000 P/prototype/pins.test.ts   -> 10 pass, 2 skip
-  The blocks fail when they should: copy the two files to W/mut, change one hex digit of a bucket digest, "instances": 14915 to 14916,
-  and delete one row of the skip list; CGT_FX=W/mut ... -> 3 fail, and the deleted row is printed by name.
+  CGT_FX=P/fixtures CGT_ASM=W/asm CGT_HOME=$H bun test --timeout 180000 P/prototype/instances.test.ts P/prototype/pins.test.ts    -> 12 pass, 10 skip (release)
+  the same with /workspace/wt/cli/build/debug/bun-debug, BUN_DEBUG_QUIET_LOGS=1 and --timeout 900000, instances.test.ts alone          -> 9 pass, 1 skip
+  CGT_FX=P/fixtures-compact CGT_ASM=W/asm CGT_HOME=$H bun test --timeout 180000 P/prototype/pins.test.ts                             -> 12 pass; debug: 10 pass, 2 skip
+  The blocks fail when they should. List form: in a copy of reference_instances.tsv, the kind of 2dArrays.ts set to E and the row of
+  ES5For-of28(target=es5).ts set to run: 2 fail, both rows are printed with what was expected and what was received.
+  Compact form: one hex digit of a bucket digest changed, "instances": 14915 to 14916, one row of the skip list deleted: 3 fail, the row is printed by name.
 
 Sizes
   bun P/probes/lists.ts W/asm $H W/lists ; wc -c W/lists/* ; gzip -9 -c <file> | wc -c
   In W/repo: a branch with the runner (cp W/asm/test/cli/lint/...), one commit; a branch with the fixtures, one commit;
-  git bundle create W/x.bundle HEAD~1..HEAD ; wc -c W/x.bundle            -> runner 112283, fixtures 35277, corpus + runner + fixtures 7885657
+  git bundle create W/x.bundle HEAD~1..HEAD ; wc -c W/x.bundle            -> runner 112283, fixtures 115863 (compact form 35277), corpus + runner + fixtures 7966242 (7885657)
   The same for each candidate that stays out, as text and as gzip: the table of FIXTURES.tsv.
 
 Times

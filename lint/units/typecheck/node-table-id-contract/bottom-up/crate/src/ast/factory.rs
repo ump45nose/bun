@@ -25,7 +25,13 @@ pub trait NodeSink {
 
 pub trait NodeUpdate: NodeSink {
     // The body of an Update function: `listed` are the members that the constructor sets, in slot order.
-    fn update_node(&mut self, node: NodeId, def: Def, flags: Option<NodeFlags>, listed: &[u32]) -> NodeId;
+    fn update_node(
+        &mut self,
+        node: NodeId,
+        def: Def,
+        flags: Option<NodeFlags>,
+        listed: &[u32],
+    ) -> NodeId;
 }
 
 // ast.ModifierToFlag
@@ -84,7 +90,15 @@ impl NodeSink for Factory<'_> {
     fn alloc_node(&mut self, def: Def, kind: Kind, flags: NodeFlags, slots: &[u32]) -> NodeId {
         let open = self.ast.open();
         let slots = open.arena.alloc_slice_copy(slots);
-        let node = OpenNode { loc: undefined_text_range(), parent: NodeId::NIL, flags, kind, def, slots, late: [0; 8] };
+        let node = OpenNode {
+            loc: undefined_text_range(),
+            parent: NodeId::NIL,
+            flags,
+            kind,
+            def,
+            slots,
+            late: [0; 8],
+        };
         let index = push(&open.nodes, node);
         if index == 0 {
             self.ast.fault(FaultKind::IdSpaceExhausted, "newNode", 0, 0);
@@ -104,7 +118,14 @@ impl NodeSink for Factory<'_> {
     fn new_node_list(&mut self, nodes: &[NodeId]) -> NodeListId {
         let open = self.ast.open();
         let nodes = List::from_slice(open.arena.alloc_slice_copy(nodes));
-        NodeListId::from_open_index(push(&open.lists, OpenList { loc: undefined_text_range(), nodes, modifier_flags: ModifierFlags::NONE }))
+        NodeListId::from_open_index(push(
+            &open.lists,
+            OpenList {
+                loc: undefined_text_range(),
+                nodes,
+                modifier_flags: ModifierFlags::NONE,
+            },
+        ))
     }
     fn new_modifier_list(&mut self, nodes: &[NodeId]) -> ModifierListId {
         let open = self.ast.open();
@@ -113,12 +134,25 @@ impl NodeSink for Factory<'_> {
             modifier_flags |= modifier_to_flag(self.ast.kind(*node));
         }
         let nodes = List::from_slice(open.arena.alloc_slice_copy(nodes));
-        ModifierListId::from_open_index(push(&open.lists, OpenList { loc: undefined_text_range(), nodes, modifier_flags }))
+        ModifierListId::from_open_index(push(
+            &open.lists,
+            OpenList {
+                loc: undefined_text_range(),
+                nodes,
+                modifier_flags,
+            },
+        ))
     }
 }
 
 impl NodeUpdate for Factory<'_> {
-    fn update_node(&mut self, node: NodeId, def: Def, flags: Option<NodeFlags>, listed: &[u32]) -> NodeId {
+    fn update_node(
+        &mut self,
+        node: NodeId,
+        def: Def,
+        flags: Option<NodeFlags>,
+        listed: &[u32],
+    ) -> NodeId {
         let Some(data) = self.ast.data(node, def) else {
             return node;
         };
@@ -127,7 +161,9 @@ impl NodeUpdate for Factory<'_> {
         let mut changed = flags.is_some_and(|flags| flags != self.ast.flags(node));
         for (index, value) in listed.iter().enumerate() {
             let same = match info.slots.get(index).map(|slot| slot.ty) {
-                Some(SlotType::Text) => data.text(index) == read(&open.texts, *value as usize, |text| *text),
+                Some(SlotType::Text) => {
+                    data.text(index) == read(&open.texts, *value as usize, |text| *text)
+                }
                 _ => data.node(index).0 == *value,
             };
             changed |= !same;

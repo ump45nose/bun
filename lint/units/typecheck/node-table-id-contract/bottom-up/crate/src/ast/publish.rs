@@ -1,5 +1,8 @@
 // Ends the binding of a file: the objects of the binder's open store get their ids and move into the file, once.
-use crate::ast::file::{Bound, File, FlowList, FlowNode, IdAllocator, NodeRecord, SymbolRecord, TableEntry, TableRecord, TextSpan, round_up_to_page};
+use crate::ast::file::{
+    Bound, File, FlowList, FlowNode, IdAllocator, NodeRecord, SymbolRecord, TableEntry,
+    TableRecord, TextSpan, round_up_to_page,
+};
 use crate::ast::layout::SlotType;
 use crate::ast::open::{Open, count};
 use crate::tscore::deps::hash_bytes;
@@ -34,18 +37,29 @@ impl Names<'_> {
         let pool = self.file.text_bytes.as_ptr_range();
         let at = name.as_ptr().addr();
         if at >= pool.start.addr() && at + name.len() <= pool.end.addr() {
-            return TextSpan { start: (at - pool.start.addr()) as u32, len: name.len() as u32 };
+            return TextSpan {
+                start: (at - pool.start.addr()) as u32,
+                len: name.len() as u32,
+            };
         }
         let hash = hash_bytes(name);
         let known = self.by_hash.get(&hash);
-        let known_bytes = bound.text_bytes.get(known as usize..known as usize + name.len());
+        let known_bytes = bound
+            .text_bytes
+            .get(known as usize..known as usize + name.len());
         if self.by_hash.get_ok(&hash).is_some() && known_bytes == Some(name) {
-            return TextSpan { start: known | OPEN_BIT, len: name.len() as u32 };
+            return TextSpan {
+                start: known | OPEN_BIT,
+                len: name.len() as u32,
+            };
         }
         let start = bound.text_bytes.len() as u32;
         bound.text_bytes.extend_from_slice(name);
         let _ = self.by_hash.set(hash, start);
-        TextSpan { start: start | OPEN_BIT, len: name.len() as u32 }
+        TextSpan {
+            start: start | OPEN_BIT,
+            len: name.len() as u32,
+        }
     }
 }
 
@@ -55,7 +69,15 @@ impl File {
         if self.bound.get().is_some() {
             return Err(PublishError::AlreadyPublished);
         }
-        let (Ok(nodes), Ok(texts), Ok(symbols), Ok(tables), Ok(flow_nodes), Ok(flow_lists), Ok(symbol_ids)) = (
+        let (
+            Ok(nodes),
+            Ok(texts),
+            Ok(symbols),
+            Ok(tables),
+            Ok(flow_nodes),
+            Ok(flow_lists),
+            Ok(symbol_ids),
+        ) = (
             open.nodes.try_borrow(),
             open.texts.try_borrow(),
             open.symbols.try_borrow(),
@@ -63,19 +85,41 @@ impl File {
             open.flow_nodes.try_borrow(),
             open.flow_lists.try_borrow(),
             open.open_symbol_ids.try_borrow(),
-        ) else {
+        )
+        else {
             return Err(PublishError::StoreBusy);
         };
         if count(&open.lists) != 0 {
             return Err(PublishError::HasLists);
         }
-        let needed = count(&open.nodes).max(count(&open.symbols)).max(count(&open.tables)).max(count(&open.flow_nodes)).max(count(&open.flow_lists));
-        let span = needed.checked_add(1).and_then(round_up_to_page).ok_or(PublishError::IdSpaceExhausted)?;
+        let needed = count(&open.nodes)
+            .max(count(&open.symbols))
+            .max(count(&open.tables))
+            .max(count(&open.flow_nodes))
+            .max(count(&open.flow_lists));
+        let span = needed
+            .checked_add(1)
+            .and_then(round_up_to_page)
+            .ok_or(PublishError::IdSpaceExhausted)?;
         let base = ids.alloc(span).ok_or(PublishError::IdSpaceExhausted)?;
         // An id of the open store becomes an id of the file. Every other id is final already.
-        let fix = |id: u32| if id & OPEN_BIT != 0 { base + (id & !OPEN_BIT) } else { id };
-        let mut bound = Bound { base, span, serial: open.serial, ..Bound::default() };
-        let mut names = Names { file: self, by_hash: Map::make() };
+        let fix = |id: u32| {
+            if id & OPEN_BIT != 0 {
+                base + (id & !OPEN_BIT)
+            } else {
+                id
+            }
+        };
+        let mut bound = Bound {
+            base,
+            span,
+            serial: open.serial,
+            ..Bound::default()
+        };
+        let mut names = Names {
+            file: self,
+            by_hash: Map::make(),
+        };
 
         bound.records.push(NodeRecord::default());
         bound.flags.push(Default::default());
@@ -90,23 +134,39 @@ impl File {
                         let text = texts.get(value as usize).copied().unwrap_or(b"");
                         let start = bound.text_bytes.len() as u32;
                         bound.text_bytes.extend_from_slice(text);
-                        bound.texts.push(TextSpan { start, len: text.len() as u32 });
+                        bound.texts.push(TextSpan {
+                            start,
+                            len: text.len() as u32,
+                        });
                         (bound.texts.len() - 1) as u32
                     }
                     SlotType::Node | SlotType::FlowNode | SlotType::FlowList => fix(value),
                     SlotType::NodeList | SlotType::ModifierList | SlotType::RawNodeList => value,
-                    SlotType::Bool | SlotType::Kind | SlotType::TokenFlags | SlotType::Int | SlotType::TypeId => value,
+                    SlotType::Bool
+                    | SlotType::Kind
+                    | SlotType::TokenFlags
+                    | SlotType::Int
+                    | SlotType::TypeId => value,
                 };
                 bound.slots.push(moved);
             }
-            bound.records.push(NodeRecord { loc: node.loc, parent: NodeId(fix(node.parent.0)), data, late: 0, kind: node.kind, def: node.def });
+            bound.records.push(NodeRecord {
+                loc: node.loc,
+                parent: NodeId(fix(node.parent.0)),
+                data,
+                late: 0,
+                kind: node.kind,
+                def: node.def,
+            });
             bound.flags.push(node.flags);
         }
 
         bound.symbols.push(SymbolRecord::default());
         for (index, symbol) in symbols.iter().enumerate().skip(1) {
             let declarations_start = bound.declarations.len() as u32;
-            bound.declarations.extend(symbol.declarations.iter().map(|node| NodeId(fix(node.0))));
+            bound
+                .declarations
+                .extend(symbol.declarations.iter().map(|node| NodeId(fix(node.0))));
             let name = names.span(&mut bound, symbol.name);
             bound.symbols.push(SymbolRecord {
                 flags: symbol.flags,
@@ -130,10 +190,18 @@ impl File {
                 if let Some((name, symbol)) = table.entry_at(position) {
                     hashes.push(hash_bytes(name));
                     let name = names.span(&mut bound, name);
-                    bound.table_entries.push(TableEntry { name, symbol: SymbolId(fix(symbol.0)) });
+                    bound.table_entries.push(TableEntry {
+                        name,
+                        symbol: SymbolId(fix(symbol.0)),
+                    });
                 }
             }
-            let mut record = TableRecord { entries_start, len: hashes.len() as u32, index_start: bound.table_index.len() as u32, index_len: 0 };
+            let mut record = TableRecord {
+                entries_start,
+                len: hashes.len() as u32,
+                index_start: bound.table_index.len() as u32,
+                index_len: 0,
+            };
             if hashes.len() > LINEAR_TABLE {
                 let size = (hashes.len() * 2).next_power_of_two();
                 record.index_len = size as u32;
@@ -162,7 +230,10 @@ impl File {
         }
         bound.flow_lists.push(FlowList::default());
         for list in flow_lists.iter().skip(1) {
-            bound.flow_lists.push(FlowList { flow: FlowNodeId(fix(list.flow.0)), next: FlowListId(fix(list.next.0)) });
+            bound.flow_lists.push(FlowList {
+                flow: FlowNodeId(fix(list.flow.0)),
+                next: FlowListId(fix(list.next.0)),
+            });
         }
         bound.records.shrink_to_fit();
         bound.slots.shrink_to_fit();

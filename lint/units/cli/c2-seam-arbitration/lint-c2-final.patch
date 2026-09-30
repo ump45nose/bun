@@ -5,13 +5,13 @@
  
  [dependencies]
 +bun_ast.workspace = true
-+bun_paths.workspace = true
++bun_core.workspace = true
 +
 +[dev-dependencies]
 +bstr.workspace = true
 --- a/src/lint/lib.rs
 +++ b/src/lint/lib.rs
-@@ -1 +1,15 @@
+@@ -1 +1,16 @@
  //! The lint rules behind `bun --lint`.
 +
 +pub mod code_frame;
@@ -21,6 +21,7 @@
 +pub mod program;
 +pub mod scanner;
 +pub mod source_file;
++pub mod tspath;
 +
 +pub use diagnostic::{Category, Code, Diagnostic, MessageChain};
 +pub use source_file::{FileId, Files, SourceFile};
@@ -105,14 +106,14 @@
 +}
 --- /dev/null
 +++ b/src/lint/diagnostic.rs
-@@ -0,0 +1,209 @@
-+// Port of internal/ast/diagnostic.go of typescript-go, for a diagnostic that holds its final text.
+@@ -0,0 +1,212 @@
++//! Port of internal/ast/diagnostic.go of typescript-go, for a diagnostic that holds its final text.
 +use crate::source_file::{FileId, Files};
 +use core::cmp::Ordering;
 +use core::fmt;
 +use std::borrow::Cow;
 +
-+/// In upstream's order, which the sort uses.
++/// In the order of the reference, which the sort uses.
 +#[repr(u8)]
 +#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Debug)]
 +pub enum Category {
@@ -144,12 +145,12 @@
 +impl Code {
 +    /// An error or a warning of Bun's parser that has no TypeScript number.
 +    pub const SYNTAX: Code = Code::Name("syntax");
-+    /// A failed assertion of the linter or the checker.
++    /// Where the reference panics or asserts, and where a walk gives up.
 +    pub const INTERNAL_ERROR: Code = Code::Name("internal-error");
 +    pub const CANNOT_READ_FILE: Code = Code::Name("cannot-read-file");
 +    pub const UNSUPPORTED_EXTENSION: Code = Code::Name("unsupported-extension");
 +
-+    // Upstream's `Code()`: an external diagnostic has the number 0 there.
++    // `Code()` of the reference: an external diagnostic has the number 0 there.
 +    fn number(self) -> u32 {
 +        match self {
 +            Code::Ts(number) => number,
@@ -157,7 +158,7 @@
 +        }
 +    }
 +
-+    // Upstream's `Source()`: empty for a TypeScript diagnostic.
++    // `Source()` of the reference: empty for a TypeScript diagnostic.
 +    fn source(self) -> &'static str {
 +        match self {
 +            Code::Ts(_) => "",
@@ -175,14 +176,15 @@
 +    }
 +}
 +
-+#[derive(Clone, PartialEq, Eq, Debug)]
++#[derive(Clone, Debug)]
 +pub struct MessageChain {
 +    pub text: Cow<'static, [u8]>,
 +    pub next: Vec<MessageChain>,
 +}
 +
-+#[derive(Clone, PartialEq, Eq, Debug)]
++#[derive(Clone, Debug)]
 +pub struct Diagnostic {
++    /// `None` for a diagnostic that belongs to no file.
 +    pub file: Option<FileId>,
 +    /// Byte offset into the text of `file`.
 +    pub start: u32,
@@ -190,6 +192,7 @@
 +    pub length: u32,
 +    pub category: Category,
 +    pub code: Code,
++    /// The message alone: without the code and without the chain.
 +    pub text: Cow<'static, [u8]>,
 +    pub chain: Vec<MessageChain>,
 +    pub related: Vec<Diagnostic>,
@@ -222,6 +225,7 @@
 +                .all(|(r1, r2)| equal_diagnostics_at(files, r1, r2, level + 1)))
 +}
 +
++// The text stands for the message and its arguments, which the reference compares apart.
 +pub fn equal_diagnostics_no_related_info(files: &Files, d1: &Diagnostic, d2: &Diagnostic) -> bool {
 +    get_diagnostic_path(files, d1) == get_diagnostic_path(files, d2)
 +        && d1.start == d2.start
@@ -255,7 +259,7 @@
 +    Ordering::Equal
 +}
 +
-+// Upstream compares the arguments of each message here; this compares the texts.
++// The reference compares the arguments of each message here; this compares the texts.
 +fn compare_message_chain_content(c1: &[MessageChain], c2: &[MessageChain], level: u32) -> Ordering {
 +    if level >= MAX_NESTING {
 +        return Ordering::Equal;
@@ -305,7 +309,7 @@
 +        .then_with(|| d1.code.number().cmp(&d2.code.number()))
 +        .then_with(|| d1.category.cmp(&d2.category))
 +        .then_with(|| d1.code.source().cmp(d2.code.source()))
-+        // Upstream compares the message key and then the arguments here; this compares the text.
++        // The reference compares the message key and then the arguments here; this compares the text.
 +        .then_with(|| d1.text.cmp(&d2.text))
 +        .then_with(|| compare_message_chain_size(&d1.chain, &d2.chain, 0))
 +        .then_with(|| compare_message_chain_content(&d1.chain, &d2.chain, 0))
@@ -317,8 +321,8 @@
 +}
 --- /dev/null
 +++ b/src/lint/diagnosticwriter.rs
-@@ -0,0 +1,71 @@
-+// Port of the plain writer of internal/diagnosticwriter/diagnosticwriter.go of typescript-go.
+@@ -0,0 +1,78 @@
++//! Port of the plain writer of internal/diagnosticwriter/diagnosticwriter.go of typescript-go.
 +use crate::diagnostic::{Diagnostic, MAX_NESTING, MessageChain};
 +use crate::scanner::get_ecma_line_and_utf16_character_of_position;
 +use crate::source_file::Files;
@@ -378,20 +382,27 @@
 +    }
 +}
 +
-+// A line break inside a text would read as the start of another diagnostic.
++// A line break inside a text would read as the start of another diagnostic: it becomes one space.
 +fn write_text(output: &mut Vec<u8>, text: &[u8], one_line: bool) {
 +    if !one_line {
 +        output.extend_from_slice(text);
 +        return;
 +    }
-+    output.extend(
-+        text.iter()
-+            .map(|&b| if b == b'\n' || b == b'\r' { b' ' } else { b }),
-+    );
++    let mut bytes = text.iter().copied().peekable();
++    while let Some(b) = bytes.next() {
++        match b {
++            b'\r' => {
++                bytes.next_if_eq(&b'\n');
++                output.push(b' ');
++            }
++            b'\n' => output.push(b' '),
++            _ => output.push(b),
++        }
++    }
 +}
 --- /dev/null
 +++ b/src/lint/log.rs
-@@ -0,0 +1,55 @@
+@@ -0,0 +1,56 @@
 +use crate::diagnostic::{Category, Code, Diagnostic};
 +use crate::source_file::FileId;
 +use bun_ast::{Data, Kind, Msg};
@@ -410,11 +421,12 @@
 +            Some(number) => Code::Ts(number),
 +            None => Code::SYNTAX,
 +        };
++        // A note has no number of its own.
 +        let related = msg
 +            .notes
 +            .into_vec()
 +            .into_iter()
-+            .map(|note| from_data(file, note, Category::Message, code, Vec::new()))
++            .map(|note| from_data(file, note, Category::Message, Code::SYNTAX, Vec::new()))
 +            .collect();
 +        diagnostics.push(from_data(file, msg.data, category, code, related));
 +    }
@@ -449,13 +461,14 @@
 +}
 --- /dev/null
 +++ b/src/lint/program.rs
-@@ -0,0 +1,46 @@
-+// Port of SortAndDeduplicateDiagnostics of internal/compiler/program.go of typescript-go.
+@@ -0,0 +1,47 @@
++//! Port of SortAndDeduplicateDiagnostics of internal/compiler/program.go of typescript-go.
 +use crate::diagnostic::{
 +    Diagnostic, compare_diagnostics, equal_diagnostics, equal_diagnostics_no_related_info,
 +};
 +use crate::source_file::Files;
 +
++/// The sort is stable: diagnostics that compare equal print the same bytes.
 +pub fn sort_and_deduplicate_diagnostics(
 +    files: &Files,
 +    mut diagnostics: Vec<Diagnostic>,
@@ -498,8 +511,8 @@
 +}
 --- /dev/null
 +++ b/src/lint/scanner.rs
-@@ -0,0 +1,91 @@
-+// Port of the line map of internal/core/core.go and internal/scanner/scanner.go of typescript-go.
+@@ -0,0 +1,61 @@
++//! Port of the line map of internal/core/core.go and internal/scanner/scanner.go of typescript-go.
 +use crate::source_file::SourceFile;
 +
 +/// The offset at which each line starts. LF, CR, CR LF, U+2028 and U+2029 end a line.
@@ -535,43 +548,12 @@
 +
 +/// The number of UTF-16 code units of `s`. A byte that is not part of valid UTF-8 counts as one.
 +pub fn utf16_len(s: &[u8]) -> u32 {
-+    let mut n: u32 = 0;
-+    let mut i: usize = 0;
-+    while let Some(&b) = s.get(i) {
-+        let (size, units) = match b {
-+            0x00..=0x7F => (1, 1),
-+            0xC2..=0xDF if continuation(s, i + 1, 0x80, 0xBF) => (2, 1),
-+            0xE0..=0xEF
-+                if continuation(
-+                    s,
-+                    i + 1,
-+                    if b == 0xE0 { 0xA0 } else { 0x80 },
-+                    if b == 0xED { 0x9F } else { 0xBF },
-+                ) && continuation(s, i + 2, 0x80, 0xBF) =>
-+            {
-+                (3, 1)
-+            }
-+            0xF0..=0xF4
-+                if continuation(
-+                    s,
-+                    i + 1,
-+                    if b == 0xF0 { 0x90 } else { 0x80 },
-+                    if b == 0xF4 { 0x8F } else { 0xBF },
-+                ) && continuation(s, i + 2, 0x80, 0xBF)
-+                    && continuation(s, i + 3, 0x80, 0xBF) =>
-+            {
-+                (4, 2)
-+            }
-+            _ => (1, 1),
-+        };
-+        i += size;
-+        n = n.saturating_add(units);
++    let mut n: usize = 0;
++    for chunk in s.utf8_chunks() {
++        n += chunk.valid().chars().map(char::len_utf16).sum::<usize>();
++        n += chunk.invalid().len();
 +    }
-+    n
-+}
-+
-+fn continuation(s: &[u8], at: usize, low: u8, high: u8) -> bool {
-+    s.get(at).is_some_and(|&b| low <= b && b <= high)
++    to_u32(n)
 +}
 +
 +/// The index of the line that holds `pos`.
@@ -587,13 +569,15 @@
 +    let text = file.text();
 +    let line = compute_line_of_position(line_map, pos);
 +    let line_start = line_map.get(line).copied().unwrap_or(0) as usize;
++    // Where the reference panics on a position behind the text, this takes the end of the text.
 +    let end = (pos as usize).min(text.len());
 +    (line, utf16_len(text.get(line_start..end).unwrap_or(b"")))
 +}
 --- /dev/null
 +++ b/src/lint/source_file.rs
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,80 @@
 +use crate::scanner::compute_ecma_line_starts;
++use crate::tspath::{self, ComparePathsOptions};
 +use bun_ast::Source;
 +use core::cell::OnceCell;
 +
@@ -634,13 +618,14 @@
 +    }
 +}
 +
-+/// Every file that a diagnostic of one run can name. Each name is added once.
++/// Every file that a diagnostic of one run can name.
 +#[derive(Default)]
 +pub struct Files {
 +    files: Vec<SourceFile>,
 +}
 +
 +impl Files {
++    /// `text` is the file without its byte order mark.
 +    pub fn add(&mut self, name: Box<[u8]>, display: Box<[u8]>, text: Vec<u8>) -> Option<FileId> {
 +        let id = FileId(u32::try_from(self.files.len()).ok()?);
 +        // The path of the source borrows `name`, which lives as long as the source does.
@@ -659,25 +644,21 @@
 +    }
 +}
 +
-+/// The name of an operand for [`Files::add`]: absolute, and relative to `cwd` for printing.
++/// The names of an operand for [`Files::add`]: the absolute one, and the one that is printed.
 +pub fn names_of(cwd: &[u8], operand: &[u8]) -> (Box<[u8]>, Box<[u8]>) {
-+    use bun_paths::resolve_path::{self, platform};
-+    let mut spill = Vec::new();
-+    let mut name =
-+        resolve_path::join_abs_string_spill::<platform::Auto>(cwd, &mut spill, &[operand]).to_vec();
-+    let mut buf = bun_paths::path_buffer_pool::get();
-+    let mut display =
-+        resolve_path::relative_platform_buf::<platform::Auto, true>(buf.as_mut_slice(), cwd, &name)
-+            .to_vec();
-+    if cfg!(windows) {
-+        resolve_path::slashes_to_posix_in_place::<u8>(&mut name);
-+        resolve_path::slashes_to_posix_in_place::<u8>(&mut display);
-+    }
++    let name = tspath::get_normalized_absolute_path(operand, cwd);
++    let display = tspath::convert_to_relative_path(
++        &name,
++        ComparePathsOptions {
++            use_case_sensitive_file_names: tspath::USE_CASE_SENSITIVE_FILE_NAMES,
++            current_directory: cwd,
++        },
++    );
 +    (name.into_boxed_slice(), display.into_boxed_slice())
 +}
 --- /dev/null
 +++ b/src/lint/tests.rs
-@@ -0,0 +1,420 @@
+@@ -0,0 +1,518 @@
 +use crate::code_frame::write_code_frames;
 +use crate::diagnostic::{compare_diagnostics, equal_diagnostics_no_related_info};
 +use crate::diagnosticwriter::write_format_diagnostics;
@@ -687,6 +668,7 @@
 +    compute_ecma_line_starts, get_ecma_line_and_utf16_character_of_position, utf16_len,
 +};
 +use crate::source_file::names_of;
++use crate::tspath::{ComparePathsOptions, convert_to_relative_path, get_normalized_absolute_path};
 +use crate::{Category, Code, Diagnostic, FileId, Files, MessageChain};
 +use bstr::BString;
 +use bun_ast::{Loc, Log, Range};
@@ -892,7 +874,7 @@
 +            0,
 +            0,
 +            Code::CANNOT_READ_FILE,
-+            "Cannot read file 'nosuch.ts': ENOENT.",
++            "File 'nosuch.ts' not found.",
 +        ),
 +        diag(
 +            Some(a),
@@ -914,11 +896,11 @@
 +            category: Category::Message,
 +            ..diag(None, 0, 0, Code::Ts(6194), "A message.")
 +        },
-+        diag(Some(a), 0, 0, Code::SYNTAX, "Unexpected `a\nb`"),
++        diag(Some(a), 0, 0, Code::SYNTAX, "Unexpected `a\nb\r\nc\rd`"),
 +    ];
 +    assert_eq!(
 +        plain(&files, &diagnostics),
-+        "error cannot-read-file: Cannot read file 'nosuch.ts': ENOENT.\n\
++        "error cannot-read-file: File 'nosuch.ts' not found.\n\
 +         a.ts(1,1): error internal-error: The walk is nested too deeply.\n\
 +         a.ts(1,7): error TS2322: Type '{ a: string; }' is not assignable to type '{ a: number; }'.\n  \
 +         Types of property 'a' are incompatible.\n    \
@@ -926,11 +908,11 @@
 +         a.ts(1,1): warning no-debugger: Unexpected 'debugger' statement.\n\
 +         a.ts(1,1): suggestion TS80001: A suggestion.\n\
 +         message TS6194: A message.\n\
-+         a.ts(1,1): error syntax: Unexpected `a b`\n"
++         a.ts(1,1): error syntax: Unexpected `a b c d`\n"
 +    );
 +    assert_eq!(
 +        frames(&files, &diagnostics),
-+        "error: cannot-read-file: Cannot read file 'nosuch.ts': ENOENT.\n\n\
++        "error: cannot-read-file: File 'nosuch.ts' not found.\n\n\
 +         1 | const x: number = \"s\";\n    ^\n\
 +         error: internal-error: The walk is nested too deeply.\n    at a.ts:1:1\n\n\
 +         1 | const x: number = \"s\";\n          ^\n\
@@ -941,7 +923,7 @@
 +         warn: no-debugger: Unexpected 'debugger' statement.\n   at a.ts:1:1\n\n\
 +         1 | const x: number = \"s\";\n    ^\nnote: TS80001: A suggestion.\n   at a.ts:1:1\n\n\
 +         note: TS6194: A message.\n\n\
-+         1 | const x: number = \"s\";\n    ^\nerror: syntax: Unexpected `a\nb`\n    at a.ts:1:1\n"
++         1 | const x: number = \"s\";\n    ^\nerror: syntax: Unexpected `a\nb\r\nc\rd`\n    at a.ts:1:1\n"
 +    );
 +}
 +
@@ -1071,32 +1053,322 @@
 +    assert_eq!(position("", 0), (0, 0));
 +}
 +
++// Working directory, operand, absolute name, printed name with and without case: as TypeScript 6.0.2.
++const NAMES: &[[&str; 5]] = &[
++    ["/proj", "a.ts", "/proj/a.ts", "a.ts", "a.ts"],
++    [
++        "/proj",
++        "./src/../src/a.ts",
++        "/proj/src/a.ts",
++        "src/a.ts",
++        "src/a.ts",
++    ],
++    [
++        "/proj",
++        "/proj/src/a.ts",
++        "/proj/src/a.ts",
++        "src/a.ts",
++        "src/a.ts",
++    ],
++    [
++        "/proj",
++        "/other/b.ts",
++        "/other/b.ts",
++        "../other/b.ts",
++        "../other/b.ts",
++    ],
++    ["/proj", "../b.ts", "/b.ts", "../b.ts", "../b.ts"],
++    ["/proj/", "a.ts", "/proj/a.ts", "a.ts", "a.ts"],
++    ["/", "a.ts", "/a.ts", "a.ts", "a.ts"],
++    ["/proj", "../../../b.ts", "/b.ts", "../b.ts", "../b.ts"],
++    [
++        "/proj",
++        "src//a.ts",
++        "/proj/src/a.ts",
++        "src/a.ts",
++        "src/a.ts",
++    ],
++    ["/proj", "/proj/a.ts/", "/proj/a.ts", "a.ts", "a.ts"],
++    [
++        "/proj/sub",
++        "/proj/a.ts",
++        "/proj/a.ts",
++        "../a.ts",
++        "../a.ts",
++    ],
++    ["/proj", "/Proj/a.ts", "/Proj/a.ts", "../Proj/a.ts", "a.ts"],
++    [
++        "C:\\proj",
++        "src\\a.ts",
++        "C:/proj/src/a.ts",
++        "src/a.ts",
++        "src/a.ts",
++    ],
++    [
++        "c:/proj",
++        "D:/x/b.ts",
++        "D:/x/b.ts",
++        "D:/x/b.ts",
++        "D:/x/b.ts",
++    ],
++    [
++        "C:/Proj",
++        "c:/proj/a.ts",
++        "c:/proj/a.ts",
++        "../proj/a.ts",
++        "a.ts",
++    ],
++    [
++        "c:/proj",
++        "C:/proj/sub/a.ts",
++        "C:/proj/sub/a.ts",
++        "sub/a.ts",
++        "sub/a.ts",
++    ],
++    [
++        "c:/proj",
++        "\\\\server\\share\\a.ts",
++        "//server/share/a.ts",
++        "//server/share/a.ts",
++        "//server/share/a.ts",
++    ],
++    [
++        "//server/share/dir",
++        "//server/share/a.ts",
++        "//server/share/a.ts",
++        "../a.ts",
++        "../a.ts",
++    ],
++    ["/proj", "a b.ts", "/proj/a b.ts", "a b.ts", "a b.ts"],
++    [
++        "/proj",
++        "\u{E9}.ts",
++        "/proj/\u{E9}.ts",
++        "\u{E9}.ts",
++        "\u{E9}.ts",
++    ],
++    ["/proj", "", "/proj", "", ""],
++    ["/proj", ".", "/proj", "", ""],
++    ["/proj", "c:a.ts", "/proj/c:a.ts", "c:a.ts", "c:a.ts"],
++];
++
 +#[test]
 +fn names() {
-+    let names = |cwd: &str, operand: &str| -> (BString, BString) {
-+        let (name, display) = names_of(cwd.as_bytes(), operand.as_bytes());
-+        (
-+            BString::from(name.into_vec()),
-+            BString::from(display.into_vec()),
-+        )
++    for [cwd, operand, name, sensitive, insensitive] in NAMES {
++        let absolute = get_normalized_absolute_path(operand.as_bytes(), cwd.as_bytes());
++        assert_eq!(BString::from(absolute.clone()), *name, "{cwd} {operand}");
++        for (use_case_sensitive_file_names, display) in [(true, sensitive), (false, insensitive)] {
++            let options = ComparePathsOptions {
++                use_case_sensitive_file_names,
++                current_directory: cwd.as_bytes(),
++            };
++            assert_eq!(
++                BString::from(convert_to_relative_path(&absolute, options)),
++                *display,
++                "{cwd} {operand} {use_case_sensitive_file_names}"
++            );
++        }
++    }
++    let (name, display) = names_of(b"/proj", b"src/../a.ts");
++    assert_eq!(BString::from(name.into_vec()), "/proj/a.ts");
++    assert_eq!(BString::from(display.into_vec()), "a.ts");
++    let long = "d".repeat(5_000) + "/x.ts";
++    let (name, display) = names_of(b"/proj", long.as_bytes());
++    assert_eq!(name.len(), "/proj/".len() + long.len());
++    assert_eq!(BString::from(display.into_vec()), long);
++}
+--- /dev/null
++++ b/src/lint/tspath.rs
+@@ -0,0 +1,190 @@
++//! Port of the part of internal/tspath/path.go of typescript-go that names a file in a diagnostic.
++use bun_core::strings;
++
++const DIRECTORY_SEPARATOR: u8 = b'/';
++
++#[derive(Clone, Copy)]
++pub struct ComparePathsOptions<'a> {
++    pub use_case_sensitive_file_names: bool,
++    pub current_directory: &'a [u8],
++}
++
++/// What the reference asks the file system; this is the usual answer of the platform.
++pub const USE_CASE_SENSITIVE_FILE_NAMES: bool = !cfg!(any(windows, target_os = "macos"));
++
++fn is_any_directory_separator(char: u8) -> bool {
++    char == b'/' || char == b'\\'
++}
++
++fn is_volume_character(char: u8) -> bool {
++    char.is_ascii_alphabetic()
++}
++
++/// The length of the root of a name on disk, 0 for a relative name. The reference also knows URLs.
++pub fn get_root_length(path: &[u8]) -> usize {
++    let Some(&ch0) = path.first() else {
++        return 0;
 +    };
-+    let pair = |name: &str, display: &str| (BString::from(name), BString::from(display));
-+    assert_eq!(names("/proj", "a.ts"), pair("/proj/a.ts", "a.ts"));
-+    assert_eq!(
-+        names("/proj", "./src/../src/a.ts"),
-+        pair("/proj/src/a.ts", "src/a.ts")
-+    );
-+    assert_eq!(
-+        names("/proj", "/proj/src/a.ts"),
-+        pair("/proj/src/a.ts", "src/a.ts")
-+    );
-+    assert_eq!(
-+        names("/proj", "/other/b.ts"),
-+        pair("/other/b.ts", "../other/b.ts")
-+    );
-+    assert_eq!(names("/proj", "../b.ts"), pair("/b.ts", "../b.ts"));
-+    assert_eq!(names("/proj/", "a.ts"), pair("/proj/a.ts", "a.ts"));
-+    assert_eq!(names("/", "a.ts"), pair("/a.ts", "a.ts"));
++    if is_any_directory_separator(ch0) {
++        if path.get(1) != Some(&ch0) {
++            return 1;
++        }
++        let rest = path.get(2..).unwrap_or_default();
++        return match strings::index_of_char_usize(rest, ch0) {
++            Some(p1) => p1 + 2 + 1,
++            None => path.len(),
++        };
++    }
++    if is_volume_character(ch0) && path.get(1) == Some(&b':') {
++        return match path.get(2) {
++            None => 2,
++            Some(&ch2) if is_any_directory_separator(ch2) => 3,
++            Some(_) => 0,
++        };
++    }
++    0
++}
++
++pub fn is_rooted_disk_path(path: &[u8]) -> bool {
++    get_root_length(path) > 0
++}
++
++fn has_trailing_directory_separator(path: &[u8]) -> bool {
++    path.last().is_some_and(|&b| is_any_directory_separator(b))
++}
++
++pub fn normalize_slashes(path: &[u8]) -> Vec<u8> {
++    let mut result = path.to_vec();
++    for b in &mut result {
++        if *b == b'\\' {
++            *b = DIRECTORY_SEPARATOR;
++        }
++    }
++    result
++}
++
++/// `path` replaces `first_path` when it is absolute, else it is appended to it.
++pub fn combine_paths(first_path: &[u8], path: &[u8]) -> Vec<u8> {
++    let mut result = normalize_slashes(first_path);
++    if path.is_empty() {
++        return result;
++    }
++    let path = normalize_slashes(path);
++    if result.is_empty() || get_root_length(&path) != 0 {
++        return path;
++    }
++    if !has_trailing_directory_separator(&result) {
++        result.push(DIRECTORY_SEPARATOR);
++    }
++    result.extend_from_slice(&path);
++    result
++}
++
++// The root, then each name; the root of a relative path is empty.
++fn get_path_components(path: &[u8]) -> Vec<&[u8]> {
++    let (root, rest) = path
++        .split_at_checked(get_root_length(path))
++        .unwrap_or((path, b""));
++    let mut components: Vec<&[u8]> = vec![root];
++    components.extend(strings::split(rest, b"/"));
++    if components.len() > 1 && components.last().is_some_and(|last| last.is_empty()) {
++        components.pop();
++    }
++    components
++}
++
++fn reduce_path_components<'a>(components: &[&'a [u8]]) -> Vec<&'a [u8]> {
++    let Some((&root, names)) = components.split_first() else {
++        return Vec::new();
++    };
++    let mut reduced: Vec<&'a [u8]> = vec![root];
++    for &component in names {
++        if component.is_empty() || component == b"." {
++            continue;
++        }
++        if component == b".." {
++            if reduced.len() > 1 {
++                if reduced.last().is_some_and(|&last| last != b"..") {
++                    reduced.pop();
++                    continue;
++                }
++            } else if !root.is_empty() {
++                continue;
++            }
++        }
++        reduced.push(component);
++    }
++    reduced
++}
++
++fn get_path_from_path_components(path_components: &[&[u8]]) -> Vec<u8> {
++    let Some((&root, names)) = path_components.split_first() else {
++        return Vec::new();
++    };
++    let mut result = root.to_vec();
++    if !root.is_empty() && !has_trailing_directory_separator(root) {
++        result.push(DIRECTORY_SEPARATOR);
++    }
++    for (i, name) in names.iter().enumerate() {
++        if i > 0 {
++            result.push(DIRECTORY_SEPARATOR);
++        }
++        result.extend_from_slice(name);
++    }
++    result
++}
++
++/// The absolute form of a file name, with forward slashes and without `.` and `..`.
++pub fn get_normalized_absolute_path(file_name: &[u8], current_directory: &[u8]) -> Vec<u8> {
++    let combined = combine_paths(current_directory, file_name);
++    get_path_from_path_components(&reduce_path_components(&get_path_components(&combined)))
++}
++
++// ASCII letters only; the reference folds the case of every letter.
++fn equate_string_case_insensitive(a: &[u8], b: &[u8]) -> bool {
++    a.eq_ignore_ascii_case(b)
++}
++
++fn get_path_components_relative_to<'a>(
++    from: &'a [u8],
++    to: &'a [u8],
++    options: ComparePathsOptions<'_>,
++) -> Vec<&'a [u8]> {
++    let from_components = reduce_path_components(&get_path_components(from));
++    let to_components = reduce_path_components(&get_path_components(to));
++
++    let mut start = 0;
++    for (from_component, to_component) in from_components.iter().zip(&to_components) {
++        let equal = if start == 0 || !options.use_case_sensitive_file_names {
++            equate_string_case_insensitive(from_component, to_component)
++        } else {
++            from_component == to_component
++        };
++        if !equal {
++            break;
++        }
++        start += 1;
++    }
++
++    if start == 0 {
++        return to_components;
++    }
++
++    let mut result: Vec<&'a [u8]> = vec![b""];
++    result.extend(from_components.iter().skip(start).map(|_| &b".."[..]));
++    result.extend(to_components.iter().skip(start));
++    result
++}
++
++/// The name that a diagnostic prints: relative to the current directory when both have one root.
++pub fn convert_to_relative_path(
++    absolute_or_relative_path: &[u8],
++    options: ComparePathsOptions<'_>,
++) -> Vec<u8> {
++    if !is_rooted_disk_path(absolute_or_relative_path) {
++        return absolute_or_relative_path.to_vec();
++    }
++    let from = normalize_slashes(options.current_directory);
++    let to = combine_paths(options.current_directory, absolute_or_relative_path);
++    get_path_from_path_components(&get_path_components_relative_to(&from, &to, options))
 +}
 --- a/Cargo.lock
 +++ b/Cargo.lock
@@ -1107,7 +1379,7 @@
 +dependencies = [
 + "bstr",
 + "bun_ast",
-+ "bun_paths",
++ "bun_core",
 +]
  
  [[package]]

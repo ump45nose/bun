@@ -26,7 +26,7 @@ Nothing below uses the network. Steps 1 to 6 need no Go.
    It stops when the number of declarations is not the one it expects (126 at 89d5d5b): the number is changed in the script with the commit.
 
 4. bun H/pin.ts --write --reference GO  (today: committed-ground-truth/top-down/probes/pin.ts <assembled runner> H <out> --reference GO)
-   rewrites H/reference_counts.json and H/reference_skips.tsv from the runner over the new corpus, and prints what no Go is needed to know:
+   rewrites H/reference_counts.json and H/reference_instances.tsv from the runner over the new corpus, and prints what no Go is needed to know:
      - baseline files of typescript-go (every kind, three directories) that are not the name of a run instance: must be 0 (45811 files at 89d5d5b);
      - run instances without any baseline file of typescript-go: 34 of 12797 at 89d5d5b, all without errors; their names are printed;
      - TypeScript's error baselines by use: oracle 6353, of a skipped instance 2081, behind typescript-go's file 552, behind the no-error list 23, no instance 47.

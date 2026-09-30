@@ -45,7 +45,8 @@ if has tree; then
   python3 "$HERE/split_cases.py" corpus "$R/tree/all/corpus" "$R/tree/all/manifest.tsv"
   awk -F'\t' -v d="$R/tree/all/corpus" '{print $1"="d"/"$1}' "$R/tree/all/manifest.tsv" > "$R/tree/all/args.txt"
   xargs -a "$R/tree/all/args.txt" -n 2000 "$P" tree "$R/tree/all/out"
-  "$W/treedigest" "$R/tree/all/out" "$R/tree/all/corpus" "$R/tree/all/manifest.tsv" "$R/tree/all/cases.tsgo-digests.tsv"
+  # -norelated: the stored digests predate the related-information lines of the tree probe (31 units have one)
+  "$W/treedigest" -norelated "$R/tree/all/out" "$R/tree/all/corpus" "$R/tree/all/manifest.tsv" "$R/tree/all/cases.tsgo-digests.tsv"
   gzip -dc "$T/top-down/golden/cases.tsgo-digests.tsv.gz" > "$R/tree/all/golden.tsv"
   python3 "$HERE/cmpset.py" --lines tree.topdown.cases-digests "$R/tree/all/cases.tsgo-digests.tsv" "$R/tree/all/golden.tsv"
   (cd "$LIBS" && ls *.d.ts | awk -v d="$LIBS" '{print $0"="d"/"$0}') > "$R/tree/libs/args.txt"

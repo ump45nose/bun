@@ -1,4 +1,4 @@
-// Research prototype of the blocks of test/cli/lint/conformance.test.ts that read reference_counts.json and reference_skips.tsv.
+// Research prototype of the blocks of test/cli/lint/conformance.test.ts that read reference_counts.json (both forms: describe "pinned corpus") and the compact form with reference_skips.tsv and bucket digests (describe "pinned enumeration").
 // In the repository: "harness" for the absolute import, "./conformance/runner" for the runner, join(import.meta.dir, "conformance") for CGT_HOME.
 // usage: CGT_ASM=<assembled runner root> CGT_HOME=<conformance directory with corpus/> [CGT_FX=<directory of the two files>] bun test ./pins.test.ts
 import { describe, expect, test } from "bun:test";
@@ -18,7 +18,8 @@ const { compareStrings } = await import(join(runner, "gostrings.ts"));
 // A debug or sanitizer build enumerates eight buckets of cases; a release build enumerates all of them and reads every file of the corpus.
 const small = isDebug || isASAN;
 const pins = JSON.parse(readFileSync(join(fx, "reference_counts.json"), "utf8"));
-const skipsText = readFileSync(join(fx, "reference_skips.tsv"), "utf8");
+const compact = pins.buckets !== undefined;
+const skipsText = compact ? readFileSync(join(fx, "reference_skips.tsv"), "utf8") : "";
 const skips = new Map(skipsText.split("\n").filter(l => l !== "").map(l => l.split("\t") as [string, string]));
 const c = home + "/corpus";
 const layout = {
@@ -33,7 +34,7 @@ const layout = {
 };
 const sha = (x: string | Uint8Array) => createHash("sha256").update(x).digest("hex");
 const digestOf = (rows: string[]) => sha(rows.slice().sort(compareStrings).join(""));
-const bucketOf = (casePath: string) => Bun.hash.crc32(casePath) % pins.buckets.of;
+const bucketOf = (casePath: string) => Bun.hash.crc32(casePath) % (pins.buckets?.of ?? 256);
 const rowOf = (f: any) => `${f.name}\t${f.status}\t${f.reason}\t${f.kind ?? ""}\n`;
 const bucketRow = (k: number, part: any[]) => [
   k,
@@ -101,7 +102,7 @@ describe("pinned corpus", () => {
   });
 });
 
-describe("pinned enumeration", () => {
+describe.skipIf(!compact)("pinned enumeration", () => {
   test("the skip list is the pinned one", () => {
     expect({ rows: skips.size, sha256: sha(skipsText) }).toEqual(pins.skips);
     expect(pins.buckets.rows.length).toBe(pins.buckets.of);

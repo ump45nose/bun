@@ -8,9 +8,19 @@ extern "C" fn Bun__StackCheck__getMaxStack() -> *mut core::ffi::c_void {
 }
 
 #[unsafe(no_mangle)]
-unsafe extern "C" fn highway_memmem(haystack: *const u8, haystack_len: usize, needle: *const u8, needle_len: usize) -> *const u8 {
+unsafe extern "C" fn highway_memmem(
+    haystack: *const u8,
+    haystack_len: usize,
+    needle: *const u8,
+    needle_len: usize,
+) -> *const u8 {
     // SAFETY: the caller passes two valid slices.
-    let (h, n) = unsafe { (core::slice::from_raw_parts(haystack, haystack_len), core::slice::from_raw_parts(needle, needle_len)) };
+    let (h, n) = unsafe {
+        (
+            core::slice::from_raw_parts(haystack, haystack_len),
+            core::slice::from_raw_parts(needle, needle_len),
+        )
+    };
     if n.is_empty() {
         return haystack;
     }

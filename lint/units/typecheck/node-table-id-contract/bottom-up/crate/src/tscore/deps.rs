@@ -71,7 +71,10 @@ mod shim {
         }
         pub fn insert(&mut self, key: K, value: V) -> Option<V> {
             if let Some(&slot) = self.index.get(&key) {
-                return self.values.get_mut(slot).map(|v| std::mem::replace(v, value));
+                return self
+                    .values
+                    .get_mut(slot)
+                    .map(|v| std::mem::replace(v, value));
             }
             self.index.insert(key.clone(), self.keys.len());
             self.keys.push(key);
@@ -105,6 +108,7 @@ mod shim {
         if needle.is_empty() {
             return Some(0);
         }
-        (0..haystack.len().checked_sub(needle.len())? + 1).find(|&i| haystack.get(i..i + needle.len()) == Some(needle))
+        (0..haystack.len().checked_sub(needle.len())? + 1)
+            .find(|&i| haystack.get(i..i + needle.len()) == Some(needle))
     }
 }

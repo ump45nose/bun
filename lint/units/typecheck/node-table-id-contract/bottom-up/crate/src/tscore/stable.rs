@@ -38,10 +38,11 @@ impl<T> Stable<T> {
     pub fn push(&self, value: T) -> Option<&T> {
         let index = self.len.get();
         let (chunk, offset) = locate(index);
-        let cells = self
-            .chunks
-            .get(chunk)?
-            .get_or_init(|| (0..(FIRST as usize) << chunk).map(|_| OnceCell::new()).collect());
+        let cells = self.chunks.get(chunk)?.get_or_init(|| {
+            (0..(FIRST as usize) << chunk)
+                .map(|_| OnceCell::new())
+                .collect()
+        });
         let cell = cells.get(offset)?;
         if cell.set(value).is_err() {
             return None;

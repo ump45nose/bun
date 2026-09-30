@@ -1,0 +1,68 @@
+== load: 567.77 634.90 706.14; opt-level 3 for ntproto only (deps at opt-level 0), debug assertions and overflow checks off
+== cargo test --no-run with opt-level 3
+wall 9.615 s; user 20.854 s; sys 1.572 s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.40s
+test tests::measure_es5_closure ... es5 closure: files 3 nodes 15198 lists 4212 source bytes 233387 dump bytes 999897
+  reference digests: same 3 differ 0 not in the golden table 0; faults 0; nodes printed after freeze 10888
+  json read 4.4 ms; build 6.1 ms; finish 3.9 ms; freeze 0.19 ms; program 1 0.002 ms; program 2 0.000 ms (7 pages)
+  walk of 10888 nodes 0.5 ms (checksum 1466626); dump of all trees 6.3 ms
+  table heap 990171 bytes (65.2 per node, source text included); arena while building 798240 bytes; ids used 6 pages
+ok
+test tests::measure_esnext_closure ... esnext closure: files 93 nodes 161791 lists 41768 source bytes 2983921 dump bytes 12552275
+  reference digests: same 93 differ 0 not in the golden table 0; faults 0; nodes printed after freeze 139412
+  json read 39.3 ms; build 53.9 ms; finish 35.6 ms; freeze 1.84 ms; program 1 0.006 ms; program 2 0.003 ms (127 pages)
+  walk of 139412 nodes 7.2 ms (checksum 18949382); dump of all trees 76.3 ms
+  table heap 13075909 bytes (80.8 per node, source text included); arena while building 9518417 bytes; ids used 126 pages
+ok
+--
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 3.04s
+
+   Doc-tests ntproto
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+test tests::measure_es5_closure ... es5 closure: files 3 nodes 15198 lists 4212 source bytes 233387 dump bytes 999897
+  reference digests: same 3 differ 0 not in the golden table 0; faults 0; nodes printed after freeze 10888
+  json read 4.4 ms; build 6.2 ms; finish 4.1 ms; freeze 0.17 ms; program 1 0.002 ms; program 2 0.000 ms (7 pages)
+  walk of 10888 nodes 0.7 ms (checksum 1466626); dump of all trees 7.3 ms
+  table heap 990171 bytes (65.2 per node, source text included); arena while building 798240 bytes; ids used 6 pages
+ok
+test tests::measure_esnext_closure ... esnext closure: files 93 nodes 161791 lists 41768 source bytes 2983921 dump bytes 12552275
+  reference digests: same 93 differ 0 not in the golden table 0; faults 0; nodes printed after freeze 139412
+  json read 47.3 ms; build 61.5 ms; finish 35.1 ms; freeze 1.54 ms; program 1 0.007 ms; program 2 0.003 ms (127 pages)
+  walk of 139412 nodes 6.5 ms (checksum 18949382); dump of all trees 53.7 ms
+  table heap 13075909 bytes (80.8 per node, source text included); arena while building 9518417 bytes; ids used 126 pages
+ok
+--
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.34s
+
+   Doc-tests ntproto
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+test tests::measure_es5_closure ... es5 closure: files 3 nodes 15198 lists 4212 source bytes 233387 dump bytes 999897
+  reference digests: same 3 differ 0 not in the golden table 0; faults 0; nodes printed after freeze 10888
+  json read 7.9 ms; build 7.4 ms; finish 3.0 ms; freeze 0.14 ms; program 1 0.002 ms; program 2 0.000 ms (7 pages)
+  walk of 10888 nodes 0.4 ms (checksum 1466626); dump of all trees 4.8 ms
+  table heap 990171 bytes (65.2 per node, source text included); arena while building 798240 bytes; ids used 6 pages
+ok
+test tests::measure_esnext_closure ... esnext closure: files 93 nodes 161791 lists 41768 source bytes 2983921 dump bytes 12552275
+  reference digests: same 93 differ 0 not in the golden table 0; faults 0; nodes printed after freeze 139412
+  json read 39.7 ms; build 35.0 ms; finish 23.7 ms; freeze 1.08 ms; program 1 0.005 ms; program 2 0.002 ms (127 pages)
+  walk of 139412 nodes 4.5 ms (checksum 18949382); dump of all trees 51.5 ms
+  table heap 13075909 bytes (80.8 per node, source text included); arena while building 9518417 bytes; ids used 126 pages
+ok
+--
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.87s
+
+   Doc-tests ntproto
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+== load: 573.03 631.58 703.52

@@ -99,12 +99,22 @@ impl DumpFile<'_> {
         self.nodes.get(node * 8 + field).copied().unwrap_or(-1)
     }
     fn prop(&self, index: i64) -> &[u8] {
-        usize::try_from(index).ok().and_then(|i| self.props.get(i)).copied().unwrap_or(b"")
+        usize::try_from(index)
+            .ok()
+            .and_then(|i| self.props.get(i))
+            .copied()
+            .unwrap_or(b"")
     }
 }
 
 // The text as a slice of the source when the source has it where the node ends.
-fn text_slot(builder: &mut FileBuilder, dump: &DumpFile<'_>, text: &[u8], end: i64, stats: &mut ImportStats) -> u32 {
+fn text_slot(
+    builder: &mut FileBuilder,
+    dump: &DumpFile<'_>,
+    text: &[u8],
+    end: i64,
+    stats: &mut ImportStats,
+) -> u32 {
     for back in [0usize, 1] {
         let Some(stop) = usize::try_from(end).ok().and_then(|e| e.checked_sub(back)) else {
             continue;
@@ -121,7 +131,12 @@ fn text_slot(builder: &mut FileBuilder, dump: &DumpFile<'_>, text: &[u8], end: i
     builder.text_slot(text)
 }
 
-fn import_file(dump: &DumpFile<'_>, data: SourceFileData, ids: &IdAllocator, stats: &mut ImportStats) -> Option<File> {
+fn import_file(
+    dump: &DumpFile<'_>,
+    data: SourceFileData,
+    ids: &IdAllocator,
+    stats: &mut ImportStats,
+) -> Option<File> {
     let count = dump.nodes.len() / 8;
     let mut builder = FileBuilder::new(dump.text);
     // The children and the lists of each node, in the order of the dump.
@@ -165,7 +180,11 @@ fn import_file(dump: &DumpFile<'_>, data: SourceFileData, ids: &IdAllocator, sta
     {
         let mut at = 0usize;
         for (node, start) in attr_start.iter_mut().enumerate() {
-            while dump.attrs.get(at * 4).is_some_and(|owner| (*owner as usize) < node) {
+            while dump
+                .attrs
+                .get(at * 4)
+                .is_some_and(|owner| (*owner as usize) < node)
+            {
                 at += 1;
             }
             *start = at;
@@ -179,13 +198,22 @@ fn import_file(dump: &DumpFile<'_>, data: SourceFileData, ids: &IdAllocator, sta
     let mut slots: Vec<u32> = Vec::new();
     let mut jsdoc: Vec<NodeId> = Vec::new();
     for node in (0..count).rev() {
-        let kind = usize::try_from(dump.node_field(node, 0)).ok().and_then(|k| dump.kinds.get(k)).copied().unwrap_or(Kind::Unknown);
+        let kind = usize::try_from(dump.node_field(node, 0))
+            .ok()
+            .and_then(|k| dump.kinds.get(k))
+            .copied()
+            .unwrap_or(Kind::Unknown);
         let pos = dump.node_field(node, 1);
         let end = dump.node_field(node, 2);
         let prop = dump.prop(dump.node_field(node, 5));
         let (main, second) = Def::of_kind(kind);
-        let in_token_position = prop == b"modifiers" || prop.ends_with(b"Token") || prop.ends_with(b"Modifier");
-        let def = if second != Def::None && in_token_position { second } else { main };
+        let in_token_position =
+            prop == b"modifiers" || prop.ends_with(b"Token") || prop.ends_with(b"Modifier");
+        let def = if second != Def::None && in_token_position {
+            second
+        } else {
+            main
+        };
         if kind == Kind::Unknown || def == Def::None {
             stats.unknown_kinds += 1;
             continue;
@@ -214,7 +242,10 @@ fn import_file(dump: &DumpFile<'_>, data: SourceFileData, ids: &IdAllocator, sta
                 SlotType::Node => {
                     for entry in children.iter_mut() {
                         let (index, used) = *entry;
-                        if !used && dump.node_field(index, 6) < 0 && takes(slot.name, dump.prop(dump.node_field(index, 5))) {
+                        if !used
+                            && dump.node_field(index, 6) < 0
+                            && takes(slot.name, dump.prop(dump.node_field(index, 5)))
+                        {
                             value = made.get(index).map_or(0, |id| id.0);
                             entry.1 = true;
                             break;
@@ -225,7 +256,9 @@ fn import_file(dump: &DumpFile<'_>, data: SourceFileData, ids: &IdAllocator, sta
                     for entry in lists.iter_mut() {
                         let (index, used) = *entry;
                         let record = dump.lists.get(index * 5..index * 5 + 5).unwrap_or(&[]);
-                        if used || !takes(slot.name, dump.prop(record.get(1).copied().unwrap_or(-1))) {
+                        if used
+                            || !takes(slot.name, dump.prop(record.get(1).copied().unwrap_or(-1)))
+                        {
                             continue;
                         }
                         entry.1 = true;
@@ -243,28 +276,44 @@ fn import_file(dump: &DumpFile<'_>, data: SourceFileData, ids: &IdAllocator, sta
                         } else {
                             builder.new_node_list(&items)
                         };
-                        let loc = TextRange::new(record.get(2).copied().unwrap_or(-1) as i32, record.get(3).copied().unwrap_or(-1) as i32);
+                        let loc = TextRange::new(
+                            record.get(2).copied().unwrap_or(-1) as i32,
+                            record.get(3).copied().unwrap_or(-1) as i32,
+                        );
                         builder.set_list_loc(id, loc);
                         value = id.0;
                         break;
                     }
                 }
-                SlotType::Text | SlotType::Bool | SlotType::Kind | SlotType::TokenFlags | SlotType::Int => {
+                SlotType::Text
+                | SlotType::Bool
+                | SlotType::Kind
+                | SlotType::TokenFlags
+                | SlotType::Int => {
                     for at in attrs_from..attrs_to {
                         let record = dump.attrs.get(at * 4..at * 4 + 4).unwrap_or(&[]);
                         let bit = 1u64 << ((at - attrs_from) & 63);
-                        if attr_used & bit != 0 || !takes(slot.name, dump.prop(record.get(1).copied().unwrap_or(-1))) {
+                        if attr_used & bit != 0
+                            || !takes(slot.name, dump.prop(record.get(1).copied().unwrap_or(-1)))
+                        {
                             continue;
                         }
                         let raw = record.get(3).copied().unwrap_or(0);
                         let ty = record.get(2).copied().unwrap_or(-1);
                         value = match (slot.ty, ty) {
                             (SlotType::Text, 2) => {
-                                let text = usize::try_from(raw).ok().and_then(|i| dump.strings.get(i)).copied().unwrap_or(b"");
+                                let text = usize::try_from(raw)
+                                    .ok()
+                                    .and_then(|i| dump.strings.get(i))
+                                    .copied()
+                                    .unwrap_or(b"");
                                 text_slot(&mut builder, dump, text, end, stats)
                             }
                             (SlotType::Bool, 0) => u32::from(raw != 0),
-                            (SlotType::Kind, 1) => usize::try_from(raw).ok().and_then(|k| dump.kinds.get(k)).map_or(0, |k| *k as u32),
+                            (SlotType::Kind, 1) => usize::try_from(raw)
+                                .ok()
+                                .and_then(|k| dump.kinds.get(k))
+                                .map_or(0, |k| *k as u32),
                             (SlotType::TokenFlags | SlotType::Int, 3) => raw as u32,
                             _ => continue,
                         };
@@ -281,8 +330,15 @@ fn import_file(dump: &DumpFile<'_>, data: SourceFileData, ids: &IdAllocator, sta
             for at in attrs_from..attrs_to {
                 let record = dump.attrs.get(at * 4..at * 4 + 4).unwrap_or(&[]);
                 let bit = 1u64 << ((at - attrs_from) & 63);
-                if attr_used & bit == 0 && record.get(2) == Some(&2) && dump.prop(record.get(1).copied().unwrap_or(-1)) == b"comment" {
-                    let text = usize::try_from(record.get(3).copied().unwrap_or(-1)).ok().and_then(|i| dump.strings.get(i)).copied().unwrap_or(b"");
+                if attr_used & bit == 0
+                    && record.get(2) == Some(&2)
+                    && dump.prop(record.get(1).copied().unwrap_or(-1)) == b"comment"
+                {
+                    let text = usize::try_from(record.get(3).copied().unwrap_or(-1))
+                        .ok()
+                        .and_then(|i| dump.strings.get(i))
+                        .copied()
+                        .unwrap_or(b"");
                     let text_node = builder.new_jsdoc_text(text);
                     let list = builder.new_node_list(&[text_node]);
                     if let Some(slot) = slots.get_mut(comment) {
@@ -314,12 +370,22 @@ fn import_file(dump: &DumpFile<'_>, data: SourceFileData, ids: &IdAllocator, sta
         }
         let lost_children = children.iter().filter(|entry| !entry.1).count() as u32;
         let lost_lists = lists.iter().filter(|entry| !entry.1).count() as u32;
-        let lost_attrs = (attrs_from..attrs_to).filter(|at| attr_used & (1u64 << ((at - attrs_from) & 63)) == 0).count() as u32;
+        let lost_attrs = (attrs_from..attrs_to)
+            .filter(|at| attr_used & (1u64 << ((at - attrs_from) & 63)) == 0)
+            .count() as u32;
         if stats.first_unmapped.is_empty() && lost_children + lost_lists + lost_attrs > 0 {
             stats.first_unmapped = kind.name().as_bytes().to_vec();
             stats.first_unmapped.push(b'.');
-            let lost = children.iter().find(|entry| !entry.1).map(|entry| dump.prop(dump.node_field(entry.0, 5)));
-            let lost = lost.or_else(|| lists.iter().find(|entry| !entry.1).map(|entry| dump.prop(dump.lists.get(entry.0 * 5 + 1).copied().unwrap_or(-1))));
+            let lost = children
+                .iter()
+                .find(|entry| !entry.1)
+                .map(|entry| dump.prop(dump.node_field(entry.0, 5)));
+            let lost = lost.or_else(|| {
+                lists
+                    .iter()
+                    .find(|entry| !entry.1)
+                    .map(|entry| dump.prop(dump.lists.get(entry.0 * 5 + 1).copied().unwrap_or(-1)))
+            });
             let lost = lost.or_else(|| {
                 (attrs_from..attrs_to)
                     .find(|at| attr_used & (1u64 << ((at - attrs_from) & 63)) == 0)
@@ -338,7 +404,11 @@ fn import_file(dump: &DumpFile<'_>, data: SourceFileData, ids: &IdAllocator, sta
 }
 
 // Every file of a dump, not bound yet, in the order of the dump.
-pub fn import_dump(bytes: &[u8], ids: &IdAllocator, stats: &mut ImportStats) -> Result<Vec<File>, ImportError> {
+pub fn import_dump(
+    bytes: &[u8],
+    ids: &IdAllocator,
+    stats: &mut ImportStats,
+) -> Result<Vec<File>, ImportError> {
     let root = Json::parse(bytes).map_err(ImportError::Json)?;
     if root.get("v").map(Json::number) != Some(1.0) {
         return Err(ImportError::Version);
@@ -347,11 +417,33 @@ pub fn import_dump(bytes: &[u8], ids: &IdAllocator, stats: &mut ImportStats) -> 
         b"EndOfFileToken" => Kind::EndOfFile,
         other => Kind::from_name(other).unwrap_or(Kind::Unknown),
     };
-    let kinds: Vec<Kind> = root.get("kinds").ok_or(ImportError::Shape("kinds"))?.items().iter().map(kind_of).collect();
-    let props: Vec<&[u8]> = root.get("props").ok_or(ImportError::Shape("props"))?.items().iter().map(Json::bytes).collect();
-    let strings: Vec<&[u8]> = root.get("strings").ok_or(ImportError::Shape("strings"))?.items().iter().map(Json::bytes).collect();
+    let kinds: Vec<Kind> = root
+        .get("kinds")
+        .ok_or(ImportError::Shape("kinds"))?
+        .items()
+        .iter()
+        .map(kind_of)
+        .collect();
+    let props: Vec<&[u8]> = root
+        .get("props")
+        .ok_or(ImportError::Shape("props"))?
+        .items()
+        .iter()
+        .map(Json::bytes)
+        .collect();
+    let strings: Vec<&[u8]> = root
+        .get("strings")
+        .ok_or(ImportError::Shape("strings"))?
+        .items()
+        .iter()
+        .map(Json::bytes)
+        .collect();
     let mut files = Vec::new();
-    for file in root.get("files").ok_or(ImportError::Shape("files"))?.items() {
+    for file in root
+        .get("files")
+        .ok_or(ImportError::Shape("files"))?
+        .items()
+    {
         let field = |name: &'static str| file.get(name).ok_or(ImportError::Shape(name));
         let dump = DumpFile {
             nodes: field("nodes")?.numbers(),
@@ -373,4 +465,3 @@ pub fn import_dump(bytes: &[u8], ids: &IdAllocator, stats: &mut ImportStats) -> 
     }
     Ok(files)
 }
-

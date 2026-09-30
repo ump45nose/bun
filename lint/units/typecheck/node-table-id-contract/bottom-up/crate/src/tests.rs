@@ -1,4 +1,6 @@
-use crate::ast::ast_generated::{DEF_COUNT, Def, NodeFactory, NodeUpdater, is_identifier, is_variable_statement};
+use crate::ast::ast_generated::{
+    DEF_COUNT, Def, NodeFactory, NodeUpdater, is_identifier, is_variable_statement,
+};
 use crate::ast::builder::FileBuilder;
 use crate::ast::factory::{Factory, NodeSink};
 use crate::ast::file::{File, IdAllocator, SourceFileData};
@@ -11,7 +13,9 @@ use crate::ast::reader::{Ast, Frozen, FrozenError};
 use crate::bindprobe::{BindStats, bind_probe, get_symbol_name_for_private_identifier};
 use crate::testimport::{ImportStats, import_dump};
 use crate::tscore::deps::{hash_bytes, index_of};
-use crate::tscore::ids::{FlowNodeId, ModifierListId, NodeId, NodeListId, OPEN_BIT, PAGE_SIZE, SymbolId, SymbolTableId};
+use crate::tscore::ids::{
+    FlowNodeId, ModifierListId, NodeId, NodeListId, OPEN_BIT, PAGE_SIZE, SymbolId, SymbolTableId,
+};
 use crate::tscore::internal::FaultKind;
 use crate::tscore::stable::{Arena, Stable};
 use crate::tscore::text::TextRange;
@@ -51,25 +55,32 @@ fn build_min(extra_garbage: bool, ids: &IdAllocator) -> File {
     let root = b.new_source_file(statements, eof);
     b.set_loc(root, TextRange::new(0, 23));
     assert_eq!(b.faults.count(), 0);
-    match b.finish(root, SourceFileData { file_name: b"/min.ts".to_vec(), ..SourceFileData::default() }, ids) {
+    match b.finish(
+        root,
+        SourceFileData {
+            file_name: b"/min.ts".to_vec(),
+            ..SourceFileData::default()
+        },
+        ids,
+    ) {
         Some(file) => file,
         None => panic!("no ids left"),
     }
 }
 
 fn bind_and_publish(file: File, ids: &IdAllocator) -> (Arc<File>, BindStats) {
-    let arena = Arena::new();
-    let open = Open::new(&arena, ids.next_serial());
     let stats = {
+        let arena = Arena::new();
+        let open = Open::new(&arena, ids.next_serial());
         let frozen = Frozen::of_binding(&file);
         let a = Ast::new(&frozen, &open);
         let stats = bind_probe(a, file.source_file.root);
         assert_eq!(open.faults.first(), None);
+        if let Err(error) = file.publish(&open, ids) {
+            panic!("publish: {error:?}");
+        }
         stats
     };
-    if let Err(error) = file.publish(&open, ids) {
-        panic!("publish: {error:?}");
-    }
     (Arc::new(file), stats)
 }
 
@@ -78,7 +89,15 @@ fn digest(a: Ast<'_>, file: &File) -> u64 {
     let base = file.base();
     let bound_base = file.bound().map_or(0, |bound| bound.base());
     // An id of the nodes and lists relative to their range, an id of the binder relative to its range.
-    let rel = |id: u32| if id == 0 || id & OPEN_BIT != 0 { id } else if id > bound_base && bound_base > base { id - bound_base } else { id - base };
+    let rel = |id: u32| {
+        if id == 0 || id & OPEN_BIT != 0 {
+            id
+        } else if id > bound_base && bound_base > base {
+            id - bound_base
+        } else {
+            id - base
+        }
+    };
     let mut out: Vec<u8> = Vec::new();
     let mut put = |value: u32| out.extend_from_slice(&value.to_le_bytes());
     let mut stack = vec![file.source_file.root];
@@ -135,7 +154,11 @@ fn digest(a: Ast<'_>, file: &File) -> u64 {
         let mut children: Vec<NodeId> = a.jsdoc(node).iter().collect();
         children.extend(a.iter_children(node));
         for child in &children {
-            assert_eq!(a.parent(*child), node, "the parent of a child is the node that holds it");
+            assert_eq!(
+                a.parent(*child),
+                node,
+                "the parent of a child is the node that holds it"
+            );
         }
         stack.extend(children.iter().rev());
     }
@@ -156,7 +179,10 @@ fn stable_store_keeps_addresses() {
     let arena = Arena::new();
     let a = arena.alloc_slice_copy(&[NodeId(1), NodeId(2)]);
     let b = arena.alloc_slice_copy(b"text".as_slice());
-    assert_eq!((a, b), ([NodeId(1), NodeId(2)].as_slice(), b"text".as_slice()));
+    assert_eq!(
+        (a, b),
+        ([NodeId(1), NodeId(2)].as_slice(), b"text".as_slice())
+    );
     assert_eq!(arena.allocated_bytes(), 12);
 }
 
@@ -193,7 +219,9 @@ fn finish_numbers_in_for_each_child_order() {
                 Kind::EndOfFile
             ]
         );
-        let parents: Vec<u32> = (1..=8).map(|id| a.parent(n(id)).0.saturating_sub(base)).collect();
+        let parents: Vec<u32> = (1..=8)
+            .map(|id| a.parent(n(id)).0.saturating_sub(base))
+            .collect();
         assert_eq!(parents, [0, 1, 2, 3, 4, 4, 4, 1]);
         assert_eq!(file.source_file.root, n(1));
         let root = a.as_source_file(n(1));
@@ -211,16 +239,29 @@ fn finish_numbers_in_for_each_child_order() {
         assert_eq!(a.list_loc(root.statements), TextRange::new(0, 22));
         assert!(a.modifiers(n(2)).is_nil());
         assert!(a.nodes(a.modifiers(n(2)).as_node_list()).is_nil());
-        assert_eq!(a.iter_children(n(4)).collect::<Vec<_>>(), [n(5), n(6), n(7)]);
+        assert_eq!(
+            a.iter_children(n(4)).collect::<Vec<_>>(),
+            [n(5), n(6), n(7)]
+        );
         assert_eq!(open.faults.count(), 0);
         // A cast to another definition gives the zero value and records a fault.
         assert_eq!(a.as_if_statement(n(4)).expression, NodeId::NIL);
-        assert_eq!(open.faults.first().map(|fault| fault.kind), Some(FaultKind::BadCast));
+        assert_eq!(
+            open.faults.first().map(|fault| fault.kind),
+            Some(FaultKind::BadCast)
+        );
         // A method of Node on a kind that upstream does not handle.
         assert_eq!(a.expression(n(4)), NodeId::NIL);
         assert_eq!(open.faults.count(), 2);
         // An id that no file of the context owns reads as nil.
-        assert_eq!((a.kind(NodeId(7)), a.parent(NodeId(base + 500)), a.kind(NodeId(u32::MAX))), (Kind::Unknown, NodeId::NIL, Kind::Unknown));
+        assert_eq!(
+            (
+                a.kind(NodeId(7)),
+                a.parent(NodeId(base + 500)),
+                a.kind(NodeId(u32::MAX))
+            ),
+            (Kind::Unknown, NodeId::NIL, Kind::Unknown)
+        );
     }
 }
 
@@ -229,9 +270,23 @@ fn bind_publish_and_share_between_programs() {
     let ids = IdAllocator::new();
     let (first, stats) = bind_and_publish(build_min(false, &ids), &ids);
     let (second, _) = bind_and_publish(build_min(true, &ids), &ids);
-    assert_eq!(stats, BindStats { nodes: 8, symbols: 1, declarations: 1, tables: 1, flow_nodes: 3, flow_data_nodes: 0, private_names: 0 });
+    assert_eq!(
+        stats,
+        BindStats {
+            nodes: 8,
+            symbols: 1,
+            declarations: 1,
+            tables: 1,
+            flow_nodes: 3,
+            flow_data_nodes: 0,
+            private_names: 0
+        }
+    );
     let bases = |file: &File| (file.base(), file.bound().map_or(0, |bound| bound.base()));
-    assert_eq!((bases(&first), bases(&second)), ((PAGE_SIZE, 2 * PAGE_SIZE), (3 * PAGE_SIZE, 4 * PAGE_SIZE)));
+    assert_eq!(
+        (bases(&first), bases(&second)),
+        ((PAGE_SIZE, 2 * PAGE_SIZE), (3 * PAGE_SIZE, 4 * PAGE_SIZE))
+    );
     let second_bound = second.bound().map_or(0, |bound| bound.base());
 
     let one = Program::new(vec![first.clone(), second.clone()]);
@@ -258,12 +313,18 @@ fn bind_publish_and_share_between_programs() {
         let locals = a.locals(NodeId(second.base() + 1));
         assert_eq!(a.table_get(locals, b"x"), symbol);
         assert_eq!(a.table_get(locals, b"y"), SymbolId::NIL);
-        assert_eq!(a.flow(a.flow_node(NodeId(second.base() + 5))).node, NodeId(second.base() + 5));
+        assert_eq!(
+            a.flow(a.flow_node(NodeId(second.base() + 5))).node,
+            NodeId(second.base() + 5)
+        );
         assert_eq!(open.faults.first(), None);
         // A published file takes no write.
         a.set_symbol(declaration, SymbolId::NIL);
         a.set_flags(declaration, NodeFlags::NONE);
-        assert_eq!(open.faults.first().map(|fault| fault.kind), Some(FaultKind::WriteToFrozen));
+        assert_eq!(
+            open.faults.first().map(|fault| fault.kind),
+            Some(FaultKind::WriteToFrozen)
+        );
         assert_eq!(a.symbol(declaration), symbol);
     }
     // The two files hold the same tree, so every digest is the same: no id was left without its base.
@@ -273,7 +334,13 @@ fn bind_publish_and_share_between_programs() {
     let other_ids = IdAllocator::new();
     let foreign = bind_and_publish(build_min(false, &other_ids), &other_ids).0;
     let mixed = Program::new(vec![first, foreign]);
-    assert_eq!(mixed.frozen().err(), Some(FrozenError::Overlap { first: 0, second: 1 }));
+    assert_eq!(
+        mixed.frozen().err(),
+        Some(FrozenError::Overlap {
+            first: 0,
+            second: 1
+        })
+    );
 }
 
 #[test]
@@ -293,7 +360,8 @@ fn checker_nodes_live_in_the_open_store() {
     let name = a.name(declaration);
     // checker.go isPropertyInitializedInConstructor: `this.x` with a name that is a node of the file.
     let this = factory.new_keyword_expression(Kind::ThisKeyword);
-    let reference = factory.new_property_access_expression(this, NodeId::NIL, name, NodeFlags::NONE);
+    let reference =
+        factory.new_property_access_expression(this, NodeId::NIL, name, NodeFlags::NONE);
     a.set_parent(this, reference);
     a.set_parent(reference, declaration);
     a.set_flow_node(reference, a.flow_node(name));
@@ -309,10 +377,22 @@ fn checker_nodes_live_in_the_open_store() {
     assert_eq!(a.loc(reference), TextRange::new(5, 21));
 
     // Update returns the node itself when nothing changed, else a node with the flags and the range of the original.
-    let same = factory.update_property_access_expression(reference, this, NodeId::NIL, name, a.flags(reference));
+    let same = factory.update_property_access_expression(
+        reference,
+        this,
+        NodeId::NIL,
+        name,
+        a.flags(reference),
+    );
     assert_eq!(same, reference);
     let other = factory.new_identifier(b"y");
-    let updated = factory.update_property_access_expression(reference, this, NodeId::NIL, other, a.flags(reference));
+    let updated = factory.update_property_access_expression(
+        reference,
+        this,
+        NodeId::NIL,
+        other,
+        a.flags(reference),
+    );
     assert_ne!(updated, reference);
     assert_eq!(a.loc(updated), a.loc(reference));
     assert_eq!(a.as_identifier(a.name(updated)).text, b"y");
@@ -334,7 +414,10 @@ fn checker_nodes_live_in_the_open_store() {
     assert_eq!(a.table_get(table, b"t"), symbol);
     assert_eq!(a.table_entry_at(table, 0), Some((b"t".as_slice(), symbol)));
     a.table_set(SymbolTableId::NIL, b"t", symbol);
-    assert_eq!(open.faults.first().map(|fault| fault.kind), Some(FaultKind::NilMapWrite));
+    assert_eq!(
+        open.faults.first().map(|fault| fault.kind),
+        Some(FaultKind::NilMapWrite)
+    );
     let flow = a.new_flow_node(FlowFlags::TRUE_CONDITION, reference, a.flow_node(name));
     assert_eq!(a.flow(flow).antecedent, a.flow_node(name));
     assert_eq!(open.node_count(), 5);
@@ -347,10 +430,22 @@ fn lazy_symbol_ids_and_private_names() {
     let build = || {
         let mut b = FileBuilder::new(source);
         let private_name = b.new_private_identifier(b"#x");
-        let property = b.new_property_declaration(ModifierListId::NIL, private_name, NodeId::NIL, NodeId::NIL, NodeId::NIL);
+        let property = b.new_property_declaration(
+            ModifierListId::NIL,
+            private_name,
+            NodeId::NIL,
+            NodeId::NIL,
+            NodeId::NIL,
+        );
         let members = b.new_node_list(&[property]);
         let class_name = b.new_identifier(b"C");
-        let class = b.new_class_declaration(ModifierListId::NIL, class_name, NodeListId::NIL, NodeListId::NIL, members);
+        let class = b.new_class_declaration(
+            ModifierListId::NIL,
+            class_name,
+            NodeListId::NIL,
+            NodeListId::NIL,
+            members,
+        );
         let statements = b.new_node_list(&[class]);
         let eof = b.new_token(Kind::EndOfFile);
         let root = b.new_source_file(statements, eof);
@@ -380,7 +475,10 @@ fn lazy_symbol_ids_and_private_names() {
         let member = a.table_get(a.locals(class), name);
         assert!(!member.is_nil(), "{:?}", String::from_utf8_lossy(name));
         assert_eq!(a.sym(member).name, name);
-        assert_eq!(a.get_symbol_id(class_symbol) >> 32, u64::from(file.bound().map_or(0, |bound| bound.serial())));
+        assert_eq!(
+            a.get_symbol_id(class_symbol) >> 32,
+            u64::from(file.bound().map_or(0, |bound| bound.serial()))
+        );
         names.push(name.to_vec());
     }
     assert_ne!(names[0], names[1]);
@@ -408,7 +506,10 @@ fn every_definition_round_trips() {
         let mut slots = Vec::new();
         let mut expected_children = 0usize;
         for (position, slot) in info.slots.iter().enumerate() {
-            let is_child = info.children.iter().any(|child| usize::from(child.slot) == position);
+            let is_child = info
+                .children
+                .iter()
+                .any(|child| usize::from(child.slot) == position);
             slots.push(match slot.ty {
                 SlotType::Node => {
                     expected_children += usize::from(is_child);
@@ -436,27 +537,59 @@ fn every_definition_round_trips() {
         for (position, slot) in info.slots.iter().enumerate() {
             match slot.ty {
                 SlotType::Text => assert_eq!(data.text(position), slot.name.as_bytes()),
-                _ => assert_eq!(data.node(position).0, slots[position], "{}.{}", info.name, slot.name),
+                _ => assert_eq!(
+                    data.node(position).0,
+                    slots[position],
+                    "{}.{}",
+                    info.name,
+                    slot.name
+                ),
             }
         }
-        assert_eq!(a.iter_children(node).count(), expected_children, "{}", info.name);
-        assert!(info.children.iter().all(|child| match info.slots[usize::from(child.slot)].ty {
-            SlotType::Node => !matches!(child.visit, VisitTag::Nodes | VisitTag::Modifiers | VisitTag::RawNodes | VisitTag::Parameters | VisitTag::TopLevelStatements),
-            SlotType::NodeList | SlotType::RawNodeList | SlotType::ModifierList => !matches!(child.visit, VisitTag::Node | VisitTag::Token),
-            _ => false,
-        }));
+        assert_eq!(
+            a.iter_children(node).count(),
+            expected_children,
+            "{}",
+            info.name
+        );
+        assert!(
+            info.children
+                .iter()
+                .all(|child| match info.slots[usize::from(child.slot)].ty {
+                    SlotType::Node => !matches!(
+                        child.visit,
+                        VisitTag::Nodes
+                            | VisitTag::Modifiers
+                            | VisitTag::RawNodes
+                            | VisitTag::Parameters
+                            | VisitTag::TopLevelStatements
+                    ),
+                    SlotType::NodeList | SlotType::RawNodeList | SlotType::ModifierList =>
+                        !matches!(child.visit, VisitTag::Node | VisitTag::Token),
+                    _ => false,
+                })
+        );
         let clone = factory.clone_node(node);
-        assert_eq!(a.iter_children(clone).collect::<Vec<_>>(), a.iter_children(node).collect::<Vec<_>>());
+        assert_eq!(
+            a.iter_children(clone).collect::<Vec<_>>(),
+            a.iter_children(node).collect::<Vec<_>>()
+        );
         assert_eq!(a.flags(clone), NodeFlags::SYNTHESIZED);
         defs += 1;
     }
     assert_eq!(defs, 194);
     assert_eq!(open.faults.first(), None);
     assert!(is_token_kind(Kind::CommaToken) && !is_token_kind(Kind::IfStatement));
-    assert_eq!(Def::of_kind(Kind::ThisKeyword), (Def::KeywordExpression, Def::Token));
+    assert_eq!(
+        Def::of_kind(Kind::ThisKeyword),
+        (Def::KeywordExpression, Def::Token)
+    );
     assert_eq!(Kind::from_name(b"IfStatement"), Some(Kind::IfStatement));
     assert_eq!(Kind::FIRST_TOKEN, Kind::Unknown);
-    assert_eq!(ModifierFlags::EXPORT_DEFAULT, ModifierFlags::EXPORT | ModifierFlags::DEFAULT);
+    assert_eq!(
+        ModifierFlags::EXPORT_DEFAULT,
+        ModifierFlags::EXPORT | ModifierFlags::DEFAULT
+    );
     assert_eq!(SymbolFlags::ALL.0, (1 << 30) - 1);
 }
 
@@ -464,15 +597,32 @@ fn every_definition_round_trips() {
 fn imports_a_dump_of_typescript() {
     let mut stats = ImportStats::default();
     let ids = IdAllocator::new();
-    let files = match import_dump(include_bytes!("../testdata/lib.decorators.legacy.d.ts.ast.json"), &ids, &mut stats) {
+    let files = match import_dump(
+        include_bytes!("../testdata/lib.decorators.legacy.d.ts.ast.json"),
+        &ids,
+        &mut stats,
+    ) {
         Ok(files) => files,
         Err(error) => panic!("{error:?}"),
     };
-    assert_eq!((stats.files, stats.dump_nodes, stats.made_nodes), (1, 74, 74));
-    assert_eq!((stats.unknown_kinds, stats.unmapped_children, stats.unmapped_lists, stats.unmapped_attrs), (0, 0, 0, 0), "{:?}", String::from_utf8_lossy(&stats.first_unmapped));
+    assert_eq!(
+        (stats.files, stats.dump_nodes, stats.made_nodes),
+        (1, 77, 77)
+    );
+    assert_eq!(
+        (
+            stats.unknown_kinds,
+            stats.unmapped_children,
+            stats.unmapped_lists,
+            stats.unmapped_attrs
+        ),
+        (0, 0, 0, 0),
+        "{:?}",
+        String::from_utf8_lossy(&stats.first_unmapped)
+    );
     let mut published = Vec::new();
     for file in files {
-        assert_eq!(file.node_count(), 74);
+        assert_eq!(file.node_count(), 77);
         published.push(bind_and_publish(file, &ids).0);
     }
     let program = Program::new(published);
@@ -492,9 +642,17 @@ fn imports_a_dump_of_typescript() {
     assert_eq!(a.text(a.name(first)), b"ClassDecorator");
     assert_eq!(a.modifier_flags(first), ModifierFlags::AMBIENT);
     assert!(a.flags(first).contains(NodeFlags::AMBIENT));
-    assert_eq!(a.sym(a.table_get(a.locals(root), b"MethodDecorator")).declarations.at(0usize), statements.at(2usize));
+    assert_eq!(
+        a.sym(a.table_get(a.locals(root), b"MethodDecorator"))
+            .declarations
+            .at(0usize),
+        statements.at(2usize)
+    );
     assert_eq!(a.kind(a.type_node(first)), Kind::FunctionType);
     assert_eq!(a.type_parameters(a.type_node(first)).len(), 1);
-    assert_eq!(&file.source_text()[a.pos(a.name(first)) as usize + 1..a.end(a.name(first)) as usize], b"ClassDecorator");
+    assert_eq!(
+        &file.source_text()[a.pos(a.name(first)) as usize + 1..a.end(a.name(first)) as usize],
+        b"ClassDecorator"
+    );
     assert_eq!(open.faults.first(), None);
 }

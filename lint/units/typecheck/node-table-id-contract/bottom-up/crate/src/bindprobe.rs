@@ -30,10 +30,18 @@ fn get_locals(a: Ast<'_>, container: NodeId) -> SymbolTableId {
 }
 
 // binder.GetSymbolNameForPrivateIdentifier
-pub fn get_symbol_name_for_private_identifier<'a>(a: Ast<'a>, containing_class_symbol: SymbolId, description: &[u8]) -> &'a [u8] {
+pub fn get_symbol_name_for_private_identifier<'a>(
+    a: Ast<'a>,
+    containing_class_symbol: SymbolId,
+    description: &[u8],
+) -> &'a [u8] {
     let mut name = Vec::new();
     name.extend_from_slice(b"\xFE#");
-    name.extend_from_slice(a.get_symbol_id(containing_class_symbol).to_string().as_bytes());
+    name.extend_from_slice(
+        a.get_symbol_id(containing_class_symbol)
+            .to_string()
+            .as_bytes(),
+    );
     name.push(b'@');
     name.extend_from_slice(description);
     a.open().arena.alloc_slice_copy(&name)
@@ -50,6 +58,8 @@ pub fn bind_probe<'a>(a: Ast<'a>, root: NodeId) -> BindStats {
     while let Some((node, mut container, mut class_symbol)) = stack.pop() {
         stats.nodes += 1;
         let kind = a.kind(node);
+        // The symbol of a declaration goes into the container around it, not into its own locals.
+        let outer = container;
         if a.has_locals_container_data(node) {
             if !last_container.is_nil() {
                 a.set_next_container(last_container, node);
@@ -60,13 +70,17 @@ pub fn bind_probe<'a>(a: Ast<'a>, root: NodeId) -> BindStats {
         if a.has_declaration_data(node) {
             let name_node = a.name(node);
             let private = a.kind(name_node) == Kind::PrivateIdentifier;
-            if matches!(a.kind(name_node), Kind::Identifier | Kind::PrivateIdentifier) && !container.is_nil() {
+            if matches!(
+                a.kind(name_node),
+                Kind::Identifier | Kind::PrivateIdentifier
+            ) && !outer.is_nil()
+            {
                 let mut name = a.text(name_node);
                 if private && !class_symbol.is_nil() {
                     name = get_symbol_name_for_private_identifier(a, class_symbol, name);
                     stats.private_names += 1;
                 }
-                let locals = get_locals(a, container);
+                let locals = get_locals(a, outer);
                 let mut symbol = a.table_get(locals, name);
                 if symbol.is_nil() {
                     symbol = a.new_symbol(SymbolFlags::NONE, name);
@@ -101,7 +115,12 @@ pub fn bind_probe<'a>(a: Ast<'a>, root: NodeId) -> BindStats {
         }
         if kind == Kind::SwitchStatement {
             // createFlowSwitchClause: the data of the flow node is a node of kind Unknown.
-            let data = factory.alloc_node(Def::FlowSwitchClauseData, Kind::Unknown, NodeFlags::NONE, &[node.0, 0, 1]);
+            let data = factory.alloc_node(
+                Def::FlowSwitchClauseData,
+                Kind::Unknown,
+                NodeFlags::NONE,
+                &[node.0, 0, 1],
+            );
             current_flow = a.new_flow_node(FlowFlags::SWITCH_CLAUSE, data, current_flow);
             stats.flow_nodes += 1;
             stats.flow_data_nodes += 1;
@@ -113,7 +132,12 @@ pub fn bind_probe<'a>(a: Ast<'a>, root: NodeId) -> BindStats {
         children.clear();
         children.extend(a.jsdoc(node).iter());
         children.extend(a.iter_children(node));
-        stack.extend(children.iter().rev().map(|child| (*child, container, class_symbol)));
+        stack.extend(
+            children
+                .iter()
+                .rev()
+                .map(|child| (*child, container, class_symbol)),
+        );
     }
     stats.tables = a.open().table_count();
     stats

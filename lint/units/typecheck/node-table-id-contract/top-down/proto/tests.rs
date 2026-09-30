@@ -473,6 +473,29 @@ fn measure_bundle(label: &str, path: &str) {
         }
     }
     let t_walk = t.elapsed();
+    // ForEachChild gives the children in source order, and a child's id is above its parent's and its elder siblings'.
+    let (mut out_of_source_order, mut out_of_id_order) = (0u32, 0u32);
+    for table in &tables {
+        let mut stack = vec![table.root];
+        while let Some(node) = stack.pop() {
+            let (mut last_pos, mut last_id) = (i32::MIN, node.0);
+            node.for_each_child(&second, &mut |child| {
+                let pos = child.pos(&second);
+                out_of_source_order += u32::from(pos < last_pos);
+                out_of_id_order += u32::from(child.0 <= last_id);
+                last_pos = pos;
+                last_id = child.0;
+                stack.push(child);
+                false
+            });
+        }
+    }
+    let mut parts = [0usize; 6];
+    for table in &tables {
+        for (sum, part) in parts.iter_mut().zip(table.heap_parts()) {
+            *sum += part;
+        }
+    }
     let t = Instant::now();
     let mut after = 0;
     for table in &tables {
@@ -483,7 +506,7 @@ fn measure_bundle(label: &str, path: &str) {
     faults += first.log.count() + second.log.count();
     let _ = writeln!(
         err,
-        "{label}: files {} nodes {nodes} lists {lists} source bytes {source} dump bytes {}\n  reference digests: same {same} differ {differ} not in the golden table {unknown}; faults {faults}; nodes printed after freeze {after}\n  json read {:.1} ms; build {:.1} ms; finish {:.1} ms; freeze {:.2} ms; program 1 {:.3} ms; program 2 {:.3} ms ({} pages)\n  walk of {visited} nodes {:.1} ms (checksum {kinds}); dump of all trees {:.1} ms\n  table heap {heap} bytes ({:.1} per node, source text included); arena while building {arena_bytes} bytes; ids used {} pages",
+        "{label}: files {} nodes {nodes} lists {lists} source bytes {source} dump bytes {}\n  reference digests: same {same} differ {differ} not in the golden table {unknown}; faults {faults}; nodes printed after freeze {after}\n  json read {:.1} ms; build {:.1} ms; finish {:.1} ms; freeze {:.2} ms; program 1 {:.3} ms; program 2 {:.3} ms ({} pages)\n  walk of {visited} nodes {:.1} ms (checksum {kinds}); dump of all trees {:.1} ms\n  table heap {heap} bytes ({:.1} per node, source text included); arena while building {arena_bytes} bytes; ids used {} pages\n  bytes of records, slots, list records, list items, node texts, source: {parts:?}; children out of source order {out_of_source_order}, out of id order {out_of_id_order}",
         tables.len(),
         bytes.len(),
         t_json.as_secs_f64() * 1e3,
@@ -500,6 +523,7 @@ fn measure_bundle(label: &str, path: &str) {
     );
     assert_eq!(differ, 0);
     assert_eq!(faults, 0);
+    assert_eq!(out_of_id_order, 0);
 }
 
 #[test]

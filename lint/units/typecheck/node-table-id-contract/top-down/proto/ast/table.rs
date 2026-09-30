@@ -108,6 +108,17 @@ impl NodeTable {
             + self.source_text.capacity()
             + self.bound.heap_bytes()
     }
+    // Bytes of: node records, slots, list records, list items, node texts, the source text.
+    pub fn heap_parts(&self) -> [usize; 6] {
+        [
+            self.recs.len() * std::mem::size_of::<NodeRec>(),
+            self.slots.len() * 4,
+            self.lists.len() * std::mem::size_of::<ListRec>(),
+            self.list_items.len() * 4,
+            self.text_spans.len() * 8 + self.bytes.len(),
+            self.source_text.len(),
+        ]
+    }
     #[inline]
     pub(crate) fn payload(&self, rec: &NodeRec) -> &[AtomicU32] {
         let start = rec.data as usize;

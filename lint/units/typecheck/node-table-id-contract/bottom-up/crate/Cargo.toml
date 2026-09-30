@@ -20,7 +20,7 @@ debug = 1
 
 [lints.rust]
 warnings = { level = "deny", priority = -1 }
-unexpected_cfgs = { level = "warn", check-cfg = ['cfg(bun_asan)', 'cfg(bun_debug)', 'cfg(socket_fault_injection)'] }
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(bun_asan)', 'cfg(bun_debug)', 'cfg(socket_fault_injection)', 'cfg(ntc_shim)'] }
 linker_messages = "allow"
 dead_code = "deny"
 unreachable_pub = "deny"

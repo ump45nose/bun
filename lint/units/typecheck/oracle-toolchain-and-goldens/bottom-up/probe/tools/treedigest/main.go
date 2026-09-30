@@ -1,6 +1,6 @@
 // Replay tool: one line of digests per unit from the trees that `tsgoprobe tree` wrote, in the format of
 // ts-dump-and-test-importer/top-down/probe/golden.ts (FNV-1a 64 over the named lines, each followed by "\n").
-// usage: treedigest <dir of .tsgo.txt> <corpus dir> <manifest.tsv: vname, case, unit name | -> <out.tsv>
+// usage: treedigest [-norelated] <dir of .tsgo.txt> <corpus dir> <manifest.tsv: vname, case, unit name | -> <out.tsv>
 // With "-" the units are the files of the corpus dir in byte order, without a case name.
 package main
 
@@ -18,7 +18,13 @@ var (
 	header   = regexp.MustCompile(`^(file |externalModuleIndicator|commonJSModuleIndicator|usesUriStyleNodeCoreModules|counts |import |moduleAugmentation|ambientModuleName|pragma |referencedFile|typeReference|libReference|checkJs|commentDirective|diagnostic |jsDiagnostic |jsdocDiagnostic )`)
 	fileData = regexp.MustCompile(`^(externalModuleIndicator|usesUriStyleNodeCoreModules|import |moduleAugmentation|ambientModuleName|pragma |referencedFile|typeReference|libReference|checkJs|commentDirective)`)
 	nodeLine = regexp.MustCompile(` Kind\w+ \[`)
+	related  = regexp.MustCompile(`^(diagnostic|jsDiagnostic|jsdocDiagnostic)\.related `)
 )
+
+// The stored digests were made before the tree probe printed the related information of a diagnostic: with
+// -norelated those lines are left out, as they were then. Without it they count as tree lines (golden.ts has no
+// header pattern for them), which changes the two tree digests of the 31 units that have such a line.
+var norelated bool
 
 func fnvLines(lines []string) string {
 	h := uint64(0xcbf29ce484222325)
@@ -67,6 +73,10 @@ func stripJsdoc(lines []string) []string {
 type unit struct{ vname, caseName, unitName string }
 
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "-norelated" {
+		norelated = true
+		os.Args = append(os.Args[:1], os.Args[2:]...)
+	}
 	goOut, corpus, manifest, outFile := os.Args[1], os.Args[2], os.Args[3], os.Args[4]
 	var units []unit
 	if manifest == "-" {
@@ -109,7 +119,7 @@ func main() {
 		}
 		var all []string
 		for _, l := range strings.Split(string(raw), "\n") {
-			if l != "" {
+			if l != "" && !(norelated && related.MatchString(l)) {
 				all = append(all, l)
 			}
 		}

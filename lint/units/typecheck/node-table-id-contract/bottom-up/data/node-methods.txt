@@ -1,7 +1,7 @@
 core    AsNode (ast.go:192) -> none: a NodeId is the node
 core    Pos (ast.go:193) -> Ast::pos (ast/reader.rs)
 core    End (ast.go:194) -> Ast::end (ast/reader.rs)
-core    IterChildren (ast.go:195) -> Ast::children (ast/reader.rs)
+core    IterChildren (ast.go:195) -> Ast::iter_children (ast/reader.rs)
 core    Clone (ast.go:207) -> Factory::clone_node (ast/factory.rs)
 core    VisitEachChild (ast.go:208) -> DefInfo::children with VisitTag and Factory::update_node; the NodeVisitor itself is ported with ast/visitor.go
 core    Name (ast.go:209) -> Ast::name (ast_generated.rs, table NAME_SLOT)

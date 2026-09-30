@@ -111,6 +111,7 @@ MOD
 
 # 4. The overlay: patched copies of seven reference files, the probe's own files, one generated table.
 (cd "$P/tools/instr" && GOFLAGS= go build -o "$W/instr" .)
+(cd "$P/tools/treedigest" && GOFLAGS= go build -o "$W/treedigest" .)
 overlay() { # <overlay dir> <json> [all]
   rm -rf "$1" && mkdir -p "$1/internal/zzprobe/diaggt"
   python3 "$P/patch.py" "$REF" "$1" "$W/instr" ${3:-} > "$1/patched.txt"

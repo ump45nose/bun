@@ -4,7 +4,9 @@ use crate::ast::flags_generated::{FlowFlags, ModifierFlags, NodeFlags, SymbolFla
 use crate::ast::kind_generated::Kind;
 use crate::ast::layout::late_rank;
 use crate::tscore::deps::hash_bytes;
-use crate::tscore::ids::{FlowListId, FlowNodeId, NodeId, NodeListId, OPEN_BIT, PAGE_SIZE, SymbolId, SymbolTableId};
+use crate::tscore::ids::{
+    FlowListId, FlowNodeId, NodeId, NodeListId, OPEN_BIT, PAGE_SIZE, SymbolId, SymbolTableId,
+};
 use crate::tscore::text::TextRange;
 use std::sync::OnceLock;
 use std::sync::atomic::{AtomicU32, Ordering};
@@ -190,7 +192,9 @@ impl IdAllocator {
 }
 
 pub(crate) fn round_up_to_page(count: u32) -> Option<u32> {
-    count.checked_add(PAGE_SIZE - 1).map(|n| n & !(PAGE_SIZE - 1))
+    count
+        .checked_add(PAGE_SIZE - 1)
+        .map(|n| n & !(PAGE_SIZE - 1))
 }
 
 impl Bound {
@@ -233,7 +237,9 @@ impl Bound {
     #[inline]
     pub(crate) fn node_slots(&self, record: &NodeRecord) -> &[u32] {
         let start = record.data as usize;
-        self.slots.get(start..start + record.def.info().slots.len()).unwrap_or(&[])
+        self.slots
+            .get(start..start + record.def.info().slots.len())
+            .unwrap_or(&[])
     }
     // A text of a node that the binder or a program made.
     #[inline]
@@ -241,18 +247,24 @@ impl Bound {
         match self.texts.get(id as usize) {
             Some(span) => {
                 let start = span.start as usize;
-                self.text_bytes.get(start..start + span.len as usize).unwrap_or(&[])
+                self.text_bytes
+                    .get(start..start + span.len as usize)
+                    .unwrap_or(&[])
             }
             None => &[],
         }
     }
     pub(crate) fn symbol_declarations(&self, symbol: &SymbolRecord) -> &[NodeId] {
         let start = symbol.declarations_start as usize;
-        self.declarations.get(start..start + symbol.declarations_len as usize).unwrap_or(&[])
+        self.declarations
+            .get(start..start + symbol.declarations_len as usize)
+            .unwrap_or(&[])
     }
     pub(crate) fn table_entries(&self, table: &TableRecord) -> &[TableEntry] {
         let start = table.entries_start as usize;
-        self.table_entries.get(start..start + table.len as usize).unwrap_or(&[])
+        self.table_entries
+            .get(start..start + table.len as usize)
+            .unwrap_or(&[])
     }
 }
 
@@ -280,7 +292,9 @@ impl File {
         self.late.len() as u32
     }
     pub fn source_text(&self) -> &[u8] {
-        self.text_bytes.get(..self.source_file.text_len as usize).unwrap_or(&[])
+        self.text_bytes
+            .get(..self.source_file.text_len as usize)
+            .unwrap_or(&[])
     }
     // The bytes that the file keeps on the heap.
     pub fn heap_bytes(&self) -> usize {
@@ -300,7 +314,11 @@ impl File {
     // A name of the binder: a slice of the text of the file, or of the names that the binder added.
     #[inline]
     pub(crate) fn name<'f>(&'f self, bound: &'f Bound, span: TextSpan) -> &'f [u8] {
-        let pool = if span.start & OPEN_BIT != 0 { &bound.text_bytes } else { &self.text_bytes };
+        let pool = if span.start & OPEN_BIT != 0 {
+            &bound.text_bytes
+        } else {
+            &self.text_bytes
+        };
         let start = (span.start & !OPEN_BIT) as usize;
         pool.get(start..start + span.len as usize).unwrap_or(&[])
     }
@@ -308,10 +326,16 @@ impl File {
     pub(crate) fn table_lookup(&self, bound: &Bound, table: &TableRecord, name: &[u8]) -> SymbolId {
         let entries = bound.table_entries(table);
         if table.index_len == 0 {
-            return entries.iter().find(|entry| self.name(bound, entry.name) == name).map_or(SymbolId::NIL, |entry| entry.symbol);
+            return entries
+                .iter()
+                .find(|entry| self.name(bound, entry.name) == name)
+                .map_or(SymbolId::NIL, |entry| entry.symbol);
         }
         let start = table.index_start as usize;
-        let Some(index) = bound.table_index.get(start..start + table.index_len as usize) else {
+        let Some(index) = bound
+            .table_index
+            .get(start..start + table.index_len as usize)
+        else {
             return SymbolId::NIL;
         };
         let mask = index.len() - 1;
@@ -338,7 +362,9 @@ impl File {
     #[inline]
     pub(crate) fn node_slots(&self, record: &NodeRecord) -> &[u32] {
         let start = record.data as usize;
-        self.slots.get(start..start + record.def.info().slots.len()).unwrap_or(&[])
+        self.slots
+            .get(start..start + record.def.info().slots.len())
+            .unwrap_or(&[])
     }
     #[inline]
     pub(crate) fn node_flags(&self, local: usize) -> NodeFlags {
@@ -362,14 +388,18 @@ impl File {
     #[inline]
     pub(crate) fn list_nodes(&self, list: &ListRecord) -> &[NodeId] {
         let start = list.start as usize;
-        self.list_items.get(start..start + list.len as usize).unwrap_or(&[])
+        self.list_items
+            .get(start..start + list.len as usize)
+            .unwrap_or(&[])
     }
     #[inline]
     pub(crate) fn text(&self, id: u32) -> &[u8] {
         match self.texts.get(id as usize) {
             Some(span) => {
                 let start = span.start as usize;
-                self.text_bytes.get(start..start + span.len as usize).unwrap_or(&[])
+                self.text_bytes
+                    .get(start..start + span.len as usize)
+                    .unwrap_or(&[])
             }
             None => &[],
         }
@@ -381,4 +411,3 @@ impl File {
         }
     }
 }
-
