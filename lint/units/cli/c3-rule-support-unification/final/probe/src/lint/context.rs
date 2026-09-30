@@ -147,7 +147,10 @@ impl<'p, 'a> Context<'p, 'a> {
 
     /// How many `)` between `own` and the token at `to` close a `(` that stands before `own`. `None`: not known.
     pub(crate) fn closes(&self, own: Loc, to: Loc, under: &[&Expr]) -> Option<u32> {
-        let (own, to) = (u32::try_from(own.start).ok()?, u32::try_from(to.start).ok()?);
+        let (own, to) = (
+            u32::try_from(own.start).ok()?,
+            u32::try_from(to.start).ok()?,
+        );
         if to.checked_sub(own)? > tokens::MAX_SCAN {
             return None;
         }

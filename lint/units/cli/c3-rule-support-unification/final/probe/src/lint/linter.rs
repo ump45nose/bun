@@ -177,7 +177,8 @@ impl<'ast> Visitor<'ast> for Linter<'_, '_> {
 
     fn visit_e_binary(&mut self, node: &'ast E::Binary, loc: Loc) -> Option<&'ast Expr> {
         // The `=` of a default in a pattern is not an assignment: its left side is a target all the same.
-        let is_default = node.op == OpCode::BinAssign && self.take(core::ptr::from_ref(node).addr());
+        let is_default =
+            node.op == OpCode::BinAssign && self.take(core::ptr::from_ref(node).addr());
         if node.op == OpCode::BinAssign
             && matches!(node.left.data, ExprData::EArray(_) | ExprData::EObject(_))
         {

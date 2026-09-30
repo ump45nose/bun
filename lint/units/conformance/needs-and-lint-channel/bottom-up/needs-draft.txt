@@ -122,21 +122,33 @@ Ask. For `bun --lint <files>` when stdout and stderr are no terminal:
     internal/diagnostics/diagnostics.go:29-41 (category names). No empty line, no summary, no code frame.
  3. The code is `TS` and a number only for a diagnostic that typescript-go has under that number, with its text.
     Every other code (a rule, a syntax error of Bun without a TypeScript number) is a name:
-    [A-Za-z@][A-Za-z0-9@/_-]* and not `TS` and digits.
+    [A-Za-z@][A-Za-z0-9@/_-]* and not `TS` and digits. No line `error: <text>` without a code.
+    cli's prototype has that already: Code::Ts(u32) prints `TS<n>`, Code::Name prints the name, and the names
+    that are no rule are `syntax`, `internal-error`, `cannot-read-file` and `unsupported-extension`
+    (lint-prototype.patch, src/lint/diagnostic.rs). The runner reads a name that it was not told to leave out
+    as a failure of the instance: a syntax error of Bun in a case without expected errors must not pass.
  4. Exit code 0 with no diagnostic of category error, 2 with one or more, 1 for a refusal with a text on stderr.
     Every other exit code and every signal is read as a crash (a panic ends with SIGABRT on POSIX and with exit
     code 3 on Windows: src/crash_handler/lib.rs:2927-2992).
  5. The operands of one run are the roots of ONE program, in the order given, as for `tsc a.ts b.ts`.
-    (td) 1,562 run instances have more than one root.
+    (td) 1,562 run instances have more than one root. Today cli.md C1.3 reads each operand by itself, and the
+    rule tests that cli plans give many cases that do not know of each other as the operands of one run
+    (units/cli/rules-comparisons/spec-rules.txt:80-81): with a checker behind the flag those are one program.
  6. Order and duplicates as the reference: sorted with ast.CompareDiagnostics
-    (internal/ast/diagnostic.go:458-503: path, start, END of the span, code, category, source, message, chain,
-    related information), then compactAndMergeRelatedInfos (internal/compiler/program.go:1605-1634), which
-    joins diagnostics that differ only in their related information. cli.md C2.2 says "file, then position,
-    then code": the end comes before the code. (td) 474 baselines hold two diagnostics at one start, in 105
-    their ends differ, in 37 the order by code is the reverse of the order by end.
+    (internal/ast/diagnostic.go:458-503: path, start, END of the span, code, category, source, message key,
+    arguments, chain, related information), then compactAndMergeRelatedInfos
+    (internal/compiler/program.go:1605-1634), which joins diagnostics that differ only in their related
+    information. cli.md C2.2 says "file, then position, then code": the end comes before the code. (td) 474
+    baselines hold two diagnostics at one start, in 105 their ends differ, in 37 the order by code is the
+    reverse of the order by end (first: compiler/TransportStream.ts, compiler/arithmeticOnInvalidTypes.ts).
+    cli's prototype has this order (compare_diagnostics in src/lint/diagnostic.rs of lint-prototype.patch). It
+    compares the text where the reference compares the message key and then the arguments. No baseline of the
+    oracle is decided by that difference: 36 pairs in 22 baselines tie on file, start, end, code and category,
+    and all 36 are in ascending order of their text (error-baseline-format/top-down/ties.ts, run again now).
  7. A lint run reads and prints nothing about bunfig.toml, package.json, tsconfig.json or jsconfig.json of the
-    current directory. 130 case files have a unit named tsconfig.json and 242 one named package.json, some
-    broken on purpose; none has a bunfig.toml, a jsconfig.json or a .env file.
+    current directory. 130 case files have a unit named tsconfig.json (73 run instances) and 242 one named
+    package.json (504 run instances), some broken on purpose; none has a bunfig.toml, a jsconfig.json or a
+    .env file.
 Unlocks: the probe of the default check (one file that would leave a mark if it ran, one file with a syntax
 error). Alone it lets no instance be listed: see "Until then" of CH-2.
 Until then: the probe refuses the binary and no instance is handed to it. Measured again for this draft: with

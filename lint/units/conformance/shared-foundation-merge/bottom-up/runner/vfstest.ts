@@ -175,7 +175,7 @@ export class MemFs {
     return undefined;
   }
 
-  // internal.go:30 and iofs.go:49: "/" is the whole map, "c:/" is the sub tree "c:"
+  // internal.go:30 and iofs.go:109: "/" is the whole map, "c:/" is the sub tree "c:"
   private split(path: string): { root: string; rest: string } {
     const p = normalizePath(path);
     const l = getRootLength(p);

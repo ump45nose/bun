@@ -10,6 +10,7 @@ import (
 	"os"
 	"regexp"
 	"runtime"
+	"strconv"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -457,6 +458,27 @@ func regexpVectors() {
 	emit(map[string]any{"s": "regexps", "fields": "line optionRegex.FindAllStringSubmatch linkRegex.FindStringSubmatch referencesRegex.MatchString compilerBaselineRegex.MatchString", "cases": cases})
 }
 
+func atoiVectors() {
+	inputs := []string{
+		"", "0", "-0", "+0", "7", "+7", "-7", "007", "-007", "1_000", "0x10", "0b1", "0o7", "1e3", " 1", "1 ", "1\n", "\t1", "1.0", "1.", ".1", "+", "-", "--1", "+-1", "-+1", "++1",
+		"\uff19", "\u0663", "1\u0663", "true", "NaN", "Infinity", "9007199254740991", "9007199254740992", "9007199254740993", "9223372036854775807", "9223372036854775808",
+		"-9223372036854775808", "-9223372036854775809", "+9223372036854775807", "12345678901234567890", "00000000000000000000001", "-00000000000000000000000000", "1a", "a1", "0,1",
+	}
+	for range 400 {
+		var b strings.Builder
+		for range rnd(22) {
+			b.WriteByte("0123456789+-_ x.e9"[rnd(18)])
+		}
+		inputs = append(inputs, b.String())
+	}
+	var cases []any
+	for _, s := range inputs {
+		n, err := strconv.Atoi(s)
+		cases = append(cases, []any{s, strconv.Itoa(n), err == nil})
+	}
+	emit(map[string]any{"s": "atoi", "fields": "in value ok", "int": strconv.IntSize, "cases": cases})
+}
+
 func main() {
 	f, err := os.Create(os.Args[1])
 	if err != nil {
@@ -471,6 +493,7 @@ func main() {
 	decodeVectors()
 	pathVectors()
 	regexpVectors()
+	atoiVectors()
 	out.Flush()
 	f.Close()
 }
