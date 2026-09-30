@@ -283,6 +283,12 @@ impl InstallCompletionsCommand {
                             let input: &[u8] = argv.get(i + 1).expect("len checked").as_bytes();
 
                             if !bun_paths::is_absolute(input) {
+                                let Ok(cwd) = bun_core::cwd::require() else {
+                                    pretty_errorln!(
+                                        "<r><red>error<r>: Could not get current working directory"
+                                    );
+                                    Global::exit(fail_exit_code);
+                                };
                                 completions_dir =
                                     resolve_path::join_abs::<platform::Auto>(&cwd, input);
                             } else {

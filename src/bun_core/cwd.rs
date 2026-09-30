@@ -2,7 +2,7 @@
 //!
 //! Read from the operating system once, at process start ([`startup`]), and
 //! again only when Bun changes directory (`bun_sys::chdir`/`fchdir` call
-//! [`set`]). Code that needs the working directory reads it here with
+//! [`Writer::set`]). Code that needs the working directory reads it here with
 //! [`get`] and joins onto it, rather than asking the OS again or keeping its
 //! own copy. [`get`] returns a counted reference, [`Cwd`]; what is kept past
 //! a `chdir` is the directory that was current when it was read.
@@ -122,7 +122,7 @@ static EMPTY: Empty = Empty {
 static CWD: AtomicPtr<Entry> = AtomicPtr::new(ptr::addr_of!(EMPTY) as *mut Entry);
 
 /// Readers that have loaded [`CWD`] and not yet counted their reference.
-/// [`set`] gives up the previous directory's reference only once it has seen
+/// [`Writer::set`] gives up the previous directory's reference only once it has seen
 /// this at zero after the swap: a reader that loaded the previous directory
 /// announced itself here before the swap, and has counted itself by the time
 /// it leaves.
@@ -157,13 +157,23 @@ fn is_component(cwd: &[u8], name: &[u8]) -> bool {
 }
 
 /// Why [`startup`] could not read the working directory, until a `chdir`
-/// records one. Its lock is also what keeps [`set`] to one caller at a time.
+/// records one. Its lock is the [`Writer`]'s.
 static UNREAD: Mutex<Option<crate::Error>> = Mutex::new(None);
+
+/// Changes the record, one thread at a time. Taken before the process's
+/// directory is changed or its name is read from the OS, and held until that
+/// name is recorded, so that a name one thread read is never recorded after
+/// one that another thread read later.
+pub struct Writer(crate::MutexGuard<'static, Option<crate::Error>>);
+
+pub fn writer() -> Writer {
+    Writer(UNREAD.lock())
+}
 
 /// The working directory as the OS reports it.
 #[inline]
 pub fn get() -> Cwd {
-    // `SeqCst` on these and on `set`'s swap and check: each side writes one
+    // `SeqCst` on these and on the swap and check in `set`: each side writes one
     // and then reads the other, and at least one of them must see the
     // other's write.
     READERS.fetch_add(1, Ordering::SeqCst);
@@ -204,7 +214,7 @@ pub fn startup() {
     let mut buf = PathBuffer::ZEROED;
     match crate::getcwd(&mut buf) {
         Ok(cwd) => {
-            set(cwd.as_bytes());
+            writer().set(cwd.as_bytes());
         }
         Err(err) => {
             let exe_dir: &[u8] = crate::self_exe_path()
@@ -212,8 +222,9 @@ pub fn startup() {
                 .and_then(|p| crate::dirname(p.as_bytes()))
                 .filter(|d| crate::path_sep::is_absolute_native(d))
                 .unwrap_or(if cfg!(windows) { b"C:\\" } else { b"/" });
-            set(exe_dir);
-            *UNREAD.lock() = Some(err);
+            let mut record = writer();
+            record.set(exe_dir);
+            *record.0 = Some(err);
         }
     }
 }
@@ -229,17 +240,21 @@ pub fn require() -> crate::CrateResult<Cwd> {
     }
 }
 
-/// Records `path` as the working directory. For [`startup`] and
-/// `bun_sys::chdir`/`fchdir`, which have just read it back from the OS;
-/// nothing else should need this.
-pub fn set(path: &[u8]) {
-    let mut unread = UNREAD.lock();
-    *unread = None;
+impl Writer {
+    /// Records `path` as the working directory. For [`startup`] and
+    /// `bun_sys`, which have just read it from the OS; nothing else should
+    /// need this.
+    pub fn set(&mut self, path: &[u8]) {
+        *self.0 = None;
+        set(path);
+    }
+}
 
+fn set(path: &[u8]) {
     let current = CWD.load(Ordering::SeqCst);
     let is_empty = ptr::eq(current, ptr::addr_of!(EMPTY).cast());
     // SAFETY: `CWD`'s reference keeps `current` allocated, and only this
-    // function, one caller at a time, gives that reference up.
+    // function, under the `Writer`, gives that reference up.
     let current_bytes = unsafe {
         slice::from_raw_parts(ptr::addr_of!((*current).bytes).cast::<u8>(), (*current).len)
     };

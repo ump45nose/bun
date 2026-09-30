@@ -543,6 +543,85 @@ describe.skipIf(isWindows)("after this process renames the working directory, it
   });
 });
 
+// POSIX-only: the renames that read the working directory's name again are the POSIX ones.
+it.skipIf(isWindows)(
+  "the recorded working directory is the one the process is in while another thread reads its name again",
+  async () => {
+    using dir = tempDir("process-cwd-writers", { "a/in-a.txt": "", "b/in-b.txt": "", "scratch/.keep": "" });
+    await using proc = Bun.spawn({
+      cmd: [
+        bunExe(),
+        "-e",
+        `
+        const { Worker } = require("node:worker_threads");
+        const path = require("node:path");
+        const root = process.cwd();
+        const dirs = { a: path.join(root, "a"), b: path.join(root, "b") };
+        const ROUNDS = ${isDebug || isASAN ? 300 : 2000};
+        const stop = new Int32Array(new SharedArrayBuffer(4));
+        const renames = new Int32Array(new SharedArrayBuffer(4));
+        // Renames entries called "a" and "b", which is what the working directory is called, so
+        // that every rename reads its name again.
+        const source = \`
+          const { parentPort, workerData } = require("node:worker_threads");
+          const fs = require("node:fs");
+          const path = require("node:path");
+          const { stop, renames, scratch } = workerData;
+          for (const name of ["a", "b"]) fs.writeFileSync(path.join(scratch, name), "");
+          parentPort.postMessage("ready");
+          while (Atomics.load(stop, 0) === 0) {
+            for (const name of ["a", "b"]) {
+              fs.renameSync(path.join(scratch, name), path.join(scratch, name + "2"));
+              fs.renameSync(path.join(scratch, name + "2"), path.join(scratch, name));
+            }
+            Atomics.add(renames, 0, 1);
+          }
+          parentPort.postMessage("done");
+        \`;
+        (async () => {
+          const worker = new Worker(source, {
+            eval: true,
+            workerData: { stop, renames, scratch: path.join(root, "scratch") },
+          });
+          await new Promise((resolve, reject) => {
+            worker.once("message", resolve);
+            worker.once("error", reject);
+          });
+          const done = new Promise(resolve => worker.once("message", resolve));
+          // Glob scans the recorded directory.
+          const recorded = () => [...new Bun.Glob("in-*.txt").scanSync()].join(",");
+          const wrong = [];
+          const before = Atomics.load(renames, 0);
+          for (let round = 0; round < ROUNDS || Atomics.load(renames, 0) - before < 200; round++) {
+            for (const name of ["a", "b"]) {
+              process.chdir(dirs[name]);
+              for (let i = 0; i < 3; i++) {
+                const seen = recorded();
+                if (seen !== "in-" + name + ".txt" && wrong.length < 5) wrong.push({ in: name, recorded: seen });
+              }
+            }
+          }
+          Atomics.store(stop, 0, 1);
+          await done;
+          console.log(JSON.stringify({ wrong }));
+          process.exit(0);
+        })().catch(e => { console.error(e); process.exit(1); });
+      `,
+      ],
+      env: bunEnv,
+      cwd: String(dir),
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+    expect({ out: JSON.parse(stdout.trim() || "null"), stderr: exitCode === 0 ? "" : stderr }).toEqual({
+      out: { wrong: [] },
+      stderr: "",
+    });
+    expect(exitCode).toBe(0);
+  },
+);
+
 it("Workers can read the working directory while the main thread changes it", async () => {
   using dir = tempDir("process-cwd-concurrent", { "a/.keep": "", "b/.keep": "" });
   await using proc = Bun.spawn({

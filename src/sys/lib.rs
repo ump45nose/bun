@@ -885,11 +885,11 @@ pub fn lstatat(fd: impl AsFd, path: &ZStr) -> Result<Stat> {
 /// ancestor is unreadable, the path is longer than `PATH_MAX`), go back to the
 /// recorded directory and return the `getcwd` error. The process stays where
 /// it moved only if the recorded directory can no longer be entered.
-fn cwd_changed() -> Maybe<()> {
+fn cwd_changed(record: &mut bun_core::cwd::Writer) -> Maybe<()> {
     let mut buf = bun_paths::path_buffer_pool::get();
     match getcwd(&mut buf[..]) {
         Ok(len) => {
-            bun_core::cwd::set(&buf[..len]);
+            record.set(&buf[..len]);
             Ok(())
         }
         Err(err) => {
@@ -902,9 +902,10 @@ fn cwd_changed() -> Maybe<()> {
 /// The working directory as the OS names it now, recorded in
 /// [`bun_core::cwd`] if that is not what it holds.
 fn reread_cwd() -> Maybe<bun_core::cwd::Cwd> {
+    let mut record = bun_core::cwd::writer();
     let mut buf = bun_paths::path_buffer_pool::get();
     let len = getcwd(&mut buf[..])?;
-    bun_core::cwd::set(&buf[..len]);
+    record.set(&buf[..len]);
     Ok(bun_core::cwd::get())
 }
 
@@ -949,8 +950,9 @@ fn cwd_renamed(path: &[u8]) {
 /// [`bun_core::cwd`] is unchanged, and the process is in that directory
 /// unless it could not be entered again.
 pub fn chdir(path: &ZStr) -> Maybe<()> {
+    let mut record = bun_core::cwd::writer();
     chdir_os(path)?;
-    cwd_changed()
+    cwd_changed(&mut record)
 }
 
 pub mod coreutils_error_map;
@@ -3066,8 +3068,9 @@ mod posix_impl {
     /// follows. On `Err` [`bun_core::cwd`] is unchanged, and the process is in
     /// that directory unless it could not be entered again.
     pub fn fchdir(fd: Fd) -> Maybe<()> {
+        let mut record = bun_core::cwd::writer();
         check!(safe_libc::fchdir(fd.native()), Tag::fchdir);
-        super::cwd_changed()
+        super::cwd_changed(&mut record)
     }
     pub fn umask(mode: Mode) -> Mode {
         // `Mode` is normalized to u32 across platforms; libc::mode_t is u16 on

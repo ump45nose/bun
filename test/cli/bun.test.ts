@@ -300,6 +300,48 @@ describe("bun", () => {
       expect(fs.readlinkSync(join(String(dir), "home-local", ".local", "bin", bunxName))).toBe(exeRealpath);
     });
 
+    test("does not resolve a relative directory from a working directory that was removed", async () => {
+      // `out` exists next to the executable, which is the directory that stands in for the removed one.
+      using dir = tempDir("completions-relative-gone", {
+        "bin": { out: {} },
+        "empty-path": {},
+        "home": {},
+        "gone": {},
+      });
+      const exe = join(String(dir), "bin", "bun");
+      try {
+        fs.linkSync(fs.realpathSync(bunExe()), exe);
+      } catch {
+        fs.copyFileSync(bunExe(), exe);
+      }
+      const gone = join(String(dir), "gone");
+      // No bunx on the PATH bun gets, so that it installs the symlink as usual.
+      const emptyPath = join(String(dir), "empty-path");
+      await using proc = Bun.spawn({
+        cmd: [
+          "/bin/sh",
+          "-c",
+          `cd "${gone}" && rmdir "${gone}" && PATH="${emptyPath}" exec "${exe}" completions ./out`,
+        ],
+        env: {
+          ...bunEnv,
+          HOME: join(String(dir), "home"),
+          SHELL: "/bin/bash",
+          BUN_INSTALL: undefined,
+          // Write the completions to a directory even though stdout is a pipe.
+          IS_BUN_AUTO_UPDATE: "true",
+        },
+        stdout: "pipe",
+        stderr: "pipe",
+      });
+      const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+      expect(stdout).toBe("");
+      expect(stderr).toContain("Could not get current working directory");
+      expect(fs.readdirSync(join(String(dir), "bin", "out"))).toEqual([]);
+      // A failure exits 0 with IS_BUN_AUTO_UPDATE.
+      expect(exitCode).toBe(0);
+    });
+
     test("reports that PowerShell completions do not exist when $SHELL is pwsh", async () => {
       // An empty home keeps the bunx symlink fallbacks ($HOME/.bun/bin, $HOME/.local/bin) out of the
       // real home directory. The first candidate, the executable's own directory, is unaffected.
