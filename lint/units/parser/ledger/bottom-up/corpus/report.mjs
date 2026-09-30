@@ -98,7 +98,7 @@ const totals = {}; // view -> class -> n
 const bySet = {}; // set -> view -> class -> n
 const A = []; // set A entries
 const B = [];
-const goDiff = { verdict: [], first: [], count: 0, panic: [], rows: 0, same: 0 };
+const goDiff = { verdict: [], first: [], later: [], count: 0, panic: [], rows: 0, same: 0, dtsDiffers: { tsc: 0, go: 0 } };
 const firstCodes = [];
 const posAgree = { rr: 0, same: 0, sameLine: 0 };
 const bunMsgToCode = {}; // normalized bun message -> tsc code -> n   (RR rows, view ts)
@@ -147,6 +147,8 @@ for (const row of corpus) {
   }
   const bViews = VIEW_NAMES.filter(x => cls[x] === "B");
   if (bViews.length) B.push({ row, views: bViews, t, g });
+  if (JSON.stringify(t.dts) !== JSON.stringify(t.ts)) goDiff.dtsDiffers.tsc++;
+  if (g && JSON.stringify(g.dts) !== JSON.stringify(g.ts)) goDiff.dtsDiffers.go++;
   // tsc against typescript-go, per dialect
   if (g) {
     for (const d of ["ts", "tsx", "dts"]) {
@@ -161,7 +163,10 @@ for (const row of corpus) {
       const gOk = gg[0] === 0;
       if (tOk !== gOk) goDiff.verdict.push({ i: row.i, d, src: row.src, tsc: tt, go: gg, o: row.o });
       else if (!tOk && JSON.stringify(tt[2]) !== JSON.stringify(gg[2])) goDiff.first.push({ i: row.i, d, src: row.src, tsc: tt, go: gg });
-      else if (JSON.stringify(tt.slice(2)) !== JSON.stringify(gg.slice(2)) || tt[0] !== gg[0]) goDiff.count++;
+      else if (JSON.stringify(tt.slice(2)) !== JSON.stringify(gg.slice(2)) || tt[0] !== gg[0]) {
+        goDiff.count++;
+        goDiff.later.push({ i: row.i, d, src: row.src, tsc: tt, go: gg });
+      }
       else goDiff.same++;
     }
   }
@@ -402,6 +407,7 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
   L.push(`both reject, the first diagnostic differs: ${goDiff.first.length}`);
   L.push(`verdict differs: ${goDiff.verdict.length}`);
   L.push(`typescript-go panicked or died: ${goDiff.panic.length}`);
+  L.push(`rows whose parse diagnostics as input.d.ts differ from those as input.ts: tsc ${goDiff.dtsDiffers.tsc}, typescript-go ${goDiff.dtsDiffers.go}`);
   L.push("");
   const dirs = {};
   for (const x of goDiff.verdict) inc(dirs, `${x.d}: ${x.tsc[0] === 0 ? "tsc accepts, typescript-go rejects with TS" + x.go[2][0] : "typescript-go accepts, tsc rejects with TS" + x.tsc[2][0]}`);
@@ -467,6 +473,9 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
   const F = ["i\tdialect\ttsc count\ttsc first\ttsc message\tgo count\tgo first\tgo message\tsource"];
   for (const x of goDiff.first) F.push([x.i, x.d, x.tsc[0], x.tsc[2].join(","), tsv(x.tsc[1]), x.go[0], x.go[2].join(","), tsv(x.go[1]), tsv(x.src)].join("\t"));
   wz("tsc-vs-tsgo.first.tsv.gz", F.join("\n") + "\n");
+  const LT = ["i\tdialect\ttsc count and [code,start,length] from the second on\tgo count and the same\tsource"];
+  for (const x of goDiff.later) LT.push([x.i, x.d, x.tsc[0] + " " + JSON.stringify(x.tsc.slice(3)), x.go[0] + " " + JSON.stringify(x.go.slice(3)), tsv(x.src)].join("\t"));
+  w("tsc-vs-tsgo.later.tsv", LT.join("\n"));
   const P = ["i\tdialect\tgo\tsource"];
   for (const x of goDiff.panic) P.push([x.i, x.d, tsv(JSON.stringify(x.go)), tsv(x.src.slice(0, 300))].join("\t"));
   w("tsc-vs-tsgo.panic.tsv", P.join("\n"));
@@ -579,5 +588,5 @@ console.log("written to " + outDir);
 // Files: table.jsonl.gz (every row: b, t, g, v; join with the corpus on i), totals.txt,
 // setA.classes.txt, setA.rows.tsv.gz, setA.codes.<view>.tsv, setA.causes.<view>.txt, setA.worklist.<view>.tsv,
 // setB.causes.<view>.txt, setB.rows.tsv.gz,
-// tsc-vs-tsgo.summary.txt, tsc-vs-tsgo.causes.txt, tsc-vs-tsgo.verdict.tsv, tsc-vs-tsgo.first.tsv.gz, tsc-vs-tsgo.panic.tsv,
+// tsc-vs-tsgo.summary.txt, tsc-vs-tsgo.causes.txt, tsc-vs-tsgo.verdict.tsv, tsc-vs-tsgo.later.tsv, tsc-vs-tsgo.first.tsv.gz, tsc-vs-tsgo.panic.tsv,
 // pins.summary.txt, pins.flip.tsv, pins.keep.tsv, pins.odd.tsv, codes.first.tsv.gz, codes.summary.txt

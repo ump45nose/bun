@@ -4,6 +4,7 @@ same verdict and same first diagnostic, later diagnostics or the count differ: 2
 both reject, the first diagnostic differs: 1080
 verdict differs: 1181
 typescript-go panicked or died: 0
+rows whose parse diagnostics as input.d.ts differ from those as input.ts: tsc 0, typescript-go 3
 
 verdict differs, by dialect and direction:
       96  ts: tsc accepts, typescript-go rejects with TS1005

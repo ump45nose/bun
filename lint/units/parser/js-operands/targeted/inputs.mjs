@@ -248,6 +248,13 @@ export const inputs = [
   ["x91", "class A extends B implements C, D {}"],
   ["x92", "x = function* <T>() {}; y = async function <T>() {}; z = async <T,>() => {}"],
 
+  ["x93", "@x<y> class A {}"],
+  ["x94", "@x<y>() class A {}"],
+  ["x95", "@x! class A {}"],
+  ["x96", "class A { @(a<b>(c)) m() {} }"],
+  ["x97", "var a = b?.<c>(d)"],
+  ["x98", "var a = <A<T> />"],
+
   ["p01", "// @ts-check\n/** @type {number} */\nvar x = /** @type {any} */ (y);"],
   ["p02", "// @ts-nocheck\nvar x = (1, 2);"],
   ["p03", "/// <reference path='a.d.ts' />\n/// <reference types='node' />\nvar x;"],

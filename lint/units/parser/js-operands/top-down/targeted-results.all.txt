@@ -577,6 +577,40 @@
 [class-members] "x = class extends B {}"
     bun: same
     tsc .js: clean; .ts: clean; shape=
+[class-members] "class A { static\n{ } }"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[class-members] "class A { x\n['y'] }"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[class-members] "class A { x\n*y() {} }"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[class-members] "class A { readonly\n static x }"
+    bun: DIFFERENT OUTPUT
+      js: class A { readonly; static x; }
+      ts: class A { static x; }
+    tsc .js: clean; .ts: clean; shape=
+[class-members] "class A { override\n static\n x }"
+    bun: DIFFERENT OUTPUT
+      js: class A { override; static x; }
+      ts: class A { static x; }
+    tsc .js: clean; .ts: clean; shape=
+[class-members] "class A { protected\n async\n x() {} }"
+    bun: DIFFERENT OUTPUT
+      js: class A { protected; async; x() {} }
+      ts: class A { async; x() {} }
+    tsc .js: clean; .ts: clean; shape=
+[class-members] "class A { private\n constructor() {} }"
+    bun: DIFFERENT OUTPUT
+      js: class A { private; constructor() {} }
+      ts: class A { constructor() {} }
+    tsc .js: clean; .ts: clean; shape=
+[class-members] "class A { public\n accessor x }"
+    bun: DIFFERENT OUTPUT
+      js: import { __privateAdd as __privateAdd_jy12bb7f, __privateGet as __privateGet_t4v9rzz2, __privateSet as __privateSet_3ajc9ey2 } from "bun:wrap"; var _x$1; class A { constructor() { __privateAdd_jy12bb7f(this, _x$1, void 0); } static { _x$1 = new WeakMap; } public; get x() { return __privateGet_t4v9rzz2(this, _x$1); } set x(v) { __privateSet_3ajc9ey2(this, _x$1, v); } }
+      ts: import { __privateAdd as __privateAdd_jy12bb7f, __privateGet as __privateGet_t4v9rzz2, __privateSet as __privateSet_3ajc9ey2 } from "bun:wrap"; var _x$1; class A { constructor() { __privateAdd_jy12bb7f(this, _x$1, void 0); } static { _x$1 = new WeakMap; } get x() { return __privateGet_t4v9rzz2(this, _x$1); } set x(v) { __privateSet_3ajc9ey2(this, _x$1, v); } }
+    tsc .js: clean; .ts: clean; shape=
 [statement-keywords] "var interface; interface;"
     bun: TS REJECTS  ts: Expected identifier but found ";"
     tsc .js: clean; .ts: clean; shape=
@@ -744,6 +778,55 @@
     bun: same
     tsc .js: clean; .ts: clean; shape=
 [statement-keywords] "var any, unknown, never, keyof, infer, is, asserts, unique, out, override, readonly, accessor; x = [any, unknown, never, keyof, infer, is, asserts, unique, out, override, readonly, accessor]"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "let x\n!y"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var x\n!y"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var interface; interface\n{}"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var type, a, b; type\n[a] = b"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var declare; declare\n;"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var declare; declare\n"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var declare; if (x) declare; else y"
+    bun: DIFFERENT OUTPUT
+      js: var declare; if (x) declare; else y;
+      ts: var declare; if (x) ; else y;
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var interface; if (x) interface; else y"
+    bun: TS REJECTS  ts: Expected identifier but found ";"
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var declare; x => { declare; }"
+    bun: DIFFERENT OUTPUT
+      js: var declare; (x) => { declare; };
+      ts: var declare; (x) => {};
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var interface; function f() { interface; }"
+    bun: TS REJECTS  ts: Expected identifier but found ";"
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var enum_; enum_\nA\n{}"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var namespace; namespace\n.x"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "using: 1"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var using; using\nx = 1"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[statement-keywords] "var await_; await_\nusing\nx"
     bun: same
     tsc .js: clean; .ts: clean; shape=
 [imports-exports] "import type from 'x'; type"
@@ -1293,6 +1376,63 @@
 [typescript-only] "label: type A = 1"
     bun: ts-only  js: Expected ";" but found "A"
     tsc .js: js TS8008; .ts: clean; shape=
+[paren-colon] "switch (x) { case (a): b => c }"
+    bun: TS REJECTS  ts: Expected ":" but found "}"
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[paren-colon] "switch (x) { case (a): b => {} }"
+    bun: TS REJECTS  ts: Expected ":" but found "}"
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[paren-colon] "switch (x) { case (a, b): c => d }"
+    bun: TS REJECTS  ts: Expected ":" but found "}"
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[paren-colon] "switch (x) { case (a): (b) => c }"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[paren-colon] "switch (x) { case (a): b }"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[paren-colon] "switch (x) { case a: b => c }"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[paren-colon] "switch (x) { case async (a): b => c }"
+    bun: TS REJECTS  ts: Expected ":" but found "}"
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[paren-colon] "switch (x) { case (a):\n b => c }"
+    bun: TS REJECTS  ts: Expected ":" but found "}"
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[paren-colon] "switch (x) { case ({a}): b => c }"
+    bun: TS REJECTS  ts: Expected ":" but found "}"
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[paren-colon] "switch (x) { case ([a]): b => c }"
+    bun: TS REJECTS  ts: Expected ":" but found "}"
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[paren-colon] "switch (x) { case (a = 1): b => c }"
+    bun: TS REJECTS  ts: Expected ":" but found "}"
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[paren-colon] "switch (x) { case (1): b => c }"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[paren-colon] "switch (x) { case (a): b => c; break; case (d): e => f }"
+    bun: TS REJECTS  ts: Expected ":" but found ";"
+    tsc .js: parse TS1005,TS1005; .ts: parse TS1005,TS1005; shape=
+[paren-colon] "switch (x) { case y ? (a) : b => c: d }"
+    bun: TS REJECTS  ts: Expected ":" but found "}"
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[paren-colon] "x = { k: (a) }"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[paren-colon] "x = { [(a)]: b => c }"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[paren-colon] "x = y ? { k: (a) } : b => c"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[paren-colon] "x = a ? (b) : c"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[paren-colon] "x = a ? ((b)) : c => d"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
 
 SUMMARY
 type-arguments
@@ -1316,18 +1456,18 @@ conditional-arrow
       1 tsc .js: parse error
       7 tsc .js: parse error [TS REJECTS]
 class-members
-     15 bun js/ts: DIFFERENT OUTPUT
-     29 bun js/ts: same
-     29 tsc .js: clean
-     15 tsc .js: clean [DIFFERENT OUTPUT]
+     20 bun js/ts: DIFFERENT OUTPUT
+     32 bun js/ts: same
+     32 tsc .js: clean
+     20 tsc .js: clean [DIFFERENT OUTPUT]
 statement-keywords
-      2 bun js/ts: DIFFERENT OUTPUT
-      3 bun js/ts: TS REJECTS
-     50 bun js/ts: same
+      4 bun js/ts: DIFFERENT OUTPUT
+      5 bun js/ts: TS REJECTS
+     61 bun js/ts: same
       2 tsc .js: TS8xxx
-     48 tsc .js: clean
-      2 tsc .js: clean [DIFFERENT OUTPUT]
-      3 tsc .js: clean [TS REJECTS]
+     59 tsc .js: clean
+      4 tsc .js: clean [DIFFERENT OUTPUT]
+      5 tsc .js: clean [TS REJECTS]
 imports-exports
      31 bun js/ts: same
       1 bun js/ts: ts-only
@@ -1360,3 +1500,8 @@ typescript-only
       3 tsc .js: clean [ts-only]
       2 tsc .js: parse error
       6 tsc .js: parse error [ts-only]
+paren-colon
+     10 bun js/ts: TS REJECTS
+      9 bun js/ts: same
+      9 tsc .js: clean
+     10 tsc .js: parse error [TS REJECTS]

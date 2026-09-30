@@ -60,9 +60,13 @@ const cases = [
 ];
 for (const [label, text, tsx] of cases) {
   const t = new Bun.Transpiler({ loader: tsx ? "tsx" : "ts", target: "bun", tsconfig: { compilerOptions: { experimentalDecorators: true } } });
-  let bun;
-  try { t.transformSync(text); bun = "ok"; } catch (e) { bun = "ERR " + String(e?.errors?.[0]?.message ?? e?.message ?? e).split("\n")[0]; }
+  const first = e => String(e?.errors?.[0]?.message ?? e?.message ?? e).split("\n")[0];
+  let bun, pass;
+  try { t.transformSync(text); bun = "ok"; } catch (e) { bun = "ERR " + first(e); }
+  // scanImports runs the parse pass alone: an error here is an error of the parse pass.
+  try { t.scanImports(text); pass = "parse"; } catch (e) { pass = "PARSE-PASS"; }
+  if (bun !== "ok" && pass === "parse") pass = "visit-pass";
   const sf = ts.createSourceFile(tsx ? "a.tsx" : "a.ts", text, ts.ScriptTarget.ESNext, true);
   const tsc = sf.parseDiagnostics.length ? "PARSE " + sf.parseDiagnostics.map(d => "TS" + d.code).join(",") : "parses";
-  console.log(`${label.padEnd(44)} tsc: ${tsc.padEnd(22)} bun: ${bun}`);
+  console.log(`${label.padEnd(44)} tsc: ${tsc.padEnd(14)} bun: ${(bun === "ok" ? "ok" : pass).padEnd(11)} ${bun === "ok" ? "" : bun}`);
 }
