@@ -143,18 +143,12 @@ sub('p.rs', '''    /// When not transpiling we dont use the renamer, so our solu
         }
     }
 
-    /// Leaves the parse pass as if the syntax read since `type_expr_save` were absent; symbols and names stay.
+    /// Detaches the scopes pushed since `type_expr_save` and puts the scalars back; symbols and names stay.
     #[cold]
     #[inline(never)]
-    fn type_expr_restore(&mut self, save: TypeExprSave<'a>) {
-        let mut comments = save.comments_to_preserve_before;
-        comments.append(&mut self.lexer.comments_to_preserve_before);
-        self.lexer.comments_to_preserve_before = comments;
-        self.lexer.has_react_hooks_suppression_before |= save.has_react_hooks_suppression_before;
+    fn type_expr_detach(&mut self, save: &TypeExprSave<'a>, drop_messages: bool) {
         self.lexer.is_log_disabled = save.is_log_disabled;
-        self.parse_pass_symbol_uses = save.parse_pass_symbol_uses;
-        self.options.features.emit_decorator_metadata = save.emit_decorator_metadata;
-        if save.is_log_disabled {
+        if drop_messages {
             let log = self.log();
             log.msgs.truncate(save.log_msgs_len);
             log.errors = save.log_errors;
@@ -171,7 +165,7 @@ sub('p.rs', '''    /// When not transpiling we dont use the renamer, so our solu
         self.needs_jsx_import = save.needs_jsx_import;
         self.top_level_await_keyword = save.top_level_await_keyword;
         self.esm_import_keyword = save.esm_import_keyword;
-        self.fn_or_arrow_data_parse = save.fn_or_arrow_data_parse;
+        self.fn_or_arrow_data_parse = save.fn_or_arrow_data_parse.clone();
         self.latest_arrow_arg_loc = save.latest_arrow_arg_loc;
         self.forbid_suffix_after_as_loc = save.forbid_suffix_after_as_loc;
         self.after_arrow_body_loc = save.after_arrow_body_loc;
@@ -185,12 +179,52 @@ sub('p.rs', '''    /// When not transpiling we dont use the renamer, so our solu
         self.import_records.truncate(save.import_records_len);
     }
 
-    /// An expression that tsc reads inside type syntax. The tree is returned; the scopes it pushed are detached.
+    /// Leaves the parse pass as if the syntax read since `type_expr_save` were absent.
     #[cold]
     #[inline(never)]
-    pub(crate) fn parse_expr_in_type(&mut self, kind: TypeExprKind) -> Result<Expr, crate::Error> {
+    fn type_expr_restore(&mut self, save: TypeExprSave<'a>, drop_messages: bool) {
+        self.type_expr_detach(&save, drop_messages);
+        let mut comments = save.comments_to_preserve_before;
+        comments.append(&mut self.lexer.comments_to_preserve_before);
+        self.lexer.comments_to_preserve_before = comments;
+        self.lexer.has_react_hooks_suppression_before |= save.has_react_hooks_suppression_before;
+        self.parse_pass_symbol_uses = save.parse_pass_symbol_uses;
+        self.options.features.emit_decorator_metadata = save.emit_decorator_metadata;
+    }
+
+    /// Runs `read` on syntax that tsc reads inside a type and that leaves no trace in the parse pass.
+    #[cold]
+    #[inline(never)]
+    fn read_in_type<R>(
+        &mut self,
+        kind: TypeExprKind,
+        read: fn(&mut Self, TypeExprKind) -> Result<R, crate::Error>,
+    ) -> Result<R, crate::Error> {
         let save = self.type_expr_save();
-        let result = match kind {
+        let start = self.lexer.snapshot();
+        self.lexer.is_log_disabled = true;
+        let first = read(self, kind);
+        match first {
+            Err(err)
+                if !save.is_log_disabled
+                    && !matches!(err, crate::Error::StackOverflow | crate::Error::Alloc(_)) =>
+            {
+                // The second reading logs the messages of the error.
+                self.type_expr_detach(&save, true);
+                self.lexer.restore(&start);
+                let second = read(self, kind);
+                self.type_expr_restore(save, false);
+                second
+            }
+            other => {
+                self.type_expr_restore(save, true);
+                other
+            }
+        }
+    }
+
+    fn read_expr_in_type(&mut self, kind: TypeExprKind) -> Result<Expr, crate::Error> {
+        match kind {
             TypeExprKind::ComputedName => {
                 self.allow_in = true;
                 self.parse_expr(js_ast::op::Level::Lowest)
@@ -211,24 +245,33 @@ sub('p.rs', '''    /// When not transpiling we dont use the renamer, so our solu
             }
             TypeExprKind::Constraint => self.parse_expr(js_ast::op::Level::Prefix),
             TypeExprKind::Heritage => self.parse_expr(js_ast::op::Level::New),
-        };
-        self.type_expr_restore(save);
-        result
+        }
+    }
+
+    fn read_fn_body_in_type(&mut self, _: TypeExprKind) -> Result<G::FnBody, crate::Error> {
+        let brace = self.lexer.loc();
+        let args_loc = bun_ast::Loc { start: brace.start - 1 };
+        self.push_scope_for_parse_pass(js_ast::scope::Kind::FunctionArgs, args_loc)?;
+        self.parse_fn_body(&mut FnOrArrowDataParse::default())
+    }
+
+    fn read_binding_in_type(&mut self, _: TypeExprKind) -> Result<Binding, crate::Error> {
+        self.parse_binding(crate::parser::ParseBindingOptions::default())
+    }
+
+    /// An expression that tsc reads inside type syntax. The scopes it pushed are detached; its symbols stay.
+    pub(crate) fn parse_expr_in_type(&mut self, kind: TypeExprKind) -> Result<Expr, crate::Error> {
+        self.read_in_type(kind, Self::read_expr_in_type)
     }
 
     /// The body of an accessor in a type literal or an interface. The lexer is at its "{".
-    #[cold]
-    #[inline(never)]
     pub(crate) fn parse_fn_body_in_type(&mut self) -> Result<G::FnBody, crate::Error> {
-        let save = self.type_expr_save();
-        let brace = self.lexer.loc();
-        let args_loc = bun_ast::Loc { start: brace.start - 1 };
-        let result = match self.push_scope_for_parse_pass(js_ast::scope::Kind::FunctionArgs, args_loc) {
-            Ok(_) => self.parse_fn_body(&mut FnOrArrowDataParse::default()),
-            Err(err) => Err(err),
-        };
-        self.type_expr_restore(save);
-        result
+        self.read_in_type(TypeExprKind::Initializer, Self::read_fn_body_in_type)
+    }
+
+    /// A binding pattern of a signature parameter: its names are name refs, nothing is declared.
+    pub(crate) fn parse_binding_in_type(&mut self) -> Result<Binding, crate::Error> {
+        self.read_in_type(TypeExprKind::PatternInitializer, Self::read_binding_in_type)
     }
 
     /// Removes the messages at or after `offset` that a failed reading logged.
@@ -349,8 +392,12 @@ sub(G, '''    pub(crate) fn skip_typescript_fn_args(&mut self) -> Result<(), Err
     #[cold]
     #[inline(never)]
     fn retry_computed_name_as_expr(&mut self, open: usize, err: Option<Error>) -> Result<(), Error> {
-        if let Some(err @ (Error::StackOverflow | Error::Alloc(_))) = err {
-            return Err(err);
+        if let Some(err) = err {
+            if self.lexer.is_log_disabled || matches!(err, Error::StackOverflow | Error::Alloc(_)) {
+                return Err(err);
+            }
+        } else if self.lexer.is_log_disabled {
+            return Ok(());
         }
         let was_disabled = self.lexer.is_log_disabled;
         self.lexer.is_log_disabled = true;

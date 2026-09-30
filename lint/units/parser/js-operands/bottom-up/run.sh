@@ -10,6 +10,7 @@ GO=${GO:-/tmp/rr/parsediag}
 WT=/workspace/wt/parser
 REF=/workspace/ref/typescript-go
 # 1. Every JavaScript file of the repository: loader js against ts, jsx against tsx, js against jsx.
+# The four summaries below are kept in corpus-diff.summary.txt.
 $BUN diff-js-ts.mjs corpus-diff.jsonl $WT/test $WT/src/js
 $BUN diff-js-ts.mjs nm-diff.jsonl $WT/test $WT/node_modules --node-modules
 # 2. The same with minified identifiers: the output then depends on the symbols and on the scope tree.

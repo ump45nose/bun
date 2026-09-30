@@ -11,6 +11,8 @@
 #     tsc       parser of tsc                             -> data/tsc.jsonl.gz
 #     tsgo      parser of typescript-go (../tsgo-oracle)  -> data/tsgo.jsonl.gz
 #     classify  join, checker pass, pinned tests, tables  -> out/
+#     upstream  the test cases of TypeScript (12,444 tests) against the base binary, tsc and typescript-go;
+#               units of tests without an error baseline that the binary rejects -> out-upstream/
 # The base binary is a release build of the commit that the differential harness compares against
 # (e3566be889: /workspace/notes/lint/units/parser/measure/base/bin/bun, a copy of build/release/bun of the
 # clean worktree; the directory is git-ignored, rebuild it with `bun run build:release` after a restart).
@@ -21,7 +23,7 @@ BASE=${1:?usage: run.sh <base bun binary> [work dir] [stage...]}
 WORK=${2:-/tmp/ledger-work}
 shift || true
 shift || true
-STAGES=${*:-calls corpus bun tsc tsgo classify}
+STAGES=${*:-calls corpus bun tsc tsgo classify upstream}
 HERE=$(cd "$(dirname "$0")" && pwd)
 REPO=/workspace/wt/parser
 TESTS="test/bundler/transpiler/es-decorators.test.ts test/regression/issue/27575.test.ts test/js/bun/transpiler/repl-transform.test.ts test/js/bun/resolve/lower-using-bun-target.test.ts test/js/bun/transpiler/transpiler-utf16-loader.test.ts test/js/bun/transpiler/transpiler-unsupported-loader.test.ts test/bundler/transpiler/react-compiler.test.ts test/regression/issue/03830.test.ts test/regression/issue/13251.test.ts test/js/bun/transpiler/transpiler-tsconfig-uaf.test.ts test/regression/issue/012039.test.ts test/regression/issue/14477/14477.test.ts test/js/bun/transpiler/transpiler-error-gc-uaf.test.ts test/bundler/transpiler/ts-use-define-for-class-fields.test.ts test/bundler/transpiler/scope-mismatch-panic.test.ts test/bundler/transpiler/jsx-tsconfig-react-jsx.test.ts test/regression/issue/24709.test.ts test/regression/issue/09748.test.ts test/js/bun/transpiler/transpiler-truncated-utf8.test.ts test/js/bun/transpiler/transpiler-radix-bigint.test.ts test/js/bun/resolve/import-defer.test.ts test/bundler/transpiler/ts-enum-redecl-panic.test.ts test/bundler/transpiler/decorators.test.ts"
@@ -61,6 +63,15 @@ for stage in $STAGES; do
       "$BASE" "$HERE/pinned.mjs" "$WORK/data/calls.all.jsonl.gz" "$WORK/pinned.jsonl" "$REPO"
       "$BASE" "$HERE/report.mjs" "$WORK/data" "$WORK/out" "$WORK/pinned.jsonl"
       "$BASE" "$HERE/first-codes.mjs" "$WORK/data" "$WORK/out"
+      ;;
+    upstream)
+      mkdir -p "$WORK/up"
+      [ -x /tmp/rr/parsediag ] || bash "$HERE/../tsgo-oracle/build.sh" /tmp/rr
+      "$BASE" "$HERE/upstream-corpus.mjs" build "$WORK/up/upstream.jsonl"
+      "$BASE" "$HERE/bun-side.mjs" "$WORK/up/upstream.jsonl" "$WORK/up/bun.base.jsonl.gz" --jobs=4
+      "$BASE" "$HERE/tsc-side.mjs" "$WORK/up/upstream.jsonl" "$WORK/up/tsc.jsonl.gz"
+      "$BASE" "$HERE/tsgo-side.mjs" "$WORK/up/upstream.jsonl" "$WORK/up/tsgo.jsonl.gz"
+      "$BASE" "$HERE/upstream-corpus.mjs" report "$WORK/up/upstream.jsonl" "$WORK/up/bun.base.jsonl.gz" "$WORK/up/tsc.jsonl.gz" "$WORK/up/tsgo.jsonl.gz" "$WORK/out-upstream"
       ;;
     *)
       echo "unknown stage $stage"
