@@ -136,3 +136,25 @@ ONLY B   155 insns  <bun_js_parser::p::P<true, false>>::type_expr_restore
 ONLY B   129 insns  <bun_js_parser::p::P<true, false>>::type_expr_save
 ONLY B    41 insns  <bun_js_parser::parse::type_sink::DecoratorMetadata as bun_js_parser::parse::type_sink::TypeSink>::reference::<bun_js_parser::error::Error, <bun_js_parser::p::P
 ONLY B    41 insns  <bun_js_parser::parse::type_sink::DecoratorMetadata as bun_js_parser::parse::type_sink::TypeSink>::reference::<bun_js_parser::error::Error, <bun_js_parser::p::P
+functions a 2376 b 2406; matched a 65 b 94; identical 53, different 12, only a 0, only b 29
+DIFF    212 ->   253 insns,  315 changed lines  <bun_js_parser::p::P<true, false>>::skip_type_script_binding
+DIFF    285 ->   308 insns,  335 changed lines  <bun_js_parser::p::P<true, false>>::skip_type_script_object_type
+DIFF    461 ->   461 insns,    2 changed lines  <bun_js_parser::p::P<true, false>>::skip_type_script_type_parameters
+DIFF    950 ->   960 insns,  260 changed lines  <bun_js_parser::p::P<true, false>>::skip_type_script_type_with_opts
+DIFF   1749 ->  1765 insns, 1012 changed lines  <bun_js_parser::p::P<true, false>>::skip_type_script_type_with_opts::<bun_js_parser::parse::type_sink::DecoratorMetadata>
+DIFF    104 ->   120 insns,   54 changed lines  <bun_js_parser::p::P<true, false>>::skip_typescript_fn_args
+ONLY B    91 insns  <bun_js_parser::lexer::Lexer>::rewind_to
+ONLY B   124 insns  <bun_js_parser::p::P<true, false>>::drop_log_from
+ONLY B    69 insns  <bun_js_parser::p::P<true, false>>::read_expr_in_type
+ONLY B    48 insns  <bun_js_parser::p::P<true, false>>::read_fn_body_in_type
+ONLY B   221 insns  <bun_js_parser::p::P<true, false>>::read_in_type::<bun_ast::expr::Expr>
+ONLY B   221 insns  <bun_js_parser::p::P<true, false>>::read_in_type::<bun_ast::g::FnBody>
+ONLY B    92 insns  <bun_js_parser::p::P<true, false>>::retry_computed_name_as_expr
+ONLY B    48 insns  <bun_js_parser::p::P<true, false>>::skip_binding_after_decorators
+ONLY B    55 insns  <bun_js_parser::p::P<true, false>>::skip_computed_key_in_binding
+ONLY B    17 insns  <bun_js_parser::p::P<true, false>>::skip_constraint_expr_in_type
+ONLY B    45 insns  <bun_js_parser::p::P<true, false>>::skip_initializer_in_type
+ONLY B    76 insns  <bun_js_parser::p::P<true, false>>::skip_member_tail_in_type
+ONLY B   103 insns  <bun_js_parser::p::P<true, false>>::type_expr_detach
+ONLY B    69 insns  <bun_js_parser::p::P<true, false>>::type_expr_restore
+ONLY B   129 insns  <bun_js_parser::p::P<true, false>>::type_expr_save

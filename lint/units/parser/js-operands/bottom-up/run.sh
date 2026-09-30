@@ -14,8 +14,8 @@ REF=/workspace/ref/typescript-go
 $BUN diff-js-ts.mjs corpus-diff.jsonl $WT/test $WT/src/js
 $BUN diff-js-ts.mjs nm-diff.jsonl $WT/test $WT/node_modules --node-modules
 # 2. The same with minified identifiers: the output then depends on the symbols and on the scope tree.
-$BUN diff-js-ts-minify.mjs corpus-diff-minify.jsonl $WT/test $WT/src/js
-$BUN diff-js-ts-minify.mjs nm-diff-minify.jsonl $WT/test $WT/node_modules --node-modules
+$BUN diff-js-ts-minify.mjs /tmp/js-operands.corpus-minify.jsonl $WT/test $WT/src/js
+$BUN diff-js-ts-minify.mjs /tmp/js-operands.nm-minify.jsonl $WT/test $WT/node_modules --node-modules
 $BUN classify.mjs corpus-diff.jsonl js-rejects-ts-accepts
 $BUN pattern-count.mjs $WT/test $WT/src/js > pattern-count.txt
 # 3. The JavaScript units of the conformance cases (compiler and conformance directories).

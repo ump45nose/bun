@@ -6,6 +6,9 @@ B parameter initializer, C binding pattern initializer and computed key, H param
 D/E member tail (property initializer, accessor body), G constraint expression, A computed name restart.
 The helper functions in p.rs, lexer.rs and the grammar file are always added.
 NOENUM=1 leaves SkipTypeOptions as it is (then G cannot be switched on).
+Default helper: the log stays as it is while the expression is read, and what an attempt logged is removed.
+DROP=1: the expression is read with the log disabled, its messages are dropped, and an error is read a second
+time with the log enabled.
 Compile with ../../../build-sink-positions/quick/run.py (RELAX=1) and compare with scmp.py."""
 import sys, re, os
 root = sys.argv[1]; variant = sys.argv[2] if len(sys.argv) > 2 else 'all'
@@ -99,6 +102,38 @@ pub(crate) enum TypeExprKind {
 pub(crate) type NeedsJSXType = bool;
 pub(crate) type ParsePassSymbolUsageType<'a>''')
 
+READ_DROP = r'''        let save = self.type_expr_save();
+        let start = self.lexer.snapshot();
+        self.lexer.is_log_disabled = true;
+        let first = read(self, kind);
+        match first {
+            Err(err)
+                if !save.is_log_disabled
+                    && !matches!(err, crate::Error::StackOverflow | crate::Error::Alloc(_)) =>
+            {
+                // The second reading logs the messages of the error.
+                self.type_expr_detach(&save, true);
+                self.lexer.restore(&start);
+                let second = read(self, kind);
+                self.type_expr_restore(save, false);
+                second
+            }
+            other => {
+                self.type_expr_restore(save, true);
+                other
+            }
+        }
+    }
+
+'''
+READ_KEEP = r'''        let save = self.type_expr_save();
+        let result = read(self, kind);
+        let in_attempt = save.is_log_disabled;
+        self.type_expr_restore(save, in_attempt);
+        result
+    }
+
+'''
 sub('p.rs', '''    /// When not transpiling we dont use the renamer, so our solution is to generate really
     /// hard to collide with variables, instead of actually making things collision free
     pub(crate) fn generate_temp_ref(''', '''    /// The parse-pass state that an expression or a function body inside type syntax can change.
@@ -200,30 +235,7 @@ sub('p.rs', '''    /// When not transpiling we dont use the renamer, so our solu
         kind: TypeExprKind,
         read: fn(&mut Self, TypeExprKind) -> Result<R, crate::Error>,
     ) -> Result<R, crate::Error> {
-        let save = self.type_expr_save();
-        let start = self.lexer.snapshot();
-        self.lexer.is_log_disabled = true;
-        let first = read(self, kind);
-        match first {
-            Err(err)
-                if !save.is_log_disabled
-                    && !matches!(err, crate::Error::StackOverflow | crate::Error::Alloc(_)) =>
-            {
-                // The second reading logs the messages of the error.
-                self.type_expr_detach(&save, true);
-                self.lexer.restore(&start);
-                let second = read(self, kind);
-                self.type_expr_restore(save, false);
-                second
-            }
-            other => {
-                self.type_expr_restore(save, true);
-                other
-            }
-        }
-    }
-
-    fn read_expr_in_type(&mut self, kind: TypeExprKind) -> Result<Expr, crate::Error> {
+@@READ_BODY@@    fn read_expr_in_type(&mut self, kind: TypeExprKind) -> Result<Expr, crate::Error> {
         match kind {
             TypeExprKind::ComputedName => {
                 self.allow_in = true;
@@ -296,7 +308,7 @@ sub('p.rs', '''    /// When not transpiling we dont use the renamer, so our solu
 
     /// When not transpiling we dont use the renamer, so our solution is to generate really
     /// hard to collide with variables, instead of actually making things collision free
-    pub(crate) fn generate_temp_ref(''')
+    pub(crate) fn generate_temp_ref('''.replace('@@READ_BODY@@', READ_DROP if os.environ.get('DROP') else READ_KEEP))
 
 on = lambda c: variant == 'all' or c in variant
 G = 'parse/parse_skip_typescript.rs'
