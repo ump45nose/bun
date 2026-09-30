@@ -415,6 +415,81 @@
 [conditional-arrow] "x = a ? (b): c => d"
     bun: same
     tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? (b) => (c) : d => e"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? b => (c) : d => e"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? async (b) => (c) : d => e"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? async b => (c) : d => e"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? () => (c) : d => e"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[conditional-arrow] "x = a ? (b) => (c) : d"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? (b) => ((c)) : d => e"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? (b) => (c, d) : e => f"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? (b) => c => (d) : e => f"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? b = (c) : d => e"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? b += (c) : d => e"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? b ??= (c) : d => e"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? b ? c : (d) : e => f"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? b ? c : d = (e) : f => g"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? function () { return (b) } : c => d"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? { k: (b) } : c => d"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? [(b)] : c => d"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? f((b)) : c => d"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? b + (c) : d => e"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? `${(b)}` : c => d"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? (b) => { return (c) } : d => e"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? yield_ => (b) : c => d"
+    bun: TS REJECTS  ts: Expected ":" but found end of file
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "function* g() { x = a ? yield (b) : c => d }"
+    bun: TS REJECTS  ts: Expected ":" but found "}"
+    tsc .js: parse TS1005; .ts: parse TS1005; shape=
+[conditional-arrow] "async function g() { x = a ? await (b) : c => d }"
+    bun: same
+    tsc .js: clean; .ts: clean; shape=
+[conditional-arrow] "x = a ? (b) => (c) : d => e : f"
+    bun: ts-only  js: Expected ";" but found ":"
+    tsc .js: js TS8010; .ts: clean; shape=
 [class-members] "class A { public\n x }"
     bun: DIFFERENT OUTPUT
       js: class A { public; x; }
@@ -1447,14 +1522,15 @@ type-arguments
       3 tsc .js: parse error
      18 tsc .js: parse error [ts-only]
 conditional-arrow
-      7 bun js/ts: TS REJECTS
+     21 bun js/ts: TS REJECTS
       1 bun js/ts: both reject
-     30 bun js/ts: same
-      1 bun js/ts: ts-only
-      1 tsc .js: TS8xxx [ts-only]
-     30 tsc .js: clean
+     40 bun js/ts: same
+      2 bun js/ts: ts-only
+      2 tsc .js: TS8xxx [ts-only]
+     40 tsc .js: clean
+     12 tsc .js: clean [TS REJECTS]
       1 tsc .js: parse error
-      7 tsc .js: parse error [TS REJECTS]
+      9 tsc .js: parse error [TS REJECTS]
 class-members
      20 bun js/ts: DIFFERENT OUTPUT
      32 bun js/ts: same

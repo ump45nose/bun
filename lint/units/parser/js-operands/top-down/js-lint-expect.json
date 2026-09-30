@@ -1697,6 +1697,361 @@
   "typescript_go": "same as tsc"
  },
  {
+  "group": "conditional-arrow",
+  "src": "x = a ? (b) => (c) : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? b => (c) : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? async (b) => (c) : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? async b => (c) : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? () => (c) : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "Q  tsc rejects the JavaScript file too (quirk of the reference grammar)",
+  "tsc": {
+   "parse": [
+    {
+     "code": 1005,
+     "start": 26,
+     "length": 0
+    }
+   ],
+   "js": [
+    {
+     "code": 8010,
+     "start": 20,
+     "length": 1
+    }
+   ]
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? (b) => (c) : d",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? (b) => ((c)) : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? (b) => (c, d) : e => f",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? (b) => c => (d) : e => f",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? b = (c) : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? b += (c) : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? b ??= (c) : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? b ? c : (d) : e => f",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? b ? c : d = (e) : f => g",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? function () { return (b) } : c => d",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? { k: (b) } : c => d",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? [(b)] : c => d",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? f((b)) : c => d",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? b + (c) : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? `${(b)}` : c => d",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? (b) => { return (c) } : d => e",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? yield_ => (b) : c => d",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found end of file",
+  "cause": "P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)",
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "function* g() { x = a ? yield (b) : c => d }",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "Expected \":\" but found \"}\"",
+  "cause": "Q  tsc rejects the JavaScript file too (quirk of the reference grammar)",
+  "tsc": {
+   "parse": [
+    {
+     "code": 1005,
+     "start": 43,
+     "length": 1
+    }
+   ],
+   "js": [
+    {
+     "code": 8010,
+     "start": 36,
+     "length": 1
+    }
+   ]
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "async function g() { x = a ? await (b) : c => d }",
+  "file": "a.js",
+  "bun_javascript": "accepts",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": []
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
+  "group": "conditional-arrow",
+  "src": "x = a ? (b) => (c) : d => e : f",
+  "file": "a.js",
+  "bun_javascript": "Expected \";\" but found \":\"",
+  "bun_typescript": "accepts",
+  "cause": null,
+  "tsc": {
+   "parse": [],
+   "js": [
+    {
+     "code": 8010,
+     "start": 21,
+     "length": 1
+    }
+   ]
+  },
+  "typescript_go": "same as tsc"
+ },
+ {
   "group": "class-members",
   "src": "class A { public\n x }",
   "file": "a.js",

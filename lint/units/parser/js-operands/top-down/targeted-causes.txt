@@ -1,14 +1,14 @@
-   90 not JavaScript for bun: TypeScript only; tsc .js TS8xxx, TS1206 or TS8038 only
+   91 not JavaScript for bun: TypeScript only; tsc .js TS8xxx, TS1206 or TS8038 only
     3 not JavaScript for bun: TypeScript only; tsc .js clean
    25 not JavaScript for bun: TypeScript only; tsc .js parse error
     5 not JavaScript for bun: rejected by both; tsc .js TS8xxx, TS1206 or TS8038 only
     3 not JavaScript for bun: rejected by both; tsc .js clean
    10 not JavaScript for bun: rejected by both; tsc .js parse error
-  207 valid JavaScript: TypeScript instantiation the same
+  217 valid JavaScript: TypeScript instantiation the same
    23 valid JavaScript: different tree: P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)
    42 valid JavaScript: different tree: T  type arguments in an expression (tsc: not in a JavaScript file)
-    5 valid JavaScript: rejected: P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)
-   20 valid JavaScript: rejected: Q  tsc rejects the JavaScript file too (quirk of the reference grammar)
+   17 valid JavaScript: rejected: P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)
+   22 valid JavaScript: rejected: Q  tsc rejects the JavaScript file too (quirk of the reference grammar)
     2 valid JavaScript: rejected: T  type arguments in an expression (tsc: not in a JavaScript file)
 
 valid JavaScript: different tree: P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)
@@ -81,6 +81,18 @@ valid JavaScript: different tree: T  type arguments in an expression (tsc: not i
    "x = <div>{a<b>(c)}</div>"
 
 valid JavaScript: rejected: P1 bun's TypeScript grammar differs from tsc's (tsc reads the .ts file as the .js file)
+   "x = a ? (b) => (c) : d => e"
+   "x = a ? b => (c) : d => e"
+   "x = a ? async (b) => (c) : d => e"
+   "x = a ? async b => (c) : d => e"
+   "x = a ? (b) => ((c)) : d => e"
+   "x = a ? (b) => (c, d) : e => f"
+   "x = a ? (b) => c => (d) : e => f"
+   "x = a ? b = (c) : d => e"
+   "x = a ? b += (c) : d => e"
+   "x = a ? b ??= (c) : d => e"
+   "x = a ? b ? c : d = (e) : f => g"
+   "x = a ? yield_ => (b) : c => d"
    "var interface; interface;"
    "var interface; interface"
    "var declare; declare"
@@ -95,6 +107,8 @@ valid JavaScript: rejected: Q  tsc rejects the JavaScript file too (quirk of the
    "x = a ? b ? ([c]) : d => e : f"
    "x = a ? b ? (c = 1) : d => e : f"
    "x = a ? b ? async (c) : d => e : f"
+   "x = a ? () => (c) : d => e"
+   "function* g() { x = a ? yield (b) : c => d }"
    "x = <A extends B>t</A>"
    "x = <A extends B C>t</A>"
    "x = <div>{a ? b ? (c) : d => e : f}</div>"

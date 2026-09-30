@@ -46,12 +46,12 @@
 
 SUMMARY
    15 a.cjs: DIFFERS
-  420 a.cjs: same codes and spans
+  445 a.cjs: same codes and spans
    12 a.js differs in codes
     3 a.js differs in spans
    15 a.js: DIFFERS
-  420 a.js: same codes and spans
+  445 a.js: same codes and spans
    15 a.jsx: DIFFERS
-  420 a.jsx: same codes and spans
+  445 a.jsx: same codes and spans
    15 a.mjs: DIFFERS
-  420 a.mjs: same codes and spans
+  445 a.mjs: same codes and spans
