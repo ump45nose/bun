@@ -1,12 +1,23 @@
 // Prototype of the script that writes the two reference files after a sync: reference_counts.json and fixtures/instances.tsv.
 // It runs under bun, reads the committed corpus through the runner and, when a clone is given, checks the lists
 // against the baseline directories of typescript-go with git plumbing. No Go, no network, nothing written into a clone.
-// usage: bun gen_reference.ts <assembled runner set> <directory that holds corpus/ and UPSTREAM> <output directory> [<typescript-go clone>]
+// The answers of Go are never computed here: the members "go" and "suiteRun" are copied from the file that exists,
+// or from the two files that groundtruth/tables and probes/log_reasons.py print, and suiteRun is dropped when its commit is not UPSTREAM's.
+// usage: bun gen_reference.ts <assembled runner set> <directory that holds corpus/ and UPSTREAM> <output directory> [<typescript-go clone>] [--go-tables <file>] [--suite-run <file>]
 import { createHash } from "node:crypto";
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 
-const [asm, home, out, clone] = process.argv.slice(2);
-if (out === undefined) throw new Error("usage: bun gen_reference.ts <assembled runner set> <conformance directory> <output directory> [<typescript-go clone>]");
+const argv = process.argv.slice(2);
+const flag = (name: string): string | undefined => {
+  const k = argv.indexOf(name);
+  if (k < 0) return undefined;
+  const [, value] = argv.splice(k, 2);
+  return value;
+};
+const goTablesFile = flag("--go-tables");
+const suiteRunFile = flag("--suite-run");
+const [asm, home, out, clone] = argv;
+if (out === undefined) throw new Error("usage: bun gen_reference.ts <assembled runner set> <conformance directory> <output directory> [<typescript-go clone>] [--go-tables <file>] [--suite-run <file>]");
 const runner = asm + "/test/cli/lint/conformance/runner/";
 const R = await import(runner + "index.ts");
 const G = await import(runner + "gostrings.ts");
@@ -139,6 +150,14 @@ function tableDigests(): Record<string, string> {
   return Object.fromEntries(Object.entries(parts).map(([k, v]) => [k, sha256(v.join(""))]));
 }
 
+// What Go said, from the files given or from the constants that exist. What the port computes is for the report below only.
+const before = existsSync(home + "/reference_counts.json") ? JSON.parse(readFileSync(home + "/reference_counts.json", "utf8")) : {};
+const goTables = goTablesFile === undefined ? undefined : JSON.parse(readFileSync(goTablesFile, "utf8"));
+const go = goTables === undefined ? before.go : { unicode: goTables.unicode, tables: { lower: goTables.lower, foldKey: goTables.foldKey, space: goTables.space, white: goTables.white } };
+const suiteRunGiven = suiteRunFile === undefined ? before.suiteRun : JSON.parse(readFileSync(suiteRunFile, "utf8"));
+const suiteRun = suiteRunGiven !== undefined && suiteRunGiven["typescript-go"] === commits["typescript-go"] ? suiteRunGiven : undefined;
+const ofThePort = { tables: tableDigests(), subtests: goSubtests.split("\n").length - 1, sha256: sha256(goSubtests), skipReasonsSha256: sha256(goSkipReasons) };
+
 const reasons = tally(r => (r.status === "skipped" ? r.reason.replace(/^(unsupported (?:baseUrl|outFile)) .*/, "$1") : undefined));
 const reference = {
   upstream: commits,
@@ -174,12 +193,16 @@ const reference = {
     triaged: corpus.triaged.size,
   },
   options: { declared: H.optionsDeclarations.length, varying: H.getCompilerVaryByMap().size },
-  go: { unicode: "15.0.0", tables: tableDigests() },
-  suiteRun: { "typescript-go": commits["typescript-go"], go: "go1.26.8", subtests: goSubtests.split("\n").length - 1, sha256: sha256(goSubtests), skipReasonsSha256: sha256(goSkipReasons) },
+  go,
+  suiteRun,
 };
 mkdirSync(out + "/fixtures", { recursive: true });
 writeFileSync(out + "/reference_counts.json", JSON.stringify(reference, null, 2) + "\n");
 writeFileSync(out + "/fixtures/instances.tsv", instances);
+if (go === undefined) console.log("no answers of Go for the tables: run groundtruth/tables/build.sh and give its output with --go-tables");
+else console.log(`tables of the port against Go's: ${JSON.stringify(ofThePort.tables) === JSON.stringify(go.tables) ? "the same" : "DIFFERENT"}`);
+if (suiteRun === undefined) console.log("no run of the reference's suite at this commit: the member suiteRun is left out");
+else console.log(`subtests and skip reasons of the port against the run: ${ofThePort.sha256 === suiteRun.sha256 && ofThePort.skipReasonsSha256 === suiteRun.skipReasonsSha256 && ofThePort.subtests === suiteRun.subtests ? "the same" : "DIFFERENT"}`);
 console.log(`reference_counts.json ${Buffer.byteLength(JSON.stringify(reference, null, 2)) + 1} bytes, fixtures/instances.tsv ${Buffer.byteLength(instances)} bytes, ${rows.length} lines`);
 
 // The check that needs no Go: what the baseline directories of typescript-go say about the lists.

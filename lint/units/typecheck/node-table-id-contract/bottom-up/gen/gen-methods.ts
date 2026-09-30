@@ -231,10 +231,17 @@ export function generateMethods(): { text: string; report: string[] } {
       report.push(`PROBLEM ${f.name}: tail: ${tail}`);
       last = ret.nil;
     }
-    getters.push(`    // Node.${f.name}`, `    pub fn ${field(f.name)}(self, node: NodeId) -> ${ret.rust} {`, "        match self.kind(node) {", ...arms);
-    if (rest.length) getters.push("            _ => {", ...rest, `                ${last}`, "            }");
-    else getters.push(`            _ => ${last},`);
-    getters.push("        }", "    }");
+    getters.push(`    // Node.${f.name}`, `    pub fn ${field(f.name)}(self, node: NodeId) -> ${ret.rust} {`);
+    const allTrue = sw.arms.every(arm => arm.body.join(" ") === "return true");
+    if (allTrue && rest.length === 0 && last === "false") {
+        const kinds = sw.arms.flatMap(arm => arm.kinds).map(k => `Kind::${k}`).join(" | ");
+        getters.push(`        matches!(self.kind(node), ${kinds})`, "    }");
+    } else {
+        getters.push("        match self.kind(node) {", ...arms);
+        if (rest.length) getters.push("            _ => {", ...rest, `                ${last}`, "            }");
+        else getters.push(`            _ => ${last},`);
+        getters.push("        }", "    }");
+    }
     report.push(`${ok ? "auto   " : "PROBLEM"} ${f.name} (ast.go:${f.line}) -> Ast::${field(f.name)}: ${sw.arms.length} cases${panic ? ", panic becomes a fault" : ""}`);
   }
   out.push("impl<'a> Ast<'a> {", ...getters, "}", "", ...setters);

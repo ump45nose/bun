@@ -42,35 +42,37 @@ if every:
 for f in files:
     subprocess.check_call([instr, copy(C + f)])
 
-# 2. checker.go: recording hooks (checker-core-scratch/groundtruth/patch.py, plus the signature hook) ...
+# 2. checker.go: recording hooks (checker-core-scratch/groundtruth/patch.py, plus the signature hook). Every edit of
+#    the three checker files stays on the line it changes, so that the line numbers of a coverage profile of the
+#    probe are the ones of the reference (the layer tables of the unit notes are keyed by file and line).
 edit(C + "checker.go", [
-    ("\tt.checker = c\n\tt.data = data\n", "\tt.checker = c\n\tt.data = data\n\tprobeRecordType(c, t)\n"),
+    ("\tt.checker = c\n\tt.data = data\n", "\tt.checker = c\n\tt.data = data; probeRecordType(c, t)\n"),
     ("\tresult.Flags = flags | ast.SymbolFlagsTransient\n\tresult.Name = name\n\treturn result\n",
-     "\tresult.Flags = flags | ast.SymbolFlagsTransient\n\tresult.Name = name\n\tprobeRecordSymbol(c, result)\n\treturn result\n"),
-    ("\tsig.resolvedMinArgumentCount = -1\n\treturn sig\n", "\tsig.resolvedMinArgumentCount = -1\n\tprobeRecordSignature(c, sig)\n\treturn sig\n"),
-    ("func (c *Checker) initializeClosures() {", "func (c *Checker) initializeClosures() {\n\tprobeMark(c, \"after inline part of NewChecker (line 1117)\")\n"),
-    ("func (c *Checker) initializeChecker() {", "func (c *Checker) initializeChecker() {\n\tprobeMark(c, \"start of initializeChecker\")\n\tdefer probeMark(c, \"end of initializeChecker\")\n"),
+     "\tresult.Flags = flags | ast.SymbolFlagsTransient\n\tresult.Name = name; probeRecordSymbol(c, result)\n\treturn result\n"),
+    ("\tsig.resolvedMinArgumentCount = -1\n\treturn sig\n", "\tsig.resolvedMinArgumentCount = -1; probeRecordSignature(c, sig)\n\treturn sig\n"),
+    ("func (c *Checker) initializeClosures() {", "func (c *Checker) initializeClosures() { probeMark(c, \"after inline part of NewChecker (line 1117)\");"),
+    ("func (c *Checker) initializeChecker() {", "func (c *Checker) initializeChecker() { probeMark(c, \"start of initializeChecker\"); defer probeMark(c, \"end of initializeChecker\");"),
     ("\tc.addUndefinedToGlobalsOrErrorOnRedeclaration()\n\tc.valueSymbolLinks.Get(c.undefinedSymbol)",
-     "\tprobeMark(c, \"after global merge and global augmentations (line 1349)\")\n\tc.addUndefinedToGlobalsOrErrorOnRedeclaration()\n\tc.valueSymbolLinks.Get(c.undefinedSymbol)"),
-    ("\t// Now merge global ambient module declarations\n", "\tprobeMark(c, \"after special types (line 1376)\")\n\t// Now merge global ambient module declarations\n"),
+     "\tprobeMark(c, \"after global merge and global augmentations (line 1349)\"); c.addUndefinedToGlobalsOrErrorOnRedeclaration()\n\tc.valueSymbolLinks.Get(c.undefinedSymbol)"),
+    ("\t// Now merge global ambient module declarations\n", "\tprobeMark(c, \"after special types (line 1376)\") // Now merge global ambient module declarations\n"),
     # ... and the bytes of a relation cache key (checker-relations-and-inference/groundtruth/patch.py).
     ("\tif b.overflowBuffer == nil {\n\t\treturn CacheHashKey(xxh3.Hash128(b.inlineBuffer[:b.inlineLength]))\n\t}\n\treturn CacheHashKey(xxh3.Hash128(append(b.overflowBuffer, b.inlineBuffer[:b.inlineLength]...)))\n",
-     "\tif b.overflowBuffer == nil {\n\t\treturn relRecordKey(CacheHashKey(xxh3.Hash128(b.inlineBuffer[:b.inlineLength])), b.inlineBuffer[:b.inlineLength])\n\t}\n\tall := append(b.overflowBuffer, b.inlineBuffer[:b.inlineLength]...)\n\treturn relRecordKey(CacheHashKey(xxh3.Hash128(all)), all)\n"),
+     "\tif b.overflowBuffer == nil {\n\t\treturn relRecordKey(CacheHashKey(xxh3.Hash128(b.inlineBuffer[:b.inlineLength])), b.inlineBuffer[:b.inlineLength])\n\t}\n\tall := append(b.overflowBuffer, b.inlineBuffer[:b.inlineLength]...); return relRecordKey(CacheHashKey(xxh3.Hash128(all)), all)\n"),
 ])
 
 # 3. relater.go and inference.go: notes of the relation probe.
 edit(C + "relater.go", [
-    ("\tr.results[key] = result\n", "\tr.results[key] = result\n\trelRecordSet(r, key, result)\n"),
+    ("\tr.results[key] = result\n", "\tr.results[key] = result; relRecordSet(r, key, result)\n"),
     ("func (r *Relater) isRelatedToEx(originalSource *Type, originalTarget *Type, recursionFlags RecursionFlags, reportErrors bool, headMessage *diagnostics.Message, intersectionState IntersectionState) Ternary {",
-     "func (r *Relater) isRelatedToEx(originalSource *Type, originalTarget *Type, recursionFlags RecursionFlags, reportErrors bool, headMessage *diagnostics.Message, intersectionState IntersectionState) Ternary {\n\trelNote(\"isRelatedToEx %s -> %s recursionFlags=%d reportErrors=%v intersectionState=%d\", relTypeString(originalSource), relTypeString(originalTarget), recursionFlags, reportErrors, intersectionState)\n\tresult := r.isRelatedToEx0(originalSource, originalTarget, recursionFlags, reportErrors, headMessage, intersectionState)\n\trelNote(\"isRelatedToEx = %s\", ternaryString(result))\n\treturn result\n}\n\nfunc (r *Relater) isRelatedToEx0(originalSource *Type, originalTarget *Type, recursionFlags RecursionFlags, reportErrors bool, headMessage *diagnostics.Message, intersectionState IntersectionState) Ternary {"),
+     "func (r *Relater) isRelatedToEx(originalSource *Type, originalTarget *Type, recursionFlags RecursionFlags, reportErrors bool, headMessage *diagnostics.Message, intersectionState IntersectionState) Ternary { relNote(\"isRelatedToEx %s -> %s recursionFlags=%d reportErrors=%v intersectionState=%d\", relTypeString(originalSource), relTypeString(originalTarget), recursionFlags, reportErrors, intersectionState); result := r.isRelatedToEx0(originalSource, originalTarget, recursionFlags, reportErrors, headMessage, intersectionState); relNote(\"isRelatedToEx = %s\", ternaryString(result)); return result }; func (r *Relater) isRelatedToEx0(originalSource *Type, originalTarget *Type, recursionFlags RecursionFlags, reportErrors bool, headMessage *diagnostics.Message, intersectionState IntersectionState) Ternary {"),
     ("func (r *Relater) reportError(message *diagnostics.Message, args ...any) {",
-     "func (r *Relater) reportError(message *diagnostics.Message, args ...any) {\n\trelNote(\"reportError TS%d args=%q chainDepth=%d\", message.Code(), args, chainDepth(r.errorChain))\n\tdefer func() { relNote(\"chain after reportError: %s\", relChainString(r.errorChain)) }()\n"),
+     "func (r *Relater) reportError(message *diagnostics.Message, args ...any) { relNote(\"reportError TS%d args=%q chainDepth=%d\", message.Code(), args, chainDepth(r.errorChain)); defer func() { relNote(\"chain after reportError: %s\", relChainString(r.errorChain)) }();"),
 ])
 edit(C + "inference.go", [
     ("func (c *Checker) inferFromTypes(n *InferenceState, source *Type, target *Type) {",
-     "func (c *Checker) inferFromTypes(n *InferenceState, source *Type, target *Type) {\n\trelNote(\"inferFromTypes %s -> %s priority=%d contravariant=%v bivariant=%v inferencePriority=%d\", relTypeString(source), relTypeString(target), n.priority, n.contravariant, n.bivariant, n.inferencePriority)\n"),
+     "func (c *Checker) inferFromTypes(n *InferenceState, source *Type, target *Type) { relNote(\"inferFromTypes %s -> %s priority=%d contravariant=%v bivariant=%v inferencePriority=%d\", relTypeString(source), relTypeString(target), n.priority, n.contravariant, n.bivariant, n.inferencePriority);"),
     ("\tinference := n.inferences[index]\n\tif inference.inferredType == nil {",
-     "\tinference := n.inferences[index]\n\tdefer func() { relNote(\"getInferredType[%d] = %s candidates=%d contraCandidates=%d priority=%d topLevel=%v isFixed=%v\", index, relTypeString(inference.inferredType), len(inference.candidates), len(inference.contraCandidates), inference.priority, inference.topLevel, inference.isFixed) }()\n\tif inference.inferredType == nil {"),
+     "\tinference := n.inferences[index]; defer func() { relNote(\"getInferredType[%d] = %s candidates=%d contraCandidates=%d priority=%d topLevel=%v isFixed=%v\", index, relTypeString(inference.inferredType), len(inference.candidates), len(inference.contraCandidates), inference.priority, inference.topLevel, inference.isFixed) }()\n\tif inference.inferredType == nil {"),
 ])
 
 # 4. The test harness: the diagnostics-only modes (checker-type-printer/bottom-up/groundtruth/patch.py) and the

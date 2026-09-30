@@ -289,9 +289,9 @@ fn bind_publish_and_share_between_programs() {
     );
     let second_bound = second.bound().map_or(0, |bound| bound.base());
 
-    let one = Program::new(vec![first.clone(), second.clone()]);
-    let other = Program::new(vec![second.clone(), first.clone()]);
-    let alone = Program::new(vec![second.clone()]);
+    let one = Program::new(vec![Arc::clone(&first), Arc::clone(&second)]);
+    let other = Program::new(vec![Arc::clone(&second), Arc::clone(&first)]);
+    let alone = Program::new(vec![Arc::clone(&second)]);
     let arena = Arena::new();
     let mut digests = Vec::new();
     for program in [&one, &other, &alone] {
@@ -347,7 +347,7 @@ fn bind_publish_and_share_between_programs() {
 fn checker_nodes_live_in_the_open_store() {
     let ids = IdAllocator::new();
     let (file, _) = bind_and_publish(build_min(false, &ids), &ids);
-    let program = Program::new(vec![file.clone()]);
+    let program = Program::new(vec![Arc::clone(&file)]);
     let frozen = match program.frozen() {
         Ok(frozen) => frozen,
         Err(error) => panic!("{error:?}"),
@@ -457,7 +457,7 @@ fn lazy_symbol_ids_and_private_names() {
     let (first, stats) = bind_and_publish(build(), &ids);
     let (second, _) = bind_and_publish(build(), &ids);
     assert_eq!(stats.private_names, 1);
-    let program = Program::new(vec![first.clone(), second.clone()]);
+    let program = Program::new(vec![Arc::clone(&first), Arc::clone(&second)]);
     let frozen = match program.frozen() {
         Ok(frozen) => frozen,
         Err(error) => panic!("{error:?}"),
@@ -473,7 +473,7 @@ fn lazy_symbol_ids_and_private_names() {
         // The checker builds the name that the binder stored, from the id that the binder gave the class.
         let name = get_symbol_name_for_private_identifier(a, class_symbol, b"#x");
         let member = a.table_get(a.locals(class), name);
-        assert!(!member.is_nil(), "{:?}", String::from_utf8_lossy(name));
+        assert!(!member.is_nil(), "{name:?}");
         assert_eq!(a.sym(member).name, name);
         assert_eq!(
             a.get_symbol_id(class_symbol) >> 32,
@@ -618,7 +618,7 @@ fn imports_a_dump_of_typescript() {
         ),
         (0, 0, 0, 0),
         "{:?}",
-        String::from_utf8_lossy(&stats.first_unmapped)
+        stats.first_unmapped
     );
     let mut published = Vec::new();
     for file in files {

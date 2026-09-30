@@ -11,6 +11,7 @@ use crate::ast::layout::SlotType;
 use crate::tscore::ids::NodeId;
 use crate::tscore::text::TextRange;
 use json::Json;
+use std::time::Instant;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum ImportError {
@@ -32,6 +33,10 @@ pub struct ImportStats {
     pub unmapped_attrs: u32,
     pub source_texts: u32,
     pub copied_texts: u32,
+    // Nanoseconds spent in the JSON reader, in the builder and in `finish`.
+    pub json_ns: u64,
+    pub build_ns: u64,
+    pub finish_ns: u64,
     pub first_unmapped: Vec<u8>,
 }
 
@@ -137,6 +142,7 @@ fn import_file(
     ids: &IdAllocator,
     stats: &mut ImportStats,
 ) -> Option<File> {
+    let started = Instant::now();
     let count = dump.nodes.len() / 8;
     let mut builder = FileBuilder::new(dump.text);
     // The children and the lists of each node, in the order of the dump.
@@ -400,7 +406,11 @@ fn import_file(
     stats.dump_nodes += count as u32;
     stats.files += 1;
     let root = made.first().copied().unwrap_or(NodeId::NIL);
-    builder.finish(root, data, ids)
+    stats.build_ns += started.elapsed().as_nanos() as u64;
+    let started = Instant::now();
+    let file = builder.finish(root, data, ids);
+    stats.finish_ns += started.elapsed().as_nanos() as u64;
+    file
 }
 
 // Every file of a dump, not bound yet, in the order of the dump.
@@ -409,7 +419,9 @@ pub fn import_dump(
     ids: &IdAllocator,
     stats: &mut ImportStats,
 ) -> Result<Vec<File>, ImportError> {
+    let started = Instant::now();
     let root = Json::parse(bytes).map_err(ImportError::Json)?;
+    stats.json_ns += started.elapsed().as_nanos() as u64;
     if root.get("v").map(Json::number) != Some(1.0) {
         return Err(ImportError::Version);
     }

@@ -154,14 +154,14 @@ impl<'a> Ast<'a> {
     }
     // Node.CanHaveStatements
     pub fn can_have_statements(self, node: NodeId) -> bool {
-        match self.kind(node) {
+        matches!(
+            self.kind(node),
             Kind::SourceFile
-            | Kind::Block
-            | Kind::ModuleBlock
-            | Kind::CaseClause
-            | Kind::DefaultClause => true,
-            _ => false,
-        }
+                | Kind::Block
+                | Kind::ModuleBlock
+                | Kind::CaseClause
+                | Kind::DefaultClause
+        )
     }
     // Node.Type
     pub fn type_node(self, node: NodeId) -> NodeId {
