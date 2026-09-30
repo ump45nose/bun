@@ -3228,7 +3228,7 @@
 				"message": "'(a).b' is assigned to itself."
 			}
 		],
-		"differs": "extra"
+		"differs": "other-text"
 	},
 	{
 		"code": "a.b = (// c\na).b",
@@ -3251,7 +3251,7 @@
 				"message": "'(a).b' is assigned to itself."
 			}
 		],
-		"differs": "extra"
+		"differs": "other-text"
 	},
 	{
 		"code": "x = (a.b = a.b)",

@@ -46,7 +46,7 @@ REBUILD AND RERUN (every heavy command through /workspace/tools/lk, timeout 3600
   (a line break of the text as \n, a backslash as two).
 
 RESULTS (debug build with ASAN; ESLint 4618052e, espree 11.2.0, acorn 8.18.0, eslint-scope 9.1.2)
-  vectors: 2719 cases: 2638 with ESLint's answer, 21 moved, 16 missing, 2 with another name (both no-self-assign behind
+  vectors: 2719 cases: 2638 with ESLint's answer, 21 moved, 16 missing, 2 with another text (both no-self-assign behind
     a comment), 20 that both parsers reject, 21 that only ESLint's rejects, 1 that only Bun's rejects. DIFFERENCES.txt.
   real files: 16159 (9813 of node_modules, 12 large ones, 6334 of ESLint, Node's tests and Bun's tests): 16067 with the
     same reports, 0 different, 92 that ESLint's parser rejects, 445 reports. logs/corpus*.log.

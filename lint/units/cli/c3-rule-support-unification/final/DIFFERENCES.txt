@@ -176,14 +176,14 @@ eslint-rejects: "switch (a) { case new.target: break; case new.target: break; }"
 moved: "switch (a) { case a: break;\n  case // case\n a: break; }" [script]
     eslint: 2:3 Duplicate case label.
     bun:    3:2 Duplicate case label.
-no-self-assign: 501 cases: same 492, moved 1, extra 2, eslint-rejects 2, both-reject 4
+no-self-assign: 501 cases: same 492, moved 1, other-text 2, eslint-rejects 2, both-reject 4
 moved: "a.b = (\na).b" [script]
     eslint: 1:7 '(a).b' is assigned to itself.
     bun:    2:1 '(a).b' is assigned to itself.
-extra: "a.b = ( /* c */ a).b" [script]
+other-text: "a.b = ( /* c */ a).b" [script]
     eslint: 1:7 '(/*c*/a).b' is assigned to itself.
     bun:    1:17 '(a).b' is assigned to itself.
-extra: "a.b = (// c\na).b" [script]
+other-text: "a.b = (// c\na).b" [script]
     eslint: 1:7 '(//ca).b' is assigned to itself.
     bun:    2:1 '(a).b' is assigned to itself.
 eslint-rejects: "a?.b.c = a.b.c" [script]

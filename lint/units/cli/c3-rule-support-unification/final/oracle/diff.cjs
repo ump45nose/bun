@@ -104,7 +104,7 @@ for (const line of raw.split("\n")) {
 }
 fs.rmSync(dir, { recursive: true, force: true });
 
-const tally = { same: 0, merged: 0, moved: 0, missing: 0, extra: 0, "bun-rejects": 0, "eslint-rejects": 0, "both-reject": 0 };
+const tally = { same: 0, merged: 0, moved: 0, missing: 0, "other-text": 0, extra: 0, "bun-rejects": 0, "eslint-rejects": 0, "both-reject": 0 };
 const vectors = [];
 const details = [];
 for (const c of cases) {
@@ -125,6 +125,8 @@ for (const c of cases) {
 			const texts = l => l.map(k => k.slice(k.indexOf(" ") + 1)).sort();
 			if (JSON.stringify(texts(theirSet)) === JSON.stringify(texts(ourSet))) kind = "moved";
 			else if (ourSet.every(k => theirSet.includes(k))) kind = "missing";
+			// As many reports, with another place and another text: the name in a message is read from the source.
+			else if (ourSet.length === theirSet.length) kind = "other-text";
 			else kind = "extra";
 		}
 	}

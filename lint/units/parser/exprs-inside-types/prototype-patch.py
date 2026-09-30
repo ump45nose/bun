@@ -83,7 +83,7 @@ s = rep(s, '''    /// When not transpiling we dont use the renamer, so our solut
         // With the log off a missing operand is accepted without a word: the count of errors decides instead.
         self.lexer.is_log_disabled = false;
         let log = self.log();
-        ErasedParse {
+        let frame = ErasedParse {
             comments_to_preserve_before,
             log_msgs_len: log.msgs.len(),
             log_errors: log.errors,
@@ -117,7 +117,12 @@ s = rep(s, '''    /// When not transpiling we dont use the renamer, so our solut
             import_records_len: self.import_records.len(),
             // A name inside dropped code is not a use of an import.
             parse_pass_symbol_uses: self.parse_pass_symbol_uses.take(),
-        }
+        };
+        // The reference reads `super` and private names anywhere and leaves the complaint to its checker.
+        self.fn_or_arrow_data_parse.allow_super_call = true;
+        self.fn_or_arrow_data_parse.allow_super_property = true;
+        self.allow_private_identifiers = true;
+        frame
     }
 
     /// Ends it, after success and after failure: the scopes it pushed are dropped and the flags read as before.
@@ -228,7 +233,11 @@ s = rep(s, '''    /// When not transpiling we dont use the renamer, so our solut
             start: self.lexer.loc().start - 1,
         };
         let _ = self.push_scope_for_parse_pass(js_ast::scope::Kind::FunctionArgs, args_loc)?;
-        let mut data = FnOrArrowDataParse::default();
+        let mut data = FnOrArrowDataParse {
+            allow_super_call: true,
+            allow_super_property: true,
+            ..Default::default()
+        };
         let body = self.parse_fn_body(&mut data)?;
         self.pop_scope();
         Ok(body)
