@@ -130,6 +130,32 @@ static READERS: AtomicUsize = AtomicUsize::new(0);
 
 static GENERATION: AtomicU64 = AtomicU64::new(0);
 
+/// One bit for each path component of the working directory; see
+/// [`component_bit`].
+static COMPONENTS: AtomicU64 = AtomicU64::new(0);
+
+/// `name` is not empty.
+#[inline]
+fn component_bit(name: &[u8]) -> u64 {
+    1 << ((name.len() as u8 ^ name[0] ^ name[name.len() - 1]) & 63)
+}
+
+/// Whether `name` is one of the working directory's path components. For
+/// telling, of a directory entry that was renamed, whether the working
+/// directory's own name can have changed with it.
+#[inline]
+pub fn has_component(name: &[u8]) -> bool {
+    if name.is_empty() || COMPONENTS.load(Ordering::Relaxed) & component_bit(name) == 0 {
+        return false;
+    }
+    is_component(&get(), name)
+}
+
+#[cold]
+fn is_component(cwd: &[u8], name: &[u8]) -> bool {
+    crate::strings::tokenize(cwd, &[crate::SEP]).any(|component| component == name)
+}
+
 /// Why [`startup`] could not read the working directory, until a `chdir`
 /// records one. Its lock is also what keeps [`set`] to one caller at a time.
 static UNREAD: Mutex<Option<crate::Error>> = Mutex::new(None);
@@ -237,6 +263,9 @@ pub fn set(path: &[u8]) {
         p
     };
 
+    let components = crate::strings::tokenize(path, &[crate::SEP])
+        .fold(0, |bits, component| bits | component_bit(component));
+    COMPONENTS.store(components, Ordering::Relaxed);
     let previous = CWD.swap(entry, Ordering::SeqCst);
     GENERATION.fetch_add(1, Ordering::Release);
     while READERS.load(Ordering::SeqCst) != 0 {

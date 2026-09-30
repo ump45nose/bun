@@ -501,18 +501,11 @@ impl Interpreter {
         };
 
         // ── cwd / cwd_fd ───────────────────────────────────────────────────
-        // Read again: the directory is opened by name below, and its name
-        // changes without a `chdir` when it or one above it is renamed.
-        let cwd = match bun_sys::reread_cwd() {
-            Ok(cwd) => cwd,
+        let (cwd, cwd_fd) = match bun_sys::open_cwd(bun_sys::O::DIRECTORY | bun_sys::O::RDONLY) {
+            Ok(opened) => opened,
             Err(e) => return Err(ShellErr::new_sys(&e)),
         };
         let cwd_z = cwd.as_zstr();
-
-        let cwd_fd = match bun_sys::open(cwd_z, bun_sys::O::DIRECTORY | bun_sys::O::RDONLY, 0) {
-            Ok(fd) => fd,
-            Err(e) => return Err(ShellErr::new_sys(&e)),
-        };
 
         let cwd_arr = cwd_z.as_bytes_with_nul().to_vec();
 

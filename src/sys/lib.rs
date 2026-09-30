@@ -900,14 +900,49 @@ fn cwd_changed() -> Maybe<()> {
 }
 
 /// The working directory as the OS names it now, recorded in
-/// [`bun_core::cwd`] if that is not what it holds. Renaming the directory, or
-/// one above it, changes its name without a `chdir`; this is for callers
-/// about to open it by name.
-pub fn reread_cwd() -> Maybe<bun_core::cwd::Cwd> {
+/// [`bun_core::cwd`] if that is not what it holds.
+fn reread_cwd() -> Maybe<bun_core::cwd::Cwd> {
     let mut buf = bun_paths::path_buffer_pool::get();
     let len = getcwd(&mut buf[..])?;
     bun_core::cwd::set(&buf[..len]);
     Ok(bun_core::cwd::get())
+}
+
+/// The working directory and a handle to it, opened by its recorded name.
+/// The name is read from the OS again if the OS could not give one at
+/// startup, or if nothing can be opened by the recorded one: a rename made
+/// outside Bun changes it without a `chdir`.
+pub fn open_cwd(flags: i32) -> Maybe<(bun_core::cwd::Cwd, Fd)> {
+    let recorded = match bun_core::cwd::require() {
+        Ok(cwd) => match open(cwd.as_zstr(), flags, 0) {
+            Ok(fd) => return Ok((cwd, fd)),
+            Err(err) => Some(err),
+        },
+        Err(_) => None,
+    };
+    let cwd = match reread_cwd() {
+        Ok(cwd) => cwd,
+        Err(err) => return Err(recorded.unwrap_or(err)),
+    };
+    let fd = open(cwd.as_zstr(), flags, 0)?;
+    Ok((cwd, fd))
+}
+
+/// After the directory entry at `path` was renamed. The working directory's
+/// name changed if it is the directory that moved or is below it, and only an
+/// entry whose name is one of its path components can be either.
+#[cfg(unix)]
+#[inline]
+fn cwd_renamed(path: &[u8]) {
+    let path = bun_core::strings::without_trailing_slash(path);
+    let name = match bun_core::strings::last_index_of_char(path, b'/') {
+        Some(slash) => &path[slash + 1..],
+        None => path,
+    };
+    // `.` and `..` say where a directory is, not what its entry is called.
+    if matches!(name, b"" | b"." | b"..") || bun_core::cwd::has_component(name) {
+        let _ = reread_cwd();
+    }
 }
 
 /// Change the process working directory; [`bun_core::cwd`] follows. On `Err`
@@ -2452,6 +2487,7 @@ mod posix_impl {
             Tag::rename,
             from
         );
+        super::cwd_renamed(from.as_bytes());
         Ok(())
     }
     pub fn renameat(from_dir: impl AsFd, from: &ZStr, to_dir: impl AsFd, to: &ZStr) -> Maybe<()> {
@@ -2471,6 +2507,7 @@ mod posix_impl {
             Tag::rename,
             from
         );
+        super::cwd_renamed(from.as_bytes());
         Ok(())
     }
     /// `renameat2(2)` (Linux) / `renameatx_np` (macOS). FreeBSD and any other
@@ -2500,6 +2537,10 @@ mod posix_impl {
                 Tag::rename,
                 from
             );
+            super::cwd_renamed(from.as_bytes());
+            if mode == RenameMode::Exchange {
+                super::cwd_renamed(to.as_bytes());
+            }
             return Ok(());
         }
         #[cfg(target_os = "macos")]
@@ -2527,6 +2568,10 @@ mod posix_impl {
                 Tag::rename,
                 from
             );
+            super::cwd_renamed(from.as_bytes());
+            if mode == RenameMode::Exchange {
+                super::cwd_renamed(to.as_bytes());
+            }
             return Ok(());
         }
         #[cfg(not(any(target_os = "linux", target_os = "android", target_os = "macos")))]

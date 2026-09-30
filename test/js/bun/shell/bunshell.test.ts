@@ -3509,7 +3509,9 @@ describe.skipIf(isWindows)("after the working directory is renamed", () => {
           ${rename}
           const cat = (await $\`cat f.txt\`.quiet()).stdout.toString();
           const pwd = (await $\`pwd\`.quiet()).stdout.toString().trim();
-          console.log(JSON.stringify({ cat, pwd: pwd === after, cwd: Bun.cwd === after }));
+          // What reads the recorded name has the new one once the shell has run.
+          const glob = [...new Bun.Glob("*.txt").scanSync()];
+          console.log(JSON.stringify({ cat, pwd: pwd === after, glob }));
         `,
       ],
       env: bunEnv,
@@ -3519,7 +3521,7 @@ describe.skipIf(isWindows)("after the working directory is renamed", () => {
     });
     const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
     expect({ out: JSON.parse(stdout.trim() || "null"), stderr: exitCode === 0 ? "" : stderr }).toEqual({
-      out: { cat: "hello", pwd: true, cwd: true },
+      out: { cat: "hello", pwd: true, glob: ["f.txt"] },
       stderr: "",
     });
     expect(exitCode).toBe(0);

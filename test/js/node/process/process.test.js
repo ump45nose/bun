@@ -486,6 +486,63 @@ describe.skipIf(!isWindows)("process.cwd() after a chdir into a verbatim path is
   });
 });
 
+// POSIX-only: Windows refuses to rename a directory that is a process's cwd, or one above it.
+describe.skipIf(isWindows)("after this process renames the working directory, its new name is used", () => {
+  // The working directory is top/mid/cwd.
+  it.concurrent.each([
+    ["by an absolute path", `fs.renameSync(cwd, renamed);`, "top/mid/renamed"],
+    ["by a relative path", `fs.renameSync("../cwd", "../renamed");`, "top/mid/renamed"],
+    ["with fs.promises.rename", `await fs.promises.rename(cwd, renamed);`, "top/mid/renamed"],
+    ["with mv in Bun.$", `await $\`mv \${cwd} \${renamed}\`.quiet();`, "top/mid/renamed"],
+    ["when a directory above it is renamed", `fs.renameSync(top, top + "2");`, "top2/mid/cwd"],
+  ])("%s", async (_, rename, expected) => {
+    using dir = tempDir("process-cwd-renamed", { "top/mid/cwd/f.txt": "hello", "top/mid/cwd/sub/g.txt": "g" });
+    await using proc = Bun.spawn({
+      cmd: [
+        bunExe(),
+        "-e",
+        `
+          const fs = require("node:fs");
+          const path = require("node:path");
+          const { $ } = require("bun");
+          const root = process.cwd();
+          const top = path.join(root, "top");
+          const cwd = path.join(top, "mid", "cwd");
+          const renamed = path.join(top, "mid", "renamed");
+          process.chdir(cwd);
+          ${rename}
+          const relative = p => path.relative(root, p);
+          console.log(JSON.stringify({
+            processCwd: relative(process.cwd()),
+            resolve: relative(path.resolve("f.txt")),
+            glob: [...new Bun.Glob("*.txt").scanSync()],
+            resolveSync: relative(Bun.resolveSync("./f.txt", ".")),
+            realpath: relative(fs.realpathSync("f.txt")),
+            shell: relative((await $\`pwd\`.quiet()).stdout.toString().trim()),
+          }));
+        `,
+      ],
+      env: bunEnv,
+      cwd: String(dir),
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+    expect({ out: JSON.parse(stdout.trim() || "null"), stderr: exitCode === 0 ? "" : stderr }).toEqual({
+      out: {
+        processCwd: expected,
+        resolve: expected + "/f.txt",
+        glob: ["f.txt"],
+        resolveSync: expected + "/f.txt",
+        realpath: expected + "/f.txt",
+        shell: expected,
+      },
+      stderr: "",
+    });
+    expect(exitCode).toBe(0);
+  });
+});
+
 it("Workers can read the working directory while the main thread changes it", async () => {
   using dir = tempDir("process-cwd-concurrent", { "a/.keep": "", "b/.keep": "" });
   await using proc = Bun.spawn({
@@ -510,8 +567,6 @@ it("Workers can read the working directory while the main thread changes it", as
           const wrong = [];
           parentPort.postMessage("ready");
           while (Atomics.load(stop, 0) === 0) {
-            const cwd = Bun.cwd;
-            if (!dirs.includes(cwd)) wrong.push(cwd);
             const x = path.resolve("x");
             if (!resolved.includes(x)) wrong.push(x);
             Atomics.add(reads, index, 1);
