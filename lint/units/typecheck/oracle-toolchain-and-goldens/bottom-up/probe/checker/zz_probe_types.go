@@ -204,15 +204,19 @@ func (d *stateDumper) table(t ast.SymbolTable) string {
 	if t == nil {
 		return "nil"
 	}
-	type entry struct{ key, ref string }
+	// The entries are named in the order of their printed keys: naming a transient symbol gives it its number.
+	type entry struct {
+		key string
+		sym *ast.Symbol
+	}
 	entries := make([]entry, 0, len(t))
 	for k, s := range t {
-		entries = append(entries, entry{d.name(k), d.sref(s)})
+		entries = append(entries, entry{d.name(k), s})
 	}
 	sort.Slice(entries, func(i, j int) bool { return entries[i].key < entries[j].key })
 	parts := make([]string, len(entries))
 	for i, e := range entries {
-		parts[i] = e.key + ":" + e.ref
+		parts[i] = e.key + ":" + d.sref(e.sym)
 	}
 	return "{" + strings.Join(parts, " ") + "}"
 }
