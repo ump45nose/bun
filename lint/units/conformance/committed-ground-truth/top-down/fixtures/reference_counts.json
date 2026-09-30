@@ -1,0 +1,124 @@
+{
+  "upstream": {
+    "typescript-go": "89d5d5b2849a0db0957065889ca58536fa6d2e4a",
+    "TypeScript": "5848bc5157b22ff7f4e3369f4645a514a433b15f"
+  },
+  "corpus": {
+    "files": 22186,
+    "bytes": 32485872,
+    "sha256": "fe1746ba68ab2ebbb75e200ba900339edc30ca13d7633de0d4c1aa93634c5cd2",
+    "cases": 12444,
+    "tsBaselines": 9056,
+    "tsgoBaselines": {
+      "compiler": 276,
+      "conformance": 398
+    },
+    "expectsNoErrors": 23,
+    "accepted": 1163,
+    "triaged": 2,
+    "postEmitOrder": 3
+  },
+  "enumeration": {
+    "files": 12444,
+    "droppedByName": 45,
+    "instances": 14915,
+    "run": 12797,
+    "skipped": 2118,
+    "invalid": 0,
+    "E": 7027,
+    "C": 5770,
+    "compiler": {
+      "instances": 7235,
+      "run": 6282,
+      "E": 3187,
+      "C": 3095
+    },
+    "conformance": {
+      "instances": 7680,
+      "run": 6515,
+      "E": 3840,
+      "C": 2675
+    },
+    "skippedByReason": {
+      "unsupported target ES5": 1244,
+      "unsupported module kind AMD": 321,
+      "unsupported module kind System": 222,
+      "unsupported outFile": 87,
+      "unsupported module kind UMD": 57,
+      "unsupported module resolution kind 1": 57,
+      "alwaysStrict=false is unsupported": 52,
+      "unsupported baseUrl": 31,
+      "esModuleInterop=false is unsupported": 24,
+      "unsupported module resolution kind 2": 23
+    },
+    "tags": {
+      "accepted": 442,
+      "skipped-emit": 9,
+      "post-emit-order": 3,
+      "triaged": 2
+    },
+    "oracleSource": {
+      "typescript": 6353,
+      "none": 5747,
+      "typescript-go": 674,
+      "expects-no-errors": 23
+    },
+    "prettyOracles": 14
+  },
+  "digests": {
+    "subtests": "a78d75bfd9dcef2baf757f24a3519742c390c227dd1d73254f72ebe80f22abf3",
+    "names": "889b4a50fd0c57844c662bf32802941375170eeee9aab5b5aa56ce07779423ac",
+    "status": "210ef4e7de70cb369e550af1de3cf26285ef5d3108d77a5892427588fcba68bd",
+    "kinds": "c399abac2a841d3ca06575ea5c22c0242ddd06bec2f665a4ff8b66be344492b6",
+    "oracles": "432fcc857dcde179be33075f7205fd59b101f96f0a704c40739157ca532270c4"
+  },
+  "skips": {
+    "rows": 2118,
+    "sha256": "933bb51a7ac6feaff7f2ee4f428b7f3d3d1aee8c821fd42c859891084e77c515"
+  },
+  "buckets": {
+    "of": 40,
+    "rows": [
+      [0, 383, 331, 52, 199, 132, "07c219ef7491f9ca"],
+      [1, 365, 309, 56, 153, 156, "4109f2593087cd38"],
+      [2, 354, 319, 35, 164, 155, "759b78c358dc1657"],
+      [3, 391, 332, 59, 175, 157, "74477e05fa263773"],
+      [4, 388, 347, 41, 186, 161, "1654eaaaf331d622"],
+      [5, 369, 314, 55, 179, 135, "01eff954dbe64e8c"],
+      [6, 385, 336, 49, 165, 171, "170aa104f5dc76a5"],
+      [7, 401, 344, 57, 199, 145, "80adaaf03d4c3a98"],
+      [8, 359, 296, 63, 163, 133, "b7cee7fdaf69a6f6"],
+      [9, 381, 331, 50, 192, 139, "3266ea135a325162"],
+      [10, 364, 312, 52, 176, 136, "d4f70ab82a66a4bc"],
+      [11, 395, 347, 48, 188, 159, "fa908a060d6934b5"],
+      [12, 379, 332, 47, 187, 145, "9242a7c539633d43"],
+      [13, 352, 306, 46, 155, 151, "4781cde44c0966bf"],
+      [14, 336, 302, 34, 162, 140, "6f8d4fdc89901ad7"],
+      [15, 347, 299, 48, 186, 113, "4ef3a87133412a55"],
+      [16, 314, 277, 37, 153, 124, "3a2238186bc3bc6a"],
+      [17, 354, 304, 50, 159, 145, "756d096d33e224e5"],
+      [18, 371, 310, 61, 177, 133, "76d7921dc87e9f50"],
+      [19, 406, 355, 51, 188, 167, "03965bb8f48b7cfb"],
+      [20, 396, 327, 69, 178, 149, "f5cbaca67891cc3e"],
+      [21, 369, 316, 53, 183, 133, "5498340eebb1d1c3"],
+      [22, 344, 296, 48, 159, 137, "f5f18514a54b438e"],
+      [23, 319, 279, 40, 160, 119, "524be726ccc05e0f"],
+      [24, 383, 325, 58, 170, 155, "4b3a9d2629ab170e"],
+      [25, 376, 322, 54, 176, 146, "162171ecbd4b913f"],
+      [26, 334, 291, 43, 154, 137, "76e7a96cd96583d7"],
+      [27, 387, 323, 64, 189, 134, "98acabfab70e3581"],
+      [28, 397, 324, 73, 169, 155, "e094fdcaa5f39d46"],
+      [29, 396, 334, 62, 184, 150, "da32bcd61cdda23b"],
+      [30, 347, 301, 46, 163, 138, "48fb7e453f0e5fa9"],
+      [31, 391, 335, 56, 182, 153, "41e6ae6b4a76d0ab"],
+      [32, 396, 343, 53, 202, 141, "086d829c4d73ceec"],
+      [33, 411, 350, 61, 196, 154, "b03304b3f3ab90b7"],
+      [34, 400, 342, 58, 184, 158, "088e00a04f0bdda1"],
+      [35, 381, 323, 58, 179, 144, "9672fe819d81ff5c"],
+      [36, 335, 293, 42, 164, 129, "7f670c213a194ad0"],
+      [37, 416, 344, 72, 188, 156, "5c8d980b67f82e06"],
+      [38, 375, 311, 64, 170, 141, "3814d651565e503c"],
+      [39, 368, 315, 53, 171, 144, "bc5329023578ca51"]
+    ]
+  }
+}

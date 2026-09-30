@@ -522,6 +522,112 @@ impl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_O
         lint_call = ''.join('    ' + l + '\n' for l in lint_call.splitlines())
         t.rep(f, old, indent + 'if ' + g + ' {\n' + lint_call + indent + '}\n' + old)
 
+# ---- V2 as a source-level twin: the function of a parse without lint keeps its text, every helper that only it calls is copied ----
+def cut(src, start, end):
+    a = src.index(start); b = src.index(end, a + len(start))
+    return src[a:b]
+
+def source_twin(t, always_inline=False):
+    guard = '!SCAN_ONLY && Self::IS_TYPESCRIPT_ENABLED && ' + LINT
+    mod = open(t.dir + '/' + MOD).read()
+    body = cut(mod, '    /// This assumes that the open parenthesis has already been parsed by the caller\n    pub(crate) fn parse_paren_expr(', '    pub(crate) fn parse_label_name(')
+    tw = body.replace('    /// This assumes that the open parenthesis has already been parsed by the caller\n    pub(crate) fn parse_paren_expr(', '    #[cold]\n    #[inline(never)]\n    pub(crate) fn parse_paren_expr_for_lint(')
+    def r(old, new):
+        nonlocal tw
+        assert tw.count(old) == 1, old[:60]
+        tw = tw.replace(old, new)
+    r(ANNOT_OLD, ANNOT_OLD.replace('p.skip_type_script_type(Level::Lowest)?;', 'p.lint_arrow_param_type(item)?;'))
+    r(RET_OLD, '                is_arrow_fn = p.lint_decide_arrow_return_type(\n                    loc,\n                    &arrow_data,\n                    opts.is_after_question_and_before_colon,\n                )?;\n')
+    r(PAREN_OLD, PAREN_OLD.replace('            return Ok(value);', '            p.lint_paren(loc, value);\n            return Ok(value);'))
+    if not always_inline:
+        r('        p.pop_and_flatten_scope(scope_index);\n', '        p.lint_pop_and_flatten_scope(scope_index);\n')
+        r('                p.log_arrow_arg_errors(&mut arrow_arg_errors);\n', '                p.lint_log_arrow_arg_errors(&mut arrow_arg_errors);\n')
+    t.rep(MOD, '    pub(crate) fn parse_label_name(', tw + '    pub(crate) fn parse_label_name(')
+    prs = open(t.dir + '/' + PRS).read()
+    pop = cut(prs, '    pub(crate) fn pop_and_flatten_scope(&mut self, scope_index: usize) {', '    /// Everything the parse pass mutates')
+    snap = cut(prs, '    pub(crate) fn parser_snapshot(&mut self) -> ParserSnapshot<\'a> {', '    /// Undo every parse-pass mutation')
+    logerr = cut(prs, '    pub(crate) fn log_arrow_arg_errors(&mut self, errors: &mut DeferredArrowArgErrors) {', '    pub(crate) fn ')
+    skip = open(t.dir + '/' + SKIP).read()
+    attempt = cut(skip, '    pub(crate) fn is_type_script_arrow_return_type_after_question_and_before_colon(', '    // ─────────────────────── try_* wrappers')
+    if always_inline:
+        for f, text in ((PRS, pop), (PRS, snap), (PRS, logerr), (SKIP, attempt)):
+            assert text.startswith('    pub(crate) fn ')
+            t.rep(f, text, '    #[inline(always)]\n' + text)
+        lint_attempt = 'self.is_type_script_arrow_return_type_after_question_and_before_colon(arrow_data)?'
+        copies_p = ''; copies_s = ''
+    else:
+        cold = '    #[cold]\n    #[inline(never)]\n'
+        copies_p = (cold + pop.replace('fn pop_and_flatten_scope(', 'fn lint_pop_and_flatten_scope(') + cold + snap.replace('fn parser_snapshot(', 'fn lint_parser_snapshot(') + cold + logerr.replace('fn log_arrow_arg_errors(', 'fn lint_log_arrow_arg_errors('))
+        copies_s = cold + attempt.replace('fn is_type_script_arrow_return_type_after_question_and_before_colon(', 'fn lint_is_arrow_return_type_after_question(').replace('self.parser_snapshot()', 'self.lint_parser_snapshot()')
+        lint_attempt = 'self.lint_is_arrow_return_type_after_question(arrow_data)?'
+    if copies_p:
+        t.append(PRS, "\nimpl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_ONLY> {\n" + copies_p + "}\n")
+    t.append(SKIP, "\nimpl<'a, const TYPESCRIPT: bool, const SCAN_ONLY: bool> P<'a, TYPESCRIPT, SCAN_ONLY> {\n" + copies_s + """    #[cold]
+    #[inline(never)]
+    pub(crate) fn lint_decide_arrow_return_type(
+        &mut self,
+        loc: bun_ast::Loc,
+        arrow_data: &FnOrArrowDataParse,
+        after_question: bool,
+    ) -> Result<bool, Error> {
+        if after_question {
+            let mark = self.lint_mark();
+            let is_arrow_fn = %s;
+            self.lint_rewind(mark);
+            if is_arrow_fn {
+                self.lexer.next()?;
+                self.lint_arrow_return_type(loc)?;
+            }
+            return Ok(is_arrow_fn);
+        }
+        Ok(self.lint_try_arrow_return_type(loc))
+    }
+}
+""" % lint_attempt)
+    t.rep(PFX, """    fn pfx_t_open_paren(p: &mut Self, level: Level, flags: EFlags) -> PResult<Expr> {
+        let loc = p.lexer.loc();
+        p.lexer.next()?;
+""", """    #[cold]
+    #[inline(never)]
+    fn pfx_t_open_paren_for_lint(
+        p: &mut Self,
+        loc: bun_ast::Loc,
+        level: Level,
+        flags: EFlags,
+    ) -> PResult<Expr> {
+        if level.gt(Level::Assign) {
+            let old_allow_in = p.allow_in;
+            p.allow_in = true;
+            let mut value = p.parse_expr(Level::Lowest)?;
+            p.mark_expr_as_parenthesized(&mut value);
+            p.lint_paren(loc, value);
+            p.lexer.expect(T::TCloseParen)?;
+            p.allow_in = old_allow_in;
+            return Ok(value);
+        }
+        p.parse_paren_expr_for_lint(
+            loc,
+            level,
+            ParenExprOpts {
+                is_after_question_and_before_colon: flags == EFlags::AfterQuestionAndBeforeColon,
+                ..Default::default()
+            },
+        )
+    }
+
+    fn pfx_t_open_paren(p: &mut Self, level: Level, flags: EFlags) -> PResult<Expr> {
+        let loc = p.lexer.loc();
+        p.lexer.next()?;
+        if %s {
+            return Self::pfx_t_open_paren_for_lint(p, loc, level, flags);
+        }
+""" % guard)
+    for f, old in ((PFX, TSX_CALL_OLD), (PFX, CAST_CALL_OLD), (MOD, ASYNC_CALL_OLD), (MOD, ASYNC_LT_CALL_OLD)):
+        indent = old[:len(old) - len(old.lstrip(' '))]
+        lint_call = old.replace('p.parse_paren_expr(', 'p.parse_paren_expr_for_lint(', 1)
+        lint_call = ''.join('    ' + l + '\n' for l in lint_call.splitlines())
+        t.rep(f, old, indent + 'if ' + guard + ' {\n' + lint_call + indent + '}\n' + old)
+
 # ---- V5: the tests live in callees, the function only calls other names ----
 def callee(t, with_args=True, never=True):
     nv = '    #[inline(never)]\n' if never else ''
@@ -692,6 +798,8 @@ VARIANTS = {
     'v2g': lambda t: (stub(t), twin(t, ts_only=False, fixed=True)),
     'v2gt': lambda t: (stub(t), twin(t, ts_only=True, fixed=True)),
     'v2gts': lambda t: (stub(t), twin(t, ts_only=True, fixed=True, no_scan=True)),
+    'v2m': lambda t: (stub(t), source_twin(t)),
+    'v2mi': lambda t: (stub(t), source_twin(t, always_inline=True)),
     # V3
     'v3': lambda t: (stub(t), after_tests(t, ts_only=False), paren_tests(t, ts_only=False, in_function=False)),
     'v3t': lambda t: (stub(t), after_tests(t, ts_only=True), paren_tests(t, ts_only=True, in_function=False)),

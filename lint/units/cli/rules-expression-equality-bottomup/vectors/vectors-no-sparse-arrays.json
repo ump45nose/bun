@@ -1294,15 +1294,15 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 24,
-				"start": 23,
+				"column": 29,
+				"start": 28,
 				"length": 1,
 				"message": "Unexpected comma in middle of array."
 			},
 			{
 				"line": 1,
-				"column": 29,
-				"start": 28,
+				"column": 24,
+				"start": 23,
 				"length": 1,
 				"message": "Unexpected comma in middle of array."
 			}
@@ -1898,15 +1898,15 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 9,
-				"start": 8,
+				"column": 13,
+				"start": 12,
 				"length": 1,
 				"message": "Unexpected comma in middle of array."
 			},
 			{
 				"line": 1,
-				"column": 13,
-				"start": 12,
+				"column": 9,
+				"start": 8,
 				"length": 1,
 				"message": "Unexpected comma in middle of array."
 			}

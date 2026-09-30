@@ -1347,15 +1347,15 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 2,
-				"start": 1,
+				"column": 7,
+				"start": 6,
 				"length": 1,
 				"message": "Unexpected empty object pattern."
 			},
 			{
 				"line": 1,
-				"column": 7,
-				"start": 6,
+				"column": 2,
+				"start": 1,
 				"length": 1,
 				"message": "Unexpected empty object pattern."
 			}
@@ -3196,15 +3196,15 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 1,
-				"start": 0,
+				"column": 6,
+				"start": 5,
 				"length": 1,
 				"message": "Unexpected empty array pattern."
 			},
 			{
 				"line": 1,
-				"column": 6,
-				"start": 5,
+				"column": 1,
+				"start": 0,
 				"length": 1,
 				"message": "Unexpected empty array pattern."
 			}
@@ -3232,17 +3232,17 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 2,
-				"start": 1,
-				"length": 1,
-				"message": "Unexpected empty object pattern."
-			},
-			{
-				"line": 1,
 				"column": 12,
 				"start": 11,
 				"length": 1,
 				"message": "Unexpected empty array pattern."
+			},
+			{
+				"line": 1,
+				"column": 2,
+				"start": 1,
+				"length": 1,
+				"message": "Unexpected empty object pattern."
 			}
 		]
 	},

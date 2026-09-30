@@ -12,7 +12,8 @@ Two modes:
            It is the machine code that the full link would place, before identical-code folding (about 2 minutes).
 After its own tag the script works through $OUT/queue.txt (lines `<tag> [full]`, rlib at /tmp/paren-seam/out/<tag>/, or
 `cg <tag> [<binary>]`: cgbench.sh on $OUT/<tag>/bun-profile, counts to /tmp/paren-seam/cg.<tag>.txt), so that a batch started
-once under the lock can be extended without giving the lock back."""
+once under the lock can be extended without giving the lock back. While $OUT/HOLD holds the tag of the running
+invocation, an empty queue is polled for up to ten minutes before the script ends."""
 import os, re, signal, shutil, subprocess, sys, time
 R = '/workspace/wt/parser/build/release'
 OUT = os.environ.get('OUT', '/tmp/paren-seam/link')
@@ -92,9 +93,13 @@ def main():
     harvest = (os.path.exists(OUT + '/HARVEST') or os.environ.get('HARVEST')) and not full
     rc = one(tag, repl, not harvest)
     q = OUT + '/queue.txt'
+    idle = 0
     while os.path.exists(q):
         lines = [l for l in open(q).read().splitlines() if l.strip()]
-        if not lines: break
+        if not lines:
+            if os.path.exists(OUT + '/HOLD') and open(OUT + '/HOLD').read().strip() == tag and idle < 600: time.sleep(5); idle += 5; continue
+            break
+        idle = 0
         open(q, 'w').write('\n'.join(lines[1:]) + ('\n' if lines[1:] else ''))
         parts = lines[0].split()
         if parts[0] == 'cg':

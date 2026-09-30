@@ -2573,17 +2573,17 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 21,
-				"start": 20,
-				"length": 3,
-				"message": "Duplicate name 'foo'."
-			},
-			{
-				"line": 1,
 				"column": 26,
 				"start": 25,
 				"length": 3,
 				"message": "Duplicate name 'bar'."
+			},
+			{
+				"line": 1,
+				"column": 21,
+				"start": 20,
+				"length": 3,
+				"message": "Duplicate name 'foo'."
 			}
 		]
 	},

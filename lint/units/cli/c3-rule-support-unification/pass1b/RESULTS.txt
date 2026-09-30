@@ -11,9 +11,12 @@ B. The same text with amendments.patch (/tmp/c3b/out/lintprobe)
    recorded vectors: the same tallies as A, line for line.
    chain.py: 4,000 / 16,000 / 64,000 links: 1.25 s / 0.91 s / 2.17 s with parentheses, 0.78 s / 0.84 s / 2.88 s without.
    deep files of the other pass (/tmp/c3final/deep, 11 files): the same reports, internal-error where the walk is cut, nothing crashes.
-   real files: the 12 large files (typescript.js 9.1 MB and others): 12 the same as ESLint, 102 reports.
+   real files, complete: the 12 large files (typescript.js 9.1 MB and others): 12 the same as ESLint, 102 reports;
+               the node_modules list of the bottom-up unit (9,813 files): 9,812 the same, 0 different, 1 ESLint rejects, 256 reports.
+   real files, NOT complete: corpus 4 of the first pass (7,008 files): 4,500 files in, 0 different, 28 ESLint rejects, when this was written.
+   The two builds and the clippy run of B ran outside /workspace/tools/lk: the lock was held for more than an hour. Each is one rustc run of about 2 s.
 
-C. The first merge of this pass (lost from disk; the same design as ../final, written independently)
+C. The first merge of this pass (lost from disk, never compared with ../final text against text; its harness sorted the reports of a file and printed equal ones once)
    vectors of 2,699 cases: 2,612 as ESLint, 21 moved, 16 missing, 6 merged, 2 with another text, 21 only ESLint's parser rejects, 1 only Bun rejects, 20 both reject.
    recorded vectors: 2,360 cases, 21 neither (the same 21).
    real files: corpus 4 of the first pass (7,008 files): 6,826 the same, 0 different, 182 that ESLint's parser rejects, 94 reports;
@@ -21,3 +24,7 @@ C. The first merge of this pass (lost from disk; the same design as ../final, wr
    typescript.js: parse 6.78 s, walk and rules 0.22 s (debug build with ASAN).
    declarations that drop a report on a global name (27 forms run): arrow, catch, destructuring, import (default, namespace, named), class, function,
      for-of, export, rest, setter and method parameters, static block: all seen; a label, a property key, a method name: not declarations.
+
+D. `expect` in ../final/vectors is in the order lint() returns the reports, not sorted. The five files vectors-<rule>.json that this pass put beside the
+   survivors in ../../rules-expression-equality-bottomup/vectors were first written sorted by its own harness: 11 cases had the same reports in another order.
+   They are now copies of ../final/vectors/<rule>.json, byte for byte.

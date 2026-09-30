@@ -1415,17 +1415,17 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 12,
-				"start": 11,
-				"length": 1,
-				"message": "Duplicate key 'b'."
-			},
-			{
-				"line": 1,
 				"column": 18,
 				"start": 17,
 				"length": 1,
 				"message": "Duplicate key 'a'."
+			},
+			{
+				"line": 1,
+				"column": 12,
+				"start": 11,
+				"length": 1,
+				"message": "Duplicate key 'b'."
 			}
 		]
 	},
@@ -2536,17 +2536,17 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 20,
-				"start": 19,
-				"length": 1,
-				"message": "Duplicate key 'b'."
-			},
-			{
-				"line": 1,
 				"column": 28,
 				"start": 27,
 				"length": 1,
 				"message": "Duplicate key 'a'."
+			},
+			{
+				"line": 1,
+				"column": 20,
+				"start": 19,
+				"length": 1,
+				"message": "Duplicate key 'b'."
 			}
 		]
 	},
@@ -2936,17 +2936,17 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 19,
-				"start": 18,
-				"length": 1,
-				"message": "Duplicate key 'd'."
-			},
-			{
-				"line": 1,
 				"column": 29,
 				"start": 28,
 				"length": 1,
 				"message": "Duplicate key 'a'."
+			},
+			{
+				"line": 1,
+				"column": 19,
+				"start": 18,
+				"length": 1,
+				"message": "Duplicate key 'd'."
 			}
 		]
 	},
@@ -3955,17 +3955,17 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 22,
-				"start": 21,
-				"length": 1,
-				"message": "Duplicate key 'b'."
-			},
-			{
-				"line": 1,
 				"column": 30,
 				"start": 29,
 				"length": 1,
 				"message": "Duplicate key 'a'."
+			},
+			{
+				"line": 1,
+				"column": 22,
+				"start": 21,
+				"length": 1,
+				"message": "Duplicate key 'b'."
 			}
 		]
 	},
@@ -6350,17 +6350,17 @@
 		"expect": [
 			{
 				"line": 1,
-				"column": 43,
-				"start": 42,
-				"length": 1,
-				"message": "Duplicate key 'b'."
-			},
-			{
-				"line": 1,
 				"column": 54,
 				"start": 53,
 				"length": 1,
 				"message": "Duplicate key 'a'."
+			},
+			{
+				"line": 1,
+				"column": 43,
+				"start": 42,
+				"length": 1,
+				"message": "Duplicate key 'b'."
 			}
 		]
 	},
