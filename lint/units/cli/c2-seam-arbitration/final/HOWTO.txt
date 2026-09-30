@@ -21,7 +21,7 @@ the repository, path dependencies into the worktree, profile dev with panic = "a
   rustfmt --check of every file of 03 and of src/ast/lib.rs                     exit 0            logs/07-rustfmt-final.log
   MIRIFLAGS=-Zmiri-tree-borrows cargo miri test -p bun_ast --lib msg_code_tests 3 passed          logs/04-miri-ast.log
   MIRIFLAGS=-Zmiri-tree-borrows cargo miri test -p bun_lint --lib               10 passed         logs/05-miri-lint.log
-  A second clippy run without vector_tests.rs was queued behind the machine lock (scratch-only/run2.sh); see logs/06-clippy.log if present.
+  A second clippy run without vector_tests.rs was queued behind the machine lock (scratch-only/run2.sh); it copies logs/06-clippy.log here when it has run.
 
 Logs of the earlier passes, copied here because they lived under /tmp (logs-earlier/):
   01-baseline-assert.log                 the assertion size_of::<Msg>() == 152 holds at e3566be889 before any change

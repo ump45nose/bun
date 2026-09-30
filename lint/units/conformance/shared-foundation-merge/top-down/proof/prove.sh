@@ -54,3 +54,25 @@ done
 zcat "$TOP/vectors/writer-names.jsonl.gz" | cmp - "$W/writer-names-overlay.jsonl" && echo "the stored vectors of the names are what the reference gives"
 echo "the same from the stored vectors, without Go: $(bun "$HERE/nonascii_names.ts" "$W/overlay" "$TOP/vectors/writer-names.jsonl.gz" | head -1)"
 bun "$HERE/corpus_invariants.ts" "$W/overlay" "$REF" | head -3
+
+# 5. The layout of the repository: the file set that the assembler of the other pass builds from the module map,
+# with the files of this pass in place of its foundation files. Type check, the test file, the sweep, the round trip.
+TSC=${TSC:-/workspace/bun/node_modules/.bin/tsc}
+TYPES=${TYPES:-/workspace/bun/packages/bun-types}
+bun "$NOTES/shared-foundation-merge/bottom-up/overlay/assemble.ts" "$NOTES" "$W/asm-other" | head -1
+bun "$HERE/assemble_with_this_set.ts" "$W/asm-other" "$W/asm" | head -1
+mkdir -p "$W/tsc"
+cat > "$W/tsc/tsconfig.json" <<JSON
+{ "compilerOptions": { "lib": ["ESNext"], "target": "ESNext", "module": "ESNext", "moduleDetection": "force", "allowJs": true, "resolveJsonModule": true,
+    "moduleResolution": "bundler", "allowImportingTsExtensions": true, "noEmit": true, "strict": true, "skipLibCheck": true, "noFallthroughCasesInSwitch": true,
+    "isolatedModules": true, "noImplicitAny": false, "noImplicitThis": false, "typeRoots": ["$TYPES/node_modules/@types"], "types": ["node", "$TYPES"] },
+  "include": ["$W/asm/test/cli/lint/conformance/runner/*.ts", "$W/asm/test/cli/lint/conformance/sweep.ts"] }
+JSON
+(cd "$W/tsc" && "$TSC" -p tsconfig.json && echo "tsc on the assembled set: no error")
+(cd "$W/asm" && TFS_CHECK=replay NO_COLOR=1 bun test --timeout 180000 test/cli/lint/conformance.test.ts 2>&1 | tail -4)
+printf 'import { replayCheck, runOracleOf } from "%s/asm/test/cli/lint/conformance/runner";\nimport type { Corpus } from "%s/asm/test/cli/lint/conformance/runner";\nexport default ({ corpus }: { corpus: Corpus }) => replayCheck(i => runOracleOf(corpus, i.suite, i.name));\n' "$W" "$W" > "$W/replay-check-asm.ts"
+bun "$W/asm/test/cli/lint/conformance/sweep.ts" --reference "$REF" --check "$W/replay-check-asm.ts" --report "$W/sweep-asm.json" > "$W/sweep-asm.txt" 2>&1 || true
+sed -n 9,10p "$W/sweep-asm.txt"
+normsweep() { sed -E 's/[0-9.]+ ?(ms|s)\b/T/g; s#--reference [^ ]* ##; s#--check [^ ]*#--check CHECK#; s#--report [^ ]*#--report REPORT#; s#^report .*#report REPORT#' "$1"; }
+cmp <(normsweep "$W/out-orig/sweep.txt") <(normsweep "$W/sweep-asm.txt") && echo "the sweep of the assembled set prints the text of the sweep of the prototypes"
+bun "$W/asm/test/cli/lint/conformance/sweep.ts" --reference "$REF" --round-trip 2>&1 | tail -1
