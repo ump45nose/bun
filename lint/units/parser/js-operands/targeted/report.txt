@@ -2778,6 +2778,86 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
       js-diag TS8004@15+1 Type parameter declarations can only be used in TypeScript files.
       js-diag TS8004@44+1 Type parameter declarations can only be used in TypeScript files.
       js-diag TS8004@64+2 Type parameter declarations can only be used in TypeScript files.
+## x93  "@x<y> class A {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [GO!=TSC js-diag]
+   v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
+   bun js  ERR 1:3 Expected "class" but found "<"
+   bun jsx ERR 1:3 Expected "class" but found "<"
+   bun ts  OK  import { __decorateElement as __decorateElement_ggs2dd8p, __decoratorStart as __decoratorStart_x73frcn4, __runInitializers as __runInitializers_cst8seht } from "bun:wrap";\nvar _init$1, _dec$2, _A$3;\n_dec$2 = [\n  x\n];\n\nclass A {\n  static {\n    _init$1 = __decoratorStart_x73frcn4(void 0);\n    _A$3 = __decorateElement_ggs2dd8p(_init$1, 0, "A", _dec$2, this);\n  }\n}\nA = _A$3;\n__runInitializers_cst8seht(_init$1, 1, _A$3);
+   bun tsx OK  import { __decorateElement as __decorateElement_ggs2dd8p, __decoratorStart as __decoratorStart_x73frcn4, __runInitializers as __runInitializers_cst8seht } from "bun:wrap";\nvar _init$1, _dec$2, _A$3;\n_dec$2 = [\n  x\n];\n\nclass A {\n  static {\n    _init$1 = __decoratorStart_x73frcn4(void 0);\n    _A$3 = __decorateElement_ggs2dd8p(_init$1, 0, "A", _dec$2, this);\n  }\n}\nA = _A$3;\n__runInitializers_cst8seht(_init$1, 1, _A$3);
+   tsc .js parse[TS1146@2+0,TS17008@3+1,TS1005@16+0] js[TS1206@0+2]  Missing(Decorator(x)) JsxElement(JsxOpeningElement(y JsxAttributes) JsxText Jsx JsxClosingElement());
+   tsc .ts parse[TS1146@2+0]  Missing(Decorator(x)) TypeAssertion(TypeReference(y) Class(A));
+   tsc .tsx parse[TS1146@2+0,TS17008@3+1,TS1005@16+0]  Missing(Decorator(x)) JsxElement(JsxOpeningElement(y JsxAttributes) JsxText Jsx JsxClosingElement());
+   go  .js parse[TS1146@2+0,TS17008@3+1,TS1005@16+0]
+      js-diag TS1206@0+2 Decorators are not valid here.
+      js-parse TS1146@2+0 Declaration expected.
+      js-parse TS17008@3+1 JSX element 'y' has no corresponding closing tag.
+      js-parse TS1005@16+0 '</' expected.
+## x94  "@x<y>() class A {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
+   bun js  ERR 1:3 Expected "class" but found "<"
+   bun jsx ERR 1:3 Expected "class" but found "<"
+   bun ts  OK  import { __decorateElement as __decorateElement_ggs2dd8p, __decoratorStart as __decoratorStart_x73frcn4, __runInitializers as __runInitializers_cst8seht } from "bun:wrap";\nvar _init$1, _dec$2, _A$3;\n_dec$2 = [\n  x()\n];\n\nclass A {\n  static {\n    _init$1 = __decoratorStart_x73frcn4(void 0);\n    _A$3 = __decorateElement_ggs2dd8p(_init$1, 0, "A", _dec$2, this);\n  }\n}\nA = _A$3;\n__runInitializers_cst8seht(_init$1, 1, _A$3);
+   bun tsx OK  import { __decorateElement as __decorateElement_ggs2dd8p, __decoratorStart as __decoratorStart_x73frcn4, __runInitializers as __runInitializers_cst8seht } from "bun:wrap";\nvar _init$1, _dec$2, _A$3;\n_dec$2 = [\n  x()\n];\n\nclass A {\n  static {\n    _init$1 = __decoratorStart_x73frcn4(void 0);\n    _A$3 = __decorateElement_ggs2dd8p(_init$1, 0, "A", _dec$2, this);\n  }\n}\nA = _A$3;\n__runInitializers_cst8seht(_init$1, 1, _A$3);
+   tsc .js parse[TS1146@2+0,TS17008@3+1,TS1005@18+0] js[TS1206@0+2]  Missing(Decorator(x)) JsxElement(JsxOpeningElement(y JsxAttributes) JsxText Jsx JsxClosingElement());
+   tsc .ts parse-clean  Class(Decorator(Call(x TypeReference(y))) A)
+   tsc .tsx parse-clean  Class(Decorator(Call(x TypeReference(y))) A)
+   go  .js parse[TS1146@2+0,TS17008@3+1,TS1005@18+0]
+      js-diag TS1206@0+2 Decorators are not valid here.
+      js-parse TS1146@2+0 Declaration expected.
+      js-parse TS17008@3+1 JSX element 'y' has no corresponding closing tag.
+      js-parse TS1005@18+0 '</' expected.
+## x95  "@x! class A {}"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [GO!=TSC js-diag]
+   v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
+   bun js  ERR 1:3 Unexpected !
+   bun jsx ERR 1:3 Unexpected !
+   bun ts  OK  import { __decorateElement as __decorateElement_ggs2dd8p, __decoratorStart as __decoratorStart_x73frcn4, __runInitializers as __runInitializers_cst8seht } from "bun:wrap";\nvar _init$1, _dec$2, _A$3;\n_dec$2 = [\n  x\n];\n\nclass A {\n  static {\n    _init$1 = __decoratorStart_x73frcn4(void 0);\n    _A$3 = __decorateElement_ggs2dd8p(_init$1, 0, "A", _dec$2, this);\n  }\n}\nA = _A$3;\n__runInitializers_cst8seht(_init$1, 1, _A$3);
+   bun tsx OK  import { __decorateElement as __decorateElement_ggs2dd8p, __decoratorStart as __decoratorStart_x73frcn4, __runInitializers as __runInitializers_cst8seht } from "bun:wrap";\nvar _init$1, _dec$2, _A$3;\n_dec$2 = [\n  x\n];\n\nclass A {\n  static {\n    _init$1 = __decoratorStart_x73frcn4(void 0);\n    _A$3 = __decorateElement_ggs2dd8p(_init$1, 0, "A", _dec$2, this);\n  }\n}\nA = _A$3;\n__runInitializers_cst8seht(_init$1, 1, _A$3);
+   tsc .js parse-clean  Class(Decorator(NonNull(x)) A)
+   tsc .ts parse-clean  Class(Decorator(NonNull(x)) A)
+   tsc .tsx parse-clean  Class(Decorator(NonNull(x)) A)
+   go  .js parse-clean js[TS8013@1+2]
+## x96  "class A { @(a<b>(c)) m() {} }"
+   [v8:invalid] [bun-js:ok] [bun-jsx:ok] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
+   v8      script=ERR Invalid or unexpected token  module=ERR Invalid or unexpected token
+   bun js  OK  import { __decorateElement as __decorateElement_ggs2dd8p, __decoratorMetadata as __decoratorMetadata_0rk0ydtx, __decoratorStart as __decoratorStart_x73frcn4, __runInitializers as __runInitializers_cst8seht } from "bun:wrap";\nvar _init$1, _dec$2;\n\nclass A {\n  constructor() {\n    __runInitializers_cst8seht(_init$1, 5, this);\n  }\n  static {\n    _init$1 = __decoratorStart_x73frcn4(void 0);\n    __decorateElement_ggs2dd8p(_init$1, 1, "m", _dec$2, this);\n    __decoratorMetadata_0rk0ydtx(_init$1, this);\n  }\n  [(_dec$2 = [\n    a < b > c\n  ], "m")]() {}\n}
+   bun jsx OK  import { __decorateElement as __decorateElement_ggs2dd8p, __decoratorMetadata as __decoratorMetadata_0rk0ydtx, __decoratorStart as __decoratorStart_x73frcn4, __runInitializers as __runInitializers_cst8seht } from "bun:wrap";\nvar _init$1, _dec$2;\n\nclass A {\n  constructor() {\n    __runInitializers_cst8seht(_init$1, 5, this);\n  }\n  static {\n    _init$1 = __decoratorStart_x73frcn4(void 0);\n    __decorateElement_ggs2dd8p(_init$1, 1, "m", _dec$2, this);\n    __decoratorMetadata_0rk0ydtx(_init$1, this);\n  }\n  [(_dec$2 = [\n    a < b > c\n  ], "m")]() {}\n}
+   bun ts  OK  import { __decorateElement as __decorateElement_ggs2dd8p, __decoratorMetadata as __decoratorMetadata_0rk0ydtx, __decoratorStart as __decoratorStart_x73frcn4, __runInitializers as __runInitializers_cst8seht } from "bun:wrap";\nvar _init$1, _dec$2;\n\nclass A {\n  constructor() {\n    __runInitializers_cst8seht(_init$1, 5, this);\n  }\n  static {\n    _init$1 = __decoratorStart_x73frcn4(void 0);\n    __decorateElement_ggs2dd8p(_init$1, 1, "m", _dec$2, this);\n    __decoratorMetadata_0rk0ydtx(_init$1, this);\n  }\n  [(_dec$2 = [\n    a(c)\n  ], "m")]() {}\n}
+   bun tsx OK  import { __decorateElement as __decorateElement_ggs2dd8p, __decoratorMetadata as __decoratorMetadata_0rk0ydtx, __decoratorStart as __decoratorStart_x73frcn4, __runInitializers as __runInitializers_cst8seht } from "bun:wrap";\nvar _init$1, _dec$2;\n\nclass A {\n  constructor() {\n    __runInitializers_cst8seht(_init$1, 5, this);\n  }\n  static {\n    _init$1 = __decoratorStart_x73frcn4(void 0);\n    __decorateElement_ggs2dd8p(_init$1, 1, "m", _dec$2, this);\n    __decoratorMetadata_0rk0ydtx(_init$1, this);\n  }\n  [(_dec$2 = [\n    a(c)\n  ], "m")]() {}\n}
+   tsc .js parse-clean  Class(A Method(Decorator(Parenthesized(((a < b) > Parenthesized(c)))) m Block))
+   tsc .ts parse-clean  Class(A Method(Decorator(Parenthesized(Call(a TypeReference(b) c))) m Block))
+   tsc .tsx parse-clean  Class(A Method(Decorator(Parenthesized(Call(a TypeReference(b) c))) m Block))
+   go  .js parse-clean
+## x97  "var a = b?.<c>(d)"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN js!=ts] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
+   v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
+   bun js  ERR 1:12 Expected identifier but found "<"
+   bun jsx ERR 1:12 Expected identifier but found "<"
+   bun ts  OK  var a = b?.(d);
+   bun tsx OK  var a = b?.(d);
+   tsc .js parse[TS1003@11+1]  (VariableDeclarationList(Variable(a ((PropertyAccess(b QuestionDotToken ) < c) > Parenthesized(d)))))
+   tsc .ts parse-clean  (VariableDeclarationList(Variable(a Call(b QuestionDotToken TypeReference(c) d))))
+   tsc .tsx parse-clean  (VariableDeclarationList(Variable(a Call(b QuestionDotToken TypeReference(c) d))))
+   go  .js parse[TS1003@11+1]
+      js-parse TS1003@11+1 Identifier expected.
+## x98  "var a = <A<T> />"
+   [v8:invalid] [bun-js:err] [bun-jsx:err] [BUN jsx!=tsx] [TSC js!=ts] [TSC js!=tsx]
+   v8      script=ERR Unexpected token '<'  module=ERR Unexpected token '<'
+   bun js  ERR 1:9 Unexpected <
+   bun jsx ERR 1:11 Expected ">" but found "<"
+   bun ts  ERR 1:15 Expected ">" but found "/"
+   bun tsx OK  var a = jsxDEV_7x81h0kn(A, {}, void 0, !1, void 0, this);
+   tsc .js parse[TS1003@10+1,TS1382@15+1,TS17008@11+1,TS1005@16+0,TS2657@8+8]  (VariableDeclarationList(Variable(a (JsxSelfClosingElement(A JsxAttributes) , JsxElement(JsxOpeningElement(T JsxAttributes) JsxText JsxClosingElement())))))
+   tsc .ts parse[TS1005@14+1]  (VariableDeclarationList(Variable(a TypeAssertion(TypeReference(A TypeReference(T)) RegularExpressionLiteral))))
+   tsc .tsx parse-clean  (VariableDeclarationList(Variable(a JsxSelfClosingElement(A TypeReference(T) JsxAttributes))))
+   go  .js parse[TS1003@10+1,TS1382@15+1,TS17008@11+1,TS1005@16+0,TS2657@8+8]
+      js-parse TS1003@10+1 Identifier expected.
+      js-parse TS1382@15+1 Unexpected token. Did you mean `{'>'}` or `&gt;`?
+      js-parse TS17008@11+1 JSX element 'T' has no corresponding closing tag.
+      js-parse TS1005@16+0 '</' expected.
+      js-parse TS2657@8+8 JSX expressions must have one parent element.
 ## p01  "// @ts-check\n/** @type {number} */\nvar x = /** @type {any} */ (y);"
    [v8:valid] [bun-js:ok] [bun-jsx:ok]
    v8      script=ok  module=ok
@@ -2921,16 +3001,16 @@ bun 1.4.3+e3566be88  typescript 6.0.2  node v26.3.0
   "TSC js!=tsx": 2
  },
  "x": {
-  "v8:invalid": 88,
-  "bun-js:err": 84,
-  "bun-jsx:err": 84,
-  "BUN js!=ts": 76,
-  "BUN jsx!=tsx": 75,
-  "GO!=TSC js-diag": 17,
-  "bun-js:ok": 6,
-  "bun-jsx:ok": 6,
-  "TSC js!=ts": 3,
-  "TSC js!=tsx": 2,
+  "v8:invalid": 94,
+  "bun-js:err": 89,
+  "bun-jsx:err": 89,
+  "BUN js!=ts": 81,
+  "BUN jsx!=tsx": 81,
+  "GO!=TSC js-diag": 20,
+  "bun-js:ok": 7,
+  "bun-jsx:ok": 7,
+  "TSC js!=ts": 8,
+  "TSC js!=tsx": 6,
   "v8:valid": 2
  },
  "p": {

@@ -8821,6 +8821,278 @@
     "jsdoc": []
    }
   },
+  "x93": {
+   "a.js": {
+    "parse": [
+     "TS1146@2+0",
+     "TS17008@3+1",
+     "TS1005@16+0"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [
+     "TS1146@2+0",
+     "TS17008@3+1",
+     "TS1005@16+0"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [
+     "TS1146@2+0",
+     "TS17008@3+1",
+     "TS1005@16+0"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [
+     "TS1146@2+0",
+     "TS17008@3+1",
+     "TS1005@16+0"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [
+     "TS1146@2+0"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [
+     "TS1146@2+0",
+     "TS17008@3+1",
+     "TS1005@16+0"
+    ],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x94": {
+   "a.js": {
+    "parse": [
+     "TS1146@2+0",
+     "TS17008@3+1",
+     "TS1005@18+0"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [
+     "TS1146@2+0",
+     "TS17008@3+1",
+     "TS1005@18+0"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [
+     "TS1146@2+0",
+     "TS17008@3+1",
+     "TS1005@18+0"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [
+     "TS1146@2+0",
+     "TS17008@3+1",
+     "TS1005@18+0"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x95": {
+   "a.js": {
+    "parse": [],
+    "js": [
+     "TS8013@1+2 Non-null assertions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [
+     "TS8013@1+2 Non-null assertions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [
+     "TS8013@1+2 Non-null assertions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [
+     "TS8013@1+2 Non-null assertions can only be used in TypeScript files."
+    ],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x96": {
+   "a.js": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x97": {
+   "a.js": {
+    "parse": [
+     "TS1003@11+1"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [
+     "TS1003@11+1"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [
+     "TS1003@11+1"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [
+     "TS1003@11+1"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
+  "x98": {
+   "a.js": {
+    "parse": [
+     "TS1003@10+1",
+     "TS1382@15+1",
+     "TS17008@11+1",
+     "TS1005@16+0",
+     "TS2657@8+8"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.jsx": {
+    "parse": [
+     "TS1003@10+1",
+     "TS1382@15+1",
+     "TS17008@11+1",
+     "TS1005@16+0",
+     "TS2657@8+8"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.mjs": {
+    "parse": [
+     "TS1003@10+1",
+     "TS1382@15+1",
+     "TS17008@11+1",
+     "TS1005@16+0",
+     "TS2657@8+8"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.cjs": {
+    "parse": [
+     "TS1003@10+1",
+     "TS1382@15+1",
+     "TS17008@11+1",
+     "TS1005@16+0",
+     "TS2657@8+8"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.ts": {
+    "parse": [
+     "TS1005@14+1"
+    ],
+    "js": [],
+    "jsdoc": []
+   },
+   "a.tsx": {
+    "parse": [],
+    "js": [],
+    "jsdoc": []
+   }
+  },
   "p01": {
    "a.js": {
     "parse": [],
