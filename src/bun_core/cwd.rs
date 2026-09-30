@@ -194,15 +194,14 @@ pub fn set(path: &[u8]) {
             #[expect(clippy::cast_ptr_alignment, reason = "layout is Entry-aligned")]
             let entry = unsafe {
                 let p = std::alloc::alloc(layout).cast::<Entry>();
-                let Some(entry) = NonNull::new(p) else {
-                    std::alloc::handle_alloc_error(layout)
-                };
+                let entry = NonNull::new(p).unwrap_or_else(|| crate::out_of_memory());
                 ptr::addr_of_mut!((*p).len).write(path.len());
                 let bytes = ptr::addr_of_mut!((*p).bytes).cast::<u8>();
                 ptr::copy_nonoverlapping(path.as_ptr(), bytes, path.len());
                 bytes.add(path.len()).write(0);
                 EntryPtr(entry)
             };
+            crate::handle_oom(state.visited.try_reserve(1));
             state.visited.insert(at, entry);
             entry
         }
