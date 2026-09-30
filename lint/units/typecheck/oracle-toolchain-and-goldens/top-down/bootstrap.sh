@@ -8,7 +8,8 @@
 # usage: sh bootstrap.sh [plain] [trace] [cover] [check] [tools]      default: plain
 #   plain   <work>/bin/oracle         creation records, harness modes (what every golden of replay.sh needs but the traces)
 #   trace   <work>/bin/oracle-trace   plain plus the entry record of every checker function and the relater/inference notes
-#   cover   <work>/bin/oracle-cover   plain with statement counters (GOCOVERDIR=<dir>, then `go tool covdata`)
+#   cover   <work>/bin/oracle-cover   plain with statement counters (GOCOVERDIR=<dir>, then `go tool covdata`); built in a
+#           copy of the imported packages, because the cover tool cannot read overlay files
 #   check   type-checks the probe sources from source in seconds (tcheck), no build
 #   tools   only the toolchain, the modules and the helper tools
 # environment: ORACLE_WORK (default /tmp/oracle-td), ORACLE_REF (default /workspace/ref/typescript-go),
@@ -144,13 +145,39 @@ build() {
   (cd "$REF" && $LOCK go build "$@" -modfile="$W/$flavour/go.mod" -overlay="$W/$flavour/overlay.json" -o "$W/bin/$out" ./cmd/oracle)
   echo "built $W/bin/$out"
 }
+# Go's cover tool opens the files of a covered package by their path in the tree and does not see an overlay
+# ("cover: .../zz_oracle_core.go: no such file or directory"). So this one build runs in a copy: the packages that the
+# probe imports, with the overlay files written into it. The copy has links to the cases and the baselines.
+build_cover() {
+  prepare plain
+  C="$W/cover/mod"
+  rm -rf "$C" && mkdir -p "$C"
+  (cd "$REF" && go list -deps -modfile="$W/plain/go.mod" -overlay="$W/plain/overlay.json" -f '{{if not .Standard}}{{.ImportPath}}{{end}}' ./cmd/oracle) | grep "^$M/" | sed "s#^$M/##" | while read -r p; do
+    [ -d "$REF/$p" ] || continue
+    mkdir -p "$C/$p"
+    (cd "$REF/$p" && find . -type f ! -name '*_test.go' -print0 | tar -cf - --null -T -) | tar -xf - -C "$C/$p"
+  done
+  python3 - "$W/plain/overlay.json" "$REF" "$C" <<'PY'
+import json, os, shutil, sys
+overlay, ref, out = sys.argv[1:4]
+for key, value in json.load(open(overlay))['Replace'].items():
+    target = os.path.join(out, os.path.relpath(key, ref))
+    os.makedirs(os.path.dirname(target), exist_ok=True)
+    shutil.copyfile(value, target)
+PY
+  cp "$W/plain/go.mod" "$C/go.mod"
+  ln -s "$REF/_submodules" "$C/_submodules"
+  ln -s "$REF/testdata" "$C/testdata"
+  (cd "$C" && $LOCK go build -cover -covermode=atomic -coverpkg=$M/cmd/oracle,$M/internal/checker,$M/internal/binder,$M/internal/evaluator,$M/internal/printer,$M/internal/nodebuilder,$M/internal/pseudochecker,$M/internal/modulespecifiers,$M/internal/jsnum,$M/internal/ast,$M/internal/scanner,$M/internal/parser -o "$W/bin/oracle-cover" ./cmd/oracle)
+  echo "built $W/bin/oracle-cover (function lists: GOCOVERDIR=<dir> oracle-cover <sub-command> ..., then cd $C && go tool covdata func -i=<dir>)"
+}
 for what in "$@"; do
   case "$what" in
     tools) ;;
     check) prepare plain && (cd "$W" && "$W/bin/tcheck" "$W/plain/overlay.json" "$REF" cmd/oracle | grep -v '^not shown') ;;
     plain) build plain oracle ;;
     trace) build trace oracle-trace ;;
-    cover) build plain oracle-cover -cover -covermode=atomic -coverpkg=$M/cmd/oracle,$M/internal/checker,$M/internal/binder,$M/internal/evaluator,$M/internal/printer,$M/internal/nodebuilder,$M/internal/pseudochecker,$M/internal/modulespecifiers,$M/internal/jsnum,$M/internal/ast,$M/internal/scanner,$M/internal/parser ;;
+    cover) build_cover ;;
     *) echo "bootstrap: unknown target $what"; exit 2 ;;
   esac
 done

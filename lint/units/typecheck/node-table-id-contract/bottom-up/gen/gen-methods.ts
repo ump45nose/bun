@@ -43,13 +43,13 @@ const ELSEWHERE: Record<string, string> = {
   KindString: "Kind::name (kind_generated.rs)",
   KindValue: "Kind as u16",
   Decorators: "Ast::decorators (ast/reader.rs)",
-  AsMutable: "none: the setters are methods of FileBuilder and of Ast",
-  SetModifiers: "FileBuilder::set_modifiers, Ast::set_modifiers (slot of MODIFIERS_SLOT)",
+  AsMutable: "none: the setters are methods of FileBuilder; a node of an open store takes Ast::set_slot",
+  SetModifiers: "FileBuilder::set_modifiers",
   Symbol: "Ast::symbol (ast/reader.rs)",
   LocalSymbol: "Ast::local_symbol (ast/reader.rs)",
   Locals: "Ast::locals (ast/reader.rs)",
   Body: "Ast::body (ast/reader.rs)",
-  Text: "Ast::text (ast/reader.rs): two cases build a string",
+  Text: "Ast::text (ast/reader.rs): the prototype returns the text slot of a node; MetaProperty and JsxNamespacedName, which build a string, are left to the port",
   ModifierFlags: "Ast::modifier_flags (ast/reader.rs)",
   ModifierNodes: "Ast::modifier_nodes (ast/reader.rs)",
   PropertyNameOrName: "Ast::property_name_or_name (ast/reader.rs)",
@@ -179,7 +179,7 @@ export function generateMethods(): { text: string; report: string[] } {
       setters.push(`pub fn ${name}_slot(kind: Kind) -> Option<(Def, u8)> {`, "    match kind {", ...arms, "        _ => None,", "    }", "}", "");
       let extra = "";
       if (sw.defaultBody?.some(l => l.includes("FunctionLikeData"))) extra = "; the FunctionLikeData branch of the default case is in the setter itself";
-      report.push(`${ok ? "auto   " : "PROBLEM"} MutableNode.${f.name} (ast.go:${f.line}) -> ${name}_slot, used by FileBuilder::set_${name} and Ast::set_${name}${extra}`);
+      report.push(`${ok ? "auto   " : "PROBLEM"} MutableNode.${f.name} (ast.go:${f.line}) -> ${name}_slot, used by FileBuilder::set_${name}; a node of an open store through Ast::set_slot${extra}`);
       continue;
     }
     const ret = RETURN_TYPE[f.ret];

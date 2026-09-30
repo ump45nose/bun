@@ -105,7 +105,6 @@ fn takes(go: &str, ts: &[u8]) -> bool {
         || (go == "TokenFlags" && (ts == b"$tokenFlags" || ts == b"numericLiteralFlags"))
         || (go == "Comment" && ts == b"comment")
         || (go == "DefaultType" && ts == b"default")
-        || (go == "PhaseModifier" && ts == b"isTypeOnly")
 }
 
 struct DumpFile<'d> {
@@ -335,8 +334,6 @@ fn import_file(
                                 text_slot(&mut builder, dump, text, end, stats)
                             }
                             (SlotType::Bool, 0) => u32::from(raw != 0),
-                            // TypeScript keeps `import type` as a flag, the port as the kind of the modifier.
-                            (SlotType::Kind, 0) if raw != 0 => Kind::TypeKeyword as u32,
                             (SlotType::Kind, 1) => usize::try_from(raw)
                                 .ok()
                                 .and_then(|k| dump.kinds.get(k))

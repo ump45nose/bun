@@ -70,7 +70,7 @@ impl File {
     pub fn bind_once(&self, ids: &IdAllocator, bind: impl for<'x> FnOnce(Ast<'x>)) -> &Bound {
         self.bound.get_or_init(|| {
             let arena = Arena::new();
-            let open = Open::new(&arena, ids.next_serial());
+            let open = Open::new(&arena, ids);
             let frozen = Frozen::of_binding(self);
             bind(Ast::new(&frozen, &open));
             // A file whose ids cannot be given is bound to nothing: every symbol of it reads as nil.
@@ -136,7 +136,6 @@ impl File {
         let mut bound = Bound {
             base,
             span,
-            serial: open.serial,
             ..Bound::default()
         };
         let mut names = Names {
@@ -201,7 +200,7 @@ impl File {
                 exports: SymbolTableId(fix(symbol.exports.0)),
                 parent: SymbolId(fix(symbol.parent.0)),
                 export_symbol: SymbolId(fix(symbol.export_symbol.0)),
-                lazy_id: symbol_ids.get(index).copied().unwrap_or(0) as u32,
+                lazy_id: symbol_ids.get(index).copied().unwrap_or(0),
             });
         }
         bound.tables.push(TableRecord::default());

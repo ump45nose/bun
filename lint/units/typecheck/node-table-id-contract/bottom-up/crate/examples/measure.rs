@@ -114,7 +114,7 @@ fn main() {
         let frozen = first.frozen().expect("page table");
         let first_ns = started.elapsed().as_nanos() as u64;
         let arena = Arena::new();
-        let open = Open::new(&arena, 0);
+        let open = Open::new(&arena, &ids);
         let a = Ast::new(&frozen, &open);
         let started = Instant::now();
         let (walked, identifiers) = walk(a, first.files());
@@ -126,7 +126,7 @@ fn main() {
         let second = Program::new(files.iter().rev().step_by(2).map(Arc::clone).collect());
         let second_frozen = second.frozen().expect("page table");
         let second_ns = started.elapsed().as_nanos() as u64;
-        let second_open = Open::new(&arena, 0);
+        let second_open = Open::new(&arena, &ids);
         let b = Ast::new(&second_frozen, &second_open);
         let started = Instant::now();
         let (second_walked, _) = walk(b, second.files());

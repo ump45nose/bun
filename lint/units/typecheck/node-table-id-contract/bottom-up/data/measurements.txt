@@ -1,130 +1,132 @@
 # Node table prototype, release build of examples/measure.rs (opt-level 3, no LTO), real workspace crates.
-# Machine: 16 cores shared; load average: 614.35, 682.70, 697.54
+# Machine: 16 cores shared; load average: 569.86, 549.39, 566.55
 # Inputs: dumps of TypeScript 6.0.2 (dump version 1), one JSON per lib file, made by ../dump.sh.
+# 'bind probe' is bindprobe.rs, a stand-in that writes every kind of field the binder writes; 'publish' is the rest of File::bind_once.
+# ImportClause.isTypeOnly stays unmapped on purpose: TypeScript 6.0.2 also gives phaseModifier, which the port keeps.
 
 ## lib.es5.d.ts alone
 round 0: files 1 dump bytes 896058 dump nodes 13060 nodes in tables 14372 made 14372
   unknown kinds 0 unmapped children 0 lists 0 attrs 0 first ""
   kinds of the dump that the port has not: []; unmapped: []
   texts in the source 4939 copied 3
-  ms: read 1.3 json 4.9 build 2.9 finish 1.3 bind probe 2.6 publish 0.3
+  ms: read 0.7 json 4.1 build 5.9 finish 4.6 bind probe 5.7 publish 0.3
   bound: symbols 1983 declarations 2495 tables 743 flow nodes 5040
-  heap bytes: syntax 1064933 with bound data 1340989 (93.3 per node); slots 30767 late fields 9785 lists 3888; binder arenas 24052
-  rss kB: start 2168 parsed 4592 bound 4592 end 4592 peak 6220
+  heap bytes: syntax 1064933 with bound data 1349181 (93.9 per node); slots 30767 late fields 9785 lists 3888; binder arenas 24052
+  rss kB: start 2216 parsed 4672 bound 4672 end 4672 peak 6212
   ids used 21504 pages 21
-  program 1: create 0.002 ms, walk 14372 nodes (4851 identifiers) 1.0 ms
-  program 2 (1 files, other order): create 0.002 ms, walk 14372 nodes 0.9 ms
+  program 1: create 0.001 ms, walk 14372 nodes (4851 identifiers) 4.1 ms
+  program 2 (1 files, other order): create 0.005 ms, walk 14372 nodes 1.1 ms
 round 1: files 1 dump bytes 896058 dump nodes 13060 nodes in tables 14372 made 14372
   unknown kinds 0 unmapped children 0 lists 0 attrs 0 first ""
   kinds of the dump that the port has not: []; unmapped: []
   texts in the source 4939 copied 3
-  ms: read 0.5 json 4.4 build 2.4 finish 1.2 bind probe 2.4 publish 0.3
+  ms: read 0.6 json 13.8 build 5.7 finish 1.2 bind probe 5.4 publish 0.4
   bound: symbols 1983 declarations 2495 tables 743 flow nodes 5040
-  heap bytes: syntax 1064933 with bound data 1340989 (93.3 per node); slots 30767 late fields 9785 lists 3888; binder arenas 24052
-  rss kB: start 3916 parsed 7424 bound 7500 end 7500 peak 7500
+  heap bytes: syntax 1064933 with bound data 1349181 (93.9 per node); slots 30767 late fields 9785 lists 3888; binder arenas 24052
+  rss kB: start 3996 parsed 7468 bound 7544 end 7544 peak 7544
   ids used 21504 pages 21
-  program 1: create 0.001 ms, walk 14372 nodes (4851 identifiers) 0.9 ms
-  program 2 (1 files, other order): create 0.002 ms, walk 14372 nodes 0.8 ms
+  program 1: create 0.001 ms, walk 14372 nodes (4851 identifiers) 1.0 ms
+  program 2 (1 files, other order): create 0.002 ms, walk 14372 nodes 4.1 ms
 round 2: files 1 dump bytes 896058 dump nodes 13060 nodes in tables 14372 made 14372
   unknown kinds 0 unmapped children 0 lists 0 attrs 0 first ""
   kinds of the dump that the port has not: []; unmapped: []
   texts in the source 4939 copied 3
-  ms: read 0.2 json 3.2 build 1.8 finish 0.7 bind probe 1.9 publish 0.3
+  ms: read 3.7 json 23.2 build 4.5 finish 4.6 bind probe 4.7 publish 0.4
   bound: symbols 1983 declarations 2495 tables 743 flow nodes 5040
-  heap bytes: syntax 1064933 with bound data 1340989 (93.3 per node); slots 30767 late fields 9785 lists 3888; binder arenas 24052
-  rss kB: start 7500 parsed 7660 bound 7660 end 7660 peak 7660
+  heap bytes: syntax 1064933 with bound data 1349181 (93.9 per node); slots 30767 late fields 9785 lists 3888; binder arenas 24052
+  rss kB: start 3828 parsed 7524 bound 7524 end 7524 peak 7524
   ids used 21504 pages 21
-  program 1: create 0.001 ms, walk 14372 nodes (4851 identifiers) 0.7 ms
-  program 2 (1 files, other order): create 0.001 ms, walk 14372 nodes 0.7 ms
+  program 1: create 0.002 ms, walk 14372 nodes (4851 identifiers) 3.1 ms
+  program 2 (1 files, other order): create 0.004 ms, walk 14372 nodes 2.0 ms
 
 ## lib closure of lib.es5.d.ts (3 files)
 round 0: files 3 dump bytes 948661 dump nodes 13798 nodes in tables 15198 made 15198
   unknown kinds 0 unmapped children 0 lists 0 attrs 0 first ""
   kinds of the dump that the port has not: []; unmapped: []
   texts in the source 5196 copied 3
-  ms: read 2.7 json 4.1 build 2.9 finish 1.3 bind probe 2.4 publish 0.4
+  ms: read 4.1 json 12.8 build 19.3 finish 1.1 bind probe 18.5 publish 0.2
   bound: symbols 2067 declarations 2651 tables 783 flow nodes 5309
-  heap bytes: syntax 1129325 with bound data 1419573 (93.4 per node); slots 32435 late fields 10343 lists 4191; binder arenas 25908
-  rss kB: start 2352 parsed 4728 bound 4728 end 4728 peak 6188
+  heap bytes: syntax 1129325 with bound data 1428341 (94.0 per node); slots 32435 late fields 10343 lists 4191; binder arenas 25908
+  rss kB: start 2180 parsed 4556 bound 4556 end 4556 peak 6176
   ids used 25600 pages 25
-  program 1: create 0.003 ms, walk 15198 nodes (5102 identifiers) 1.0 ms
-  program 2 (2 files, other order): create 0.002 ms, walk 15121 nodes 0.8 ms
+  program 1: create 0.001 ms, walk 15198 nodes (5102 identifiers) 6.6 ms
+  program 2 (2 files, other order): create 0.004 ms, walk 15121 nodes 0.6 ms
 round 1: files 3 dump bytes 948661 dump nodes 13798 nodes in tables 15198 made 15198
   unknown kinds 0 unmapped children 0 lists 0 attrs 0 first ""
   kinds of the dump that the port has not: []; unmapped: []
   texts in the source 5196 copied 3
-  ms: read 0.7 json 13.0 build 1.9 finish 0.8 bind probe 1.4 publish 0.2
+  ms: read 0.7 json 26.7 build 1.9 finish 12.0 bind probe 13.5 publish 0.4
   bound: symbols 2067 declarations 2651 tables 783 flow nodes 5309
-  heap bytes: syntax 1129325 with bound data 1419573 (93.4 per node); slots 32435 late fields 10343 lists 4191; binder arenas 25908
-  rss kB: start 4052 parsed 7648 bound 7728 end 7728 peak 7728
+  heap bytes: syntax 1129325 with bound data 1428341 (94.0 per node); slots 32435 late fields 10343 lists 4191; binder arenas 25908
+  rss kB: start 3944 parsed 7556 bound 7644 end 7644 peak 7644
   ids used 25600 pages 25
-  program 1: create 0.001 ms, walk 15198 nodes (5102 identifiers) 0.6 ms
-  program 2 (2 files, other order): create 0.001 ms, walk 15121 nodes 0.5 ms
+  program 1: create 0.001 ms, walk 15198 nodes (5102 identifiers) 1.0 ms
+  program 2 (2 files, other order): create 0.002 ms, walk 15121 nodes 3.6 ms
 round 2: files 3 dump bytes 948661 dump nodes 13798 nodes in tables 15198 made 15198
   unknown kinds 0 unmapped children 0 lists 0 attrs 0 first ""
   kinds of the dump that the port has not: []; unmapped: []
   texts in the source 5196 copied 3
-  ms: read 0.7 json 14.0 build 2.8 finish 4.3 bind probe 5.7 publish 0.4
+  ms: read 0.3 json 24.7 build 1.7 finish 17.8 bind probe 1.9 publish 0.2
   bound: symbols 2067 declarations 2651 tables 783 flow nodes 5309
-  heap bytes: syntax 1129325 with bound data 1419573 (93.4 per node); slots 32435 late fields 10343 lists 4191; binder arenas 25908
-  rss kB: start 3880 parsed 7728 bound 7816 end 7816 peak 7816
+  heap bytes: syntax 1129325 with bound data 1428341 (94.0 per node); slots 32435 late fields 10343 lists 4191; binder arenas 25908
+  rss kB: start 7644 parsed 8024 bound 8024 end 8024 peak 8024
   ids used 25600 pages 25
-  program 1: create 0.002 ms, walk 15198 nodes (5102 identifiers) 1.1 ms
-  program 2 (2 files, other order): create 0.002 ms, walk 15121 nodes 7.1 ms
+  program 1: create 0.001 ms, walk 15198 nodes (5102 identifiers) 10.7 ms
+  program 2 (2 files, other order): create 0.004 ms, walk 15121 nodes 0.7 ms
 
 ## lib closure of lib.esnext.full.d.ts (93 files)
 round 0: files 93 dump bytes 12411458 dump nodes 152616 nodes in tables 161791 made 161791
-  unknown kinds 0 unmapped children 0 lists 0 attrs 7 first "ImportClause.phaseModifier"
-  kinds of the dump that the port has not: []; unmapped: ["ImportClause.phaseModifier=7"]
+  unknown kinds 0 unmapped children 0 lists 0 attrs 7 first "ImportClause.isTypeOnly"
+  kinds of the dump that the port has not: []; unmapped: ["ImportClause.isTypeOnly=7"]
   texts in the source 52875 copied 1614
-  ms: read 207.4 json 259.5 build 79.3 finish 43.4 bind probe 35.7 publish 12.5
+  ms: read 9.2 json 39.2 build 25.4 finish 10.4 bind probe 24.2 publish 3.1
   bound: symbols 20779 declarations 29196 tables 5612 flow nodes 55119
-  heap bytes: syntax 12617429 with bound data 15604385 (96.4 per node); slots 325171 late fields 107171 lists 41481; binder arenas 2081892
-  rss kB: start 2148 parsed 28076 bound 28272 end 28272 peak 50612
+  heap bytes: syntax 12617429 with bound data 15697297 (97.0 per node); slots 325171 late fields 107171 lists 41481; binder arenas 2081892
+  rss kB: start 2176 parsed 28140 bound 28300 end 28300 peak 50624
   ids used 384000 pages 375
-  program 1: create 0.006 ms, walk 161791 nodes (49775 identifiers) 10.6 ms
-  program 2 (47 files, other order): create 0.018 ms, walk 27289 nodes 1.7 ms
+  program 1: create 0.004 ms, walk 161791 nodes (49775 identifiers) 9.6 ms
+  program 2 (47 files, other order): create 0.013 ms, walk 27289 nodes 1.8 ms
 round 1: files 93 dump bytes 12411458 dump nodes 152616 nodes in tables 161791 made 161791
-  unknown kinds 0 unmapped children 0 lists 0 attrs 7 first "ImportClause.phaseModifier"
-  kinds of the dump that the port has not: []; unmapped: ["ImportClause.phaseModifier=7"]
+  unknown kinds 0 unmapped children 0 lists 0 attrs 7 first "ImportClause.isTypeOnly"
+  kinds of the dump that the port has not: []; unmapped: ["ImportClause.isTypeOnly=7"]
   texts in the source 52875 copied 1614
-  ms: read 6.8 json 40.1 build 31.0 finish 12.5 bind probe 23.1 publish 3.4
+  ms: read 6.7 json 53.6 build 19.6 finish 9.3 bind probe 15.9 publish 3.5
   bound: symbols 20779 declarations 29196 tables 5612 flow nodes 55119
-  heap bytes: syntax 12617429 with bound data 15604385 (96.4 per node); slots 325171 late fields 107171 lists 41481; binder arenas 2081892
-  rss kB: start 21100 parsed 54548 bound 54548 end 54548 peak 54548
+  heap bytes: syntax 12617429 with bound data 15697297 (97.0 per node); slots 325171 late fields 107171 lists 41481; binder arenas 2081892
+  rss kB: start 21068 parsed 54948 bound 54948 end 54948 peak 54948
   ids used 384000 pages 375
-  program 1: create 0.004 ms, walk 161791 nodes (49775 identifiers) 6.9 ms
-  program 2 (47 files, other order): create 0.008 ms, walk 27289 nodes 1.4 ms
-round 2: files 93 dump bytes 12411458 dump nodes 152616 nodes in tables 161791 made 161791
-  unknown kinds 0 unmapped children 0 lists 0 attrs 7 first "ImportClause.phaseModifier"
-  kinds of the dump that the port has not: []; unmapped: ["ImportClause.phaseModifier=7"]
-  texts in the source 52875 copied 1614
-  ms: read 7.5 json 41.5 build 31.3 finish 9.1 bind probe 25.4 publish 6.6
-  bound: symbols 20779 declarations 29196 tables 5612 flow nodes 55119
-  heap bytes: syntax 12617429 with bound data 15604385 (96.4 per node); slots 325171 late fields 107171 lists 41481; binder arenas 2081892
-  rss kB: start 18844 parsed 54556 bound 54556 end 54556 peak 54556
-  ids used 384000 pages 375
-  program 1: create 0.004 ms, walk 161791 nodes (49775 identifiers) 7.3 ms
+  program 1: create 0.005 ms, walk 161791 nodes (49775 identifiers) 8.4 ms
   program 2 (47 files, other order): create 0.011 ms, walk 27289 nodes 1.4 ms
+round 2: files 93 dump bytes 12411458 dump nodes 152616 nodes in tables 161791 made 161791
+  unknown kinds 0 unmapped children 0 lists 0 attrs 7 first "ImportClause.isTypeOnly"
+  kinds of the dump that the port has not: []; unmapped: ["ImportClause.isTypeOnly=7"]
+  texts in the source 52875 copied 1614
+  ms: read 8.4 json 63.6 build 29.7 finish 11.9 bind probe 19.2 publish 4.2
+  bound: symbols 20779 declarations 29196 tables 5612 flow nodes 55119
+  heap bytes: syntax 12617429 with bound data 15697297 (97.0 per node); slots 325171 late fields 107171 lists 41481; binder arenas 2081892
+  rss kB: start 17992 parsed 55060 bound 55060 end 55060 peak 55060
+  ids used 384000 pages 375
+  program 1: create 0.006 ms, walk 161791 nodes (49775 identifiers) 8.9 ms
+  program 2 (47 files, other order): create 0.017 ms, walk 27289 nodes 2.1 ms
 round 3: files 93 dump bytes 12411458 dump nodes 152616 nodes in tables 161791 made 161791
-  unknown kinds 0 unmapped children 0 lists 0 attrs 7 first "ImportClause.phaseModifier"
-  kinds of the dump that the port has not: []; unmapped: ["ImportClause.phaseModifier=7"]
+  unknown kinds 0 unmapped children 0 lists 0 attrs 7 first "ImportClause.isTypeOnly"
+  kinds of the dump that the port has not: []; unmapped: ["ImportClause.isTypeOnly=7"]
   texts in the source 52875 copied 1614
-  ms: read 7.4 json 46.5 build 26.5 finish 9.9 bind probe 43.1 publish 10.1
+  ms: read 8.0 json 34.0 build 21.9 finish 9.7 bind probe 17.9 publish 3.6
   bound: symbols 20779 declarations 29196 tables 5612 flow nodes 55119
-  heap bytes: syntax 12617429 with bound data 15604385 (96.4 per node); slots 325171 late fields 107171 lists 41481; binder arenas 2081892
-  rss kB: start 54556 parsed 57680 bound 57680 end 57680 peak 57680
+  heap bytes: syntax 12617429 with bound data 15697297 (97.0 per node); slots 325171 late fields 107171 lists 41481; binder arenas 2081892
+  rss kB: start 17976 parsed 54832 bound 54832 end 54832 peak 54852
   ids used 384000 pages 375
-  program 1: create 0.006 ms, walk 161791 nodes (49775 identifiers) 14.6 ms
-  program 2 (47 files, other order): create 0.021 ms, walk 27289 nodes 2.2 ms
+  program 1: create 0.004 ms, walk 161791 nodes (49775 identifiers) 7.7 ms
+  program 2 (47 files, other order): create 0.011 ms, walk 27289 nodes 1.8 ms
 round 4: files 93 dump bytes 12411458 dump nodes 152616 nodes in tables 161791 made 161791
-  unknown kinds 0 unmapped children 0 lists 0 attrs 7 first "ImportClause.phaseModifier"
-  kinds of the dump that the port has not: []; unmapped: ["ImportClause.phaseModifier=7"]
+  unknown kinds 0 unmapped children 0 lists 0 attrs 7 first "ImportClause.isTypeOnly"
+  kinds of the dump that the port has not: []; unmapped: ["ImportClause.isTypeOnly=7"]
   texts in the source 52875 copied 1614
-  ms: read 4.8 json 51.1 build 36.6 finish 20.9 bind probe 41.0 publish 15.2
+  ms: read 4.2 json 27.6 build 23.6 finish 9.2 bind probe 27.0 publish 4.1
   bound: symbols 20779 declarations 29196 tables 5612 flow nodes 55119
-  heap bytes: syntax 12617429 with bound data 15604385 (96.4 per node); slots 325171 late fields 107171 lists 41481; binder arenas 2081892
-  rss kB: start 57680 parsed 57680 bound 57680 end 57680 peak 57680
+  heap bytes: syntax 12617429 with bound data 15697297 (97.0 per node); slots 325171 late fields 107171 lists 41481; binder arenas 2081892
+  rss kB: start 54832 parsed 55804 bound 56444 end 56444 peak 56444
   ids used 384000 pages 375
-  program 1: create 0.005 ms, walk 161791 nodes (49775 identifiers) 19.0 ms
-  program 2 (47 files, other order): create 0.018 ms, walk 27289 nodes 1.5 ms
+  program 1: create 0.005 ms, walk 161791 nodes (49775 identifiers) 7.5 ms
+  program 2 (47 files, other order): create 0.011 ms, walk 27289 nodes 1.4 ms

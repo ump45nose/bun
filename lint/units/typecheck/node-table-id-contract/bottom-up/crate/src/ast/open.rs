@@ -1,6 +1,6 @@
 // The objects that one binder, one program or one checker makes. They are written through a shared reference.
 use crate::ast::ast_generated::Def;
-use crate::ast::file::{FlowList, FlowNode};
+use crate::ast::file::{FlowList, FlowNode, IdAllocator};
 use crate::ast::flags_generated::{CheckFlags, ModifierFlags, NodeFlags, SymbolFlags};
 use crate::ast::kind_generated::Kind;
 use crate::tscore::golang::{List, Map, OrderedMap, Text};
@@ -55,17 +55,14 @@ pub struct Open<'a> {
     // ast.GetSymbolId: the id of an open symbol by its index, of a symbol of a file by its id.
     pub(crate) open_symbol_ids: RefCell<Vec<u64>>,
     pub(crate) file_symbol_ids: RefCell<Map<u32, u64>>,
-    pub(crate) next_symbol_id: Cell<u64>,
-    // The high half of the lazy symbol ids of this store: the serial of the file for a binder, 0 for a checker.
-    pub(crate) serial: u32,
+    pub(crate) ids: &'a IdAllocator,
     pub(crate) node_count: Cell<u32>,
     pub(crate) text_count: Cell<u32>,
     pub faults: Faults,
 }
 
 impl<'a> Open<'a> {
-    // `serial` is the serial of the file that a binder binds, 0 for the store of a program or of a checker.
-    pub fn new(arena: &'a Arena, serial: u32) -> Self {
+    pub fn new(arena: &'a Arena, ids: &'a IdAllocator) -> Self {
         Self {
             arena,
             nodes: RefCell::new(vec![OpenNode::default()]),
@@ -77,8 +74,7 @@ impl<'a> Open<'a> {
             flow_lists: RefCell::new(vec![FlowList::default()]),
             open_symbol_ids: RefCell::new(vec![0]),
             file_symbol_ids: RefCell::new(Map::make()),
-            next_symbol_id: Cell::new(0),
-            serial,
+            ids,
             node_count: Cell::new(0),
             text_count: Cell::new(0),
             faults: Faults::default(),

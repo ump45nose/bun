@@ -14,7 +14,7 @@ cp $W/Cargo.lock $HERE/crate/Cargo.lock
 (cd $HERE/gen && bun collisions.ts > ../data/snake-collisions.txt)
 # 2. The workspace lints (copied into crate/Cargo.toml from Cargo.toml:181-321), clippy.toml of the worktree, rustfmt.
 /workspace/tools/lk cargo check --offline --manifest-path $M --target-dir $T
-CLIPPY_CONF_DIR=$W /workspace/tools/lk cargo clippy --offline --manifest-path $M --target-dir $T
+CLIPPY_CONF_DIR=$W /workspace/tools/lk cargo clippy --offline --manifest-path $M --target-dir $T --all-targets
 cargo fmt --manifest-path $M -- --check
 # 3. The unit tests, linked by cargo against bun_collections, bun_wyhash and bun_core.
 /workspace/tools/lk cargo test --offline --manifest-path $M --target-dir $T

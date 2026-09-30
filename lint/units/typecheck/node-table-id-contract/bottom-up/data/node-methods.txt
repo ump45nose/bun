@@ -22,16 +22,16 @@ core    TemplateLiteralLikeData (ast.go:223) -> Ast::template_literal_like_data 
 core    KindString (ast.go:226) -> Kind::name (kind_generated.rs)
 core    KindValue (ast.go:227) -> Kind as u16
 core    Decorators (ast.go:228) -> Ast::decorators (ast/reader.rs)
-core    AsMutable (ast.go:237) -> none: the setters are methods of FileBuilder and of Ast
-core    MutableNode.SetModifiers (ast.go:238) -> FileBuilder::set_modifiers, Ast::set_modifiers (slot of MODIFIERS_SLOT)
+core    AsMutable (ast.go:237) -> none: the setters are methods of FileBuilder; a node of an open store takes Ast::set_slot
+core    MutableNode.SetModifiers (ast.go:238) -> FileBuilder::set_modifiers
 core    Symbol (ast.go:240) -> Ast::symbol (ast/reader.rs)
 core    LocalSymbol (ast.go:248) -> Ast::local_symbol (ast/reader.rs)
 core    Locals (ast.go:256) -> Ast::locals (ast/reader.rs)
 core    Body (ast.go:264) -> Ast::body (ast/reader.rs)
-core    Text (ast.go:272) -> Ast::text (ast/reader.rs): two cases build a string
+core    Text (ast.go:272) -> Ast::text (ast/reader.rs): the prototype returns the text slot of a node; MetaProperty and JsxNamespacedName, which build a string, are left to the port
 auto    Expression (ast.go:310) -> Ast::expression: 35 cases, panic becomes a fault
 auto    RawText (ast.go:386) -> Ast::raw_text: 3 cases, panic becomes a fault
-auto    MutableNode.SetExpression (ast.go:398) -> expression_slot, used by FileBuilder::set_expression and Ast::set_expression
+auto    MutableNode.SetExpression (ast.go:398) -> expression_slot, used by FileBuilder::set_expression; a node of an open store through Ast::set_slot
 auto    ArgumentList (ast.go:476) -> Ast::argument_list: 2 cases, panic becomes a fault
 auto    Arguments (ast.go:486) -> Ast::arguments: the nodes of argument_list
 auto    TypeArgumentList (ast.go:494) -> Ast::type_argument_list: 9 cases, panic becomes a fault
@@ -46,9 +46,9 @@ auto    CanHaveStatements (ast.go:603) -> Ast::can_have_statements: 1 cases
 core    ModifierFlags (ast.go:612) -> Ast::modifier_flags (ast/reader.rs)
 core    ModifierNodes (ast.go:620) -> Ast::modifier_nodes (ast/reader.rs)
 auto    Type (ast.go:628) -> Ast::type_node: 25 cases
-auto    MutableNode.SetType (ast.go:688) -> type_node_slot, used by FileBuilder::set_type_node and Ast::set_type_node; the FunctionLikeData branch of the default case is in the setter itself
+auto    MutableNode.SetType (ast.go:688) -> type_node_slot, used by FileBuilder::set_type_node; a node of an open store through Ast::set_slot; the FunctionLikeData branch of the default case is in the setter itself
 auto    Initializer (ast.go:750) -> Ast::initializer: 10 cases, panic becomes a fault
-auto    MutableNode.SetInitializer (ast.go:776) -> initializer_slot, used by FileBuilder::set_initializer and Ast::set_initializer
+auto    MutableNode.SetInitializer (ast.go:776) -> initializer_slot, used by FileBuilder::set_initializer; a node of an open store through Ast::set_slot
 auto    TagName (ast.go:804) -> Ast::tag_name: 24 cases, panic becomes a fault
 auto    PropertyName (ast.go:858) -> Ast::property_name: 3 cases
 core    PropertyNameOrName (ast.go:870) -> Ast::property_name_or_name (ast/reader.rs)

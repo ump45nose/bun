@@ -932,7 +932,7 @@ impl<'a> Ast<'a> {
         if let Some((_, bound, local)) = self.frozen.locate_bound(symbol.0) {
             if let Some(record) = bound.symbols.get(local) {
                 if record.lazy_id != 0 {
-                    return (u64::from(bound.serial()) << 32) | u64::from(record.lazy_id);
+                    return record.lazy_id;
                 }
             }
         }
@@ -950,9 +950,7 @@ impl<'a> Ast<'a> {
         id
     }
     fn next_symbol_id(self) -> u64 {
-        let count = self.open.next_symbol_id.get() + 1;
-        self.open.next_symbol_id.set(count);
-        (u64::from(self.open.serial) << 32) | count
+        self.open.ids.next_symbol_id()
     }
 
     // make(SymbolTable)

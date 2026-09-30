@@ -42,3 +42,14 @@ no replay:
   leaf-packages-scratch/golden   stores no golden: its run.sh makes vectors from jsnum and stringutil with Go 1.24 alone
   end-to-end-k4-k5/vectors/lib-references.txt   made by py/libmodel.py from the lib files, no probe involved
   ts-dump-and-test-importer/top-down/rules/dump/*.ast.json   made by TypeScript 6.0.2 (probe/dump-ast.ts), not by the reference
+PASS
+PASS
+suite.manifest identical=1 different=0 (12797 lines)
+suite.manifest-with-opts identical=1 different=0 (12797 lines)
+no replay:
+  checker-relations-and-inference/groundtruth/out/k4.relation-tree.txt   the script that folded the call tree ("[x22 pair]") was never saved; tsgoprobe-all (TRACEALL=1) gives the unfolded tree
+  */out/*.entered.txt, */data/*entered*.tsv, *.blocks.tsv, *.fns.txt, *covered-functions.tsv   coverage lists: COVER=1 build, then go tool covdata and the py script of the owning unit
+  checker-type-printer/bottom-up/data/{family,panics,...}.tsv   three coverage runs of the whole suite (CTP_MODE), analysis data, not an oracle of the port
+  leaf-packages-scratch/golden   stores no golden: its run.sh makes vectors from jsnum and stringutil with Go 1.24 alone
+  end-to-end-k4-k5/vectors/lib-references.txt   made by py/libmodel.py from the lib files, no probe involved
+  ts-dump-and-test-importer/top-down/rules/dump/*.ast.json   made by TypeScript 6.0.2 (probe/dump-ast.ts), not by the reference

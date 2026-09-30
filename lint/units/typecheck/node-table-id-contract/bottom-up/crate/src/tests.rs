@@ -2,7 +2,7 @@ use crate::ast::ast_generated::{
     DEF_COUNT, Def, NodeFactory, NodeUpdater, is_identifier, is_variable_statement,
 };
 use crate::ast::builder::FileBuilder;
-use crate::ast::factory::{Factory, NodeSink};
+use crate::ast::factory::{Factory, NodeSink, NodeUpdate};
 use crate::ast::file::{File, IdAllocator, SourceFileData};
 use crate::ast::flags_generated::{FlowFlags, ModifierFlags, NodeFlags, SymbolFlags, TokenFlags};
 use crate::ast::kind_generated::{Kind, is_token_kind};
@@ -198,7 +198,7 @@ fn finish_numbers_in_for_each_child_order() {
         let base = file.base();
         assert_eq!(base, if garbage { 2 * PAGE_SIZE } else { PAGE_SIZE });
         let arena = Arena::new();
-        let open = Open::new(&arena, 0);
+        let open = Open::new(&arena, &ids);
         let frozen = Frozen::of_binding(&file);
         let a = Ast::new(&frozen, &open);
         let n = |local: u32| NodeId(base + local);
@@ -296,7 +296,7 @@ fn bind_publish_and_share_between_programs() {
             Ok(frozen) => frozen,
             Err(error) => panic!("{error:?}"),
         };
-        let open = Open::new(&arena, 0);
+        let open = Open::new(&arena, &ids);
         let a = Ast::new(&frozen, &open);
         for file in program.files() {
             digests.push(digest(a, file));
@@ -350,7 +350,7 @@ fn checker_nodes_live_in_the_open_store() {
         Err(error) => panic!("{error:?}"),
     };
     let arena = Arena::new();
-    let open = Open::new(&arena, 0);
+    let open = Open::new(&arena, &ids);
     let a = Ast::new(&frozen, &open);
     let mut factory = Factory::new(a);
     let declaration = NodeId(file.base() + 4);
@@ -460,7 +460,7 @@ fn lazy_symbol_ids_and_private_names() {
         Err(error) => panic!("{error:?}"),
     };
     let arena = Arena::new();
-    let open = Open::new(&arena, 0);
+    let open = Open::new(&arena, &ids);
     let a = Ast::new(&frozen, &open);
     let mut names = Vec::new();
     for file in [&first, &second] {
@@ -472,19 +472,15 @@ fn lazy_symbol_ids_and_private_names() {
         let member = a.table_get(a.locals(class), name);
         assert!(!member.is_nil(), "{name:?}");
         assert_eq!(a.sym(member).name, name);
-        assert_eq!(
-            a.get_symbol_id(class_symbol) >> 32,
-            u64::from(file.bound().map_or(0, |bound| bound.serial()))
-        );
         names.push(name.to_vec());
     }
     assert_ne!(names[0], names[1]);
     // A symbol that the binder did not number gets its id from the checker, once.
     let member = a.symbol(NodeId(first.base() + 4));
     let id = a.get_symbol_id(member);
-    assert_eq!((id, a.get_symbol_id(member)), (1, 1));
+    assert_eq!((id, a.get_symbol_id(member)), (3, 3));
     let transient = a.new_symbol(SymbolFlags::TRANSIENT, b"t");
-    assert_eq!(a.get_symbol_id(transient), 2);
+    assert_eq!(a.get_symbol_id(transient), 4);
 }
 
 // One node of every definition: the factory, the casts, the children, clone and update see the same layout.
@@ -492,7 +488,8 @@ fn lazy_symbol_ids_and_private_names() {
 fn every_definition_round_trips() {
     let frozen = Frozen::none();
     let arena = Arena::new();
-    let open = Open::new(&arena, 0);
+    let ids = IdAllocator::new();
+    let open = Open::new(&arena, &ids);
     let a = Ast::new(&frozen, &open);
     let mut factory = Factory::new(a);
     let leaf = factory.new_token(Kind::CommaToken);
@@ -566,6 +563,27 @@ fn every_definition_round_trips() {
                     _ => false,
                 })
         );
+        // Update: the node itself when no member changed, else a new node of the same kind.
+        assert_eq!(
+            factory.update_node(node, def, None, &slots),
+            node,
+            "{}",
+            info.name
+        );
+        if let Some(first) = info.slots.first().filter(|slot| slot.ty != SlotType::Text) {
+            let mut changed = slots.clone();
+            changed[0] = if first.ty == SlotType::Bool {
+                0
+            } else {
+                changed[0] + 1
+            };
+            let updated = factory.update_node(node, def, None, &changed);
+            assert_ne!(updated, node, "{}", info.name);
+            assert_eq!(
+                (a.def(updated), a.flags(updated)),
+                (def, NodeFlags::SYNTHESIZED)
+            );
+        }
         let clone = factory.clone_node(node);
         assert_eq!(
             a.iter_children(clone).collect::<Vec<_>>(),
@@ -628,7 +646,7 @@ fn imports_a_dump_of_typescript() {
         Err(error) => panic!("{error:?}"),
     };
     let arena = Arena::new();
-    let open = Open::new(&arena, 0);
+    let open = Open::new(&arena, &ids);
     let a = Ast::new(&frozen, &open);
     let file = &program.files()[0];
     let root = file.source_file.root;
@@ -674,7 +692,7 @@ fn published_stores_keep_their_nodes() {
     assert_eq!(stats.flow_data_nodes, 1);
     assert_eq!(file.bound().map(|bound| bound.node_count()), Some(1));
     assert_eq!(
-        file.publish(&Open::new(&Arena::new(), 0), &ids).err(),
+        file.publish(&Open::new(&Arena::new(), &ids), &ids).err(),
         Some(PublishError::AlreadyPublished)
     );
 
@@ -682,7 +700,7 @@ fn published_stores_keep_their_nodes() {
     let arena = Arena::new();
     let imports = {
         let none = Frozen::none();
-        let open = Open::new(&arena, 0);
+        let open = Open::new(&arena, &ids);
         let a = Ast::new(&none, &open);
         let mut factory = Factory::new(a);
         let specifier = factory.new_string_literal(b"tslib", TokenFlags::NONE);
@@ -704,7 +722,7 @@ fn published_stores_keep_their_nodes() {
         Ok(frozen) => frozen,
         Err(error) => panic!("{error:?}"),
     };
-    let open = Open::new(&arena, 0);
+    let open = Open::new(&arena, &ids);
     let a = Ast::new(&frozen, &open);
     let bound_base = file.bound().map_or(0, |bound| bound.base());
     // The flow node of the clause is the second flow node of the binder after the start node and the one of x.
@@ -738,5 +756,74 @@ fn published_stores_keep_their_nodes() {
     );
     assert_eq!(a.source_file_of(specifier), file.source_file.root);
     assert_eq!(a.source_file_of(data_node), NodeId::NIL);
+    assert_eq!(open.faults.first(), None);
+}
+
+// A table of more than eight entries is found through its hash index after the file is bound.
+#[test]
+fn bound_tables_with_an_index() {
+    let ids = IdAllocator::new();
+    let names: Vec<Vec<u8>> = (0..40)
+        .map(|index| format!("name{index}").into_bytes())
+        .collect();
+    let mut b = FileBuilder::new(b"");
+    let mut statements = Vec::new();
+    for name in &names {
+        let identifier = b.new_identifier(name);
+        let declaration =
+            b.new_variable_declaration(identifier, NodeId::NIL, NodeId::NIL, NodeId::NIL);
+        let declarations = b.new_node_list(&[declaration]);
+        let list = b.new_variable_declaration_list(declarations, NodeFlags::LET);
+        statements.push(b.new_variable_statement(ModifierListId::NIL, list));
+    }
+    // The reparser of upstream writes a member after the node exists: a type for the first declaration.
+    let first = statements.first().copied().unwrap_or(NodeId::NIL);
+    let declaration_list = NodeId(b.slot(first, 1));
+    assert_eq!(b.kind(declaration_list), Kind::VariableDeclarationList);
+    let first_declaration =
+        b.new_variable_declaration(NodeId::NIL, NodeId::NIL, NodeId::NIL, NodeId::NIL);
+    let keyword = b.new_keyword_type_node(Kind::StringKeyword);
+    let copy = b.clone_node(keyword);
+    b.set_type_node(first_declaration, copy);
+    b.set_initializer(first_declaration, keyword);
+    assert_eq!(
+        (b.slot(first_declaration, 2), b.slot(first_declaration, 3)),
+        (copy.0, keyword.0)
+    );
+    b.set_expression(first_declaration, keyword);
+    assert_eq!(
+        b.faults.first().map(|fault| fault.kind),
+        Some(FaultKind::Panic)
+    );
+    let statements = b.new_node_list(&statements);
+    let eof = b.new_token(Kind::EndOfFile);
+    let root = b.new_source_file(statements, eof);
+    let file = match b.finish(root, SourceFileData::default(), &ids) {
+        Some(file) => file,
+        None => panic!("no ids left"),
+    };
+    let (file, stats) = bind_and_publish(file, &ids);
+    assert_eq!((stats.symbols, stats.tables), (40, 1));
+    let program = Program::new(vec![Arc::clone(&file)]);
+    let frozen = match program.frozen() {
+        Ok(frozen) => frozen,
+        Err(error) => panic!("{error:?}"),
+    };
+    let arena = Arena::new();
+    let open = Open::new(&arena, &ids);
+    let a = Ast::new(&frozen, &open);
+    let locals = a.locals(file.source_file.root);
+    assert_eq!(a.table_len(locals), 40);
+    for (position, name) in names.iter().enumerate() {
+        let symbol = a.table_get(locals, name);
+        assert_eq!(a.sym(symbol).name, name.as_slice());
+        assert_eq!(
+            a.table_entry_at(locals, position).map(|entry| entry.1),
+            Some(symbol)
+        );
+        assert_eq!(a.symbol(a.sym(symbol).value_declaration), symbol);
+    }
+    assert_eq!(a.table_get(locals, b"name40"), SymbolId::NIL);
+    assert_eq!(a.table_get(locals, b""), SymbolId::NIL);
     assert_eq!(open.faults.first(), None);
 }

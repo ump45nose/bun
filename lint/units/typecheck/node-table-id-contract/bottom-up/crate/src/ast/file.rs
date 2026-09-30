@@ -9,7 +9,7 @@ use crate::tscore::ids::{
 };
 use crate::tscore::text::TextRange;
 use std::sync::OnceLock;
-use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct NodeRecord {
@@ -52,8 +52,8 @@ pub struct SymbolRecord {
     pub exports: SymbolTableId,
     pub parent: SymbolId,
     pub export_symbol: SymbolId,
-    // The count of the binder's ast.GetSymbolId calls when it asked for the id of this symbol, else 0.
-    pub lazy_id: u32,
+    // ast.GetSymbolId of the symbol when the binder asked for it, else 0.
+    pub lazy_id: u64,
 }
 
 // ast.FlowNode. The ids are plain data, so a published file and an open store keep the same struct.
@@ -109,8 +109,6 @@ pub struct SourceFileData {
 pub struct Bound {
     pub(crate) base: u32,
     pub(crate) span: u32,
-    // Unique in the process, the high half of the lazy symbol ids that the binder handed out.
-    pub(crate) serial: u32,
     // The nodes that the binder made: the data of switch clause and reduce label flow nodes.
     pub(crate) records: Vec<NodeRecord>,
     pub(crate) flags: Vec<NodeFlags>,
@@ -156,10 +154,10 @@ const _: () = {
     assert_sync::<File>();
 };
 
-// Hands out the id ranges and the serial numbers of the files of a process.
+// Hands out the id ranges of the files of a process and the numbers of ast.GetSymbolId.
 pub struct IdAllocator {
     next: AtomicU32,
-    serial: AtomicU32,
+    symbol_ids: AtomicU64,
 }
 
 impl Default for IdAllocator {
@@ -172,7 +170,7 @@ impl IdAllocator {
     pub const fn new() -> Self {
         Self {
             next: AtomicU32::new(PAGE_SIZE),
-            serial: AtomicU32::new(1),
+            symbol_ids: AtomicU64::new(0),
         }
     }
     // A base for `span` ids, or None when the id space below the open bit is used up.
@@ -183,8 +181,9 @@ impl IdAllocator {
             })
             .ok()
     }
-    pub fn next_serial(&self) -> u32 {
-        self.serial.fetch_add(1, Ordering::Relaxed)
+    // nextSymbolId.Add(1) of ast/utilities.go: one counter for the binders and the checkers of the process.
+    pub fn next_symbol_id(&self) -> u64 {
+        self.symbol_ids.fetch_add(1, Ordering::Relaxed) + 1
     }
     pub fn used(&self) -> u32 {
         self.next.load(Ordering::Relaxed)
@@ -203,9 +202,6 @@ impl Bound {
     }
     pub fn span(&self) -> u32 {
         self.span
-    }
-    pub fn serial(&self) -> u32 {
-        self.serial
     }
     pub fn symbol_count(&self) -> u32 {
         self.symbols.len().saturating_sub(1) as u32
