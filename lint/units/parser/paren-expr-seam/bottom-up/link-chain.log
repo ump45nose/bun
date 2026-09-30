@@ -1,0 +1,4 @@
+START N 02:43:02 load=695.09 699.66 712.94
+WAIT 03:35:44 single lock for N T X W
+WAIT 03:47:54 single lock for N2 X2 T2 W2 E (refined forms; the earlier wait was cancelled)
+WAIT 04:11:01 single lock for N3 X3 T3 W2 E (final forms; the earlier wait was cancelled)

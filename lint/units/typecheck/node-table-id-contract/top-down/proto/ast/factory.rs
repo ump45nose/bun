@@ -5,7 +5,7 @@ use crate::ast::ast_generated::{Def, visit_each_child};
 use crate::ast::context::Ast;
 use crate::ast::flags_generated::ModifierFlags;
 use crate::ast::kind_generated::Kind;
-use crate::core::undefined_text_range;
+use crate::core;
 use crate::ids::{ModifierListId, NodeId, NodeListId};
 use crate::internal::FaultKind;
 use std::cell::Cell;
@@ -90,14 +90,14 @@ impl<'a> NodeFactory<'a> {
     pub fn new_node_list(&self, nodes: &[NodeId]) -> NodeListId {
         self.a
             .arena
-            .new_list(nodes, undefined_text_range(), ModifierFlags::empty())
+            .new_list(nodes, core::undefined_text_range(), ModifierFlags::empty())
     }
     pub fn new_modifier_list(&self, nodes: &[NodeId]) -> ModifierListId {
         let mut flags = ModifierFlags::empty();
         for modifier in nodes {
             flags |= modifier_to_flag(modifier.kind(self.a));
         }
-        ModifierListId(self.a.arena.new_list(nodes, undefined_text_range(), flags).0)
+        ModifierListId(self.a.arena.new_list(nodes, core::undefined_text_range(), flags).0)
     }
     pub fn new_modifier(&self, kind: Kind) -> NodeId {
         self.new_token(kind)

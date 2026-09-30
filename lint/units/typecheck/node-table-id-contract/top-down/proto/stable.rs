@@ -62,6 +62,12 @@ impl StableCells {
         self.len.set(start.checked_add(n)?);
         Some(start)
     }
+    // Forgets everything from `len` on. The words are written again by the next runs.
+    pub fn truncate(&self, len: u32) {
+        if len < self.len.get() {
+            self.len.set(len);
+        }
+    }
     #[inline]
     pub fn run(&self, start: u32, n: usize) -> Option<&[Cell<u32>]> {
         if start >= self.len.get() {

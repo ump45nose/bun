@@ -135,18 +135,48 @@ L valueSymbolLinks Y5 resolvedType=T64
 L valueSymbolLinks Y7 resolvedType=T90
 L valueSymbolLinks Y8 resolvedType=T91
 L valueSymbolLinks Y9 resolvedType=T92
-panic: reflect: NumField of non-struct type checker.MembersAndExportsLinks
-
-goroutine 1 [running]:
-reflect.(*rtype).NumField(0xb3a9a47acf0?)
-	/tmp/oracle-td/go/src/reflect/type.go:814 +0x59
-github.com/microsoft/typescript-go/cmd/oracle/types.(*dumper).fields(0xb3a99f79db0, {0x12045a0?, 0xb3a9a0e9910?, 0x140be53?})
-	/workspace/ref/typescript-go/cmd/oracle/types/main.go:159 +0x10b
-github.com/microsoft/typescript-go/cmd/oracle/types.(*dumper).links(0xb3a99f79db0)
-	/workspace/ref/typescript-go/cmd/oracle/types/main.go:646 +0xb05
-github.com/microsoft/typescript-go/cmd/oracle/types.Main()
-	/workspace/ref/typescript-go/cmd/oracle/types/main.go:841 +0x11c7
-main.init.func2()
-	/workspace/ref/typescript-go/cmd/oracle/main.go:43 +0x16
-main.main()
-	/workspace/ref/typescript-go/cmd/oracle/main.go:89 +0x246
+L membersAndExportsLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts [-,{"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[21413,21454)@lib.es5.d.ts "charAt":$"charAt"/0x2000@MethodSignature[15617,15791)@lib.es5.d.ts "charCodeAt":$"charCodeAt"/0x2000@MethodSignature[15791,16035)@lib.es5.d.ts "concat":$"concat"/0x2000@MethodSignature[16035,16250)@lib.es5.d.ts "indexOf":$"indexOf"/0x2000@MethodSignature[16250,16639)@lib.es5.d.ts "lastIndexOf":$"lastIndexOf"/0x2000@MethodSignature[16639,16996)@lib.es5.d.ts "length":$"length"/0x4@PropertySignature[20779,20862)@lib.es5.d.ts "localeCompare":$"localeCompare"/0x2000@MethodSignature[16996,17190)@lib.es5.d.ts "match":$"match"/0x2000@MethodSignature[17190,17493)@lib.es5.d.ts "replace":$"replace"/0x2000@MethodSignature[17493,18052)@lib.es5.d.ts "search":$"search"/0x2000@MethodSignature[18382,18595)@lib.es5.d.ts "slice":$"slice"/0x2000@MethodSignature[18595,19055)@lib.es5.d.ts "split":$"split"/0x2000@MethodSignature[19055,19512)@lib.es5.d.ts "substr":$"substr"/0x2000@MethodSignature[20862,21322)@lib.es5.d.ts "substring":$"substring"/0x2000@MethodSignature[19512,20039)@lib.es5.d.ts "toLocaleLowerCase":$"toLocaleLowerCase"/0x2000@MethodSignature[20146,20329)@lib.es5.d.ts "toLocaleUpperCase":$"toLocaleUpperCase"/0x2000@MethodSignature[20436,20653)@lib.es5.d.ts "toLowerCase":$"toLowerCase"/0x2000@MethodSignature[20039,20146)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[15535,15617)@lib.es5.d.ts "toUpperCase":$"toUpperCase"/0x2000@MethodSignature[20329,20436)@lib.es5.d.ts "trim":$"trim"/0x2000@MethodSignature[20653,20779)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[21322,21413)@lib.es5.d.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[1210,1227)@rich.ts [-,{"__brand":$"__brand"/0x4@PropertySignature[1212,1225)@rich.ts}]
+L typeAliasLinks $"Cond"/0x80000@TypeAliasDeclaration[171,243)@rich.ts declaredType=T106 typeParameters=[T105] instantiations=#1[T106]
+L typeAliasLinks $"Keys"/0x80000@TypeAliasDeclaration[92,116)@rich.ts declaredType=T99 typeParameters=[T98] instantiations=#1[T99]
+L typeAliasLinks $"Pair"/0x80000@TypeAliasDeclaration[62,92)@rich.ts declaredType=T97 typeParameters=[T95,T96] instantiations=#1[T97]
+L typeAliasLinks $"Pick2"/0x80000@TypeAliasDeclaration[116,171)@rich.ts declaredType=T100 typeParameters=[T101,T102] instantiations=#1[T100]
+L typeAliasLinks $"U"/0x80000@TypeAliasDeclaration[1192,1237)@rich.ts declaredType=T131
+L typeAliasLinks $"Unwrap"/0x80000@TypeAliasDeclaration[243,292)@rich.ts declaredType=T111 typeParameters=[T107] instantiations=#1[T111]
+L declaredTypeLinks $"A"/0x40000@TypeParameter[73,74)@rich.ts declaredType=T95
+L declaredTypeLinks $"A"/0x8@EnumMember[301,307)@rich.ts declaredType=T115
+L declaredTypeLinks $"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts declaredType=T65
+L declaredTypeLinks $"B"/0x40000@TypeParameter[75,81)@rich.ts declaredType=T96
+L declaredTypeLinks $"B"/0x8@EnumMember[308,310)@rich.ts declaredType=T117
+L declaredTypeLinks $"Base"/0x20@ClassDeclaration[339,412)@rich.ts declaredType=T123
+L declaredTypeLinks $"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts declaredType=T74
+L declaredTypeLinks $"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts declaredType=T86
+L declaredTypeLinks $"C"/0x8@EnumMember[311,321)@rich.ts declaredType=T119
+L declaredTypeLinks $"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts declaredType=T70
+L declaredTypeLinks $"D"/0x8@EnumMember[322,337)@rich.ts declaredType=T121
+L declaredTypeLinks $"Derived"/0x20@ClassDeclaration[412,526)@rich.ts declaredType=T125
+L declaredTypeLinks $"E"/0x100@EnumDeclaration[292,339)@rich.ts declaredType=T122
+L declaredTypeLinks $"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts declaredType=T69
+L declaredTypeLinks $"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts declaredType=T63
+L declaredTypeLinks $"K"/0x40000@TypeParameter[130,148)@rich.ts declaredType=T102
+L declaredTypeLinks $"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts declaredType=T71
+L declaredTypeLinks $"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts declaredType=T73
+L declaredTypeLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts declaredType=T68
+L declaredTypeLinks $"P"/0x40000@TypeParameter[155,161)@rich.ts declaredType=T103
+L declaredTypeLinks $"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts declaredType=T79
+L declaredTypeLinks $"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts declaredType=T75
+L declaredTypeLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts declaredType=T72
+L declaredTypeLinks $"T"/0x40000@TypeParameter[103,104)@rich.ts declaredType=T98
+L declaredTypeLinks $"T"/0x40000@TypeParameter[128,129)@rich.ts declaredType=T101
+L declaredTypeLinks $"T"/0x40000@TypeParameter[14,15)@rich.ts declaredType=T87
+L declaredTypeLinks $"T"/0x40000@TypeParameter[182,183)@rich.ts declaredType=T105
+L declaredTypeLinks $"T"/0x40000@TypeParameter[256,257)@rich.ts declaredType=T107
+L declaredTypeLinks $"T"/0x40000@TypeParameter[427,443)@rich.ts declaredType=T126
+L declaredTypeLinks $"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts declaredType=T80
+L declaredTypeLinks $"T"/0x40000@TypeParameter[546,547)@rich.ts declaredType=T128
+L declaredTypeLinks $"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts declaredType=T66
+L declaredTypeLinks $"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts declaredType=T84
+L declaredTypeLinks $"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts declaredType=T83
+L declaredTypeLinks $"U"/0x40000@TypeParameter[280,282)@rich.ts declaredType=T108
+L declaredTypeLinks $"U"/0x40000@TypeParameter[33,34)@rich.ts declaredType=T89
+== diagnostics

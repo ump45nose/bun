@@ -8,7 +8,7 @@ sys.argv = [a for a in sys.argv]
 here = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, here)
 L = '/tmp/paren-seam/link/%s/bun_js_parser.lto.o'
-ORDER = ['stub', 'v1', 'v1t', 'v1types', 'v1paren', 'v1parent', 'fastparen', 'fastparent', 'v2', 'v2g', 'v2gt', 'v2gts', 'v2mi', 'v2m', 'v3', 'v3t', 'v3open', 'v3opent', 'v5', 'v5n', 'v5inl', 'v5p', 'v5t', 'topw', 'w1', 'w1b', 'w1f', 'w1s', 'w2', 'p1a', 'p1b', 'p1c', 'p1cu', 'p1d', 'p1c2', 'p1abc', 'p1abc2']
+ORDER = ['stub', 'v1', 'v1t', 'v1types', 'v1paren', 'v1parent', 'fastparen', 'fastparent', 'v2', 'v2g', 'v2gt', 'v2gts', 'v2mi', 'v2m', 'v2m2', 'v2mm', 'v3', 'v3t', 'v3open', 'v3opent', 'v5', 'v5n', 'v5inl', 'v5p', 'v5t', 'topw', 'topwjs', 'w1', 'w1b', 'w1f', 'w1s', 'w2', 'p1a', 'p1b', 'p1c', 'p1cu', 'p1d', 'p1c2', 'p1abc', 'p1abc2']
 tags = [a for a in sys.argv[1:]] or ORDER
 import importlib.util
 def load_objfn():

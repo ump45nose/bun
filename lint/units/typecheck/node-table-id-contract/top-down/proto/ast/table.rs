@@ -69,9 +69,9 @@ const _: () = {
 };
 
 impl NodeTable {
-    pub(crate) fn new_local() -> Self {
+    pub(crate) fn with_first(first: u32) -> Self {
         Self {
-            first: 1,
+            first,
             text_spans: vec![(0, 0)],
             ..Self::default()
         }

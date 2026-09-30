@@ -9,6 +9,8 @@ use crate::ast::ast_generated::{Def, SlotType, layout};
 use crate::ast::context::AstContext;
 use crate::ast::flags_generated::{ModifierFlags, NodeFlags};
 use crate::ast::kind_generated::Kind;
+use crate::ast::node_arena::ArenaMark;
+use crate::ast::program::IdAllocator;
 use crate::ast::table::{FileData, NodeTable};
 use crate::core::TextRange;
 use crate::ids::{ModifierListId, NodeId, NodeListId, SYNTH};
@@ -73,22 +75,63 @@ impl<'a> AstContext<'a> {
     // Attaches the JSDoc nodes of a host. The producer sets the flag HasJSDoc on the host.
     pub fn raw_set_jsdoc(&self, host: NodeId, jsdoc: &[NodeId]) {
         let list = self.raw_new_list(jsdoc, crate::core::undefined_text_range());
-        self.arena.set_jsdoc(host, list);
+        if host.0 & SYNTH == 0 || !self.arena.set_jsdoc(host, list) {
+            self.log
+                .record(FaultKind::WriteToBoundObject, "JSDoc", host.0);
+        }
     }
 
-    // Ends the construction of a file. The context can be dropped afterwards.
+    // For a producer that makes nodes it may give up: nothing made after the mark may be referenced after the rewind.
+    pub fn mark(&self) -> ArenaMark {
+        self.arena.mark()
+    }
+    pub fn rewind(&self, mark: ArenaMark) {
+        self.arena.rewind(mark);
+    }
+    // Ends the construction of a file: a local table (ids from 1) for the binder. The context can be dropped afterwards.
     pub fn finish(&'a self, root: NodeId, source_text: Vec<u8>, file: FileData) -> NodeTable {
+        let (mut table, new_id) = self.finish_into(1, &[root], false);
+        let map = |old: NodeId| -> NodeId {
+            if old.0 & SYNTH == 0 {
+                return NodeId::NIL;
+            }
+            NodeId(new_id.get((old.0 & !SYNTH) as usize).copied().unwrap_or(0))
+        };
+        let count = table.file.node_count;
+        table.source_text = source_text;
+        table.file = file;
+        table.file.node_count = count;
+        table.file.external_module_indicator = map(table.file.external_module_indicator);
+        table.file.common_js_module_indicator = map(table.file.common_js_module_indicator);
+        table
+    }
+    // Ends the construction of nodes that no file holds (the import specifiers a program makes for a file).
+    // The table is frozen at once: there is nothing to bind. A parent or a child may be a node of a frozen file.
+    pub fn finish_synthetic(&'a self, roots: &[NodeId], ids: &IdAllocator) -> Option<NodeTable> {
+        let base = ids.alloc(self.arena.node_count().max(self.arena.list_count()))?;
+        let (mut table, _) = self.finish_into(base, roots, true);
+        table.frozen = true;
+        Some(table)
+    }
+
+    fn finish_into(&'a self, first: u32, roots: &[NodeId], allow_foreign: bool) -> (NodeTable, Vec<u32>) {
         let arena_nodes = self.arena.node_count() as usize;
-        // new_id[arena index] is the local id of a reached node, 0 otherwise.
+        // new_id[arena index] is the id of a reached node in the new table, 0 otherwise.
         let mut new_id: Vec<u32> = vec![0; arena_nodes + 1];
         let mut order: Vec<(NodeId, u32)> = Vec::with_capacity(arena_nodes);
-        let mut stack: Vec<(NodeId, u32)> = vec![(root, 0)];
+        let mut stack: Vec<(NodeId, u32)> = roots.iter().rev().map(|root| (*root, 0)).collect();
         let mut children: Vec<NodeId> = Vec::new();
         while let Some((node, parent)) = stack.pop() {
-            let index = (node.0 & !SYNTH) as usize;
-            let Some(slot) = new_id.get_mut(index).filter(|_| node.0 & SYNTH != 0) else {
+            if node.0 & SYNTH == 0 {
+                if !allow_foreign {
+                    self.log
+                        .record(FaultKind::BuilderMisuse, "finish: a node of another table", node.0);
+                }
+                continue;
+            }
+            let Some(slot) = new_id.get_mut((node.0 & !SYNTH) as usize) else {
                 self.log
-                    .record(FaultKind::BuilderMisuse, "finish: a node of another table", node.0);
+                    .record(FaultKind::BuilderMisuse, "finish: an unknown node", node.0);
                 continue;
             };
             if *slot != 0 {
@@ -96,7 +139,7 @@ impl<'a> AstContext<'a> {
                     .record(FaultKind::SharedNode, "finish: a node with two parents", node.0);
                 continue;
             }
-            let id = order.len() as u32 + 1;
+            let id = first + order.len() as u32;
             *slot = id;
             order.push((node, parent));
             children.clear();
@@ -108,11 +151,11 @@ impl<'a> AstContext<'a> {
             stack.extend(children.iter().rev().map(|child| (*child, id)));
         }
 
-        let mut table = NodeTable::new_local();
+        let mut table = NodeTable::with_first(first);
         table.recs.reserve_exact(order.len());
         let map_node = |old: u32| -> u32 {
             if old & SYNTH == 0 {
-                return 0;
+                return if allow_foreign { old } else { 0 };
             }
             new_id.get((old & !SYNTH) as usize).copied().unwrap_or(0)
         };
@@ -197,15 +240,11 @@ impl<'a> AstContext<'a> {
                 let mapped = map_list(&mut table, list.0);
                 table
                     .jsdoc
-                    .push((NodeId(index as u32 + 1), NodeListId(mapped)));
+                    .push((NodeId(first + index as u32), NodeListId(mapped)));
             }
         }
-        table.root = NodeId(map_node(root.0));
-        table.source_text = source_text;
-        table.file = file;
+        table.root = NodeId(roots.first().map_or(0, |root| map_node(root.0)));
         table.file.node_count = order.len() as u32;
-        table.file.external_module_indicator = NodeId(map_node(table.file.external_module_indicator.0));
-        table.file.common_js_module_indicator = NodeId(map_node(table.file.common_js_module_indicator.0));
-        table
+        (table, new_id)
     }
 }

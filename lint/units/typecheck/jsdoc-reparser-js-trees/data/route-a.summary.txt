@@ -29,3 +29,21 @@
       3 label go<.TagName: KindIdentifier> ts<.NameExpression: KindJSDocNameReference>: c03361u0_seeTag2.ts c07290u0_controlFlowPropertyDeclarations.ts c09752u0_jsxComplexSignatureHasApplicabilityError.tsx
       1 flags KindIdentifier xor=0x8000: c06883u0_commentsCommentParsing.ts
       1 shape go<.Comment:> ts<.TagName: KindIdentifier> [JSDocEnumTag,JSDocFunctionType]: c09719u0_jsdocInTypeScript.ts
+== run instances of the conformance enumerator (12,797 run instances, ../../conformance/enumerator/vectors/instances.tsv.gz)
+  with a JavaScript unit (.js .jsx .mjs .cjs): 990
+  with a JavaScript unit that has JSDoc nodes: 489
+  with a JavaScript unit that has reparsed nodes: 432
+  with a JavaScript unit whose route A tree differs from typescript-go's at L2: 37
+== test cases (12,445 with a unit): with a JavaScript unit 952; with JSDoc 500; with reparsed nodes 443; route A differs at L2 37
+== other measurements
+  JSDoc attached to the same hosts (host kind, host range, JSDoc range): JavaScript 570/570 units, 1,588 attachments; TypeScript 167/167 units, 844 attachments
+  port of checkJSSyntax as a pass over the finished tree: 1,276/1,276 JavaScript units give typescript-go's list (173 diagnostics in 65 units, order and related information included)
+  parse diagnostics of JavaScript units: identical lists 1,266; 1,271 after merging the TS1003 of the reparse pass
+  JSDoc diagnostics of JavaScript units (TypeScript's jsDocDiagnostics against typescript-go's): identical 1,239/1,276 (56 units have any)
+  external module indicator after the reparse pass: 1,276/1,276 (one unit has a reparsed overload signature as indicator: c03344u0_overloadTag1.js)
+  file imports: the module specifiers of reparsed @import declarations are in the list (24 units have a JSImportDeclaration)
+== closure of jsdoc.go (54 functions, 1,264 function lines) and reparser.go (21 functions, 700 function lines) in parser.go (431 functions, 6,277 function lines)
+  full closure: 402 functions, 5,693 lines (plus 6 functions, 41 lines of utilities.go); not reached: the source file driver, JSON, pragmas, the top level await reparse
+  direct callees: 41 functions, 338 lines
+  closure when 7 grammar entry points are given (parseJSDocType, parseExpression, parseModifiersEx, tryParseImportClause, parseModuleSpecifier, tryParseImportAttributes, parseTypeArguments): 55 functions, 453 lines
+  closure with only the expression grammar cut (10 cut points): 218 functions, 2,649 lines

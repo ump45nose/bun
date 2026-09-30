@@ -410,3 +410,45 @@ fn measure_es5_closure() {
 fn measure_esnext_closure() {
     measure_bundle("esnext closure", "/tmp/ntc-td/esnext.json");
 }
+
+#[test]
+fn rewind_and_synthetic_table() {
+    let a = AstContext::for_building();
+    let f = new_node_factory(&a, NodeFactoryHooks::default());
+    let kept = f.new_identifier(b"kept");
+    let mark = a.mark();
+    let dropped = f.new_identifier(b"dropped");
+    let list = f.new_node_list(&[dropped]);
+    a.rewind(mark);
+    let next = f.new_identifier(b"next");
+    // The id of a node made after the mark is given again.
+    assert_eq!(next, dropped);
+    assert_eq!(next.text(&a), b"next");
+    assert_eq!(f.new_node_list(&[kept]), list);
+    assert_eq!(a.list_nodes(list).at(0usize), kept);
+    assert_eq!(a.log.count(), 0);
+
+    // The import specifier a program makes for a file: its parent is the node of a frozen file.
+    let ids = IdAllocator::new();
+    let file = freeze(min_table(), &ids).unwrap_or_else(|t| t);
+    let b = AstContext::for_building();
+    let f = new_node_factory(&b, NodeFactoryHooks::default());
+    let specifier = f.new_string_literal(b"tslib", TokenFlags::empty());
+    let import = f.new_import_declaration(crate::ids::ModifierListId::NIL, NodeId::NIL, specifier, NodeId::NIL);
+    b.set_parent(specifier, import);
+    b.set_parent(import, file.root);
+    let synthetic = b.finish_synthetic(&[import], &ids);
+    assert!(synthetic.is_some());
+    let synthetic = synthetic.unwrap_or_default();
+    assert!(synthetic.is_frozen());
+    assert_eq!(synthetic.first(), 2 * PAGE_SIZE);
+    let c = AstContext::for_checking(&[&file, &synthetic]);
+    let import = synthetic.root;
+    assert_eq!(import.kind(&c), Kind::ImportDeclaration);
+    assert_eq!(import.parent(&c), file.root);
+    let specifier = import.module_specifier(&c);
+    assert_eq!(specifier.text(&c), b"tslib");
+    assert_eq!(specifier.parent(&c), import);
+    assert_eq!(import.parent(&c).kind(&c), Kind::SourceFile);
+    assert_eq!(c.log.count(), 0);
+}

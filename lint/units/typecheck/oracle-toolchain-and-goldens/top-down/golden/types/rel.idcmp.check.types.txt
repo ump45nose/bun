@@ -62,18 +62,41 @@ L valueSymbolLinks Y1 resolvedType=T10
 L valueSymbolLinks Y2 resolvedType=T63
 L valueSymbolLinks Y4 resolvedType=T5
 L valueSymbolLinks Y5 resolvedType=T64
-panic: reflect: NumField of non-struct type checker.MembersAndExportsLinks
-
-goroutine 1 [running]:
-reflect.(*rtype).NumField(0x304480c8150?)
-	/tmp/oracle-td/go/src/reflect/type.go:814 +0x59
-github.com/microsoft/typescript-go/cmd/oracle/types.(*dumper).fields(0x30448017db0, {0x12045a0?, 0x30447d79710?, 0x140be53?})
-	/workspace/ref/typescript-go/cmd/oracle/types/main.go:159 +0x10b
-github.com/microsoft/typescript-go/cmd/oracle/types.(*dumper).links(0x30448017db0)
-	/workspace/ref/typescript-go/cmd/oracle/types/main.go:646 +0xb05
-github.com/microsoft/typescript-go/cmd/oracle/types.Main()
-	/workspace/ref/typescript-go/cmd/oracle/types/main.go:841 +0x11c7
-main.init.func2()
-	/workspace/ref/typescript-go/cmd/oracle/main.go:43 +0x16
-main.main()
-	/workspace/ref/typescript-go/cmd/oracle/main.go:89 +0x246
+L membersAndExportsLinks $"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts [-,{"valueOf":$"valueOf"/0x2000@MethodSignature[21824,21914)@lib.es5.d.ts}]
+L membersAndExportsLinks $"I1"/0x40@InterfaceDeclaration[0,26)@idcmp.ts [-,{"x":$"x"/0x4@PropertySignature[14,24)@idcmp.ts}]
+L membersAndExportsLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts [-,{"constructor":$"constructor"/0x4@PropertySignature[3312,3447)@lib.es5.d.ts "hasOwnProperty":$"hasOwnProperty"/0x2000@MethodSignature[3731,3908)@lib.es5.d.ts "isPrototypeOf":$"isPrototypeOf"/0x2000@MethodSignature[3908,4121)@lib.es5.d.ts "propertyIsEnumerable":$"propertyIsEnumerable"/0x2000@MethodSignature[4121,4290)@lib.es5.d.ts "toLocaleString":$"toLocaleString"/0x2000@MethodSignature[3532,3640)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[3447,3532)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[3640,3731)@lib.es5.d.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[113,127)@idcmp.ts [-,{"a":$"a"/0x4@PropertySignature[115,125)@idcmp.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[144,158)@idcmp.ts [-,{"a":$"a"/0x4@PropertySignature[146,156)@idcmp.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[195,209)@idcmp.ts [-,{"b":$"b"/0x4@PropertySignature[197,207)@idcmp.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[60,74)@idcmp.ts [-,{"a":$"a"/0x4@PropertySignature[62,72)@idcmp.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[82,96)@idcmp.ts [-,{"a":$"a"/0x4@PropertySignature[84,94)@idcmp.ts}]
+L declaredTypeLinks $"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts declaredType=T65
+L declaredTypeLinks $"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts declaredType=T74
+L declaredTypeLinks $"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts declaredType=T70
+L declaredTypeLinks $"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts declaredType=T69
+L declaredTypeLinks $"I1"/0x40@InterfaceDeclaration[0,26)@idcmp.ts declaredType=T86 interfaceChecked=true indexSignaturesChecked=true typeParametersChecked=true
+L declaredTypeLinks $"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts declaredType=T63
+L declaredTypeLinks $"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts declaredType=T71
+L declaredTypeLinks $"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts declaredType=T73
+L declaredTypeLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts declaredType=T68
+L declaredTypeLinks $"Promise"/0x40@InterfaceDeclaration[72557,73600)@lib.es5.d.ts declaredType=T91
+L declaredTypeLinks $"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts declaredType=T79
+L declaredTypeLinks $"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts declaredType=T75
+L declaredTypeLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts declaredType=T72
+L declaredTypeLinks $"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts declaredType=T80
+L declaredTypeLinks $"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts declaredType=T66
+L declaredTypeLinks $"T"/0x40000@TypeParameter[72648,72649)@lib.es5.d.ts declaredType=T92
+L declaredTypeLinks $"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts declaredType=T84
+L declaredTypeLinks $"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts declaredType=T83
+L sourceFileLinks SourceFile[0,284)@idcmp.ts typeChecked=true identifierCheckNodes=[InterfaceDeclaration[0,26)@idcmp.ts,InterfaceDeclaration[26,53)@idcmp.ts]
+== diagnostics
+D idcmp.ts [42,43) TS2717 cat=1 chain=0 related=1
+D.related idcmp.ts [15,16) TS6203 cat=3 chain=0 related=0
+D idcmp.ts [80,81) TS2403 cat=1 chain=0 related=1
+D.related idcmp.ts [58,59) TS6203 cat=3 chain=0 related=0
+D idcmp.ts [164,173) TS2367 cat=1 chain=0 related=0
+D idcmp.ts [190,209) TS2352 cat=1 chain=1 related=1
+D.chain TS2741
+D.related idcmp.ts [198,199) TS2728 cat=3 chain=0 related=0
+D idcmp.ts [254,255) TS2678 cat=1 chain=0 related=0
+D idcmp.ts [271,282) TS2352 cat=1 chain=0 related=0

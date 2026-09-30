@@ -390,18 +390,61 @@ L valueSymbolLinks Y5 resolvedType=T64
 L valueSymbolLinks Y7 resolvedType=T108
 L valueSymbolLinks Y8 resolvedType=T109
 L valueSymbolLinks Y9 resolvedType=T110
-panic: reflect: NumField of non-struct type checker.MembersAndExportsLinks
-
-goroutine 1 [running]:
-reflect.(*rtype).NumField(0x15174ce61580?)
-	/tmp/oracle-td/go/src/reflect/type.go:814 +0x59
-github.com/microsoft/typescript-go/cmd/oracle/types.(*dumper).fields(0x15174ce87db0, {0x12045a0?, 0x15174ca936e0?, 0x140be53?})
-	/workspace/ref/typescript-go/cmd/oracle/types/main.go:159 +0x10b
-github.com/microsoft/typescript-go/cmd/oracle/types.(*dumper).links(0x15174ce87db0)
-	/workspace/ref/typescript-go/cmd/oracle/types/main.go:646 +0xb05
-github.com/microsoft/typescript-go/cmd/oracle/types.Main()
-	/workspace/ref/typescript-go/cmd/oracle/types/main.go:841 +0x11c7
-main.init.func2()
-	/workspace/ref/typescript-go/cmd/oracle/main.go:43 +0x16
-main.main()
-	/workspace/ref/typescript-go/cmd/oracle/main.go:89 +0x246
+L membersAndExportsLinks $"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts [-,{"T":$"T"/0x40000@TypeParameter[112,113)@decl-only.ts "\xfecall":$"\xfecall"/0x20000@CallSignature[192,199)@decl-only.ts "\xfenew":$"\xfenew"/0x20000@ConstructSignature[172,192)@decl-only.ts "map":$"map"/0x2000@MethodSignature[140,172)@decl-only.ts "value":$"value"/0x4@PropertySignature[130,140)@decl-only.ts}]
+L membersAndExportsLinks $"Point"/0x40@InterfaceDeclaration[0,97)@decl-only.ts [-,{"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[61,95)@decl-only.ts "w":$"w"/0x4@PropertySignature[219,230)@decl-only.ts "x":$"x"/0x4@PropertySignature[17,28)@decl-only.ts "y":$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts "z":$"z"/0x4@PropertySignature[40,61)@decl-only.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@ConstructorType[1059,1085)@decl-only.ts [-,{"\xfenew":$"\xfenew"/0x20000@ConstructorType[1059,1085)@decl-only.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@FunctionType[150,162)@decl-only.ts [-,{"\xfecall":$"\xfecall"/0x20000@FunctionType[150,162)@decl-only.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[1097,1132)@decl-only.ts [-,{"items":$"items"/0x4@PropertySignature[1117,1130)@decl-only.ts "next":$"next"/0x4@PropertySignature[1099,1117)@decl-only.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[1209,1218)@decl-only.ts [-,{"id":$"id"/0x4@PropertySignature[1210,1216)@decl-only.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[958,976)@decl-only.ts [-,{"extra":$"extra"/0x4@PropertySignature[960,974)@decl-only.ts}]
+L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[987,1046)@decl-only.ts [-,{"\xfecall":$"\xfecall"/0x20000@CallSignature[989,1010)@decl-only.ts}]
+L typeAliasLinks $"Cond"/0x80000@TypeAliasDeclaration[767,839)@decl-only.ts declaredType=T135 typeParameters=[T134] instantiations=#2[T135,T172]
+L typeAliasLinks $"Ctor"/0x80000@TypeAliasDeclaration[1047,1086)@decl-only.ts declaredType=T149
+L typeAliasLinks $"Fn"/0x80000@TypeAliasDeclaration[977,1047)@decl-only.ts declaredType=T148
+L typeAliasLinks $"Inter"/0x80000@TypeAliasDeclaration[937,977)@decl-only.ts declaredType=T147
+L typeAliasLinks $"Keys"/0x80000@TypeAliasDeclaration[693,718)@decl-only.ts declaredType=T128
+L typeAliasLinks $"Lookup"/0x80000@TypeAliasDeclaration[718,767)@decl-only.ts declaredType=T133
+L typeAliasLinks $"Mapped"/0x80000@TypeAliasDeclaration[839,892)@decl-only.ts declaredType=T136 typeParameters=[T137] instantiations=#2[T136,T173]
+L typeAliasLinks $"Named"/0x80000@TypeAliasDeclaration[626,693)@decl-only.ts declaredType=T121
+L typeAliasLinks $"Pair"/0x80000@TypeAliasDeclaration[596,626)@decl-only.ts declaredType=T115 typeParameters=[T113,T114] instantiations=#2[T115,T163]
+L typeAliasLinks $"Rec"/0x80000@TypeAliasDeclaration[1086,1133)@decl-only.ts declaredType=T150
+L typeAliasLinks $"Tpl"/0x80000@TypeAliasDeclaration[892,937)@decl-only.ts declaredType=T145
+L typeAliasLinks $"Uppercase"/0x80000@TypeAliasDeclaration[76243,76347)@lib.es5.d.ts declaredType=T8 typeParameters=[T141] instantiations=#1[T8]
+L declaredTypeLinks $"A"/0x40000@TypeParameter[607,608)@decl-only.ts declaredType=T113
+L declaredTypeLinks $"A"/0x8@EnumMember[577,585)@decl-only.ts declaredType=T104
+L declaredTypeLinks $"Animal"/0x20@ClassDeclaration[232,373)@decl-only.ts declaredType=T91
+L declaredTypeLinks $"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts declaredType=T65
+L declaredTypeLinks $"B"/0x40000@TypeParameter[609,615)@decl-only.ts declaredType=T114
+L declaredTypeLinks $"B"/0x8@EnumMember[586,594)@decl-only.ts declaredType=T106
+L declaredTypeLinks $"Blue"/0x8@EnumMember[544,549)@decl-only.ts declaredType=T101
+L declaredTypeLinks $"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts declaredType=T74
+L declaredTypeLinks $"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts declaredType=T87
+L declaredTypeLinks $"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts declaredType=T70
+L declaredTypeLinks $"Color"/0x100@EnumDeclaration[507,551)@decl-only.ts declaredType=T102
+L declaredTypeLinks $"Dog"/0x20@ClassDeclaration[373,507)@decl-only.ts declaredType=T93
+L declaredTypeLinks $"Flag"/0x80@EnumDeclaration[551,596)@decl-only.ts declaredType=T107
+L declaredTypeLinks $"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts declaredType=T69
+L declaredTypeLinks $"Green"/0x8@EnumMember[533,543)@decl-only.ts declaredType=T99
+L declaredTypeLinks $"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts declaredType=T63
+L declaredTypeLinks $"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts declaredType=T71
+L declaredTypeLinks $"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts declaredType=T73
+L declaredTypeLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts declaredType=T68
+L declaredTypeLinks $"P"/0x40000@TypeParameter[869,881)@decl-only.ts declaredType=T138
+L declaredTypeLinks $"Point"/0x40@InterfaceDeclaration[0,97)@decl-only.ts declaredType=T86
+L declaredTypeLinks $"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts declaredType=T79
+L declaredTypeLinks $"Red"/0x8@EnumMember[528,532)@decl-only.ts declaredType=T97
+L declaredTypeLinks $"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts declaredType=T75
+L declaredTypeLinks $"S"/0x40000@TypeParameter[76317,76333)@lib.es5.d.ts declaredType=T141
+L declaredTypeLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts declaredType=T72
+L declaredTypeLinks $"T"/0x40000@TypeParameter[112,113)@decl-only.ts declaredType=T88
+L declaredTypeLinks $"T"/0x40000@TypeParameter[1702,1703)@decl-only.ts declaredType=T151
+L declaredTypeLinks $"T"/0x40000@TypeParameter[392,413)@decl-only.ts declaredType=T94
+L declaredTypeLinks $"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts declaredType=T80
+L declaredTypeLinks $"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts declaredType=T66
+L declaredTypeLinks $"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts declaredType=T84
+L declaredTypeLinks $"T"/0x40000@TypeParameter[778,779)@decl-only.ts declaredType=T134
+L declaredTypeLinks $"T"/0x40000@TypeParameter[852,853)@decl-only.ts declaredType=T137
+L declaredTypeLinks $"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts declaredType=T83
+L declaredTypeLinks $"U"/0x40000@TypeParameter[145,146)@decl-only.ts declaredType=T90
+L declaredTypeLinks $"U"/0x40000@TypeParameter[1704,1722)@decl-only.ts declaredType=T152
+== diagnostics

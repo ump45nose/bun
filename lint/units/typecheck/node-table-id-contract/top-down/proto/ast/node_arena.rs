@@ -6,11 +6,19 @@ use crate::ast::kind_generated::Kind;
 use crate::core::TextRange;
 use crate::ids::{NodeId, NodeListId, SYNTH};
 use crate::stable::{StableCells, StableVec};
-use bun_collections::{HashMap, StringHashMap};
+use bun_collections::StringHashMap;
 use std::cell::Cell;
 
-pub(crate) const REC_WORDS: usize = 6;
+// kind and struct, flags, pos, end, parent, first slot, list of JSDoc nodes.
+pub(crate) const REC_WORDS: usize = 7;
 const LIST_WORDS: usize = 4;
+
+#[derive(Clone, Copy)]
+pub struct ArenaMark {
+    recs: u32,
+    slots: u32,
+    lists: u32,
+}
 
 pub struct NodeArena {
     recs: StableCells,
@@ -19,7 +27,6 @@ pub struct NodeArena {
     list_store: StableVec<Box<[NodeId]>>,
     text_store: StableVec<Box<[u8]>>,
     interned: Cell<StringHashMap<u32>>,
-    jsdoc: Cell<HashMap<u32, u32>>,
     text_bytes: Cell<usize>,
 }
 
@@ -32,7 +39,6 @@ impl NodeArena {
             list_store: StableVec::new(),
             text_store: StableVec::new(),
             interned: Cell::new(StringHashMap::new()),
-            jsdoc: Cell::new(HashMap::default()),
             text_bytes: Cell::new(0),
         }
     }
@@ -41,6 +47,19 @@ impl NodeArena {
     }
     pub fn list_count(&self) -> u32 {
         self.lists.len() / LIST_WORDS as u32
+    }
+    // A point to which `rewind` returns: the nodes and lists made after it are forgotten, their ids are reused.
+    pub fn mark(&self) -> ArenaMark {
+        ArenaMark {
+            recs: self.recs.len(),
+            slots: self.slots.len(),
+            lists: self.lists.len(),
+        }
+    }
+    pub fn rewind(&self, mark: ArenaMark) {
+        self.recs.truncate(mark.recs);
+        self.slots.truncate(mark.slots);
+        self.lists.truncate(mark.lists);
     }
     pub fn heap_bytes(&self) -> usize {
         (self.recs.len() as usize + self.slots.len() as usize + self.lists.len() as usize) * 4
@@ -117,6 +136,7 @@ impl NodeArena {
             undefined.end() as u32,
             0,
             data,
+            0,
         ];
         match self.recs.push_run(&words) {
             Some(start) => match (start / REC_WORDS as u32).checked_add(1) {
@@ -168,16 +188,17 @@ impl NodeArena {
         self.interned.set(interned);
         handle
     }
-    pub(crate) fn set_jsdoc(&self, host: NodeId, list: NodeListId) {
-        let mut jsdoc = self.jsdoc.take();
-        jsdoc.insert(host.0, list.0);
-        self.jsdoc.set(jsdoc);
+    pub(crate) fn set_jsdoc(&self, host: NodeId, list: NodeListId) -> bool {
+        match self.rec(host.0).and_then(|rec| rec.get(6)) {
+            Some(word) => {
+                word.set(list.0);
+                true
+            }
+            None => false,
+        }
     }
     pub(crate) fn jsdoc_of(&self, host: NodeId) -> NodeListId {
-        let jsdoc = self.jsdoc.take();
-        let found = jsdoc.get(&host.0).copied().unwrap_or(0);
-        self.jsdoc.set(jsdoc);
-        NodeListId(found)
+        NodeListId(self.rec(host.0).map_or(0, |rec| rec_word(rec, 6)))
     }
 }
 

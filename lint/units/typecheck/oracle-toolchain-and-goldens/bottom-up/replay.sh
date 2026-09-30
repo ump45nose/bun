@@ -125,8 +125,9 @@ if has rel; then
   done
   cmpset rel.out "$O/out" "$O/gold" .out.txt
   cmpset rel.trace "$O/out" "$O/gold" .trace.txt
-  for f in min chain rel2; do
-    "$P" rel -strict -trace -funcs lib.es5.d.ts=$LIB/es5.d.ts "$f.ts=$C/top-down/probe/$f.ts" > "$O/td/$f.out.txt"
+  "$P" rel -strict -trace -funcs lib.es5.d.ts=$LIB/es5.d.ts "min.ts=$C/top-down/probe/min.ts" > "$O/td/min.out.txt"
+  for f in chain rel2; do
+    "$P" rel -strict -trace lib.es5.d.ts=$LIB/es5.d.ts "$f.ts=$C/top-down/probe/$f.ts" > "$O/td/$f.out.txt"
   done
   cmpset rel.topdown-probe "$O/td" "$C/top-down/probe" .out.txt
 fi

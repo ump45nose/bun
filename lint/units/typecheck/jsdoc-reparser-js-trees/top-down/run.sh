@@ -65,3 +65,7 @@ ls /tmp/tsimp/corpus | grep -E '\.(js|jsx|mjs|cjs)$' | awk '{print $0"=/tmp/tsim
 ls /tmp/tsimp/corpus | grep -E '\.(ts|tsx|mts|cts)$' | awk '{print $0"=/tmp/tsimp/corpus/"$0}' > $W/list.ts.txt
 ls $LIBS | grep '\.d\.ts$' | awk -v d=$LIBS '{print $0"="d"/"$0}' > $W/list.libs.txt
 $W/jsdocprobe $D/entered.all.tsv $W/list.js.txt $W/list.ts.txt $W/list.libs.txt
+# 8. File data that depends on the reparsed tree: the external module indicator and file.imports (parser/references.go).
+cd $W
+bun emicmp.ts
+SAME=$D/js.unmasked.same.txt bun importscmp.ts

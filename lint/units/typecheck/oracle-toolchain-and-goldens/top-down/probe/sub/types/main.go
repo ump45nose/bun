@@ -307,7 +307,11 @@ func (d *dumper) value(v reflect.Value) string {
 		}
 		return d.list(v)
 	case reflect.Array:
-		return d.list(v)
+		s := d.list(v)
+		if strings.Trim(s, "[-,]") == "" {
+			return ""
+		}
+		return s
 	case reflect.Map:
 		if v.IsNil() {
 			return ""
@@ -612,6 +616,17 @@ func sortedKeys(t ast.SymbolTable) []string {
 	return keys
 }
 
+// entry prints the value of a link store entry: the set fields of a struct, or the one value of anything else.
+func (d *dumper) entry(v reflect.Value) []string {
+	if v.Kind() == reflect.Struct {
+		return d.fields(v)
+	}
+	if s := d.value(v); s != "" {
+		return []string{s}
+	}
+	return nil
+}
+
 func (d *dumper) links() {
 	w := d.w
 	cv := reflect.ValueOf(d.c).Elem()
@@ -643,7 +658,7 @@ func (d *dumper) links() {
 			it := entries.MapRange()
 			for it.Next() {
 				key := d.value(it.Key())
-				if fs := d.fields(it.Value().Elem()); len(fs) > 0 {
+				if fs := d.entry(it.Value().Elem()); len(fs) > 0 {
 					lines = append(lines, orDash(key)+" "+strings.Join(fs, " "))
 				}
 			}
@@ -663,7 +678,7 @@ func (d *dumper) links() {
 						}
 						e = e.Elem()
 					}
-					fs := d.fields(e)
+					fs := d.entry(e)
 					if len(fs) == 0 {
 						continue
 					}
@@ -707,6 +722,10 @@ func (d *dumper) links() {
 func typ[T any]() reflect.Type { return reflect.TypeOf((*T)(nil)).Elem() }
 
 func schemaOf(t reflect.Type, out *[]string) {
+	if t.Kind() != reflect.Struct {
+		*out = append(*out, strings.ReplaceAll(t.String(), " ", ""))
+		return
+	}
 	for i := 0; i < t.NumField(); i++ {
 		f := t.Field(i)
 		if f.Anonymous && f.Type.Kind() == reflect.Struct {
