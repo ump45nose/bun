@@ -1,6 +1,16 @@
-Research artefacts of the C2 seam arbitration (worktree /workspace/wt/cli at e3566be889, nothing applied there).
+Research artefacts of the C2 seam arbitration, pass 1a (bottom-up). Worktree /workspace/wt/cli at e3566be889, nothing applied there.
 
-The three patches that carry every ruling, each passes `git apply --check` at e3566be889:
+The directory final/ holds the artefacts of pass 1b (top-down). Both passes have the same patch of src/ast/lib.rs, the same three
+arms and the same printed bytes. Their patches of src/lint differ in shape only, and ONE of the two is applied, never both:
+  here (lint-c2-final.patch)                                        final/03-bun_lint-diagnostics.patch
+  Files { add, get } in source_file.rs, FileId opaque               &[SourceFile], FileId(pub u32), SourceFile::new in diagnostic.rs
+  the printed name is stored once per file (names_of)               it is computed for each diagnostic from FormattingOptions
+  log::diagnostics_from_msgs reads msg.code()                       Diagnostic::from_msg matches msg.metadata
+  write_code_frames writes into any fmt::Write                      it writes into a Vec<u8>
+  chains and related information: recursion, 200 levels at most     explicit stacks
+  the word internal-stand-in is kept free                           Code::INTERNAL_STAND_IN is defined
+
+The three patches that carry every ruling of this pass, each passes `git apply --check` at e3566be889:
 bun_ast-msg-code.patch   src/ast/lib.rs: Metadata::Code(u32), Msg::code, Log::add_range_error_with_code, the size assertion, three tests.
 forced-arms.patch        the three arms that the new variant forces (src/jsc/VirtualMachine.rs, src/jsc/lib.rs, src/runtime/server/DevErrorPage.rs).
 lint-c2-final.patch      src/lint: the diagnostic, its order, both writers, the line map, the names, the file table, the conversion
