@@ -19,7 +19,8 @@ interface Task {
   env?: Record<string, string>;
 }
 const b = (script: string, ...args: string[]) => ["bun", join(tree, script), ...args];
-const t = (script: string) => ["bun", "test", join(tree, script)];
+// A loaded machine makes a test that spawns a process pass the default limit of 5 s: the limit is no part of what is compared.
+const t = (script: string) => ["bun", "test", "--timeout", "180000", join(tree, script)];
 const cmpFile = (a: string, gz: string) => () => {
   const x = readFileSync(a);
   const y = gunzipSync(readFileSync(join(tree, gz)));

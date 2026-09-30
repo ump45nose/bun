@@ -52,7 +52,7 @@ JSON
 printf 'import { replayCheck, runOracleOf } from "%s/asm/test/cli/lint/conformance/runner";\nimport type { Corpus } from "%s/asm/test/cli/lint/conformance/runner";\nexport default ({ corpus }: { corpus: Corpus }) => replayCheck(i => runOracleOf(corpus, i.suite, i.name));\n' "$W" "$W" > "$W/replay-check.ts"
 bun "$W/base/test-file-and-sweep/top-down/sweep.ts" --reference "$REF" --check "$W/base/test-file-and-sweep/top-down/replay-check.ts" --report "$W/sweep-base.json" > "$W/sweep-base.txt" 2>&1
 bun "$W/asm/test/cli/lint/conformance/sweep.ts" --reference "$REF" --check "$W/replay-check.ts" --report "$W/sweep-asm.json" > "$W/sweep-asm.txt" 2>&1
-norm() { sed -E 's/[0-9.]+ ?(ms|s)\b/T/g; s#--check [^ ]*#--check CHECK#; s#--report [^ ]*#--report REPORT#' "$1"; }
+norm() { sed -E 's/[0-9.]+ ?(ms|s)\b/T/g; s#--check [^ ]*#--check CHECK#; s#--report [^ ]*#--report REPORT#; s#^report .*#report REPORT#' "$1"; }
 norm "$W/sweep-base.txt" > "$W/sweep-base.norm"
 norm "$W/sweep-asm.txt" > "$W/sweep-asm.norm"
 cmp "$W/sweep-base.norm" "$W/sweep-asm.norm" && echo "the sweep over every instance prints the same text: $(grep '^pass ' "$W/sweep-asm.txt")"

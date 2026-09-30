@@ -359,9 +359,11 @@ The oracle was made with the files that typescript-go embeds: internal/bundled/l
 559 KB as one gzip archive. typecheck.md K4 names _submodules/TypeScript/src/lib: those are the sources under
 other names (es5.d.ts, dom.generated.d.ts). The names reach the baselines (`lib.es5.d.ts(--,--)`).
 The `typescript` 6.0.2 package of node_modules has the same 108 names; 101 files are equal without CR and 7
-differ: lib.es5.d.ts (10 lines, comments), lib.es2015.collection.d.ts (11), lib.es2015.core.d.ts (2),
-lib.es2015.symbol.d.ts (2), lib.es2017.string.d.ts (36), lib.es2018.intl.d.ts (1), lib.es2020.intl.d.ts (11).
-A check that reads the package's files is not the check of the oracle.
+differ. Four differ in comments only (lib.es5.d.ts, lib.es2015.collection.d.ts, lib.es2015.core.d.ts,
+lib.es2015.symbol.d.ts). Three differ in declarations: lib.es2017.string.d.ts (the parameter names of padStart
+and padEnd, which reach printed signatures), lib.es2018.intl.d.ts and lib.es2020.intl.d.ts (the package has a
+call signature of PluralRulesConstructor that typescript-go's files do not have).
+A check that reads the package's files (a K5 that dumps the libraries of node_modules) is not the oracle's.
 Proposal: the conformance unit copies internal/bundled/libs once, verbatim, into its corpus, API.md names the
 path, and K4, K5 and libDirectory of CH-3 read it. No second copy until a later unit embeds the libraries.
 Unlocks: (td) 12,788 run instances load a default library. Until then: the sweep on this machine reads

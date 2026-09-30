@@ -34,7 +34,8 @@ REBUILD AND RERUN
   lintprobe prints `path<TAB>OK|PARSE` then `path<TAB>start<TAB>len<TAB>line:column<TAB>code<TAB>text` per report.
 
 RESULTS OF THE LAST RUN (debug build with ASAN of e3566be889, ESLint 4618052e with espree 11.2.0, acorn 8.18.0, eslint-scope 9.1.2)
-  vectors: 2059 cases, 1992 with ESLint's answer, 0 with a report that ESLint does not give; see DIFFERENCES.txt for the rest.
+  vectors: 2059 cases: 2002 with the answer of ESLint, 20 moved, 18 missing, 0 extra, 7 that only the parser of ESLint rejects,
+  1 that only Bun rejects, 11 that both reject; see DIFFERENCES.txt.
   real files: 9813 files of node_modules (2 KiB to 300 KiB) and 12 large ones: every report identical (358 reports).
   stress: 1,719,619 binaries, 2,377,930 members, 217,944 indexes, 58,122 case tests: no scan failed; the `case` keyword was found
   by the text before the test for all 58,122.
