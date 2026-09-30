@@ -78,6 +78,14 @@ else:
         ('func (c *Checker) initializeClosures() {\n', 'func (c *Checker) initializeClosures() { probeMark(c, "after inline part of NewChecker (line 1117)")\n'),
         ('func (c *Checker) initializeChecker() {\n', 'func (c *Checker) initializeChecker() { probeMark(c, "start of initializeChecker"); defer probeMark(c, "end of initializeChecker")\n'),
     ])
+# The one list that the reference builds in the iteration order of a Go map and never sorts: the infer type parameters of
+# a conditional type (checker.go 23919). The order does not reach any output of the reference, but it reaches the state
+# dump (outerTypeParameters, mappers). The probe builds the list in declaration order, which is one of the orders the
+# reference can take and the one a port with insertion ordered tables takes.
+edit(CH + 'checker.go', [
+    ('\tfor _, symbol := range node.Locals() {\n\t\tif symbol.Flags&ast.SymbolFlagsTypeParameter != 0 {\n\t\t\tresult = append(result, c.getDeclaredTypeOfSymbol(symbol))',
+     '\tfor _, symbol := range probeSortedLocals(node.Locals()) {\n\t\tif symbol.Flags&ast.SymbolFlagsTypeParameter != 0 {\n\t\t\tresult = append(result, c.getDeclaredTypeOfSymbol(symbol))'),
+])
 if line_count(CH + 'checker.go') != 0:
     sys.exit('checker.go: the record patches changed the line count')
 

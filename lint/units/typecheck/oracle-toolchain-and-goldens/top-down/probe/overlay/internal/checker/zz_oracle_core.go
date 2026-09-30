@@ -72,6 +72,28 @@ func probeMark(c *Checker, name string) {
 	p.marks = append(p.marks, fmt.Sprintf("%s: TypeCount=%d SymbolCount=%d SignatureCount=%d globals=%d mergedSymbols=%d diagnostics=%d", name, c.TypeCount, c.SymbolCount, c.SignatureCount, len(c.globals), len(c.mergedSymbols), len(c.diagnostics.GetGlobalDiagnostics())))
 }
 
+// probeSortedLocals gives the symbols of a table in the order of their first declaration (the order in which the
+// binder declared them), then by name. The reference ranges over the map, so its order changes from run to run.
+func probeSortedLocals(table ast.SymbolTable) []*ast.Symbol {
+	out := make([]*ast.Symbol, 0, len(table))
+	for _, s := range table {
+		out = append(out, s)
+	}
+	pos := func(s *ast.Symbol) int {
+		if len(s.Declarations) > 0 {
+			return s.Declarations[0].Pos()
+		}
+		return -1
+	}
+	sort.SliceStable(out, func(i, j int) bool {
+		if pos(out[i]) != pos(out[j]) {
+			return pos(out[i]) < pos(out[j])
+		}
+		return out[i].Name < out[j].Name
+	})
+	return out
+}
+
 func probeName(s string) string {
 	return strings.ReplaceAll(s, "\xFE", "\\xFE")
 }
