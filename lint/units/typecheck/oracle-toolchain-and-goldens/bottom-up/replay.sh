@@ -174,7 +174,8 @@ if has checkopts; then
   while IFS= read -r line; do
     i=$((i+1)); f=$(printf 'g%03d.ts' $i)
     printf 'declare const o: any; declare function dec(...a: any[]): any; declare class A1 {} declare class B1 {} interface I1 {} interface I2 {}\n%b\n' "$line" > "$O/lines/$f"
-    { echo "--- $i: $line"; (cd "$O/lines" && "$P" checkopts -strict -o target=#4 lib.es5.d.ts=$LIB/es5.d.ts lib.decorators.d.ts=$LIB/decorators.d.ts mod_a.ts="$C/inputs/mod_a.ts" $f=$f 2>&1) | grep "^PARSE g\|^g[0-9]\|^  \|^panic\|^goroutine\|^global" | sed 's/^PARSE g[0-9]*\.ts //' | sed "s/^g[0-9]*\.ts/L/"; } >> "$O/res/grammar_lines.out.txt"
+    # the stored file was written by dash, whose echo expands the escapes of the line
+    { printf '%b\n' "--- $i: $line"; (cd "$O/lines" && "$P" checkopts -strict -o target=#4 lib.es5.d.ts=$LIB/es5.d.ts lib.decorators.d.ts=$LIB/decorators.d.ts mod_a.ts="$C/inputs/mod_a.ts" $f=$f 2>&1) | grep "^PARSE g\|^g[0-9]\|^  \|^panic\|^goroutine\|^global" | sed 's/^PARSE g[0-9]*\.ts //' | sed "s/^g[0-9]*\.ts/L/"; } >> "$O/res/grammar_lines.out.txt"
   done < "$C/inputs/grammar_lines.txt"
   cmpset checkopts.bottom-up "$O/res" "$C/out"
   C=$N/checker-declarations-grammar-jsx/top-down/probes
@@ -249,7 +250,9 @@ if has cli; then
   cmpset cli.program-order "$O/order" "$C/program-order"
   cp "$HERE"/replay-inputs/vco/* "$O/vco/" && cd "$O/vco"
   (while IFS= read -r line; do echo ">>> $line"; "$P" cli $line 2>&1; echo "exit=$?"; done < "$C/verify-compiler-options.cases.txt") > "$O/verify-compiler-options.txt"
-  same cli.verify-compiler-options "$O/verify-compiler-options.txt" "$C/verify-compiler-options.txt"
+  # two messages name the directory of the run: the stored file was made in /tmp/e2e/run3
+  sed "s#$O/vco/#/tmp/e2e/run3/#" "$O/verify-compiler-options.txt" > "$O/verify-compiler-options.normalized.txt"
+  same cli.verify-compiler-options "$O/verify-compiler-options.normalized.txt" "$C/verify-compiler-options.txt"
   cd "$HERE"
 fi
 

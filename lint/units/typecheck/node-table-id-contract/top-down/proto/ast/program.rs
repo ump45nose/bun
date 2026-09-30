@@ -42,16 +42,16 @@ impl IdAllocator {
 }
 
 // Ends the binding of a file: gives it its block and turns every local id into a global one.
-// On exhaustion the table comes back as it was, local and not frozen.
-pub fn freeze(mut table: NodeTable, ids: &IdAllocator) -> Result<NodeTable, NodeTable> {
+// False on exhaustion: the table stays as it was, local and not frozen.
+pub fn freeze(table: &mut NodeTable, ids: &IdAllocator) -> bool {
     if table.frozen {
-        return Ok(table);
+        return true;
     }
     match ids.alloc(table.id_count()) {
         Some(base) => {
             table.rebase(base);
-            Ok(table)
+            true
         }
-        None => Err(table),
+        None => false,
     }
 }

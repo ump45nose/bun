@@ -1,0 +1,23 @@
+    Checking bun_paths v0.0.0 (/workspace/wt/typecheck/src/paths)
+    Checking bun_collections v0.0.0 (/workspace/wt/typecheck/src/collections)
+    Checking ntproto v0.0.0 (/workspace/notes/lint/units/typecheck/node-table-id-contract/top-down/proto)
+    Checking bun_sys v0.0.0 (/workspace/wt/typecheck/src/sys)
+native_test_shims.rs:22:13: error: unsafe block missing a safety comment
+native_test_shims.rs:33:19: error: unsafe block missing a safety comment
+native_test_shims.rs:49:18: error: unsafe block missing a safety comment
+native_test_shims.rs:62:20: error: unsafe block missing a safety comment
+native_test_shims.rs:73:13: error: unsafe block missing a safety comment
+native_test_shims.rs:83:13: error: unsafe block missing a safety comment
+native_test_shims.rs:93:13: error: unsafe block missing a safety comment
+native_test_shims.rs:104:19: error: unsafe block missing a safety comment
+native_test_shims.rs:120:18: error: unsafe block missing a safety comment
+tests.rs:72:5: error: use of a disallowed method `alloc::string::String::from_utf8_lossy`
+tests.rs:288:48: error: use of a disallowed method `str::split`
+tests.rs:288:17: error: use of a disallowed method `alloc::string::String::from_utf8_lossy`
+tests.rs:289:37: error: use of a disallowed method `str::split`
+tests.rs:332:20: error: use of a disallowed method `alloc::string::String::from_utf8_lossy`
+error: could not compile `ntproto` (lib test) due to 14 previous errors
+
+real	0m15.809s
+user	0m4.527s
+sys	0m0.663s

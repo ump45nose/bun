@@ -110,6 +110,8 @@ for (let k = 0; k < buckets; k++) {
 }
 
 const skipsText = facts.filter(f => f.status === "skipped").map(f => `${f.name}\t${f.reason}\n`).sort(cmp).join("");
+// The other form of the list: every instance, name TAB status TAB reason TAB kind. With it the skip list and the buckets are not needed.
+const instancesText = facts.map(row).sort(cmp).join("");
 const upstream = Object.fromEntries(readFileSync(home + "/UPSTREAM", "utf8").split("\n").map(l => l.trim().split(" ")).filter(w => w[0] === "commit").map(w => [w[1], w[2]]));
 
 const pins: any = {
@@ -151,6 +153,7 @@ const pins: any = {
     oracles: digestOf(oracleRows),
   },
   skips: { rows: n(f => f.status === "skipped"), sha256: sha(skipsText) },
+  instancesFile: { rows: facts.length, sha256: sha(instancesText) },
   buckets: { of: buckets, columns: ["bucket", "cases", "instances", "run", "skipped", "E", "C", "digest"], rows: bucketRows },
 };
 
@@ -219,4 +222,5 @@ function formatPins(p: any): string {
 mkdirSync(out, { recursive: true });
 writeFileSync(join(out, "reference_counts.json"), formatPins(pins));
 writeFileSync(join(out, "reference_skips.tsv"), skipsText);
+writeFileSync(join(out, "reference_instances.tsv"), instancesText);
 console.log(`wrote ${join(out, "reference_counts.json")} (${formatPins(pins).length} bytes) and ${join(out, "reference_skips.tsv")} (${skipsText.length} bytes)`);

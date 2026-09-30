@@ -596,6 +596,12 @@ ${arms.join("\n")}
   else if (m.tail === "return nil") tail = res.zero;
   else if (panic) tail = `{ a.unhandled("${panic[1]}", self); ${res.zero} }`;
   else throw new Error(`${m.name}: tail ${JSON.stringify(m.tail)} default ${JSON.stringify(m.default)}`);
+  if (m.name === "CanHaveStatements") {
+    acc.push(`    pub fn ${fn}(self, a: Ast<'_>) -> bool {
+        matches!(self.kind(a), ${m.cases[0].kinds.map((k: string) => "Kind::" + k).join(" | ")})
+    }`);
+    continue;
+  }
   acc.push(`    pub fn ${fn}${isText ? "<'a>" : ""}(self, a: Ast<${isText ? "'a" : "'_"}>) -> ${res.ty} {
         match self.kind(a) {
 ${arms.join("\n")}

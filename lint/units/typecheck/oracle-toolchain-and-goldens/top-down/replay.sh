@@ -142,9 +142,11 @@ f_rel() {
       note "skipped: needs the trace build" "$D/groundtruth/out/$f.trace.txt.gz"
     fi
   done
+  # The function list (-funcs) is only in the first of the three stored outputs.
   for f in min rel2 chain; do
     if [ -x "$OT" ]; then
-      "$OT" rel -strict -trace -funcs lib.es5.d.ts=$TSLIB/es5.d.ts "$f.ts=$D/top-down/probe/$f.ts" > "$T/td/$f.out.txt"
+      local funcs=""; [ "$f" = min ] && funcs="-funcs"
+      "$OT" rel -strict -trace $funcs lib.es5.d.ts=$TSLIB/es5.d.ts "$f.ts=$D/top-down/probe/$f.ts" > "$T/td/$f.out.txt"
       same "$D/top-down/probe/$f.out.txt" "$T/td/$f.out.txt"
     else
       note "skipped: needs the trace build" "$D/top-down/probe/$f.out.txt"
@@ -196,7 +198,7 @@ f_decl() {
   while IFS= read -r line; do
     i=$((i+1)); f=$(printf 'g%03d.ts' $i)
     printf 'declare const o: any; declare function dec(...a: any[]): any; declare class A1 {} declare class B1 {} interface I1 {} interface I2 {}\n%b\n' "$line" > "$T/lines/$f"
-    { echo "--- $i: $line"; (cd "$T/lines" && "$O" decl -strict -o target=#4 lib.es5.d.ts=$TSLIB/es5.d.ts lib.decorators.d.ts=$TSLIB/decorators.d.ts mod_a.ts="$G/inputs/mod_a.ts" $f=$f 2>&1) | grep "^PARSE g\|^g[0-9]\|^  \|^panic\|^goroutine\|^global" | sed 's/^PARSE g[0-9]*\.ts //' | sed "s/^g[0-9]*\.ts/L/"; } >> "$T/res/grammar_lines.out.txt"
+    { printf -- '--- %d: %b\n' "$i" "$line"; (cd "$T/lines" && "$O" decl -strict -o target=#4 lib.es5.d.ts=$TSLIB/es5.d.ts lib.decorators.d.ts=$TSLIB/decorators.d.ts mod_a.ts="$G/inputs/mod_a.ts" $f=$f 2>&1) | grep "^PARSE g\|^g[0-9]\|^  \|^panic\|^goroutine\|^global" | sed 's/^PARSE g[0-9]*\.ts //' | sed "s/^g[0-9]*\.ts/L/"; } >> "$T/res/grammar_lines.out.txt"
   done < "$G/inputs/grammar_lines.txt"
   for g in "$G"/out/*.out.txt; do same "$g" "$T/res/$(basename "$g")"; done
   local P=$D/top-down/probes

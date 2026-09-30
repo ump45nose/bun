@@ -154,12 +154,12 @@ pub struct NodeVisitor<'v, 'a> {
 pub fn new_node_visitor<'v, 'a>(
     visit: Option<VisitFn<'v>>,
     factory: &'v NodeFactory<'a>,
-    hooks: NodeVisitorHooks<'v, 'a>,
+    hooks: &NodeVisitorHooks<'v, 'a>,
 ) -> NodeVisitor<'v, 'a> {
     NodeVisitor {
         visit,
         factory,
-        hooks,
+        hooks: *hooks,
     }
 }
 

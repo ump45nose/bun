@@ -112,10 +112,7 @@ const SCALAR_WORDS: usize = 4;
 pub fn build_file(a: &AstContext<'_>, bundle: &Bundle, dump: &FileDump) -> Vec<NodeId> {
     let count = dump.nodes.len() / NODE_WORDS;
     let mut ids: Vec<NodeId> = Vec::with_capacity(count);
-    for node in dump.nodes.chunks_exact(NODE_WORDS) {
-        let &[kind, pos, end, flags, _, _, _] = node else {
-            continue;
-        };
+    for &[kind, pos, end, flags, _, _, _] in dump.nodes.as_chunks::<NODE_WORDS>().0 {
         let kind = bundle.kinds.get(kind as usize).copied().unwrap_or(Kind::Unknown);
         ids.push(a.raw_new_node(
             default_def(kind),
@@ -129,10 +126,9 @@ pub fn build_file(a: &AstContext<'_>, bundle: &Bundle, dump: &FileDump) -> Vec<N
     let list_count = dump.lists.len() / LIST_WORDS;
     let mut elements: Vec<Vec<NodeId>> = vec![Vec::new(); list_count];
     let mut jsdoc: Vec<(NodeId, Vec<NodeId>)> = Vec::new();
-    for (index, node) in dump.nodes.chunks_exact(NODE_WORDS).enumerate() {
-        let &[_, _, _, _, parent, field_index, list] = node else {
-            continue;
-        };
+    for (index, &[_, _, _, _, parent, field_index, list]) in
+        dump.nodes.as_chunks::<NODE_WORDS>().0.iter().enumerate()
+    {
         let me = id(index as i32);
         if list >= 0 {
             if let Some(slot) = elements.get_mut(list as usize) {
@@ -148,10 +144,9 @@ pub fn build_file(a: &AstContext<'_>, bundle: &Bundle, dump: &FileDump) -> Vec<N
             a.unhandled("importer: no such node field", id(parent));
         }
     }
-    for (index, list) in dump.lists.chunks_exact(LIST_WORDS).enumerate() {
-        let &[owner, field_index, pos, end, kind, modifier_flags] = list else {
-            continue;
-        };
+    for (index, &[owner, field_index, pos, end, kind, modifier_flags]) in
+        dump.lists.as_chunks::<LIST_WORDS>().0.iter().enumerate()
+    {
         let nodes = elements.get(index).map_or(&[][..], Vec::as_slice);
         let loc = new_text_range(pos, end);
         let made = if kind == 1 {
@@ -164,10 +159,7 @@ pub fn build_file(a: &AstContext<'_>, bundle: &Bundle, dump: &FileDump) -> Vec<N
             a.unhandled("importer: no such list field", id(owner));
         }
     }
-    for scalar in dump.scalars.chunks_exact(SCALAR_WORDS) {
-        let &[node, field_index, kind, value] = scalar else {
-            continue;
-        };
+    for &[node, field_index, kind, value] in dump.scalars.as_chunks::<SCALAR_WORDS>().0 {
         let raw = match kind {
             0 => RawValue::Bool(value != 0),
             1 => RawValue::Kind(bundle.kinds.get(value as usize).copied().unwrap_or(Kind::Unknown)),

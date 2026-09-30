@@ -1,7 +1,7 @@
 // The write side of a producer: nodes are made in any order, `finish` numbers them in the order of ForEachChild.
 use crate::ast::ast_generated::Def;
 use crate::ast::factory::{NodeSink, modifier_to_flag};
-use crate::ast::file::{File, ListRecord, NodeRecord, SourceFileData, TextSpan};
+use crate::ast::file::{File, IdAllocator, ListRecord, NodeRecord, SourceFileData, TextSpan, round_up_to_page};
 use crate::ast::flags_generated::{ModifierFlags, NodeFlags};
 use crate::ast::kind_generated::Kind;
 use crate::ast::layout::{ChildSlot, SlotType, VisitTag};
@@ -230,8 +230,8 @@ impl FileBuilder {
         }
     }
 
-    // Ends the parse: the nodes reachable from `root` get the ids 1.. in the order of ForEachChild, and their parents.
-    pub fn finish(self, root: NodeId, mut source_file: SourceFileData) -> File {
+    // Ends the parse: the nodes reachable from `root` get their ids in the order of ForEachChild, and their parents.
+    pub fn finish(self, root: NodeId, mut source_file: SourceFileData, ids: &IdAllocator) -> Option<File> {
         let count = self.nodes.len();
         let mut new_id = vec![0u32; count];
         let mut jsdoc_of = vec![0u32; count];
@@ -264,7 +264,12 @@ impl FileBuilder {
             stack.extend(children.iter().rev().map(|child| (*child, id)));
         }
 
-        let mut file = File::default();
+        // One range for the nodes and the lists. A list is copied at most once, so the count of lists bounds theirs.
+        let needed = (order.len() as u32).max(self.lists.len() as u32).checked_add(1)?;
+        let span = round_up_to_page(needed)?;
+        let base = ids.alloc(span)?;
+        let final_id = |local: u32| if local == 0 { 0 } else { base + local };
+        let mut file = File { base, span, ..File::default() };
         file.records.reserve_exact(order.len() + 1);
         file.flags.reserve_exact(order.len() + 1);
         file.slots.reserve_exact(self.slots.len());
@@ -283,8 +288,8 @@ impl FileBuilder {
             for (k, slot) in info.slots.iter().enumerate() {
                 let value = self.slots.get(node.data as usize + k).copied().unwrap_or(0);
                 let moved = match slot.ty {
-                    SlotType::Node => new_id.get(value as usize).copied().unwrap_or(0),
-                    SlotType::NodeList | SlotType::ModifierList | SlotType::RawNodeList => self.move_list(value, &new_id, &mut new_list, &mut file),
+                    SlotType::Node => final_id(new_id.get(value as usize).copied().unwrap_or(0)),
+                    SlotType::NodeList | SlotType::ModifierList | SlotType::RawNodeList => final_id(self.move_list(value, &new_id, base, &mut new_list, &mut file)),
                     _ => value,
                 };
                 file.slots.push(moved);
@@ -292,7 +297,7 @@ impl FileBuilder {
             let id = index as u32 + 1;
             file.records.push(NodeRecord {
                 loc: node.loc,
-                parent: NodeId(parents.get(index).copied().unwrap_or(0)),
+                parent: NodeId(final_id(parents.get(index).copied().unwrap_or(0))),
                 data,
                 late: late_len,
                 kind: node.kind,
@@ -302,23 +307,28 @@ impl FileBuilder {
             late_len += info.late.count_ones();
             let jsdoc = jsdoc_of.get(*temp as usize).copied().unwrap_or(0);
             if jsdoc != 0 {
-                let list = self.move_list(jsdoc, &new_id, &mut new_list, &mut file);
-                file.jsdoc.push((NodeId(id), NodeListId(list)));
+                let list = self.move_list(jsdoc, &new_id, base, &mut new_list, &mut file);
+                file.jsdoc.push((NodeId(final_id(id)), NodeListId(final_id(list))));
             }
         }
         file.late = (0..late_len).map(|_| AtomicU32::new(0)).collect();
         file.texts = self.texts;
         file.text_bytes = self.text_bytes;
-        source_file.root = NodeId(new_id.get(root.0 as usize).copied().unwrap_or(0));
+        source_file.root = NodeId(final_id(new_id.get(root.0 as usize).copied().unwrap_or(0)));
         source_file.text_len = self.source_len;
         source_file.node_count = order.len() as u32;
         source_file.text_count = self.text_count;
         file.source_file = source_file;
-        file
+        file.lists.shrink_to_fit();
+        file.list_items.shrink_to_fit();
+        file.jsdoc.shrink_to_fit();
+        file.texts.shrink_to_fit();
+        file.text_bytes.shrink_to_fit();
+        Some(file)
     }
 
-    // Copies a list into the file at its first use and returns its id there.
-    fn move_list(&self, list: u32, new_id: &[u32], new_list: &mut [u32], file: &mut File) -> u32 {
+    // Copies a list into the file at its first use and returns its index there.
+    fn move_list(&self, list: u32, new_id: &[u32], base: u32, new_list: &mut [u32], file: &mut File) -> u32 {
         let (Some(record), Some(moved)) = (self.lists.get(list as usize), new_list.get_mut(list as usize)) else {
             return 0;
         };
@@ -327,7 +337,8 @@ impl FileBuilder {
         }
         let start = file.list_items.len() as u32;
         for node in self.list_nodes(list) {
-            file.list_items.push(NodeId(new_id.get(node.0 as usize).copied().unwrap_or(0)));
+            let local = new_id.get(node.0 as usize).copied().unwrap_or(0);
+            file.list_items.push(NodeId(if local == 0 { 0 } else { base + local }));
         }
         file.lists.push(ListRecord { loc: record.loc, start, len: record.len, modifier_flags: record.modifier_flags });
         *moved = (file.lists.len() - 1) as u32;

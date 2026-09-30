@@ -163,9 +163,9 @@ fn binder_writes_then_freeze_and_share() {
     });
 
     let ids = IdAllocator::new();
-    let table = freeze(table, &ids).unwrap_or_else(|t| t);
+    assert!(freeze(&mut table, &ids));
     other.file.file_name = b"/other.ts".to_vec();
-    let other = freeze(other, &ids).unwrap_or_else(|t| t);
+    assert!(freeze(&mut other, &ids));
     assert!(table.is_frozen() && other.is_frozen());
     assert_eq!(table.first(), PAGE_SIZE);
     assert_eq!(other.first(), 2 * PAGE_SIZE);
@@ -240,11 +240,11 @@ fn update_clone_and_visit() {
     assert_eq!(cloned.loc(&a), d.name.loc(&a));
     // VisitEachChild: the identity visitor keeps the node, a visitor that replaces a child makes a new parent.
     let identity = |node: NodeId| node;
-    let v = new_node_visitor(Some(&identity), &f, NodeVisitorHooks::default());
+    let v = new_node_visitor(Some(&identity), &f, &NodeVisitorHooks::default());
     assert_eq!(v.visit_each_child(declaration), declaration);
     assert_eq!(v.visit_each_child(file), file);
     let replace = |node: NodeId| if node == d.initializer { other } else { node };
-    let v = new_node_visitor(Some(&replace), &f, NodeVisitorHooks::default());
+    let v = new_node_visitor(Some(&replace), &f, &NodeVisitorHooks::default());
     let visited = v.visit_each_child(declaration);
     assert_ne!(visited, declaration);
     assert_eq!(visited.initializer(&a), other);
@@ -342,7 +342,9 @@ fn measure_bundle(label: &str, path: &str) {
     }
     let ids = IdAllocator::new();
     let t = Instant::now();
-    let tables: Vec<NodeTable> = tables.into_iter().map(|table| freeze(table, &ids).unwrap_or_else(|t| t)).collect();
+    for table in &mut tables {
+        assert!(freeze(table, &ids));
+    }
     let t_freeze = t.elapsed();
     let nodes: u32 = tables.iter().map(NodeTable::node_count).sum();
     let lists: u32 = tables.iter().map(NodeTable::list_count).sum();
@@ -430,7 +432,8 @@ fn rewind_and_synthetic_table() {
 
     // The import specifier a program makes for a file: its parent is the node of a frozen file.
     let ids = IdAllocator::new();
-    let file = freeze(min_table(), &ids).unwrap_or_else(|t| t);
+    let mut file = min_table();
+    assert!(freeze(&mut file, &ids));
     let b = AstContext::for_building();
     let f = new_node_factory(&b, NodeFactoryHooks::default());
     let specifier = f.new_string_literal(b"tslib", TokenFlags::empty());
