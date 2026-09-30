@@ -546,7 +546,7 @@ def source_twin(t, always_inline=False):
     prs = open(t.dir + '/' + PRS).read()
     pop = cut(prs, '    pub(crate) fn pop_and_flatten_scope(&mut self, scope_index: usize) {', '    /// Everything the parse pass mutates')
     snap = cut(prs, '    pub(crate) fn parser_snapshot(&mut self) -> ParserSnapshot<\'a> {', '    /// Undo every parse-pass mutation')
-    logerr = cut(prs, '    pub(crate) fn log_arrow_arg_errors(&mut self, errors: &mut DeferredArrowArgErrors) {', '    pub(crate) fn ')
+    logerr = cut(prs, '    pub(crate) fn log_arrow_arg_errors(&mut self, errors: &mut DeferredArrowArgErrors) {', '    // Only reached while building diagnostics')
     skip = open(t.dir + '/' + SKIP).read()
     attempt = cut(skip, '    pub(crate) fn is_type_script_arrow_return_type_after_question_and_before_colon(', '    // ─────────────────────── try_* wrappers')
     if always_inline:

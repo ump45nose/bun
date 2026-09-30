@@ -5,11 +5,12 @@
 #        line numbers of checker.go stay those of the reference), an optional scratch root for the test harness,
 #        the diagnostics-only modes and the program recorder of the harness.
 # trace: plain, plus an entry record in every function of internal/checker and the notes of the relater and of inference.
-import json, os, subprocess, sys
+import json, os, shutil, subprocess, sys
 
 ref, probe, out, flavour = sys.argv[1:5]
 instr = sys.argv[5] if len(sys.argv) > 5 else None
 gen = os.path.join(out, 'gen')
+shutil.rmtree(gen, ignore_errors=True)
 overlay = {}
 
 
@@ -197,9 +198,19 @@ for d, _, files in os.walk(sub):
     for f in files:
         if f.endswith('.go'):
             overlay[os.path.join(ref, 'cmd/oracle', os.path.relpath(os.path.join(d, f), sub))] = os.path.join(d, f)
+# diagnostics-groundtruth/gt/gen_bycode.mjs: the table from a code to its message, for the diagfmt sub-command.
+import re
+with open(os.path.join(ref, 'internal/diagnostics/diagnostics_generated.go'), encoding='utf-8') as f:
+    pairs = re.findall(r'^var (\w+) = &Message\{code: (-?\d+),', f.read(), re.M)
 bycode = os.path.join(gen, 'cmd/oracle/diagfmt/zz_bycode.go')
-if os.path.exists(bycode):
-    overlay[os.path.join(ref, 'cmd/oracle/diagfmt/zz_bycode.go')] = bycode
+os.makedirs(os.path.dirname(bycode), exist_ok=True)
+with open(bycode, 'w') as f:
+    f.write('// generated for the ground-truth probe\npackage diagfmt\n\nimport "github.com/microsoft/typescript-go/internal/diagnostics"\n\nvar byCode = map[int32]*diagnostics.Message{\n')
+    for name, code in pairs:
+        f.write('\t%s: diagnostics.%s,\n' % (code, name))
+    f.write('}\n')
+overlay[os.path.join(ref, 'cmd/oracle/diagfmt/zz_bycode.go')] = bycode
+print('diagfmt: %d messages by code' % len(pairs))
 with open(os.path.join(out, 'overlay.json'), 'w') as f:
     json.dump({'Replace': overlay}, f, indent=1, sort_keys=True)
 print('overlay: %d files, %s' % (len(overlay), os.path.join(out, 'overlay.json')))

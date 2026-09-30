@@ -13,7 +13,8 @@ B. The same text with amendments.patch (/tmp/c3b/out/lintprobe)
    deep files of the other pass (/tmp/c3final/deep, 11 files): the same reports, internal-error where the walk is cut, nothing crashes.
    real files, complete: the 12 large files (typescript.js 9.1 MB and others): 12 the same as ESLint, 102 reports;
                the node_modules list of the bottom-up unit (9,813 files): 9,812 the same, 0 different, 1 ESLint rejects, 256 reports.
-   real files, NOT complete: corpus 4 of the first pass (7,008 files): 4,500 files in, 0 different, 28 ESLint rejects, when this was written.
+               corpus 4 of the first pass (7,008 files): 6,826 the same, 0 different, 182 that ESLint's parser rejects (not compared), 94 reports.
+               typescript.js is in two of the three lists.
    The two builds and the clippy run of B ran outside /workspace/tools/lk: the lock was held for more than an hour. Each is one rustc run of about 2 s.
 
 C. The first merge of this pass (lost from disk, never compared with ../final text against text; its harness sorted the reports of a file and printed equal ones once)
