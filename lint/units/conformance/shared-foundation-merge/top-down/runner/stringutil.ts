@@ -58,7 +58,9 @@ export function getStringEqualityComparer(ignoreCase: boolean): (a: string, b: s
   return ignoreCase ? equateStringCaseInsensitive : equateStringCaseSensitive;
 }
 
-export function compareStringsCaseInsensitive(a: string, b: string): number {
+export type Comparison = -1 | 0 | 1;
+
+export function compareStringsCaseInsensitive(a: string, b: string): Comparison {
   if (a === b) return 0;
   let i = 0;
   let j = 0;
@@ -75,10 +77,10 @@ export function compareStringsCaseInsensitive(a: string, b: string): number {
   }
 }
 
-export function compareStringsCaseSensitive(a: string, b: string): number {
+export function compareStringsCaseSensitive(a: string, b: string): Comparison {
   return compareStrings(a, b);
 }
 
-export function getStringComparer(ignoreCase: boolean): (a: string, b: string) => number {
+export function getStringComparer(ignoreCase: boolean): (a: string, b: string) => Comparison {
   return ignoreCase ? compareStringsCaseInsensitive : compareStringsCaseSensitive;
 }

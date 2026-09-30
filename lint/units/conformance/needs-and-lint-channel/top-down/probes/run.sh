@@ -26,10 +26,12 @@ bun optcover.ts
 echo "== run instances without a declared compiler option"
 bun noopt.ts
 echo "== files of the run instances"
-bun prog.ts | head -6
+bun prog.ts | head -11
 bun more.ts
 bun single.ts
 bun badjson.ts
+bun which_missing.ts
+bun casedup.ts
 echo "== run instances that name /.lib/"
 zcat "$unit/enumerator/vectors/instances.tsv.gz" | bun libinst.ts
 echo "== baselines that the plain format can rebuild"
@@ -41,6 +43,7 @@ bun syn1.ts
 bun synmix.ts
 echo "== comment runs and words in what the corpus copies"
 bun comments.ts
+bun comment_variants.ts
 echo "== cost of one process and of the library files (depends on the load of the machine)"
 bun spawncost.ts "$RELEASE" 200 1
 bun spawncost.ts "$RELEASE" 400 4

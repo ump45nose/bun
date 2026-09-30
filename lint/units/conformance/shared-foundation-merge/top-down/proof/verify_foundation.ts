@@ -14,6 +14,8 @@ import {
   runeCount,
   toByteString,
   trimRightSpace,
+  utf8Bytes,
+  utf8String,
   utf8ToByteString,
   validString,
 } from "../runner/bytestring";
@@ -152,6 +154,7 @@ for (let r = 0; r <= MaxRune; r++) {
 // Vectors.
 const counts: Record<string, number> = {};
 let splitDiffersFromSplitLines = 0;
+let cutByUnitsDiffers = 0;
 let validTexts = 0;
 function seqLine(s: ByteString): string {
   const [r, size] = decodeRune(s, 0);
@@ -217,13 +220,14 @@ for (const line of load(vecPath).split("\n")) {
       if (utf8Model.utf16Length(s, starts[lineNo], p) !== v.lc[p][1]) fail("utf8Model.utf16Length", { id, p });
     }
     eq("lineDelimiter.Split on bytes", s.split(/\r?\n/).map(hex), v.split.map((x: string) => hex(b(x))), id);
-    eq("utf8Model.splitContentByNewlines", utf8Model.splitContentByNewlines(s).map(hex), v.split.map((x: string) => hex(b(x))), id);
+    eq("utf8Model.contentLines", utf8Model.contentLines(s).map(hex), v.split.map((x: string) => hex(b(x))), id);
     if (JSON.stringify(v.split) !== JSON.stringify(v.splitLines)) splitDiffersFromSplitLines++;
     if (v.valid) {
       validTexts++;
       const d = byteStringToUtf8(s);
       eq("round trip of the conversions", hex(enc(d)), hex(s), id);
       eq("bytes of a ByteString", fromByteString(s).toString("hex"), hex(s), id);
+      eq("utf8String and utf8Bytes", utf8Bytes(utf8String(fromByteString(s))).toString("hex"), hex(s), id);
       eq("lineDelimiter.Split on decoded text", d.split(/\r?\n/).map(x => hex(enc(x))), v.split.map((x: string) => hex(b(x))), id);
       eq("strings.TrimSpace", hex(enc(trimSpace(d))), hex(b(v.trimSpace)), id);
       eq("strings.TrimFunc(IsWhiteSpaceLike)", hex(enc(trimFunc(d, isWhiteSpaceLike))), hex(b(v.trimWhite)), id);
@@ -239,6 +243,14 @@ for (const line of load(vecPath).split("\n")) {
         threw = e instanceof InvalidUtf8Error;
       }
       if (!threw) fail("bytes that are no UTF-8 throw", id);
+      checks++;
+      threw = false;
+      try {
+        utf8String(fromByteString(s));
+      } catch (e) {
+        threw = e instanceof InvalidUtf8Error;
+      }
+      if (!threw) fail("utf8String throws on bytes that are no UTF-8", id);
     }
   } else if (k === "seq") {
     const h = createHash("sha256");
@@ -284,7 +296,7 @@ for (const line of load(vecPath).split("\n")) {
     eq("CombinePaths", tspath.combinePaths(dir, name), d(v.combinePaths), id);
     eq("ToPath case sensitive", tspath.toPath(name, dir, true), d(v.toPathCaseSensitive), id);
     eq("ToPath case insensitive", tspath.toPath(name, dir, false), d(v.toPathCaseInsensitive), id);
-    eq("GetAnyExtensionFromPath", tspath.getAnyExtensionFromPath(name), d(v.getAnyExtensionFromPath), id);
+    eq("GetAnyExtensionFromPath", tspath.getAnyExtensionFromPath(name, undefined, false), d(v.getAnyExtensionFromPath), id);
     eq("HasExtension", tspath.hasExtension(name), v.hasExtension, id);
     eq("FileExtensionIs .d.ts", tspath.fileExtensionIs(name, tspath.ExtensionDts), v.fileExtensionIsDts, id);
     eq("ChangeExtension", tspath.changeExtension(name, ".ts"), d(v.changeExtensionTs), id);
@@ -301,6 +313,26 @@ for (const line of load(vecPath).split("\n")) {
     eq("ContainsPath case insensitive", tspath.containsPath(dir, name, plainCI), v.containsPathCaseInsensitive, id);
     eq("ConvertToRelativePath case sensitive", tspath.convertToRelativePath(name, cs), d(v.convertToRelativePathCaseSensitive), id);
     eq("ConvertToRelativePath case insensitive", tspath.convertToRelativePath(name, ci), d(v.convertToRelativePathCaseInsensitive), id);
+  } else if (k === "ext") {
+    const name = byteStringToUtf8(b(v.name));
+    const list: string[] = v.extensions.map((x: string) => byteStringToUtf8(b(x)));
+    const id = [name, list, v.ignoreCase];
+    eq("GetAnyExtensionFromPath with a list", tspath.getAnyExtensionFromPath(name, list, v.ignoreCase), byteStringToUtf8(b(v.getAnyExtensionFromPath)), id);
+    eq("ChangeAnyExtension", tspath.changeAnyExtension(name, ".x", list, v.ignoreCase), byteStringToUtf8(b(v.changeAnyExtension)), id);
+    // The cut by code units, which the copies had: where it is another answer than the one of the reference.
+    const ext = list.map(e => (e.startsWith(".") ? e : "." + e));
+    const p = tspath.removeTrailingDirectorySeparator(name);
+    let byUnits = "";
+    for (const e of ext) {
+      if (p.length >= e.length && p[p.length - e.length] === ".") {
+        const tail = p.slice(p.length - e.length);
+        if (v.ignoreCase ? equalFold(tail, e) : tail === e) {
+          byUnits = tail;
+          break;
+        }
+      }
+    }
+    if (byUnits !== byteStringToUtf8(b(v.getAnyExtensionFromPath))) cutByUnitsDiffers++;
   } else if (k === "decode") {
     const bytes = Buffer.from(v.bytes, "base64");
     let got: string;
@@ -329,6 +361,7 @@ console.log(`engine (Unicode ${process.versions.unicode}) against Go: ${engineLo
 for (const e of engineLowerExamples) console.log("   " + e);
 console.log("vectors:", JSON.stringify(counts), "valid texts:", validTexts);
 console.log(`texts where lineDelimiter.Split and stringutil.SplitLines differ: ${splitDiffersFromSplitLines} of ${counts.text}`);
+console.log(`extension rows where a cut by code units gives another answer than the reference: ${cutByUnitsDiffers} of ${counts.ext}`);
 console.log(`checks ${checks}, failures ${failures}`);
 for (const [what, n] of shown) console.log(`   ${n}  ${what}`);
 process.exit(failures === 0 ? 0 : 1);

@@ -1,4 +1,5 @@
 // Port of internal/tspath/path.go and extension.go of microsoft/typescript-go at 89d5d5b: the functions the runner calls.
+import { utf8Bytes, utf8String } from "./bytestring";
 import { isAscii, unicodeToLower } from "./gostrings";
 import {
   compareStringsCaseInsensitive,
@@ -167,9 +168,11 @@ export function reducePathComponents(components: string[]): string[] {
   return reduced;
 }
 
-// GetNormalizedPathComponents with getNormalizedPathComponentsFromCombined.
 export function getNormalizedPathComponents(path: string, currentDirectory: string): string[] {
-  const combined = combinePaths(currentDirectory, path);
+  return getNormalizedPathComponentsFromCombined(combinePaths(currentDirectory, path));
+}
+
+function getNormalizedPathComponentsFromCombined(combined: string): string[] {
   const rootLength = getRootLength(combined);
   const components = [combined.slice(0, rootLength)];
   for (let i = rootLength; i < combined.length; ) {
@@ -411,28 +414,53 @@ export function getBaseFileName(path: string): string {
   return path.slice(Math.max(getRootLength(path), path.lastIndexOf("/") + 1));
 }
 
-export function getAnyExtensionFromPath(path: string, extensions?: readonly string[], ignoreCase = false): string {
+export function getAnyExtensionFromPath(
+  path: string,
+  extensions: readonly string[] | undefined,
+  ignoreCase: boolean,
+): string {
   if (extensions !== undefined && extensions.length > 0) {
-    const p = removeTrailingDirectorySeparator(path);
-    const eq = getStringEqualityComparer(ignoreCase);
-    for (const extension of extensions) {
-      const result = tryGetExtensionFromPath(p, extension, eq);
-      if (result !== "") return result;
-    }
-    return "";
+    return getAnyExtensionFromPathWorker(
+      removeTrailingDirectorySeparator(path),
+      extensions,
+      getStringEqualityComparer(ignoreCase),
+    );
   }
   const baseFileName = getBaseFileName(path);
   const extensionIndex = baseFileName.lastIndexOf(".");
   return extensionIndex >= 0 ? baseFileName.slice(extensionIndex) : "";
 }
 
-function tryGetExtensionFromPath(path: string, extension: string, eq: (a: string, b: string) => boolean): string {
-  if (!extension.startsWith(".")) extension = "." + extension;
-  if (path.length >= extension.length && path[path.length - extension.length] === ".") {
-    const pathExtension = path.slice(path.length - extension.length);
-    if (eq(pathExtension, extension)) return pathExtension;
+function getAnyExtensionFromPathWorker(
+  path: string,
+  extensions: readonly string[],
+  stringEqualityComparer: (a: string, b: string) => boolean,
+): string {
+  for (const extension of extensions) {
+    const result = tryGetExtensionFromPath(path, extension, stringEqualityComparer);
+    if (result !== "") return result;
   }
   return "";
+}
+
+// Upstream cuts the path at a count of bytes: text that is not ASCII takes that cut on its UTF-8 form.
+function tryGetExtensionFromPath(
+  path: string,
+  extension: string,
+  stringEqualityComparer: (a: string, b: string) => boolean,
+): string {
+  if (!extension.startsWith(".")) extension = "." + extension;
+  let pathExtension: string;
+  if (isAscii(extension) && isAscii(path.slice(-extension.length))) {
+    if (!(path.length >= extension.length && path[path.length - extension.length] === ".")) return "";
+    pathExtension = path.slice(path.length - extension.length);
+  } else {
+    const pathBytes = utf8Bytes(path);
+    const size = utf8Bytes(extension).length;
+    if (!(pathBytes.length >= size && pathBytes[pathBytes.length - size] === 0x2e)) return "";
+    pathExtension = utf8String(pathBytes.subarray(pathBytes.length - size));
+  }
+  return stringEqualityComparer(pathExtension, extension) ? pathExtension : "";
 }
 
 export interface ComparePathsOptions {

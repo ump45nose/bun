@@ -83,6 +83,7 @@ chunks = [
     ]),
     take("internal/vfs/internal/internal.go", ["decodeBytes", "decodeUtf16"]),
     take("internal/testutil/tsbaseline/util.go", ["var:lineDelimiter"]),
+    take("internal/testutil/tsbaseline/error_baseline.go", ["var:diagnosticsLocationPrefix"]),
     take("internal/testrunner/test_case_parser.go", ["optionRegex", "linkRegex"]),
     take("internal/testrunner/compiler_runner.go", ["var:compilerBaselineRegex"]),
 ]

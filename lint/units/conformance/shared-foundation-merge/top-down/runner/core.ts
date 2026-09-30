@@ -1,5 +1,6 @@
 // Port of internal/core/core.go of microsoft/typescript-go at 89d5d5b: line starts and UTF-16 lengths of a Go string.
 import { type ByteString, decodeRune } from "./bytestring";
+import { isLineBreak } from "./stringutil";
 
 // ComputeECMALineStarts: LF, CR, CR LF, U+2028 and U+2029 end a line.
 export function computeECMALineStarts(text: ByteString): number[] {
@@ -22,7 +23,7 @@ export function computeECMALineStarts(text: ByteString): number[] {
     } else {
       const [ch, size] = decodeRune(text, pos);
       pos += size;
-      if (ch === 0x2028 || ch === 0x2029) {
+      if (isLineBreak(ch)) {
         result.push(lineStart);
         lineStart = pos;
       }

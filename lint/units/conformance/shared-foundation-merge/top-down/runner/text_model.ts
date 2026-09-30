@@ -7,6 +7,7 @@ import {
   runeCount,
   toByteString,
   trimRightSpace,
+  utf8String,
   utf8ToByteString,
 } from "./bytestring";
 import { computeECMALineStarts, utf16Len } from "./core";
@@ -20,8 +21,8 @@ export interface TextModel {
   toString(text: string): string;
   // ECMAScript line starts: LF, CR, CR LF, U+2028, U+2029.
   lineStarts(text: string): number[];
-  // The harness split of a file into lines, before the trailing CR is cut; it is not stringutil.SplitLines.
-  splitContentByNewlines(content: string): string[];
+  // The lines of an input file as the harness of the rules cuts them, before the CR at the end of a line is cut.
+  contentLines(content: string): string[];
   // UTF-16 code units of text[from:to]: the column of the first section.
   utf16Length(text: string, from: number, to: number): number;
   // Position that is `units` UTF-16 code units after `from`; undefined when that is no position of the model.
@@ -68,7 +69,7 @@ export const utf8Model: TextModel = {
   fromString: utf8ToByteString,
   toString: text => byteStringToUtf8(text),
   lineStarts: computeECMALineStarts,
-  splitContentByNewlines: content => content.split(/\r?\n/),
+  contentLines: content => content.split(/\r?\n/),
   utf16Length: (text, from, to) => utf16Len(text.slice(from, to)),
   advanceUTF16(text, from, units, limit) {
     let pos = from;
@@ -106,12 +107,13 @@ export const utf8Model: TextModel = {
 
 export const utf16Model: TextModel = {
   name: "utf16",
-  fromBytes: bytes => byteStringToUtf8(toByteString(bytes)),
+  fromBytes: bytes => utf8String(bytes),
+  // Node writes TypeScript's baselines: a lone surrogate becomes U+FFFD there too.
   toBytes: text => Buffer.from(text, "utf8"),
   fromString: text => text,
   toString: text => text,
   lineStarts: lineStartsUtf16,
-  splitContentByNewlines(content) {
+  contentLines(content) {
     let lines = content.split("\n");
     if (lines.length === 1) lines = lines[0].split("\r");
     return lines;

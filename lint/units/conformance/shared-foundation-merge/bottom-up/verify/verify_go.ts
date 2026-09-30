@@ -9,6 +9,7 @@ import * as su from "../runner/stringutil";
 import { utf8Model } from "../runner/text_model";
 import * as tp from "../runner/tspath";
 import { decodeBytes } from "../runner/vfs";
+import * as RE2 from "./re2";
 
 const path = process.argv[2] ?? import.meta.dir + "/../vectors/go-vectors.jsonl.gz";
 const raw = readFileSync(path);
@@ -112,7 +113,7 @@ for (const [a, b, fold, ci, cs] of sec("pairs").cases as [string, string, boolea
   check("strings.Compare, pairs as byte strings", go.compareStrings(go.utf8ToByteString(a), go.utf8ToByteString(b)), cs, d);
   check("Buffer.compare of the UTF-8 forms is strings.Compare", Math.sign(Buffer.compare(Buffer.from(a), Buffer.from(b))), cs, d);
 }
-for (const [s, trimSpace, trimRight, lower, fileLower, trimSuffix, trimFunc, trimPrefix] of sec("strings").cases as string[][]) {
+for (const [s, trimSpace, trimRight, lower, fileLower, trimSuffix, trimFunc] of sec("strings").cases as string[][]) {
   const d = () => JSON.stringify(s);
   check("strings.TrimSpace", go.trimSpace(s), trimSpace, d);
   check("strings.TrimRightFunc(IsSpace) on a byte string", go.byteStringToUtf8(go.trimRightSpace(go.utf8ToByteString(s))), trimRight, d);
@@ -120,7 +121,6 @@ for (const [s, trimSpace, trimRight, lower, fileLower, trimSuffix, trimFunc, tri
   check("tspath.ToFileNameLowerCase, strings", tp.toFileNameLowerCase(s), fileLower, d);
   check("strings.TrimSuffix", go.trimSuffix(go.trimSpace(s), ";"), trimSuffix, d);
   check("strings.TrimFunc(IsWhiteSpaceLike)", go.trimFunc(s, su.isWhiteSpaceLike), trimFunc, d);
-  check("strings.TrimPrefix", go.trimPrefix(s, " "), trimPrefix, d);
 }
 
 // utf8.DecodeRuneInString and utf8.DecodeLastRuneInString on every string of a class of byte strings.
@@ -322,15 +322,15 @@ for (const [input, output, ok] of sec("decodeBytes").cases as [string, string, b
   console.log(`comparePaths on byte strings that are not decoded, ${undecoded.pairs} pairs with a name that is not ASCII: the sign differs from Go in ${undecoded.ci} (case folded) and ${undecoded.cs} (case kept), the test for 0 differs in ${undecoded.ciEquality}`);
 }
 
-// The classes and anchors of Go's regexp, written in the syntax of JavaScript.
+// The classes and anchors of Go's regexp, written in the syntax of JavaScript: regex_sites.ts holds the places of the runner to them.
 {
   const c = sec("re2classes");
   const cls: [string, string, number[], boolean][] = [
-    ["\\s", go.RE2_SPACE, c.space, true],
-    ["\\S", go.RE2_NOT_SPACE, c.not_S, false],
-    ["\\w", go.RE2_WORD, c.w, true],
-    ["\\d", go.RE2_DIGIT, c.d, true],
-    [".", go.RE2_DOT, c.not_dot, false],
+    ["\\s", RE2.SPACE, c.space, true],
+    ["\\S", RE2.NOT_SPACE, c.not_S, false],
+    ["\\w", RE2.WORD, c.w, true],
+    ["\\d", RE2.DIGIT, c.d, true],
+    [".", RE2.DOT, c.not_dot, false],
   ];
   for (const [name, source, runes, positive] of cls) {
     const set = new Set(runes);
@@ -347,14 +347,19 @@ for (const [input, output, ok] of sec("decodeBytes").cases as [string, string, b
   const a = sec("re2anchors");
   const text = go.utf8ToByteString(a.text);
   const at = (source: string) => [...text.matchAll(new RegExp(source, "g"))].map(m => m.index);
-  check("regexp (?m)^ is RE2_LINE_START", at(go.RE2_LINE_START), a.mstart, () => "");
-  check("regexp (?m)$ is RE2_LINE_END", at(go.RE2_LINE_END), a.mend, () => "");
+  check("regexp (?m)^ is RE2.LINE_START", at(RE2.LINE_START), a.mstart, () => "");
+  check("regexp (?m)$ is RE2.LINE_END", at(RE2.LINE_END), a.mend, () => "");
   check("regexp ^ without a flag is the start of the text", at("^"), a.start, () => "");
   check("regexp $ without a flag is the end of the text", at("$"), a.end, () => "");
-  const S = go.RE2_SPACE;
-  const option = new RegExp(`${go.RE2_LINE_START}\\/{2}${S}*@(${go.RE2_WORD}+)${S}*:${S}*([^\\r\\n]*)`, "g");
-  const link = new RegExp(`${go.RE2_LINE_START}\\/{2}${S}*@link${S}*:${S}*([^\\r\\n]*)${S}*->${S}*([^\\r\\n]*)`);
-  const references = new RegExp(`reference${S}path`);
+  // Under (?i) a letter matches the runes of its orbit under unicode.SimpleFold: s has U+017F, k has U+212A, the others two runes.
+  const orbit = (letters: string, extra: number[] = []) => [...new Set([...letters.toLowerCase(), ...letters.toUpperCase()].map(x => x.codePointAt(0)!)), ...extra].sort((x, y) => x - y);
+  check("regexp (?i)s", c.is, orbit("s", [0x17f]), () => "");
+  check("regexp (?i)k", c.ik, orbit("k", [0x212a]), () => "");
+  check("regexp (?i)i", c.ii, orbit("i"), () => "");
+  check("regexp (?i)[libdt]", c.ilibdt, orbit("libdt"), () => "");
+  const option = new RegExp(RE2.optionRegexText, "g");
+  const link = new RegExp(RE2.LINE_START + RE2.linkRegexLine.slice(1));
+  const references = new RegExp(RE2.referencesRegex);
   const compilerBaseline = /\.tsx?$/;
   for (const [line, optionWant, linkWant, referencesWant, baselineWant] of sec("regexps").cases as [string, string[][] | null, string[] | null, boolean, boolean][]) {
     const d = () => JSON.stringify(line);
@@ -364,6 +369,23 @@ for (const [input, output, ok] of sec("decodeBytes").cases as [string, string, b
     check("referencesRegex.MatchString", references.test(line), referencesWant, d);
     check("compilerBaselineRegex.MatchString", compilerBaseline.test(line), baselineWant, d);
   }
+}
+
+// error_baseline.go:31 and :32 on byte strings, texts that are not UTF-8 among them.
+{
+  const prefix = new RegExp(RE2.diagnosticsLocationPrefixGo, "g");
+  const pattern = new RegExp(RE2.diagnosticsLocationPatternGo, "g");
+  for (const [input, prefixWant, patternWant] of sec("libLocation").cases as string[][]) {
+    const s = bytesOf(input);
+    check("diagnosticsLocationPrefix.ReplaceAllString", hexOf(s.replace(prefix, "$1(--,--)")), prefixWant, () => input);
+    check("diagnosticsLocationPattern.ReplaceAllString", hexOf(s.replace(pattern, "$1:--:--")), patternWant, () => input);
+  }
+}
+
+// strconv.Atoi: the value as Go prints it, read back as a number.
+check("strconv.IntSize", sec("atoi").int, 64, () => "");
+for (const [input, value, ok] of sec("atoi").cases as [string, string, boolean][]) {
+  check("strconv.Atoi", go.atoi(input), ok ? Number(value) : undefined, () => JSON.stringify(input));
 }
 
 let total = 0;

@@ -1,4 +1,4 @@
-//! The harness of the probe: not part of the proposed crate.
+//! The harness of the probe: not part of the proposed crate. In a text, `\\` stands for a backslash and `\n` for a line feed.
 
 use std::io::Write;
 
@@ -106,7 +106,9 @@ fn run(paths: Vec<String>) {
                         d.start,
                         d.length,
                         code,
-                        String::from_utf8_lossy(&d.text).replace('\n', "\\n")
+                        String::from_utf8_lossy(&d.text)
+                            .replace('\\', "\\\\")
+                            .replace('\n', "\\n")
                     )
                     .unwrap();
                 }

@@ -11,7 +11,7 @@ const args = process.argv.slice(2);
 const rule = args.shift();
 let show = false;
 let out = null;
-let probe = "/tmp/rsu/out/lintprobe";
+let probe = "/tmp/rsu/fin/lintprobe";
 let eslintDir = "/tmp/cmp-probe/eslint-pin";
 const files = [];
 while (args.length) {
@@ -60,6 +60,8 @@ function eslint(c, sourceType) {
 	]);
 }
 
+// The probe writes a backslash as `\\\\` and a line feed as `\\n`.
+const unescape = s => s.replace(/\\(.)/g, (m, c) => (c === "n" ? "\n" : c));
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), "rsu-diff-"));
 const list = [];
 cases.forEach((c, i) => {
@@ -97,7 +99,7 @@ for (const line of raw.split("\n")) {
 	if (parts.length === 2) entry.parse = parts[1];
 	else if (parts[4] === rule || parts[4] === "internal-error") {
 		const [l, col] = parts[3].split(":").map(Number);
-		entry.reports.push({ line: l, column: col, start: Number(parts[1]), length: Number(parts[2]), message: parts[5], code: parts[4] });
+		entry.reports.push({ line: l, column: col, start: Number(parts[1]), length: Number(parts[2]), message: unescape(parts[5]), code: parts[4] });
 	}
 }
 fs.rmSync(dir, { recursive: true, force: true });

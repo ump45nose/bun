@@ -25,20 +25,26 @@ export function fromByteString(s: ByteString): Buffer {
 }
 
 // A lone surrogate has no UTF-8 form: Buffer would write U+FFFD for it.
-export function utf8ToByteString(s: string): ByteString {
-  if (isAscii(s)) return s;
+export function utf8Bytes(s: string): Buffer {
   if (!s.isWellFormed()) throw new InvalidUtf8Error("a string with a lone surrogate");
-  return Buffer.from(s, "utf8").toString("latin1");
+  return Buffer.from(s, "utf8");
 }
 
 // Nothing is replaced: bytes that are no UTF-8 throw.
-export function byteStringToUtf8(s: ByteString, what = "the text"): string {
-  if (isAscii(s)) return s;
+export function utf8String(b: Uint8Array, what = "the text"): string {
   try {
-    return strict.decode(Buffer.from(s, "latin1"));
+    return strict.decode(b);
   } catch {
     throw new InvalidUtf8Error(what);
   }
+}
+
+export function utf8ToByteString(s: string): ByteString {
+  return isAscii(s) ? s : utf8Bytes(s).toString("latin1");
+}
+
+export function byteStringToUtf8(s: ByteString, what = "the text"): string {
+  return isAscii(s) ? s : utf8String(Buffer.from(s, "latin1"), what);
 }
 
 // utf8.ValidString

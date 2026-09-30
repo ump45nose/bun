@@ -458,6 +458,21 @@ func regexpVectors() {
 	emit(map[string]any{"s": "regexps", "fields": "line optionRegex.FindAllStringSubmatch linkRegex.FindStringSubmatch referencesRegex.MatchString compilerBaselineRegex.MatchString", "cases": cases})
 }
 
+func libLocationVectors() {
+	inputs := []string{
+		"lib.d.ts(1,2): error TS1: x", "LIB.ES5.D.TS(10,20): error", "lib.d.t\u017f(1,1)", "lib.d.tS(3,4)", "a\nlib.d.ts(1,1)", "a\rlib.d.ts(1,1)", "a\r\nlib.d.ts(1,1)", "a\u2028lib.d.ts(1,1)",
+		" lib.d.ts(1,1)", "lib.x\ny.d.ts(1,1)", "lib.x\ry.d.ts(1,1)", "lib.x\u2028y.d.ts(1,1)", "lib.d.ts(1,1) lib.d.ts(2,2)", "lib.d.ts(1,1)\nlib.dom.d.ts(2,2)\n", "l\u0131b.d.ts(1,1)", "l\u0130b.d.ts(1,1)",
+		"lib.d.ts(\u0661,\u0662)", "lib.d.ts(1, 2)", "lib.d.ts(,)", "lib\u00e9\U0001F600.d.ts(7,8)", "lib\xff.d.ts(7,8)", "libd.ts(1,1)", "lib.d.tsx(1,1)", "\u212aib.d.ts(1,1)", "lib.d.t\u017f\u017f(1,1)",
+		"lib.d.ts:1:2", "xlib.es5.d.ts:10:20 and lib.d.ts:3:4", "liB.D.TS:1:1", " lib.d.t\u017f:5:6", "lib.d.ts:--:--", "lib.a\nb.d.ts:1:1", "lib.a\rb.d.ts:1:1", "lib.d.ts:1:2:3:4", "lib.d.ts:\u0661:2", "lib\xff.d.ts:7:8",
+		"", "lib", "\n", "lib.d.ts", "(1,1)",
+	}
+	var cases []any
+	for _, s := range inputs {
+		cases = append(cases, []any{hx(s), hx(diagnosticsLocationPrefix.ReplaceAllString(s, "$1(--,--)")), hx(diagnosticsLocationPattern.ReplaceAllString(s, "$1:--:--"))})
+	}
+	emit(map[string]any{"s": "libLocation", "fields": "in prefixReplaced patternReplaced", "cases": cases})
+}
+
 func atoiVectors() {
 	inputs := []string{
 		"", "0", "-0", "+0", "7", "+7", "-7", "007", "-007", "1_000", "0x10", "0b1", "0o7", "1e3", " 1", "1 ", "1\n", "\t1", "1.0", "1.", ".1", "+", "-", "--1", "+-1", "-+1", "++1",
@@ -493,6 +508,7 @@ func main() {
 	decodeVectors()
 	pathVectors()
 	regexpVectors()
+	libLocationVectors()
 	atoiVectors()
 	out.Flush()
 	f.Close()

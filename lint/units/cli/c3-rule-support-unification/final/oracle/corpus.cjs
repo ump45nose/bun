@@ -5,7 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const { execFileSync } = require("child_process");
 const args = process.argv.slice(2);
-let probe = "/tmp/rsu/out/lintprobe";
+let probe = "/tmp/rsu/fin/lintprobe";
 let eslintDir = "/tmp/cmp-probe/eslint-pin";
 let listFile = null;
 while (args.length) {
@@ -25,7 +25,7 @@ for (const line of raw.split("\n")) {
 	const p = line.split("\t");
 	if (!bun.has(p[0])) bun.set(p[0], { parse: null, reports: [] });
 	if (p.length === 2) bun.get(p[0]).parse = p[1];
-	else bun.get(p[0]).reports.push(`${p[3]} ${p[4]} ${p[5]}`);
+	else bun.get(p[0]).reports.push(`${p[3]} ${p[4]} ${p[5].replace(/\\(.)/g, (m, c) => (c === "n" ? "\n" : c))}`);
 }
 const tally = { files: 0, same: 0, differ: 0, "eslint-rejects": 0, "bun-rejects": 0, eslintReports: 0, bunReports: 0 };
 const perRule = {};

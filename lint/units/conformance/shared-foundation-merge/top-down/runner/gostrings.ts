@@ -107,7 +107,7 @@ export function equalFold(a: string, b: string): boolean {
 }
 
 // strings.Compare: the byte order of UTF-8, which differs from the order of code units above the BMP.
-export function compareStrings(a: string, b: string): number {
+export function compareStrings(a: string, b: string): -1 | 0 | 1 {
   if (a === b) return 0;
   return Buffer.compare(Buffer.from(a, "utf8"), Buffer.from(b, "utf8"));
 }

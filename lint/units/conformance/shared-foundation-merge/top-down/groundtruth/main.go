@@ -364,6 +364,30 @@ func pathRecord(name string, dir string) pathRow {
 	return r
 }
 
+// Names and lists of extensions where a cut by a count of bytes and a cut by a count of code units differ.
+var extNames = []string{
+	"a.ts", "a.TS", "a.Ts", "a.tsx", "a.d.ts", "a.D.TS", "a", "a.", ".ts", "ts", "", "a.t\u017f", "a.T\u017f", "a.\u212a", "a.k", "a.K", "a.\u00e9", "a.\u00c9",
+	"\u00e9.ts", "\u00e9.TS", "\u00e9.t\u017f", "a.ts/", "a.\u00e9/", "a.t\u017f/", "dir.ts/a", "a.\u0130", "a.i", "a.\u0131", "a.I", "a.\U00010400", "a.\U00010428",
+	"a.\u1c89", "a.\u1c8a", "\u4e2d.\u6587", "x\u4e2d.k", "x.\u4e2d", "\u00e9", "a\u00e9ts", "a\u017f.ts", "a.\u017fts", "\u017f.t\u017f", "a.d.t\u017f", "\U0001F600.\U0001F600", "ab.\u00df", "a.SS",
+}
+
+var extLists = [][]string{
+	{".ts", ".tsx", ".d.ts"},
+	{"ts", "k", "\u00e9"},
+	{".\u212a", ".t\u017f", ".\u00c9"},
+	{".i", ".\u0131", ".\U00010428", ".\u1c8a", ".\u6587"},
+	{".d.ts", ".ts", ".\U0001F600", ".ss"},
+}
+
+type extRow struct {
+	K          string   `json:"k"`
+	Name       string   `json:"name"`
+	Extensions []string `json:"extensions"`
+	IgnoreCase bool     `json:"ignoreCase"`
+	Any        string   `json:"getAnyExtensionFromPath"`
+	Changed    string   `json:"changeAnyExtension"`
+}
+
 type decodeRow struct {
 	K        string `json:"k"`
 	Bytes    string `json:"bytes"`
@@ -465,6 +489,17 @@ func vectors(path string) {
 	for _, name := range pathStrings {
 		for _, dir := range pathStrings {
 			emit(pathRecord(name, dir))
+		}
+	}
+	for _, name := range extNames {
+		for _, list := range extLists {
+			for _, ignoreCase := range []bool{false, true} {
+				emit(extRow{
+					K: "ext", Name: b64(name), Extensions: b64s(list), IgnoreCase: ignoreCase,
+					Any:     b64(tspath.GetAnyExtensionFromPath(name, list, ignoreCase)),
+					Changed: b64(tspath.ChangeAnyExtension(name, ".x", list, ignoreCase)),
+				})
+			}
 		}
 	}
 	for _, s := range decodeInputs {

@@ -185,14 +185,17 @@ Ask.
               "relatedInformation": [ { "code": 2728, "messageText": "...", "next": [...], "location": {...} } ] }
         R = { "rule": "no-debugger", "category": "...", "messageText": "...", "location": {...} }
     - checked: true when the binder and the checker ran over the whole program. false when the run only parsed,
-      or stopped before the check. An instance is listed only with true.
+      or stopped before the check. An instance is listed only with true: a binary that only parses prints
+      nothing for the 5,770 instances without expected errors, and none of them may pass that way.
     - options: the value of BUN_INTERNAL_LINT_OPTIONS as the binary read it (CH-3); absent when that variable
-      was not set. It is the proof that the options were applied.
-    - diagnostics: what the harness of the reference collects (CH-3 point 3), in the order of CH-1 point 6. The
-      runner sorts them again with a stable sort by path, start, end, code and category, so diagnostics that
-      are equal in those keep the order of the report. No diagnostic of a lint rule.
+      was not set. It is the proof that the options were applied. The value is JSON already: the binary can
+      copy its bytes into the report after it has read them without an error.
+    - diagnostics: the diagnostics that have a TypeScript number, and only those: what the harness of the
+      reference collects (CH-3 point 3), in the order of CH-1 point 6. The runner sorts them again with a
+      stable sort by path, start, end, code and category, so diagnostics that are equal in those keep the
+      order of the report.
     - rules: the diagnostics of lint rules. The runner counts them and leaves them out of the comparison: the
-      cases are full of code that the first rules of C3 report.
+      cases are full of code that the first rules of C3 report (15 case files have a `debugger` statement).
     - next is absent or empty without a chain. location is absent for a diagnostic without a file.
       relatedInformation is always there.
     - file is the real absolute path of a file of the instance, or a default library file: then only its last
@@ -201,8 +204,12 @@ Ask.
       without a byte order mark. line and character are 1-based, the character in UTF-16 code units. Both
       pairs are given and have to agree, and each diagnostic of stderr has to be in the report.
     - standIns: the names of the stand-in log of the run, each once, in the order of the first reach.
-    - internal: the internal diagnostics of the run (ported panics and asserts). Any entry fails the instance.
+    - internal: every other diagnostic of the run, as `<code>: <text>`: a ported panic or assert
+      (`internal-error`), a syntax error of Bun that has no TypeScript number (`syntax`), a file that was not
+      read (`cannot-read-file`, `unsupported-extension`). Any entry fails the instance.
     - A member that is not named here makes the report unreadable.
+    - The runner gives each spawn a path of its own outside the directory of the instance and removes the file
+      after it has read it. No file after exit code 0 or 2 means a binary without CH-2: level "plain".
 Unlocks. Every listing through the binary. Of the 7,027 E baselines (td) 6,865 need the span length and 1,024 the
 related information; the plain format alone rebuilds 143 (own count: 144 baselines have no squiggle line and no
 related line, 1,035 have related lines, 14 are in the pretty form).
@@ -234,13 +241,20 @@ Ask.
     (td) the run instances use 90 of the 125 declared names (68 booleans, 11 strings, 6 enumerations, 4 lists,
     1 number); `target` alone covers 5,012 instances, the 12 names used most 10,461, 30 names 12,113.
  3. typecheck: the diagnostics of one program as the harness collects them, not as the command line does:
-    configuration file, program, syntactic, semantic and global diagnostics together
-    (internal/testutil/harnessutil/harnessutil.go:662-666, again after the emit at :677-689), then
-    compiler.SortAndDeduplicateDiagnostics (internal/compiler/program.go:1597-1634). The command line collects
-    program and global diagnostics only without a syntactic one (program.go:1970) and semantic ones only
-    without any of those (:1979). 288 to 293 E baselines hold a code that only the parser reports together
-    with a code that it never reports. The options are applied as given and none is added: a run that is told
-    noEmit reports less (the earlier pass saw TS2441, TS5055 and TS5056 go).
+    configuration file, program, syntactic, semantic and global diagnostics together, the declaration
+    diagnostics when the options emit declarations (internal/testutil/harnessutil/harnessutil.go:662-668,
+    again after the emit at :676-687), then compiler.SortAndDeduplicateDiagnostics
+    (internal/compiler/program.go:1597-1634). The command line collects program and global diagnostics only
+    without a syntactic one (program.go:1970) and semantic ones only without any of those (:1979).
+    Counted on the programs that the reference built for the 12,797 run instances
+    (units/typecheck/drivers-k4-k5/bottom-up/data/manifest.jsonl.gz): 691 have a syntactic diagnostic; in 406
+    of them the harness also has a diagnostic that the command line drops at :1970 (in 387 a bind, semantic or
+    global one); 61 more have a program or global diagnostic beside a semantic one, dropped at :1979. So the
+    command line's rule changes the result of 467 run instances. (By codes alone the two passes had counted
+    288 to 293.)
+    The emit itself adds nothing: the count before the emit (:673) and after it (:689) is the same in all
+    12,797, so no emit has to run. The options are applied as given and none is added: a run that is told
+    noEmit reports less (the earlier pass saw TS2441, TS5055 and TS5056 go; 988 run instances set noEmit).
     With BUN_INTERNAL_LINT_REPORT set the report holds the harness's set; stderr may hold less.
  4. typecheck: per run, the stand-in log (names, each once, order of the first reach) and the internal log.
     The scratch of the typecheck research has both: Checker.stand_ins: StandInLog with snapshot() ->
@@ -263,11 +277,22 @@ Ask.
     CH-2 point 3 whatever carried it. An instance with a stand-in is "provisional" and is not listed.
  2. The list of K5 is a file of typecheck's own directory. The functions of the runner take the path of the list
     and the check as arguments. test/cli/lint/conformance/expectations.json is the list of the default check.
- 3. The tree dump carries the parse diagnostics of TypeScript: 525 to 533 E baselines hold a code that only the
-    parser or the scanner reports.
+ 3. The tree dump carries the parse diagnostics of TypeScript: 691 run instances have a syntactic diagnostic
+    (typecheck's own count on the reference's programs; by codes, 525 to 533 E baselines hold a code that only
+    the parser or the scanner reports).
  4. K5 says which instances it does not take ("already resolved inputs" only): their status is "unsupported".
+ 5. The list is guarded by CI only if the check reaches the checker through what a test lane has: the built
+    binary (bunExe()), test/node_modules (typescript 6.0.2) and committed files. The lanes run test files with
+    the built binary. The one job that runs the `#[test]`s of crates below src/ is `cargo miri test`
+    (.github/workflows/rust-lints.yml:77-97) for the 17 crates of scripts/rust-miri.ts:39-57; bun_lint and
+    bun_typecheck are not in that list, that file has no owner, and Miri cannot run a suite of this size.
+    typecheck's research probes a test target of the crate that answers one request for each line
+    (units/typecheck/end-to-end-k4-k5/rust/tests_program.rs): a list made through it is a local result.
+    The Check interface takes several instances in one call, so a check that keeps one process and speaks one
+    line for each instance fits; its line holds what the report of CH-2 holds.
 Unlocks: the growth of the list during this work. (td) with one file and no configuration file 10,723 run
-instances (E 5,905, C 4,818). Until then: both lists are empty and the sweep reports zero passes.
+instances (E 5,905, C 4,818); by typecheck's count 10,639 programs have one file beside the libraries
+(E 5,868, C 4,771). Until then: both lists are empty and the sweep reports zero passes.
 
 CH-5. What no unit owns: the program layer
 To: no owner (cli.md:92 and typecheck.md:122-124 put tsconfig, module resolution from disk, the embedding of the
@@ -275,7 +300,9 @@ libraries and declaration emit out of scope).
   piece                                              what needs it
   default libraries                                  (td) 12,788 run instances, all but the 9 with noLib: LB-2
   module resolution among the files of an instance   (td) 2,073 run instances with more than one file or a configuration file
-  parsing of a tsconfig.json                         (td) 72 run instances (130 case files have such a unit)
+  parsing of a tsconfig.json                         73 run instances (130 case files have such a unit): (td) 72 in
+                                                     the vector of the materialisation research, which lacks
+                                                     compiler/tsconfigExtendsPackageJsonExportsWildcard.ts
   absolute paths in the text of a file               (td) 175 run instances, 170 of them name /.lib/
   diagnostics of the program and the options         145 E baselines hold a code that only internal/compiler reports
                                                      (TS5055 35, TS5110 25, TS5102 23), 26 one of internal/tsoptions,
@@ -285,6 +312,9 @@ libraries and declaration emit out of scope).
   file names without case                            (td) 5 run instances (6 case files set useCaseSensitiveFileNames false)
   suggestions                                        1 case file sets captureSuggestions
 In all, 235 of the 7,027 E baselines hold a code that no package of typecheck.md and no parser reports.
+By origin, on the programs that the reference built (typecheck's manifest, see CH-3): 6,798 of the 7,027 have
+only diagnostics of the parser, the binder and the checker; program diagnostics are in 147 run instances,
+diagnostics of the include processor in 29, of the configuration file in 6, declaration diagnostics in 48.
 Until then: the runner gives such an instance the status "unsupported" with the reason, before any process starts
 where it can tell from the instance, else from the refusal of the binary.
 
@@ -331,11 +361,18 @@ To: cli (keep the lint path free of leaks at exit), integrator for the stopgap. 
 Why. For a test file that is not in that list the runner sets ASAN_OPTIONS=...:detect_leaks=1:abort_on_error=1
 (scripts/runner.node.ts:2201-2205), in the ASAN lane and locally, and test/harness.ts:95 keeps a value that is
 set, so every `bun --lint` child runs under LeakSanitizer.
-Measured with the debug build at e3566be88 and those settings: `bun-debug build --no-bundle ok.ts` (exit 0),
-`bun-debug build --no-bundle bad.ts` (exit 1) and `bun-debug bad.ts` (exit 1) print no LeakSanitizer line. So a
-path that parses and exits is quiet today. If the lint path is not, the line `test/cli/lint/conformance.test.ts`
-in this file is the stopgap, and the defect is on the lint path.
-Not proved: that LeakSanitizer reports at all on these exit paths.
+The check does run on a path that parses and exits. The binary turns it off by default
+(src/runtime/bin_entry/mod.rs:80-92, detect_leaks=0), the variable turns it on, and in a build with ASAN
+Global::exit ends with libc's exit and not with quick_exit (src/bun_core/Global.rs:716-719), so the check at
+exit runs. Proved with the debug build at e3566be88: with detect_leaks=1 and every root of the search turned off
+(LSAN_OPTIONS=use_stacks=0:use_registers=0:use_globals=0:use_tls=0) `bun-debug build --no-bundle ok.ts` prints
+"LeakSanitizer: detected memory leaks", 185,563 bytes in 1,034 blocks, and ends with exit code 1.
+With the settings of the runner the same command (exit 0), `bun-debug build --no-bundle bad.ts` (exit 1) and
+`bun-debug bad.ts` (exit 1) print no LeakSanitizer line: a path that parses and exits leaves no block without
+a reference today. A block of the lint path that nothing refers to when Global::exit is called aborts the child
+(abort_on_error=1), and the runner reads a crash. Then the defect is on the lint path, and the line
+`test/cli/lint/conformance.test.ts` in this file is the stopgap.
+`bun bd test <file>` does not go through scripts/runner.node.ts and leaves the check off.
 
 RP-5. src/bun_core/env_var.rs and test/harness.ts
 To: integrator (both files have no owner) and cli.
@@ -361,8 +398,13 @@ To: integrator. For information.
    Differs: the top-down draft adds the file with `git add -f`, which leaves the trap for the next sync.
  - No case name matches the test discovery (scripts/runner.node.ts:2492-2494, `\.test|spec\.`), the discovery of
    `bun test`, or the glob of prettier (package.json:80, test/**/*.{test,spec}.*): 0 of 12,445.
- - scripts/buildkite.ts:435-465 reads at most 500 files of a pull request and comment-cop.yml reads the file
-   list of the GitHub API, which ends at 3,000 files (not verified here). Paths below src/ sort before test/.
+ - scripts/buildkite.ts:435-465 reads at most 500 files of a pull request (10 pages of 50, lines 441-443) and
+   comment-cop.yml:92-93 reads the file list of the GitHub API, which GitHub documents to end at 3,000 files
+   (not verified here). If that list is in the order of the paths, src/ comes before test/ and
+   test/cli/lint/conformance.test.ts before the corpus, and test/cli/lint/lint.test.ts and
+   test/cli/lint/typecheck/ come after its 22,000 files: the test runner reads the list to run changed test
+   files first and to mark new ones (scripts/runner.node.ts:1315-1317, :2818-2823, :3018), so those would not
+   be marked. Nothing fails by it.
 
 RP-7. The formatter
 To: nobody; a duty of the unit. autofix.ci (.github/workflows/format.yml) runs `bun run prettier` over docs and
@@ -446,9 +488,11 @@ To: integrator.
 internal/STATE.md:20-22 has the integrator check a merged branch for comment runs and for TODO and FIXME. The
 corpus is copied byte for byte:
  - case files with two `//` lines in a row: 8,352 of 12,445 when the file is read as UTF-8 (8,162 when the byte
-   order mark of 190 of them hides the first line; the figure 8,238 of an earlier finding was not reproduced).
-   With the line test of .github/workflows/comment-cop.yml: 8,386 (8,199). In 6,455 of the 8,352 every run is
-   made of directives such as `// @target: es2015`.
+   order mark of 190 of them hides the first line). The figure 8,238 of an earlier finding was not reproduced:
+   twelve ways to define a run give 8,131 (both lines at column 0, read as bytes) to 8,424 (empty lines between
+   the two allowed). With the line test of .github/workflows/comment-cop.yml:41-47: 8,386 (8,199). In 6,455 of
+   the 8,352 every run is made of directives such as `// @target: es2015`; 642 have two `//` lines in a row of
+   which neither is a directive.
  - 29 case files hold TODO, FIXME, XXX or HACK.
  - error baselines, which quote the cases: 469 of TypeScript's 9,056 and 408 of typescript-go's 7,027 have such a
    run, 19 and 21 a marker.
@@ -463,8 +507,9 @@ only paths that start with `src/` (line 99), so CI needs no change.
 7. What only CI can verify
 --------------------------
 
-No Windows machine and no macOS machine was available. Nothing below is verified. Do not read a green run on
-Linux as a statement about them. Watch the first run of these lanes for:
+No Windows machine and no macOS machine was available (asked again on 2026-09-30 at 00:40 UTC: windows-x64 and
+windows-aarch64 both answer "not available in this session"; there is no macOS machine to ask). Nothing below
+is verified. Do not read a green run on Linux as a statement about them. Watch the first run of these lanes for:
  - CI-1, long paths (Windows). The longest path of the corpus is 191 to 202 characters (today 159). The CI
    image sets core.longpaths (scripts/build/ci-images/spec.ts:1376); a clone without it fails with "Filename too
    long" when its root is longer than about 57 to 68 characters.
@@ -473,8 +518,12 @@ Linux as a statement about them. Watch the first run of these lanes for:
  - CI-3, links (Windows). 22 case files make links. Without the right to make links the status has to be
    "unsupported on this platform", not "fail" (5 run instances link to a file, by the materialisation research).
  - CI-4, case rules (macOS, Windows). The harness runs with case-sensitive names (harnessutil.go:105) and the
-   disk is not: 2 run instances have units that differ only by case. The 6 cases that ask for names without
-   case can be right only there.
+   disk is not, so a check that reads the disk finds `A.ts` for `a.ts` and a diagnostic about the casing of a
+   name can differ. No run instance has two files whose whole names differ only by case; in two
+   (compiler/commonSourceDir3.ts and commonSourceDir4.ts) a leading part does (`A:/foo`, `a:/foo`). The 6 cases
+   that ask for names without case can be right only there. Predicted by the materialisation research and not
+   measured on those systems: 182 run instances cannot be written to the disk on macOS, 183 on Windows (188
+   without the right to make links), 185 on Linux.
  - CI-5, names in the output (Windows). Drive letters, back slashes, a short name of the temporary directory
    (RUNNER~1), /var against /private/var on macOS: the mapping from real to virtual names was tested on Linux.
  - CI-6, time. Process creation on Windows and under ASAN is not measured. The debug numbers of section 1 are

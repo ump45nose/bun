@@ -61,7 +61,7 @@ export function toPath(fileName: string, basePath: string): string {
   return tspath.toPath(fileName, basePath, true);
 }
 export function getAnyExtensionFromPath(path: string): string {
-  return tspath.getAnyExtensionFromPath(path);
+  return tspath.getAnyExtensionFromPath(path, undefined, false);
 }
 '''
 
@@ -305,18 +305,18 @@ edit(td + "diagnosticwriter.ts", "convertToRelativePath(fileName, formatOpts)", 
 edit(td + "error_baseline.ts",
      "comparePaths(removeTestPathPrefixes(rules, e.file.fileName), removeTestPathPrefixes(rules, inputFile.unitName), {",
      "comparePaths(model.toString(removeTestPathPrefixes(rules, e.file.fileName)), model.toString(removeTestPathPrefixes(rules, inputFile.unitName)), {")
-edit(td + "error_baseline.ts", "model.splitLines(", "model.splitContentByNewlines(")
+edit(td + "error_baseline.ts", "model.splitLines(", "model.contentLines(")
 edit(td + "reader.ts", "comparePaths(e.fileName, section.name, caseInsensitive)",
      "comparePaths(rules.model.toString(e.fileName), rules.model.toString(section.name), caseInsensitive)")
 edit(td + "reader.ts", "comparePaths(unitName, realName(rules, sectionName, true), caseInsensitive)",
      "comparePaths(rules.model.toString(unitName), rules.model.toString(realName(rules, sectionName, true)), caseInsensitive)")
 edit(td + "reader.ts", "comparePaths(name, sections[k].name, caseInsensitive)",
      "comparePaths(model.toString(name), model.toString(sections[k].name), caseInsensitive)")
-edit(td + "reader.ts", "model.splitLines(", "model.splitContentByNewlines(")
+edit(td + "reader.ts", "model.splitLines(", "model.contentLines(")
 edit(td + "shape.ts", "comparePaths(shown, removeTestPathPrefixes(rules, f.unitName), caseInsensitive)",
      "comparePaths(model.toString(shown), model.toString(removeTestPathPrefixes(rules, f.unitName)), caseInsensitive)")
-edit(td + "reader_fuzz.ts", "rules.model.splitLines(", "rules.model.splitContentByNewlines(")
-edit(td + "stats_spans.ts", "rules.model.splitLines(", "rules.model.splitContentByNewlines(")
+edit(td + "reader_fuzz.ts", "rules.model.splitLines(", "rules.model.contentLines(")
+edit(td + "stats_spans.ts", "rules.model.splitLines(", "rules.model.contentLines(")
 
 print("overlay:", out)
 print("replaced by a re-export:", len(written))
