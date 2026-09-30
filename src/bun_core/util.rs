@@ -4078,10 +4078,19 @@ pub fn getcwd_len(buf: &mut [u8], wide: &mut [u16]) -> crate::CrateResult<usize>
         bun_windows_sys::kernel32::SetLastError(ERROR_FILENAME_EXCED_RANGE);
         return Err(crate::CrateError::NameTooLong);
     }
-    // Drop a `\\?\` prefix and transcode to UTF-8, the form every other
-    // path in the process is compared against.
+    // Back to the plain spelling, the form every other path in the process is
+    // compared against: `\\?\C:\dir` is `C:\dir`, and `\\?\UNC\server\share`
+    // is `\\server\share`.
     const LONG_PATH_PREFIX: [u16; 4] = [b'\\' as u16, b'\\' as u16, b'?' as u16, b'\\' as u16];
-    let src = crate::strings::trim_prefix_comptime::<u16>(&wide[..n], &LONG_PATH_PREFIX);
+    const UNC: [u16; 4] = [b'U' as u16, b'N' as u16, b'C' as u16, b'\\' as u16];
+    let mut src = &mut wide[..n];
+    if src.starts_with(&LONG_PATH_PREFIX) {
+        src = &mut src[LONG_PATH_PREFIX.len()..];
+        if src.starts_with(&UNC) {
+            src[2] = b'\\' as u16;
+            src = &mut src[2..];
+        }
+    }
     let last = buf.len() - 1;
     let result = crate::strings::copy_utf16_into_utf8(&mut buf[..last], src);
     if (result.read as usize) < src.len() {

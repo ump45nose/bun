@@ -438,6 +438,41 @@ it.skipIf(isWindows)("process.chdir() into a directory the OS cannot name throws
   });
 });
 
+it.skipIf(!isWindows)("process.cwd() after a chdir into a verbatim path is the plain path", async () => {
+  using dir = tempDir("process-cwd-verbatim", {});
+  await using proc = Bun.spawn({
+    cmd: [
+      bunExe(),
+      "-e",
+      String.raw`
+        const fs = require("node:fs");
+        const plain = process.cwd();
+        const out = {};
+        process.chdir("\\\\?\\" + plain);
+        out.drive = process.cwd() === plain;
+        // The same directory through the drive's administrative share, where there is one.
+        const share = "\\\\localhost\\" + plain[0] + "$" + plain.slice(2);
+        if (fs.existsSync(share)) {
+          process.chdir("\\\\?\\UNC\\" + share.slice(2));
+          out.unc = process.cwd() === share;
+        } else {
+          out.unc = "no administrative share";
+        }
+        console.log(JSON.stringify(out));
+      `,
+    ],
+    env: bunEnv,
+    cwd: String(dir),
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  const [stdout, stderr, exitCode] = await Promise.all([proc.stdout.text(), proc.stderr.text(), proc.exited]);
+  const out = JSON.parse(stdout.trim() || "null");
+  expect({ drive: out?.drive, stderr: exitCode === 0 ? "" : stderr }).toEqual({ drive: true, stderr: "" });
+  expect([true, "no administrative share"]).toContain(out.unc);
+  expect(exitCode).toBe(0);
+});
+
 it("process.cwd() in a Worker follows a process.chdir() on the main thread", async () => {
   using dir = tempDir("process-cwd-worker", { "sub/.keep": "" });
   await using proc = Bun.spawn({
