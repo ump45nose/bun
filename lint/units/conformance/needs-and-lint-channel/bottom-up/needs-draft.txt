@@ -12,8 +12,11 @@ order and the plain writer (units/cli/c2-seam-arbitration/lint-prototype.patch) 
 Neither reads a variable of section 1 and neither writes JSON.
 
 The ids are the ones of the top-down draft (needs-and-lint-channel/top-down/NEEDS.draft.md): CH, RP, LB, LC, VN,
-CK, CI. They replace N1 to N6 of the earlier findings. Where this draft says something else than the top-down
-draft, the entry ends with a line "Differs:". The largest difference is the channel: section 1.
+CK, CI, MQ. They replace N1 to N6 of the earlier findings. Both drafts choose the same channel, proposal (d),
+with the same shapes (the first edition of the top-down draft had chosen the batch form). This file holds every
+entry of the second edition of the top-down draft, read again in the code, and what this pass added: the counts
+of CH-3 point 3 on typecheck's data, the names that are no rule in CH-1 and CH-2, point 7 of CH-3, the proof of
+RP-4, the editor settings of RP-7 and VN-1, the ties of CH-1 point 6. It is the one to copy.
 
 Every number was measured on Linux x64 on the pinned clones (typescript-go 89d5d5b, TypeScript 5848bc5). The
 probes are in needs-and-lint-channel/bottom-up/probes (HOWTO.txt). Numbers marked (td) were measured by the probes
@@ -480,15 +483,17 @@ To: integrator. For information.
    compiler/taggedTemplateWithoutDeclaredHelper.ts) and stay so. No case is a link.
  - test/cli/lint is in no list of test/parallel-allowlist.json (made by scripts/update-parallel-allowlist.mjs):
    the new test files run in the serial part of a shard until that file is made again.
- - The longest path: the longest case is 152 characters below tests/cases, so 191 below the repository with the
-   layout of corpus-repo-hazards/prove-corpus.sh (today's longest tracked path is 159). (td) 202 with the layout
-   that keeps upstream's directories. No two planned paths differ only by case, and none has a name that
-   Windows refuses (28,647 paths checked).
+ - The longest path depends on the layout (today's longest tracked path is 159): the longest case is 152
+   characters below tests/cases, so 191 below the repository with the layout of
+   corpus-repo-hazards/prove-corpus.sh, and 200 with the layout of the sync prototype, which keeps upstream's
+   directories (test/cli/lint/conformance/corpus/ts/tests/cases/...; 16 paths longer than 180; 202 for a
+   baseline of typescript-go in the first edition of that layout). No two planned paths differ only by case,
+   and none has a name that Windows refuses (28,647 paths checked).
  - .gitignore:139 (`*.generated.ts`, also line 36) ignores one case,
    conformance/parser/ecmascript5/parserSyntaxWalker.generated.ts. Proved in a scratch repository: a file
    `.gitignore` with the line `!*` in the corpus directory lifts it, and `git add <directory>` then takes the
-   file. That file is the unit's own.
-   Differs: the top-down draft adds the file with `git add -f`, which leaves the trap for the next sync.
+   file, now and after the next sync (with the root files of this worktree: the blob is upstream's; without
+   the nested file `git add <directory>` leaves the case out and says nothing). That file is the unit's own.
  - The corpus directory has its own `.gitattributes` with the line `* -text`, as VN-1 asks of typecheck: the root
    file gives `text eol=lf` to .ts, .tsx, .js, .json and .mts, so `git add` would store the 9,241 cases that hold
    a CR LF (8,879 at every line break, 362 at some) with other bytes than upstream's. With the line, a clone
@@ -561,11 +566,13 @@ Ask.
     "the type checker of bun --lint is a port of typescript-go" becomes true: it is a second line, added then.
     The research scratch of typecheck also copies src/compiler/diagnosticMessages.json of TypeScript and
     internal/diagnostics/extraDiagnosticMessages.json of typescript-go into the crate: the same credit.
- 2. cli: say whether a rule or a test copies text of ESLint (MIT): then a line for it.
- 3. Maintainers: Apache-2.0 section 4(d) asks for the notices of a NOTICE file in what is distributed. They
-    belong to the library files (DefinitelyTyped, Unicode, Document Object Model, WebGL) and to the Unicode
-    tables of the scanner. Which file of a Bun release carries them once the checker and the libraries are in
-    the binary is not a decision of this unit. LICENSE.md has no line for the React Compiler port either.
+ 2. cli: the same for src/lint (its prototype has an UPSTREAM_PORTED that names typescript-go: the diagnostic,
+    its order, the plain writer and the line map are ports), and whether a rule or a test copies text of
+    ESLint (MIT): then a line for it.
+    .claude/docs/landing-prs.md:48: "Include license attribution in the same PR for any copied open-source
+    code." This work is one pull request, so the credit for the ported code has to be in it too, and only this
+    unit may write the two files.
+ 3. Maintainers: MQ-2.
 Until then: the corpus line only.
 
 
@@ -611,6 +618,19 @@ with the pathspecs `:(exclude)test/cli/lint/conformance/corpus` and `:(exclude)t
 The runner, sweep.ts and conformance.test.ts are checked as any other file. The workflow comment-cop.yml reads
 only paths that start with `src/` (line 99), so CI needs no change.
 
+CK-2. The list may not shrink: a check at the merge
+To: integrator.
+conformance.md: "A committed list of passing names may grow and may not shrink." The test file sees one commit:
+it fails when a listed instance does not pass, and it cannot see that a commit took a name out of the list.
+The comparison of two revisions of the list is in the prototype of the sweep
+(test-file-and-sweep/top-down/sweep.ts:117-121, the option --since <revision>: it reads the list of that
+revision with `git show`, runs no instance, and ends with exit code 1 when a name left a list, moved from E to
+C, or the level was lowered).
+Ask: before a unit branch is merged, run the command that conformance/API.md names for this (in the prototype
+`bun test/cli/lint/conformance/sweep.ts --since <the commit before the merge>`), for
+test/cli/lint/conformance/expectations.json and for the list of K5, and do not merge when it fails.
+Until then: only the review of the diff guards the rule.
+
 
 7. What only CI can verify
 --------------------------
@@ -618,9 +638,10 @@ only paths that start with `src/` (line 99), so CI needs no change.
 No Windows machine and no macOS machine was available (asked again on 2026-09-30 at 00:40 UTC: windows-x64 and
 windows-aarch64 both answer "not available in this session"; there is no macOS machine to ask). Nothing below
 is verified. Do not read a green run on Linux as a statement about them. Watch the first run of these lanes for:
- - CI-1, long paths (Windows). The longest path of the corpus is 191 to 202 characters (today 159). The CI
-   image sets core.longpaths (scripts/build/ci-images/spec.ts:1376); a clone without it fails with "Filename too
-   long" when its root is longer than about 57 to 68 characters.
+ - CI-1, long paths (Windows). The longest path of the corpus is 191 to 202 characters by the layout (today
+   159). The CI image sets core.longpaths (scripts/build/ci-images/spec.ts:1376); a clone without it fails with
+   "Filename too long" when its root is longer than about 57 to 68 characters (259 less the path and one
+   separator).
  - CI-2, line endings (Windows). The image sets core.autocrlf false (spec.ts:1374). A clone with autocrlf true
    has to leave the corpus byte for byte: proved by simulation only (prove-corpus.sh).
  - CI-3, links (Windows). 22 case files make links. Without the right to make links the status has to be
@@ -640,3 +661,26 @@ is verified. Do not read a green run on Linux as a statement about them. Watch t
  - CI-8, the size of the pull request: RP-6.
  - CI-9, a crash. Windows ends a panic with exit code 3, POSIX with a signal: the runner reads both as a crash,
    tested on Linux only.
+ - CI-10, that the test ran. .claude/docs/landing-prs.md:66: "confirm CI actually executed your tests". Look for
+   test/cli/lint/conformance.test.ts in the log of one shard of every platform.
+
+
+8. Questions that only the maintainers can answer
+-------------------------------------------------
+
+MQ-1. REVIEW.md:15 against an internal variable. "Never add production code solely to make a test writable —
+use `bun:internal-for-testing` or externally observable behavior." A lint run must not start JavaScriptCore
+(cli.md C1.1), so that module cannot serve the command line, and the plain format cannot carry options, span
+length and related information. The tree has variables of this kind: BUN_BYTECODE_ORDER_NAMES_OUT behind the
+gate "a debug build, or the tests' environment" (src/bundler/bytecode_order.rs:62-71), and the switches
+BUN_INTERNAL_INTERACTIVE_ASSUME_TTY ("Test-only") and BUN_INTERNAL_FAIL_PIPE_READER_START ("Debug-only fault
+injection for" a test) at src/bun_core/env_var.rs:291-295. Is the pair of CH-2 and CH-3 behind that gate
+acceptable? If not, the default check stays at the level "plain" and lists nothing, and every list is K5's.
+MQ-2. Apache-2.0 section 4(d) asks for the notices of a NOTICE file in what is distributed. NOTICE.txt of
+typescript-go (48,860 bytes) holds the notices for DefinitelyTyped, Unicode, the Document Object Model and
+others: they belong to the library files and to the Unicode tables of the scanner. Which file of a Bun release
+carries them once the checker and the libraries are in the binary? LICENSE.md has no entry for the React
+Compiler port either (src/react_compiler/UPSTREAM_PORTED).
+MQ-3. The corpus under test/: more than 22,000 files and about 8 MiB packed in one pull request
+(.claude/docs/landing-prs.md:67: "Diff size itself is grounds for changes-requested"). internal/STATE.md:29-30
+lists this as an open question with the default "corpus under test/".

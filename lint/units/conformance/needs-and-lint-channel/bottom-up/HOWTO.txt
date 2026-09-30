@@ -1,6 +1,9 @@
 needs-and-lint-channel, bottom-up pass (read from the code). Research only: no file of a worktree was changed.
 
-needs-draft.txt   the draft of NEEDS.md of the unit "conformance" (ids of the top-down draft, channel (d))
+needs-draft.txt   the draft of NEEDS.md of the unit "conformance" (ids of the top-down draft, channel (d)). To use it:
+                  cp needs-draft.txt /workspace/notes/lint/units/conformance/NEEDS.md
+                  It holds every entry of the second edition of ../top-down/NEEDS.draft.md (which chooses (d) too) and
+                  what the second check of this pass added. The notes were not saved with save-notes by this pass.
 probes/           what measured its numbers; every probe reads the reference clones only
 
 Run (each prints one JSON line or a short table):

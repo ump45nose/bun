@@ -2,7 +2,7 @@ Pins are calls of the existing tests with a TypeScript loader, recorded with the
 pins (call sites x distinct input): 967; files of itBundled cases: 173
 the test expects an error: 266
    tsc parses the input without a diagnostic (a set A fix flips the expectation): 101   -> pins.flip.tsv
-      by class of rule N: {"A1":14,"A2":77,"A3":10}; tsc's emit parses as js for 82
+      by class of rule N: {"A1v":13,"A2":77,"A3":10,"A1j":1}; tsc's emit parses as js for 82
    tsc rejects as well: 165
 the test expects the input to be accepted: 701
    the parser of tsc rejects it (a parse without lint must keep accepting it): 11   -> pins.keep.tsv

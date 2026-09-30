@@ -30,6 +30,17 @@ const NR = new Set([
   2875, 2879, 2882, 7026, 2354, 2343,
 ]);
 const VH = new Set([2304, 2307, 2318, 2322, 2339, 2355, 2503, 2552, 2554, 2580, 2584, 2693, 2697, 2711, 2749]);
+// Class A1 of rule N is split once more:
+//   A1j  tsc's JavaScript for the row does not parse with the js loader of the bun side (an early error of JavaScript
+//        that tsc does not report: accepting the row would print code that does not run)
+//   A1r  an unresolved name of the row is a reserved word (tsc and typescript-go read `let x: if` as a type reference)
+//   A1v  the rest: valid TypeScript that the bun side rejects. This is the worklist.
+const NAME_CODES = new Set([2304, 2552, 2503, 2693, 2694, 2749]);
+const RESERVED = new Set(
+  "break case catch class const continue debugger default delete do else enum export extends finally for function if import in instanceof new return super switch throw try var while with".split(
+    " ",
+  ),
+);
 
 const VIEWS = { ts: [0, "ts"], tsx: [1, "tsx"], deco: [2, "ts"], dts: [0, "dts"] };
 const VIEW_NAMES = Object.keys(VIEWS);
@@ -127,7 +138,10 @@ for (const row of corpus) {
       const G = gr.length ? "A2" : rest.some(c => STRUCTURAL.has(c)) ? "A1s" : "A1c";
       const N = gr.length ? "A2" : rest.every(c => NR.has(c)) ? "A1" : "A3";
       const V = gr.length ? "A2" : rest.every(c => VH.has(c)) ? "A1" : "A3";
-      e.views[view] = { codes, G, N, V, js: one.js, m: one.m, msg: b.b[VIEWS[view][0]][0], threw: one.threw };
+      const reserved = one.c.some(x => NAME_CODES.has(x[0]) && RESERVED.has(row.src.slice(x[1], x[1] + x[2])));
+      const sub = N !== "A1" ? N : one.js !== 1 && one.js !== undefined ? "A1j" : reserved ? "A1r" : "A1v";
+      const goOk = g ? g[VIEWS[view][1]][0] === 0 : null;
+      e.views[view] = { codes, G, N, V, sub, goOk, js: one.js, m: one.m, msg: b.b[VIEWS[view][0]][0], threw: one.threw };
     }
     A.push(e);
   }
@@ -200,12 +214,14 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
 // ───────────── set A ─────────────
 {
   const L = [];
-  const rowsOut = ["i\tview\tG\tN\tV\tchecker codes\ttsc emit parses as js\tbun first message\tpins\torigins\tsource"];
+  const rowsOut = ["i\tview\tG\tN (A1 split)\tV\ttypescript-go\tchecker codes\ttsc emit parses as js\tbun first message\tpins\torigins\tsource"];
   for (const view of VIEW_NAMES) {
     const es = A.filter(e => e.views[view]);
     const cG = {};
     const cN = {};
     const cV = {};
+    const cS = {};
+    const cGo = {};
     const cross = {};
     const js = {};
     for (const e of es) {
@@ -213,16 +229,20 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
       inc(cG, x.G);
       inc(cN, x.N);
       inc(cV, x.V);
+      inc(cS, x.sub);
+      if (x.goOk === false) inc(cGo, x.sub);
       inc(cross, `G=${x.G} N=${x.N} V=${x.V}`);
       inc(js, `${x.N} js=${x.js === 1 ? "parses" : x.js === null ? "emit threw" : x.js === undefined ? "n/a" : "REJECTED"}`);
       rowsOut.push(
-        [e.row.i, view, x.G, x.N, x.V, x.codes.join(","), x.js === 1 ? "yes" : x.js === undefined ? "" : x.js === null ? "emit threw" : "no: " + tsv(x.js[0]), tsv(x.msg), tsv((e.row.pin ?? []).join(" | ")), e.row.o.slice(0, 4).join(" "), tsv(e.row.src)].join("\t"),
+        [e.row.i, view, x.G, x.sub, x.V, x.goOk === false ? "go rejects" : "", x.codes.join(","), x.js === 1 ? "yes" : x.js === undefined ? "" : x.js === null ? "emit threw" : "no: " + tsv(x.js[0]), tsv(x.msg), tsv((e.row.pin ?? []).join(" | ")), e.row.o.slice(0, 4).join(" "), tsv(e.row.src)].join("\t"),
       );
     }
     L.push(`==== view ${view}: set A = ${es.length} rows`);
     L.push(`  rule G: ${JSON.stringify(cG)}`);
     L.push(`  rule N: ${JSON.stringify(cN)}`);
     L.push(`  rule V: ${JSON.stringify(cV)}`);
+    L.push(`  rule N with A1 split (A1v worklist, A1r reserved word as a name, A1j tsc's JavaScript does not parse): ${JSON.stringify(cS)}`);
+    L.push(`  of these, rows that the parser of typescript-go rejects: ${JSON.stringify(cGo)}`);
     L.push("  cross table:");
     for (const [k, n] of Object.entries(cross).sort((a, b) => b[1] - a[1])) L.push(`    ${String(n).padStart(6)}  ${k}`);
     L.push("  does the JavaScript that tsc prints parse with the js loader of the bun side (by class of rule N):");
@@ -258,29 +278,81 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
     for (const e of A) {
       const x = e.views[view];
       if (!x) continue;
-      const k = (clusters[normBun(x.msg)] ??= { n: 0, N: {}, G: {}, js: 0, fams: {}, ex: { A1: [], A2: [], A3: [] }, pins: 0, codes: {} });
+      const k = (clusters[normBun(x.msg)] ??= { n: 0, N: {}, G: {}, js: 0, fams: {}, ex: { A1v: [], A1r: [], A1j: [], A2: [], A3: [] }, pins: 0, codes: {} });
       k.n++;
-      inc(k.N, x.N);
+      inc(k.N, x.sub);
       inc(k.G, x.G);
       if (x.js === 1) k.js++;
       if (e.row.pin) k.pins++;
-      for (const o of e.row.o) inc(k.fams, o.replace(/@.*$/, "").replace(/\/m$/, ""));
+      if (x.sub === "A1v") for (const o of e.row.o) inc(k.fams, o.replace(/@.*$/, "").replace(/\/m$/, ""));
       for (const c of x.codes) if (!NR.has(c)) inc(k.codes, c);
-      k.ex[x.N].push(e.row.src);
+      k.ex[x.sub].push(e.row.src);
     }
-    const L2 = [`set A by cause, view ${view}: the first message of the bun side (token text replaced). N: classes of rule N.`, ""];
-    for (const [msg, k] of Object.entries(clusters).sort((a, b) => (b[1].N.A1 ?? 0) - (a[1].N.A1 ?? 0) || b[1].n - a[1].n)) {
+    const L2 = [`set A by cause, view ${view}: the first message of the bun side (token text replaced). N: classes of rule N, A1 split. Sorted by A1v.`, ""];
+    for (const [msg, k] of Object.entries(clusters).sort((a, b) => (b[1].N.A1v ?? 0) - (a[1].N.A1v ?? 0) || b[1].n - a[1].n)) {
       L2.push(`${String(k.n).padStart(6)}  ${msg}`);
-      L2.push(`        N: A1=${k.N.A1 ?? 0} A2=${k.N.A2 ?? 0} A3=${k.N.A3 ?? 0}   G: A1c=${k.G.A1c ?? 0} A1s=${k.G.A1s ?? 0} A2=${k.G.A2 ?? 0}   tsc's emit parses as js: ${k.js}   rows with a pin: ${k.pins}`);
+      L2.push(`        N: A1v=${k.N.A1v ?? 0} A1r=${k.N.A1r ?? 0} A1j=${k.N.A1j ?? 0} A2=${k.N.A2 ?? 0} A3=${k.N.A3 ?? 0}   G: A1c=${k.G.A1c ?? 0} A1s=${k.G.A1s ?? 0} A2=${k.G.A2 ?? 0}   tsc's emit parses as js: ${k.js}   rows with a pin: ${k.pins}`);
       const codes = Object.entries(k.codes).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([c, n]) => `${c}x${n}`).join(" ");
       if (codes) L2.push(`        checker codes outside NR: ${codes}`);
-      L2.push(`        origins: ${Object.entries(k.fams).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([f, n]) => `${f}x${n}`).join(" ")}`);
-      for (const c of ["A1", "A2", "A3"]) {
-        const ex = k.ex[c].sort((a, b) => a.length - b.length).slice(0, 4);
+      if (k.N.A1v) L2.push(`        origins of A1v: ${Object.entries(k.fams).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([f, n]) => `${f}x${n}`).join(" ")}`);
+      for (const c of ["A1v", "A1r", "A1j", "A2", "A3"]) {
+        const ex = k.ex[c].sort((a, b) => a.length - b.length).slice(0, c === "A1v" ? 8 : 3);
         if (ex.length) L2.push(`        ${c}: ${ex.map(s => short(s, 90)).join("   ")}`);
       }
     }
     w(`setA.causes.${view}.txt`, L2.join("\n"));
+  }
+}
+
+// ───────────── set A: worklist by origin ─────────────
+{
+  // probes/inputs/*.mjs name, per family, the place in Bun and the production of the reference parser.
+  const fam = {};
+  const probeInputs = process.env.PROBE_INPUTS ?? "/workspace/notes/lint/units/parser/probes/inputs";
+  if (existsSync(probeInputs)) {
+    const { readdirSync } = await import("node:fs");
+    for (const f of readdirSync(probeInputs).filter(f => /^\d\d-.*\.mjs$/.test(f))) {
+      try {
+        const mod = await import(join(probeInputs, f));
+        for (const [name, v] of Object.entries(mod.families ?? {})) fam[`p${f.slice(0, 2)}:${name}`] = v;
+      } catch {}
+    }
+  }
+  for (const view of ["ts", "tsx", "deco"]) {
+    const keys = {};
+    for (const e of A) {
+      const x = e.views[view];
+      if (!x) continue;
+      for (const o of new Set(e.row.o.map(o => o.replace(/@.*$/, "").replace(/\/m$/, "").replace(/^(td\d\d:[^.]+\.[^.]+).*$/, "$1")))) {
+        const k = (keys[o] ??= { c: {}, msgs: {}, ex: [], go: 0 });
+        inc(k.c, x.sub);
+        if (x.sub === "A1v") {
+          inc(k.msgs, x.msg);
+          k.ex.push(e.row.src);
+          if (x.goOk === false) k.go++;
+        }
+      }
+    }
+    const T = ["origin\tA1v\tA1r\tA1j\tA2\tA3\tA1v rows typescript-go rejects\tplace in bun\tproduction of the reference\tfirst messages of bun for A1v\texamples of A1v"];
+    for (const [o, k] of Object.entries(keys).sort((a, b) => (b[1].c.A1v ?? 0) - (a[1].c.A1v ?? 0))) {
+      if (!k.c.A1v) continue;
+      T.push(
+        [
+          o,
+          k.c.A1v ?? 0,
+          k.c.A1r ?? 0,
+          k.c.A1j ?? 0,
+          k.c.A2 ?? 0,
+          k.c.A3 ?? 0,
+          k.go,
+          tsv(fam[o]?.bun ?? ""),
+          tsv(fam[o]?.ref ?? ""),
+          tsv(Object.entries(k.msgs).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([m, n]) => `${m} x${n}`).join(" | ")),
+          tsv(k.ex.sort((a, b) => a.length - b.length).slice(0, 5).join("   ‖   ")),
+        ].join("\t"),
+      );
+    }
+    w(`setA.worklist.${view}.tsv`, T.join("\n"));
   }
 }
 
@@ -349,6 +421,45 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
     for (const x of v.ex) L.push(`            ${x.d} ${short(x.src, 80)}  tsc ${JSON.stringify(x.tsc[2])} go ${JSON.stringify(x.go[2])}`);
   }
   w("tsc-vs-tsgo.summary.txt", L.join("\n"));
+  // Every disagreement gets a cause. The order matters: the first pattern that matches owns the row.
+  const CAUSES = [
+    ["typeof-private-name", x => /typeof\s+[\w$.]*#/.test(x.src)],
+    ["import-assert (TS2880 from the parser of typescript-go)", x => x.go[2]?.[0] === 2880 || x.tsc[2]?.[0] === 2880 || /\bassert\s*[:{]/.test(x.src)],
+    ["reference-directive", x => /<reference/.test(x.src)],
+    ["modifier-before-rest-parameter", x => /\b(public|private|protected|readonly|override)\s+\.\.\./.test(x.src)],
+    ["jsdoc-function-type", x => /\bfunction\s*[(<.]/.test(x.src) || /[:<=|&(\[,]\s*function\b\s*[;,>)\]|&=]/.test(x.src)],
+    ["await-as-declaration-name", x => /\b(type|interface|class|enum|namespace|module)\s+await\b/.test(x.src)],
+    ["as-or-satisfies-then-operator", x => /\b(as|satisfies)\b/.test(x.src) && x.tsc[0] === 0 && x.go[2]?.[0] === 1005],
+    ["numeric-literal-prefix-without-digits (TS1351 against TS1125, TS1177, TS1178)", x => x.tsc[2]?.[0] === 1351],
+    ["export-type-without-name", x => /export\s+type\s*(=|default\b)/.test(x.src)],
+    ["invalid-character-span (TS1127 length 0 against 1)", x => x.tsc[2]?.[0] === 1127 && x.go[2]?.[0] === 1127],
+    ["jsdoc-question (a `?` that is a whole type, or `?` before a function type)", x => /\?/.test(x.src)],
+  ];
+  const causeOf = x => (CAUSES.find(c => c[1](x)) ?? ["other"])[0];
+  const byCause = {};
+  for (const [kind, list] of [["verdict", goDiff.verdict], ["first", goDiff.first]]) {
+    for (const x of list) {
+      const c = (byCause[causeOf(x)] ??= { verdict: 0, first: 0, dirs: {}, ex: [], rows: new Set() });
+      c[kind]++;
+      c.rows.add(x.i);
+      if (kind === "verdict") inc(c.dirs, x.tsc[0] === 0 ? "tsc accepts, typescript-go rejects" : "typescript-go accepts, tsc rejects");
+      else inc(c.dirs, `both reject: TS${x.tsc[2][0]} -> TS${x.go[2][0]}`);
+      c.ex.push(x);
+    }
+  }
+  const C = ["Disagreements of tsc 6.0.2 and typescript-go by cause (rows x dialects; verdict = one accepts and one rejects, first = both reject with another first diagnostic).", ""];
+  for (const [name, c] of Object.entries(byCause).sort((a, b) => b[1].verdict + b[1].first - a[1].verdict - a[1].first)) {
+    C.push(`${name}: verdict ${c.verdict}, first ${c.first}, distinct sources ${c.rows.size}`);
+    for (const [d, n] of Object.entries(c.dirs).sort((a, b) => b[1] - a[1]).slice(0, 8)) C.push(`      ${String(n).padStart(5)}  ${d}`);
+    const seen = new Set();
+    const limit = name === "other" ? 1000 : 6;
+    for (const x of c.ex.sort((a, b) => a.src.length - b.src.length)) {
+      if (seen.has(x.src) || seen.size >= limit) continue;
+      seen.add(x.src);
+      C.push(`      ${x.d} ${short(x.src, 100)}  tsc ${x.tsc[0] === 0 ? "accepts" : JSON.stringify(x.tsc[2]) + " " + x.tsc[1]}  |  go ${x.go[0] === 0 ? "accepts" : JSON.stringify(x.go[2]) + " " + x.go[1]}`);
+    }
+  }
+  w("tsc-vs-tsgo.causes.txt", C.join("\n"));
   const V = ["i\tdialect\ttsc count\ttsc first\ttsc message\tgo count\tgo first\tgo message\torigins\tsource"];
   for (const x of goDiff.verdict)
     V.push([x.i, x.d, x.tsc[0], (x.tsc[2] ?? []).join(","), tsv(x.tsc[1]), x.go[0], (x.go[2] ?? []).join(","), tsv(x.go[1]), x.o.slice(0, 3).join(" "), tsv(x.src)].join("\t"));
@@ -363,7 +474,7 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
 
 // ───────────── pins ─────────────
 {
-  const flip = ["pin (test file:line loader method expectation)\tclass N\tclass G\tclass V\tchecker codes\ttsc emit parses as js\tsource"];
+  const flip = ["pin (test file:line loader method expectation)\tclass N (A1 split)\tclass G\tclass V\tchecker codes\ttsc emit parses as js\tsource"];
   const keep = ["pin\ttsc first code\tstart\tlength\ttsc message\ttypescript-go first\tsource"];
   const odd = ["pin\tstage 1 verdict of the same loader\tsource"];
   const S = { pins: 0, expectError: 0, expectOk: 0, flip: 0, flipByN: {}, flipJs: 0, keep: 0, errorBoth: 0, okBoth: 0, odd: 0, bundleFiles: 0, bundleKeep: 0, bundleA: 0 };
@@ -386,7 +497,7 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
         } else if (bb !== 1 && t[d][0] === 0) {
           S.bundleA++;
           const x = aByI.get(row.i)?.views[d];
-          flip.push([pin + "  (bun rejects: " + (bb === "CRASH" ? "CRASH" : bb[0]) + ")", x?.N ?? "", x?.G ?? "", x?.V ?? "", x?.codes.join(",") ?? "", x?.js === 1 ? "yes" : "no", tsv(row.src)].join("\t"));
+          flip.push([pin + "  (bun rejects: " + (bb === "CRASH" ? "CRASH" : bb[0]) + ")", x?.sub ?? "", x?.G ?? "", x?.V ?? "", x?.codes.join(",") ?? "", x?.js === 1 ? "yes" : "no", tsv(row.src)].join("\t"));
         }
         continue;
       }
@@ -405,9 +516,9 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
         if (tscOk) {
           S.flip++;
           const x = aByI.get(row.i)?.views[d];
-          inc(S.flipByN, x?.N ?? "not in set A of stage 1");
+          inc(S.flipByN, x?.sub ?? "not in set A of stage 1");
           if (x?.js === 1) S.flipJs++;
-          flip.push([pin, x?.N ?? "", x?.G ?? "", x?.V ?? "", x?.codes.join(",") ?? "", x?.js === 1 ? "yes" : x?.js ? "no: " + tsv(x.js[0]) : "", tsv(row.src)].join("\t"));
+          flip.push([pin, x?.sub ?? "", x?.G ?? "", x?.V ?? "", x?.codes.join(",") ?? "", x?.js === 1 ? "yes" : x?.js ? "no: " + tsv(x.js[0]) : "", tsv(row.src)].join("\t"));
         } else S.errorBoth++;
       } else {
         S.expectOk++;
@@ -466,7 +577,7 @@ wz("table.jsonl.gz", table.join("\n") + "\n");
 }
 console.log("written to " + outDir);
 // Files: table.jsonl.gz (every row: b, t, g, v; join with the corpus on i), totals.txt,
-// setA.classes.txt, setA.rows.tsv.gz, setA.codes.<view>.tsv, setA.causes.<view>.txt,
+// setA.classes.txt, setA.rows.tsv.gz, setA.codes.<view>.tsv, setA.causes.<view>.txt, setA.worklist.<view>.tsv,
 // setB.causes.<view>.txt, setB.rows.tsv.gz,
-// tsc-vs-tsgo.summary.txt, tsc-vs-tsgo.verdict.tsv, tsc-vs-tsgo.first.tsv.gz, tsc-vs-tsgo.panic.tsv,
+// tsc-vs-tsgo.summary.txt, tsc-vs-tsgo.causes.txt, tsc-vs-tsgo.verdict.tsv, tsc-vs-tsgo.first.tsv.gz, tsc-vs-tsgo.panic.tsv,
 // pins.summary.txt, pins.flip.tsv, pins.keep.tsv, pins.odd.tsv, codes.first.tsv.gz, codes.summary.txt
