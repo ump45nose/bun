@@ -7,6 +7,7 @@ import {
   runeCount,
   toByteString,
   trimRightSpace,
+  utf8Bytes,
   utf8String,
   utf8ToByteString,
 } from "./bytestring";
@@ -41,8 +42,8 @@ export interface TextModel {
   compare(a: string, b: string): number;
 }
 
-// ts.computeLineStarts of src/compiler/scanner.ts
-function lineStartsUtf16(text: string): number[] {
+// ts.computeLineStarts of src/compiler/scanner.ts of microsoft/TypeScript at 5848bc5.
+function computeLineStarts(text: string): number[] {
   const result: number[] = [];
   let pos = 0;
   let lineStart = 0;
@@ -108,11 +109,10 @@ export const utf8Model: TextModel = {
 export const utf16Model: TextModel = {
   name: "utf16",
   fromBytes: bytes => utf8String(bytes),
-  // Node writes TypeScript's baselines: a lone surrogate becomes U+FFFD there too.
-  toBytes: text => Buffer.from(text, "utf8"),
+  toBytes: utf8Bytes,
   fromString: text => text,
   toString: text => text,
-  lineStarts: lineStartsUtf16,
+  lineStarts: computeLineStarts,
   contentLines(content) {
     let lines = content.split("\n");
     if (lines.length === 1) lines = lines[0].split("\r");

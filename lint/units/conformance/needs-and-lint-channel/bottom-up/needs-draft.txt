@@ -99,22 +99,26 @@ What (d) costs, measured. This is its weak side and the reason why the top-down 
   460 ms with 1. The figures of this machine say how loaded it is more than what a start costs.
 - The default libraries are read again by each process. Today's parser, which drops the types, reads the 102
   library files that are no worker or script host library (2,984,246 bytes) in 10 ms in the release build; (td)
-  the 15 files of a `target: es2015` program take 6 ms release and 284 ms to 311 ms debug. Binding and the start
-  of the checker cannot be measured yet.
-- A full sweep pays 12,797 starts and library loads before any check: on this loaded machine 5 to 9 minutes with
-  a release build and 8 to 16 processes at a time, and 20 minutes or more with a debug build. With (c) it pays
-  about 50 starts. A sweep belongs to a release build in both forms: the check itself is 10 to 100 times slower
-  in a debug build with ASAN.
-- conformance.test.ts (budget 10 s in a release build): 10 s hold about 250 starts with 8 at a time on this
-  loaded machine, and about 5,000 with the 12 ms start of a machine that is not loaded. In the debug and ASAN
-  lanes a listed instance costs at least 57 ms of wall time plus the libraries. So a list of the default check
-  above a few hundred names needs a fixed sample in those lanes. That list is empty until the binary checks.
+  the 15 files of a `target: es2015` program take 6 ms release and 284 ms to 311 ms debug.
+  A real checker says what that costs with binding and checking: the command line of typescript-go built from
+  source (/tmp/e2e/k4real of the typecheck research), `min.ts --noEmit --skipDefaultLibCheck
+  --noErrorTruncation --target es2015`, ten runs: 1.07 s user and 0.31 s system, so about 130 ms of processor
+  time for each process; with `--lib es5` (4 files) 29 ms. Three quarters of a process is the default libraries.
+- The reference does not pay this: its harness keeps every parsed file for the whole process
+  (harnessutil.go:493-530, sourceFileCache), and the typecheck research ran all 12,797 instances in one process
+  in 60 s on this machine (/tmp/k4drv/k5/setup3.log).
+- A full sweep through (d) pays 12,797 starts and library loads: about 28 minutes of processor time with a
+  release build, a few minutes of wall time with 8 to 16 processes at a time; at least two hours of processor
+  time with a debug build before any check. A sweep belongs to a release build in both forms.
+- conformance.test.ts (budget 10 s in a release build): about 600 to 1,300 listed instances on 8 to 16 cores
+  at 130 ms each. In the debug and ASAN lanes (10 to 100 times slower) a list of more than a few dozen names
+  needs a fixed sample. That list is empty until the binary checks.
 - (c) removes the starts. It removes the library loads only if the checker crate shares parsed and bound library
-  files between the programs of one process, which nobody has asked of typecheck. It can be added later without
-  a change to the payloads: D of CH-2 and compilerOptions of CH-3 are the shapes of the (c) draft.
-Differs: the top-down draft chooses (c) ("about two hours for one sweep" in a debug build: that is with one
-process at a time). What would decide for (c): a list of the default check with thousands of names that has to
-run in full in the debug lanes, together with shared libraries in the checker crate.
+  files between the programs of one process, which no goal file asks of typecheck. It can be added later without
+  a change to the payloads: D of CH-2 and compilerOptions of CH-3 do not depend on what carries them.
+The first edition of the top-down draft chose (c) for this cost; its second edition chooses (d) too. What would
+justify a batch form later: a list of the default check with more than about a thousand names that has to run
+in full in the test file, together with shared libraries in the checker crate.
 
 CH-1. The operand form: what cli.md C2 leaves open
 To: cli (src/runtime/cli/lint_command.rs, src/lint/).
@@ -157,8 +161,28 @@ Ask. For `bun --lint <files>` when stdout and stderr are no terminal:
     current directory. 130 case files have a unit named tsconfig.json (73 run instances) and 242 one named
     package.json (504 run instances), some broken on purpose; none has a bunfig.toml, a jsconfig.json or a
     .env file.
-Unlocks: the probe of the default check (one file that would leave a mark if it ran, one file with a syntax
-error). Alone it lets no instance be listed: see "Until then" of CH-2.
+ 8. Configuration files and operands. The reference refuses operands beside a configuration file: with file
+    names on the command line it looks for a tsconfig.json in the current directory and in every directory
+    above it, prints TS5112 and checks nothing (internal/execute/tsc.go:180-188, :269-281; measured with
+    typescript-go's command line: `error TS5112: tsconfig.json is present but will not be loaded if files are
+    specified on commandline. Use '--ignoreConfig' to skip this error.`, exit code 1). The plan of this work
+    has `bun --lint` follow that. Then a conformance run needs the way out: a run with
+    BUN_INTERNAL_LINT_OPTIONS set looks for no configuration file and loads none (CH-3 point 1). Without that
+    variable the runner can only keep its scratch directory where no directory above holds a tsconfig.json
+    (the temporary directory of the system), and the 73 run instances that bring their own cannot run.
+ 9. The plain form is chosen by "stderr is no terminal" alone: bun_core::output::is_stderr_tty()
+    (src/bun_core/output.rs:841), not enable_ansi_colors_stderr() (:2257), which FORCE_COLOR turns on for a
+    pipe (:398-438). The runner removes FORCE_COLOR and sets NO_COLOR=1, as bunEnv does.
+10. A run whose check reached a stand-in, or recorded an internal diagnostic, says so on stderr with one line
+    for each that has a name as its code (`internal-error` is in cli's prototype; one more name for a
+    stand-in) and ends with exit code 2: a check that was not complete never looks like a clean run, with or
+    without a report. (typecheck gives the data: CH-3 point 4.)
+Unlocks: the probe of the default check, three steps of one process each: (1) a file that would leave a mark
+if it ran: no mark, exit code 0, nothing printed; (2) a file with `const x: number = "s";` and
+BUN_INTERNAL_LINT_REPORT: exit code 2, the line of TS2322 on stderr, and the report with start 6 and length 1
+decides the level "report" or "plain"; (3) BUN_INTERNAL_LINT_OPTIONS with an option name that does not exist:
+exit code 1 and the name on stderr decide "options are read". Alone CH-1 lets no instance be listed: see
+"Until then" of CH-2.
 Until then: the probe refuses the binary and no instance is handed to it. Measured again for this draft: with
 BUN_FEATURE_FLAG_EXPERIMENTAL_LINT=1 the release binary (1.4.3-canary.1+367d939d9) and the debug build of the cli
 worktree (1.4.3-debug+e3566be88) both run the operand of `bun --lint probe.ts`: the mark is written, exit code 0.
@@ -199,10 +223,10 @@ Ask.
     - options: the value of BUN_INTERNAL_LINT_OPTIONS as the binary read it (CH-3); absent when that variable
       was not set. It is the proof that the options were applied. The value is JSON already: the binary can
       copy its bytes into the report after it has read them without an error.
-    - diagnostics: the diagnostics that have a TypeScript number, and only those: what the harness of the
-      reference collects (CH-3 point 3), in the order of CH-1 point 6. The runner sorts them again with a
-      stable sort by path, start, end, code and category, so diagnostics that are equal in those keep the
-      order of the report.
+    - diagnostics: the diagnostics of the run that have a TypeScript number, and only those, in the order of
+      CH-1 point 6 (in a harness run: what the harness of the reference collects, CH-3 point 3). The runner
+      sorts them again with a stable sort by the virtual path, start, end, code and category, so diagnostics
+      that are equal in those keep the order of the report.
     - rules: the diagnostics of lint rules. The runner counts them and leaves them out of the comparison: the
       cases are full of code that the first rules of C3 report (15 case files have a `debugger` statement).
     - next is absent or empty without a chain. location is absent for a diagnostic without a file.
@@ -211,7 +235,8 @@ Ask.
       component (lib.<name>.d.ts) is read.
     - start and length count UTF-8 bytes from the first byte of the file; the runner writes every unit as UTF-8
       without a byte order mark. line and character are 1-based, the character in UTF-16 code units. Both
-      pairs are given and have to agree, and each diagnostic of stderr has to be in the report.
+      pairs are given and have to agree. The report and stderr show the same diagnostics: the runner fails a
+      run in which one has an entry that the other lacks.
     - standIns: the names of the stand-in log of the run, each once, in the order of the first reach.
     - internal: every other diagnostic of the run, as `<code>: <text>`: a ported panic or assert
       (`internal-error`), a syntax error of Bun that has no TypeScript number (`syntax`), a file that was not
@@ -239,8 +264,20 @@ Ask.
       directives of the variation. The longest directive text of one case is 424 bytes, so the value stays far
       below the 32,767 characters that Windows allows for one variable.
     - libDirectory is optional and is read only until the libraries are part of the binary.
+    - With the variable set the run is a harness run: no configuration file is looked for or loaded (CH-1
+      point 8), and the diagnostics are collected as the harness collects them (point 3 below). stderr and the
+      report show that one set. BUN_INTERNAL_LINT_REPORT alone changes nothing of a run.
     - An unknown member, an option that the binary does not know and a value that it does not implement are a
       refusal: exit code 1, a text on stderr that names it, no report. Nothing is dropped in silence.
+    - Names kept for the program layer. The runner sends one only when cli's API.md says that it is
+      implemented; until then such an instance is "unsupported" and no process starts:
+      "configFile": "<path>" with "defaultOptions": {...} (73 run instances; the order is the one of
+      harnessutil.go:89-109: the options of the configuration file, then defaultOptions where no value is set,
+      then compilerOptions; the roots stay the operands);
+      "root": "<path>" (175 run instances: a text of the instance names a file by an absolute path such as
+      /.lib/react.d.ts, to be found below that real directory);
+      "useCaseSensitiveFileNames": false (5 run instances); "captureSuggestions": true (1 run instance,
+      harnessutil.go:670-672 and :686-688).
  2. typecheck: an entry that sets one option from its declared name and a JSON value: the port of
     tsoptions.ParseCompilerOptions(key string, value any, allOptions *core.CompilerOptions)
     (internal/tsoptions/parsinghelpers.go:268, the switch from :279; called by the harness at
@@ -264,7 +301,8 @@ Ask.
     The emit itself adds nothing: the count before the emit (:673) and after it (:689) is the same in all
     12,797, so no emit has to run. The options are applied as given and none is added: a run that is told
     noEmit reports less (the earlier pass saw TS2441, TS5055 and TS5056 go; 988 run instances set noEmit).
-    With BUN_INTERNAL_LINT_REPORT set the report holds the harness's set; stderr may hold less.
+    A run with BUN_INTERNAL_LINT_OPTIONS collects this way (point 1); a run without it may keep the rule of
+    the command line.
  4. typecheck: per run, the stand-in log (names, each once, order of the first reach) and the internal log.
     The scratch of the typecheck research has both: Checker.stand_ins: StandInLog with snapshot() ->
     Vec<(&'static str, u32)> and Checker.internal: InternalLog with snapshot() and count()

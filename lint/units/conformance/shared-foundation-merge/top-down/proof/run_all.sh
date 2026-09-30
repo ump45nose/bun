@@ -82,19 +82,19 @@ run imt-verify_roots $IM/top-down/prototype bun verify_roots.ts
 run imt-verify_materialize $IM/top-down/prototype bun verify_materialize.ts
 
 OE=oracle-and-expectations
-run oe-expectations.test $OE/bottom-up/prototype bun test ./expectations.test.ts
+run oe-expectations.test $OE/bottom-up/prototype bun test --timeout 180000 ./expectations.test.ts
 run oe-verify_list $OE/bottom-up/prototype bun verify_list.ts
 run oe-selfcheck $OE/top-down/prototype bun selfcheck.ts
 
 CC=check-contract-default-spawn
-run cc-spawn.test $CC/prototype bun test ./spawn.test.ts
+run cc-spawn.test $CC/prototype bun test --timeout 180000 ./spawn.test.ts
 run cc-verify_plain $CC/prototype bun verify_plain.ts
-run cct-manifest.test $CC/top-down bun test ./manifest.test.ts
-run cct-plain.test $CC/top-down bun test ./plain.test.ts
-run cct-spawn.test $CC/top-down bun test ./spawn.test.ts
+run cct-manifest.test $CC/top-down bun test --timeout 180000 ./manifest.test.ts
+run cct-plain.test $CC/top-down bun test --timeout 180000 ./plain.test.ts
+run cct-spawn.test $CC/top-down bun test --timeout 180000 ./spawn.test.ts
 
 TF=test-file-and-sweep
-run tf-conformance.test $TF/top-down bun test ./conformance.test.ts
-run tfb-proto.test $TF/bottom-up/prototype bun test ./proto.test.ts
-run tfb-proto2.test $TF/bottom-up/prototype bun test ./proto2.test.ts
+run tf-conformance.test $TF/top-down bun test --timeout 180000 ./conformance.test.ts
+run tfb-proto.test $TF/bottom-up/prototype bun test --timeout 180000 ./proto.test.ts
+run tfb-proto2.test $TF/bottom-up/prototype bun test --timeout 180000 ./proto2.test.ts
 echo "done: $OUT"

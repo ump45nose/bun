@@ -56,8 +56,8 @@ for (const f of files) {
       if (n.initializer) hit((ts.isIndexSignatureDeclaration(n.parent) ? "I index signature parameter initializer" : "B parameter initializer in a type signature") + ": " + (hasScopeMaker(n.initializer) ? "with function or class" : "no scope") + sfx, sf, n.parent);
       const decos = (ts.canHaveDecorators(n) && ts.getDecorators(n)) || (n.modifiers || []).filter(m => m.kind === K.Decorator);
       if (decos && decos.length) hit("H parameter decorator in a type signature" + sfx, sf, n.parent);
-      if (ts.isIndexSignatureDeclaration(n.parent) && (n.questionToken || n.dotDotDotToken || (n.modifiers && n.modifiers.length) || n.parent.parameters.length !== 1 || !ts.isIdentifier(n.name))) hit("I index signature parameter with ?, ..., modifier, pattern or count != 1" + sfx, sf, n.parent);
-      if (!ts.isIdentifier(n.name)) hit("C binding pattern as parameter name in a type signature" + sfx, sf, n.parent);
+      if (ts.isIndexSignatureDeclaration(n.parent) && (n.questionToken || n.dotDotDotToken || (n.modifiers && n.modifiers.length) || n.parent.parameters.length !== 1 || !n.name || !ts.isIdentifier(n.name))) hit("I index signature parameter with ?, ..., modifier, pattern or count != 1" + sfx, sf, n.parent);
+      if (n.name && !ts.isIdentifier(n.name)) hit("C binding pattern as parameter name in a type signature" + sfx, sf, n.parent);
     }
     if (ts.isBindingElement(n) && n.initializer && enclosingTypeSignature(n)) hit("C binding element initializer in a type signature: " + (hasScopeMaker(n.initializer) ? "with function or class" : "no scope") + sfx, sf, n);
     if (ts.isPropertySignature(n) && n.initializer) hit("D property signature initializer: " + (hasScopeMaker(n.initializer) ? "with function or class" : "no scope") + sfx, sf, n);

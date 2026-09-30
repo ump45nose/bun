@@ -23,7 +23,6 @@ export interface Entries {
 
 export class MemFsPanic extends Error {}
 
-// vfstest.go:185
 function comparePathsByParts(a: string, b: string): number {
   for (;;) {
     const ai = a.indexOf("/");
@@ -122,7 +121,7 @@ export class MemFs {
     if (entry.kind === "symlink") this.symlinks.set(canonical, this.canonical(entry.target));
   }
 
-  // vfstest.go:262; the Go map walk over symlinks has no fixed order, here it is insertion order
+  // getFollowingSymlinksWorker; the Go map walk over symlinks has no fixed order, here it is insertion order
   getFollowingSymlinks(
     p: string,
     from = "",
@@ -141,7 +140,6 @@ export class MemFs {
     return { entry: undefined, path: p, broken: from !== "" };
   }
 
-  // vfstest.go:325
   private mkdirAll(p: string): string | undefined {
     const fast = this.getFollowingSymlinks(this.canonical(p));
     if (fast.entry !== undefined) {
@@ -175,7 +173,7 @@ export class MemFs {
     return undefined;
   }
 
-  // internal.go:29 and iofs.go RootFor: "/" is the whole map, "c:/" is the sub tree "c:"
+  // SplitPath of internal.go and the root of iofs.go: "/" is the whole map, "c:/" is the sub tree "c:"
   private split(path: string): { root: string; rest: string } {
     const p = normalizePath(path);
     const l = getRootLength(p);
@@ -211,7 +209,7 @@ export class MemFs {
     return s !== undefined && s.kind === "file" ? s.data : undefined;
   }
 
-  // iofs.go:191 with vfstest.go:442
+  // Realpath of iofs.go over Realpath of vfstest.go
   realpath(path: string): string {
     const { root, rest } = this.split(path);
     const joined = root + rest;
@@ -221,7 +219,7 @@ export class MemFs {
     return hadSlash ? "/" + r.entry.realpath : r.entry.realpath;
   }
 
-  // internal.go:66; the entries of a directory come sorted by name
+  // GetAccessibleEntries of internal.go; the entries of a directory come sorted by name
   getAccessibleEntries(path: string): Entries {
     const result: Entries = { files: [], directories: [], symlinks: new Set() };
     const k = this.key(path);

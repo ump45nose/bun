@@ -299,9 +299,11 @@ Ask.
    again after the emit at `:676-689`; the typecheck research measured that the two counts are equal in all
    12,797 instances), then `compiler.SortAndDeduplicateDiagnostics` (`internal/compiler/program.go:1597-1634`).
    The command line collects program and global diagnostics only without a syntactic one
-   (`program.go:1970`) and semantic ones only without any of those (`:1979`). 288 to 293 E baselines hold a
-   code that only the parser reports together with a code that it never reports. The options are applied as
-   given and none is added: a run that is told `noEmit` reports less.
+   (`program.go:1970`) and semantic ones only without any of those (`:1979`). On the programs that the
+   typecheck research recorded from the reference, 691 run instances have a syntactic diagnostic; 406 of
+   them lose another diagnostic at the first gate and 61 more at the second (count of the bottom-up pass,
+   `../bottom-up/probes/harness_gate.py`). The options are applied as given and none is added: a run that
+   is told `noEmit` reports less.
 4. typecheck: per run, the stand-in log (names, each once, order of the first reach) and the internal log.
    The scratch of the typecheck research has both: `StandInLog::snapshot() -> Vec<(&'static str, u32)>` and
    `InternalLog::snapshot()`, `count()` (`units/typecheck/conventions-scratch/rust/internal.rs:28-81`).
@@ -454,7 +456,9 @@ Why it is here. For a test file that is not in that list the runner of CI sets
 `ASAN_OPTIONS=...:detect_leaks=1:abort_on_error=1` and `LSAN_OPTIONS` (`scripts/runner.node.ts:2201-2206`),
 in the ASAN lane and on a local run of that script. `test/harness.ts:95` keeps a value that is set, so every
 `bun --lint` child runs under LeakSanitizer, and a leak aborts it: the runner reads a crash. Other commands
-are rooted for this on purpose (`src/options_types/schema.rs:57`). With empty lists no instance is expected
+are rooted for this on purpose (`src/options_types/schema.rs:57`), and the bottom-up pass showed that the
+scan does run on a path that parses and exits (`bun-debug build --no-bundle` with every root switched off
+in `LSAN_OPTIONS` reports leaks; with the settings of CI it reports none today). With empty lists no instance is expected
 to pass and the test stays green. When the first instance is listed, a leak is a defect of the lint path,
 to be fixed there; the line `test/cli/lint/conformance.test.ts` in this file is the stopgap. The same holds
 for cli's own `lint.test.ts` and for typecheck's test file of K5.
