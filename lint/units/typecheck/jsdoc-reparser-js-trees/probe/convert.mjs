@@ -235,8 +235,14 @@ export function convert(n, ctx) {
     out.children.set("name", id);
   }
   // Rule jsdoc-flags
-  if (n.jsdocInfo & 1) out.flags = (out.flags | GOF.HasJSDoc) >>> 0;
-  if (n.jsdocInfo & 2) out.flags = (out.flags | GOF.PossiblyContainsDeprecatedTag) >>> 0;
+  if (ctx.isJS) {
+    // In a JavaScript file the flags follow the parsed comments: a comment that is attached, a deprecated tag that was parsed.
+    if (n.jsDoc.length) out.flags = (out.flags | GOF.HasJSDoc) >>> 0;
+    if (n.jsDoc.some(hasDeprecatedTag)) out.flags = (out.flags | GOF.PossiblyContainsDeprecatedTag) >>> 0;
+  } else {
+    if (n.jsdocInfo & 1) out.flags = (out.flags | GOF.HasJSDoc) >>> 0;
+    if (n.jsdocInfo & 2 || (n.jsdocInfo & 4 && n.jsDoc.some(hasDeprecatedTag))) out.flags = (out.flags | GOF.PossiblyContainsDeprecatedTag) >>> 0;
+  }
   // Rule jsdoc-position: a JSDoc node starts where its host starts, or where the JSDoc before it ends.
   let jpos = n.pos;
   for (const j of n.jsDoc) {
@@ -250,6 +256,11 @@ export function convert(n, ctx) {
   return out;
 }
 
+function hasDeprecatedTag(n) {
+  if (n.tsKind === "JSDocDeprecatedTag") return true;
+  for (const v of n.props.values()) { if (v.list) { if (v.nodes.some(hasDeprecatedTag)) return true; } else if (hasDeprecatedTag(v)) return true; }
+  return false;
+}
 const CONTEXT_MASK = GOF.DisallowInContext | GOF.DisallowConditionalTypesContext | GOF.YieldContext | GOF.DecoratorContext | GOF.AwaitContext | GOF.JavaScriptFile | GOF.InWithStatement | GOF.Ambient;
 function clearFlags(g, mask) {
   g.flags = (g.flags & ~mask) >>> 0;

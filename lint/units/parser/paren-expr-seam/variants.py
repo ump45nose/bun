@@ -642,6 +642,34 @@ def source_twin(t, always_inline=False, cold_twin=True):
         lint_call = ''.join('    ' + l + '\n' for l in lint_call.splitlines())
         t.rep(f, old, indent + 'if ' + guard + ' {\n' + lint_call + indent + '}\n' + old)
 
+# ---- V2 with ONE source text: a macro defines the function and its lint twin; lint_pick! selects tokens, it adds no block ----
+def macro_twin(t):
+    source_twin(t, cold_twin=False)
+    mod = open(t.dir + '/' + MOD).read()
+    normal = cut(mod, '    /// This assumes that the open parenthesis has already been parsed by the caller\n    pub(crate) fn parse_paren_expr(', '    #[inline(never)]\n    pub(crate) fn parse_paren_expr_for_lint(')
+    twin_text = cut(mod, '    #[inline(never)]\n    pub(crate) fn parse_paren_expr_for_lint(', '    #[cold]\n    #[inline(never)]\n    pub(crate) fn parse_paren_expr_for_lint_cold(')
+    body = normal
+    def pick(plain, lint):
+        nonlocal body
+        assert body.count(plain) == 1, plain[:50]
+        body = body.replace(plain, 'lint_pick!($is_lint, { ' + lint + ' }, { ' + plain + ' });' if not plain.endswith('\n') else 'lint_pick!($is_lint, {\n' + lint + '}, {\n' + plain + '});\n')
+    pick('p.skip_type_script_type(Level::Lowest)?;', 'p.lint_arrow_param_type(item)?;')
+    pick(RET_OLD, '                is_arrow_fn = p.lint_decide_arrow_return_type(\n                    loc,\n                    &arrow_data,\n                    opts.is_after_question_and_before_colon,\n                )?;\n')
+    pick('p.pop_and_flatten_scope(scope_index);', 'p.lint_pop_and_flatten_scope(scope_index);')
+    pick('p.log_arrow_arg_errors(&mut arrow_arg_errors);', 'p.lint_log_arrow_arg_errors(&mut arrow_arg_errors);')
+    assert body.count('            p.mark_expr_as_parenthesized(&mut value);\n            return Ok(value);\n') == 1
+    body = body.replace('            p.mark_expr_as_parenthesized(&mut value);\n            return Ok(value);\n', '            p.mark_expr_as_parenthesized(&mut value);\n            lint_pick!($is_lint, { p.lint_paren(loc, value); }, {});\n            return Ok(value);\n')
+    head = '    /// This assumes that the open parenthesis has already been parsed by the caller\n    pub(crate) fn parse_paren_expr('
+    assert body.startswith(head)
+    body = '        $(#[$attr])*\n        pub(crate) fn $name(' + body[len(head):]
+    macro = ('macro_rules! lint_pick {\n    (true, { $($lint:tt)* }, { $($plain:tt)* }) => { $($lint)* };\n    (false, { $($lint:tt)* }, { $($plain:tt)* }) => { $($plain)* };\n}\n\n'
+             'macro_rules! define_parse_paren_expr {\n    ($(#[$attr:meta])* $name:ident, $is_lint:tt) => {\n' + body + '    };\n}\n\n')
+    mod = mod.replace(normal, '    define_parse_paren_expr!(parse_paren_expr, false);\n\n').replace(twin_text, '    define_parse_paren_expr!(\n        #[inline(never)]\n        parse_paren_expr_for_lint,\n        true\n    );\n\n')
+    anchor = "// File-split mixin: Round-C lowered"
+    assert mod.count(anchor) == 1
+    mod = mod.replace(anchor, macro + anchor)
+    open(t.dir + '/' + MOD, 'w').write(mod)
+
 # ---- V5: the tests live in callees, the function only calls other names ----
 def callee(t, with_args=True, never=True):
     nv = '    #[inline(never)]\n' if never else ''
@@ -858,6 +886,7 @@ VARIANTS = {
     'v2gts': lambda t: (stub(t), twin(t, ts_only=True, fixed=True, no_scan=True)),
     'v2m': lambda t: (stub(t), source_twin(t)),
     'v2m2': lambda t: (stub(t), source_twin(t, cold_twin=False)),
+    'v2mm': lambda t: (stub(t), macro_twin(t)),
     'v2mi': lambda t: (stub(t), source_twin(t, always_inline=True)),
     # V3
     'v3': lambda t: (stub(t), after_tests(t, ts_only=False), paren_tests(t, ts_only=False, in_function=False)),

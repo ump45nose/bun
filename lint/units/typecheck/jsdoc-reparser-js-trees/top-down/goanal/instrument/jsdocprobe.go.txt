@@ -12,6 +12,7 @@ import (
 	"github.com/microsoft/typescript-go/internal/ast"
 	"github.com/microsoft/typescript-go/internal/core"
 	"github.com/microsoft/typescript-go/internal/parser"
+	"github.com/microsoft/typescript-go/internal/scanner"
 	"github.com/microsoft/typescript-go/internal/tspath"
 )
 
@@ -61,6 +62,9 @@ func main() {
 	fmt.Fprintf(w, "# files %d\n# file\tstart\tend\tfunction\tentered\tentered below parseJSDocComment\n", files)
 	for i, n := range parser.ProbeNames {
 		fmt.Fprintf(w, "%s\t%d\t%d\n", n, parser.AllEntered[i], parser.JSDocEntered[i])
+	}
+	for i, n := range scanner.ProbeNames {
+		fmt.Fprintf(w, "scanner/%s\t%d\t%d\n", n, scanner.AllEntered[i], scanner.JSDocEntered[i])
 	}
 	w.Flush()
 	f.Close()

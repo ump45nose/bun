@@ -2,7 +2,7 @@
 //   id without bit 31: a node of a file. The page of the id names the table; the index is `id - first`.
 //   id with bit 31   : a node of the context's own arena (a file under construction, or what a checker made).
 // A nil id, an unknown id and a cast to the wrong struct give zero values and one entry in the log. Nothing panics.
-use crate::ast::ast_generated::{DEF_COUNT, Def, layout};
+use crate::ast::ast_generated::{DEF_COUNT, Def, MAX_SLOTS, layout};
 use crate::ast::flags_generated::{ModifierFlags, NodeFlags};
 use crate::ast::kind_generated::Kind;
 use crate::ast::node_arena::{NodeArena, rec_def, rec_flags, rec_kind, rec_word};
@@ -319,23 +319,28 @@ impl<'a> AstContext<'a> {
         self.nil_read("data", id);
         None
     }
-    // Every slot of a node, in the order of its layout. For the generic walkers (finish, dump, for_each_child).
-    pub(crate) fn all_slots(&self, node: NodeId, out: &mut Vec<u32>) -> Def {
-        out.clear();
+    // Every slot of a node, in the order of its layout, with its struct. For the generic walkers.
+    #[inline]
+    pub(crate) fn slots_any(&self, node: NodeId) -> (Def, [u32; MAX_SLOTS]) {
+        let mut out = [0u32; MAX_SLOTS];
         let id = node.0;
         if id & SYNTH == 0 {
             if let (Some(rec), Some(table)) = (self.file_rec(id), self.file_table(id)) {
-                out.extend(table.payload(rec).iter().map(|s| s.load(Relaxed)));
-                return rec.def;
+                for (value, slot) in out.iter_mut().zip(table.payload(rec)) {
+                    *value = slot.load(Relaxed);
+                }
+                return (rec.def, out);
             }
         } else if let Some(rec) = self.arena.rec(id) {
             let def = Def::from_u8(rec_def(rec));
             let n = layout(def).slots.len();
-            out.extend(self.arena.payload(rec, n).iter().map(|s| s.get()));
-            return def;
+            for (value, slot) in out.iter_mut().zip(self.arena.payload(rec, n)) {
+                *value = slot.get();
+            }
+            return (def, out);
         }
         self.nil_read("data", id);
-        Def::None
+        (Def::None, out)
     }
 
     // The text behind a text slot of `node`.

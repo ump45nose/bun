@@ -1,6 +1,6 @@
 // Research probe: rewrites a copy of typescript-go's internal/parser so that every function records that it was entered,
 // and whether that happened while parseJSDocComment was on the stack. Writes zz_probe.go with the tables.
-// usage: instrument <dir of the copied internal/parser>
+// usage: instrument <dir of the copied package> [package name, default parser]
 package main
 
 import (
@@ -18,6 +18,10 @@ import (
 
 func main() {
 	dir := os.Args[1]
+	pkgName := "parser"
+	if len(os.Args) > 2 {
+		pkgName = os.Args[2]
+	}
 	fset := token.NewFileSet()
 	pkgs, err := parser.ParseDir(fset, dir, func(fi os.FileInfo) bool {
 		return !strings.HasSuffix(fi.Name(), "_test.go") && fi.Name() != "zz_probe.go"
@@ -74,9 +78,9 @@ func main() {
 		}
 	}
 	var b strings.Builder
-	b.WriteString("package parser\n\n")
+	b.WriteString("package " + pkgName + "\n\n")
 	fmt.Fprintf(&b, "var JSDocDepth int\nvar JSDocEntered [%d]int64\nvar AllEntered [%d]int64\n\n", len(names), len(names))
-	b.WriteString("func jsdocLeave() { JSDocDepth-- }\n\n")
+	b.WriteString("func jsdocLeave() { JSDocDepth-- }\n\nfunc JSDocLeave() { JSDocDepth-- }\n\n")
 	b.WriteString("func jsdocProbe(i int) {\n\tAllEntered[i]++\n\tif JSDocDepth > 0 {\n\t\tJSDocEntered[i]++\n\t}\n}\n\n")
 	b.WriteString("var ProbeNames = []string{\n")
 	for _, n := range names {
