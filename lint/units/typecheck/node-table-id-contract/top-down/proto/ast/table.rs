@@ -182,6 +182,56 @@ impl NodeTable {
         });
         NodeId(id)
     }
+    // The id the binder gives to the next flow data node it makes, when it has made `pending` of them already.
+    pub fn next_flow_data_id(&self, pending: u32) -> NodeId {
+        NodeId(self.first + self.node_count() + pending)
+    }
+    // ast.NewFlowSwitchClauseData, appended when the binder hands over. Only a local table takes it.
+    pub fn push_flow_switch_clause_data(
+        &mut self,
+        switch_statement: NodeId,
+        clause_start: i32,
+        clause_end: i32,
+    ) -> NodeId {
+        if self.frozen {
+            return NodeId::NIL;
+        }
+        self.push_node(
+            Kind::Unknown,
+            Def::FlowSwitchClauseData,
+            NodeFlags::empty(),
+            crate::core::undefined_text_range(),
+            NodeId::NIL,
+            &[switch_statement.0, clause_start as u32, clause_end as u32],
+        )
+    }
+    // ast.NewFlowReduceLabelData.
+    pub fn push_flow_reduce_label_data(
+        &mut self,
+        target: crate::ids::FlowNodeId,
+        antecedents: crate::ids::FlowListId,
+    ) -> NodeId {
+        if self.frozen {
+            return NodeId::NIL;
+        }
+        self.push_node(
+            Kind::Unknown,
+            Def::FlowReduceLabelData,
+            NodeFlags::empty(),
+            crate::core::undefined_text_range(),
+            NodeId::NIL,
+            &[target.0, antecedents.0],
+        )
+    }
+    pub(crate) fn shrink(&mut self) {
+        self.recs.shrink_to_fit();
+        self.slots.shrink_to_fit();
+        self.lists.shrink_to_fit();
+        self.list_items.shrink_to_fit();
+        self.text_spans.shrink_to_fit();
+        self.bytes.shrink_to_fit();
+        self.jsdoc.shrink_to_fit();
+    }
     pub(crate) fn push_list(
         &mut self,
         loc: TextRange,

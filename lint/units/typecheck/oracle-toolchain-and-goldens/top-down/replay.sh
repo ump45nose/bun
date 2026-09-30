@@ -307,7 +307,7 @@ f_types() {
   rm -rf "$T"; mkdir -p "$T"
   while IFS='|' read -r name args; do
     [ -z "$name" ] && continue
-    (cd "$HERE/fixtures" && eval "\"$O\" types $args") > "$T/$name.types.txt" 2>&1
+    (cd "$HERE/fixtures" && eval "\"$O\" types $args" | "$O" canon) > "$T/$name.types.txt" 2>&1
     same "$G/$name.types.txt" "$T/$name.types.txt"
   done < <(sed -e "s#\$TSLIB#$TSLIB#g" -e "s#\$BLIB#$BLIB#g" "$G/RUNS.txt")
 }

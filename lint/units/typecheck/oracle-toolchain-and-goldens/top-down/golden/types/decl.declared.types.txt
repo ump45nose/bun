@@ -9,100 +9,100 @@ after NewChecker types=85 symbols=6 signatures=4
 declared InterfaceDeclaration[0,97)@decl-only.ts = T86
 declared InterfaceDeclaration[97,201)@decl-only.ts = T87
 declared TypeParameter[112,113)@decl-only.ts = T88
-declared TypeParameter[145,146)@decl-only.ts = T90
+declared TypeParameter[145,146)@decl-only.ts = T89
 declared InterfaceDeclaration[201,232)@decl-only.ts = T86
-declared ClassDeclaration[232,373)@decl-only.ts = T91
-declared ClassDeclaration[373,507)@decl-only.ts = T93
-declared TypeParameter[392,413)@decl-only.ts = T94
-declared EnumDeclaration[507,551)@decl-only.ts = T102
-declared EnumDeclaration[551,596)@decl-only.ts = T107
-declared TypeAliasDeclaration[596,626)@decl-only.ts = T115
-declared TypeParameter[607,608)@decl-only.ts = T113
-declared TypeParameter[609,615)@decl-only.ts = T114
-declared TypeAliasDeclaration[626,693)@decl-only.ts = T121
-declared TypeAliasDeclaration[693,718)@decl-only.ts = T128
-declared TypeAliasDeclaration[718,767)@decl-only.ts = T133
-declared TypeAliasDeclaration[767,839)@decl-only.ts = T135
-declared TypeParameter[778,779)@decl-only.ts = T134
-declared TypeAliasDeclaration[839,892)@decl-only.ts = T136
-declared TypeParameter[852,853)@decl-only.ts = T137
-declared TypeParameter[869,881)@decl-only.ts = T138
-declared TypeAliasDeclaration[892,937)@decl-only.ts = T145
-declared TypeAliasDeclaration[937,977)@decl-only.ts = T147
-declared TypeAliasDeclaration[977,1047)@decl-only.ts = T148
-declared TypeAliasDeclaration[1047,1086)@decl-only.ts = T149
-declared TypeAliasDeclaration[1086,1133)@decl-only.ts = T150
-declared TypeParameter[1702,1703)@decl-only.ts = T151
-declared TypeParameter[1704,1722)@decl-only.ts = T152
+declared ClassDeclaration[232,373)@decl-only.ts = T90
+declared ClassDeclaration[373,507)@decl-only.ts = T91
+declared TypeParameter[392,413)@decl-only.ts = T92
+declared EnumDeclaration[507,551)@decl-only.ts = T93
+declared EnumDeclaration[551,596)@decl-only.ts = T94
+declared TypeAliasDeclaration[596,626)@decl-only.ts = T95
+declared TypeParameter[607,608)@decl-only.ts = T96
+declared TypeParameter[609,615)@decl-only.ts = T97
+declared TypeAliasDeclaration[626,693)@decl-only.ts = T98
+declared TypeAliasDeclaration[693,718)@decl-only.ts = T99
+declared TypeAliasDeclaration[718,767)@decl-only.ts = T100
+declared TypeAliasDeclaration[767,839)@decl-only.ts = T101
+declared TypeParameter[778,779)@decl-only.ts = T102
+declared TypeAliasDeclaration[839,892)@decl-only.ts = T103
+declared TypeParameter[852,853)@decl-only.ts = T104
+declared TypeParameter[869,881)@decl-only.ts = T105
+declared TypeAliasDeclaration[892,937)@decl-only.ts = T106
+declared TypeAliasDeclaration[937,977)@decl-only.ts = T107
+declared TypeAliasDeclaration[977,1047)@decl-only.ts = T108
+declared TypeAliasDeclaration[1047,1086)@decl-only.ts = T109
+declared TypeAliasDeclaration[1086,1133)@decl-only.ts = T110
+declared TypeParameter[1702,1703)@decl-only.ts = T111
+declared TypeParameter[1704,1722)@decl-only.ts = T112
 == counts types=152 symbols=15 signatures=8 files=1
 == types
-T86 Object(0x100000) of=0x280002 InterfaceType symbol=$"Point"/0x40@InterfaceDeclaration[0,97)@decl-only.ts members={"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[61,95)@decl-only.ts "w":$"w"/0x4@PropertySignature[219,230)@decl-only.ts "x":$"x"/0x4@PropertySignature[17,28)@decl-only.ts "y":$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts "z":$"z"/0x4@PropertySignature[40,61)@decl-only.ts} properties=[$"x"/0x4@PropertySignature[17,28)@decl-only.ts,$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts,$"z"/0x4@PropertySignature[40,61)@decl-only.ts,$"w"/0x4@PropertySignature[219,230)@decl-only.ts] indexInfos=[{keyType=T123 valueType=T9 declaration=IndexSignature[61,95)@decl-only.ts}] baseTypesResolved=true declaredMembersResolved=true declaredMembers={"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[61,95)@decl-only.ts "w":$"w"/0x4@PropertySignature[219,230)@decl-only.ts "x":$"x"/0x4@PropertySignature[17,28)@decl-only.ts "y":$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts "z":$"z"/0x4@PropertySignature[40,61)@decl-only.ts} declaredIndexInfos=[{keyType=T123 valueType=T9 declaration=IndexSignature[61,95)@decl-only.ts}]
-T87 Object(0x100000) of=0x6 InterfaceType symbol=$"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts target=T87 instantiations=#2[T87,T130] resolvedTypeArguments=[T88] allTypeParameters=[T88,T89] thisType=T89 baseTypesResolved=true declaredMembersResolved=true resolvedBaseTypes=[T86] declaredMembers={"T":$"T"/0x40000@TypeParameter[112,113)@decl-only.ts "\xfecall":$"\xfecall"/0x20000@CallSignature[192,199)@decl-only.ts "\xfenew":$"\xfenew"/0x20000@ConstructSignature[172,192)@decl-only.ts "map":$"map"/0x2000@MethodSignature[140,172)@decl-only.ts "value":$"value"/0x4@PropertySignature[130,140)@decl-only.ts} declaredCallSignatures=[G5] declaredConstructSignatures=[G6]
+T86 Object(0x100000) of=0x280002 InterfaceType symbol=$"Point"/0x40@InterfaceDeclaration[0,97)@decl-only.ts members={"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[61,95)@decl-only.ts "w":$"w"/0x4@PropertySignature[219,230)@decl-only.ts "x":$"x"/0x4@PropertySignature[17,28)@decl-only.ts "y":$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts "z":$"z"/0x4@PropertySignature[40,61)@decl-only.ts} properties=[$"x"/0x4@PropertySignature[17,28)@decl-only.ts,$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts,$"z"/0x4@PropertySignature[40,61)@decl-only.ts,$"w"/0x4@PropertySignature[219,230)@decl-only.ts] indexInfos=[{keyType=T113 valueType=T9 declaration=IndexSignature[61,95)@decl-only.ts}] baseTypesResolved=true declaredMembersResolved=true declaredMembers={"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[61,95)@decl-only.ts "w":$"w"/0x4@PropertySignature[219,230)@decl-only.ts "x":$"x"/0x4@PropertySignature[17,28)@decl-only.ts "y":$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts "z":$"z"/0x4@PropertySignature[40,61)@decl-only.ts} declaredIndexInfos=[{keyType=T113 valueType=T9 declaration=IndexSignature[61,95)@decl-only.ts}]
+T87 Object(0x100000) of=0x6 InterfaceType symbol=$"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts target=T87 instantiations=#2[T87,T149] resolvedTypeArguments=[T88] allTypeParameters=[T88,T114] thisType=T114 baseTypesResolved=true declaredMembersResolved=true resolvedBaseTypes=[T86] declaredMembers={"T":$"T"/0x40000@TypeParameter[112,113)@decl-only.ts "\xfecall":$"\xfecall"/0x20000@CallSignature[192,199)@decl-only.ts "\xfenew":$"\xfenew"/0x20000@ConstructSignature[172,192)@decl-only.ts "map":$"map"/0x2000@MethodSignature[140,172)@decl-only.ts "value":$"value"/0x4@PropertySignature[130,140)@decl-only.ts} declaredCallSignatures=[G5] declaredConstructSignatures=[G6]
 T88 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"T"/0x40000@TypeParameter[112,113)@decl-only.ts
-T89 TypeParameter(0x80000) TypeParameter symbol=$"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts constraint=T87 isThisType=true
-T90 TypeParameter(0x80000) TypeParameter symbol=$"U"/0x40000@TypeParameter[145,146)@decl-only.ts
-T91 Object(0x100000) of=0x5 InterfaceType symbol=$"Animal"/0x20@ClassDeclaration[232,373)@decl-only.ts target=T91 instantiations=#1[T91] allTypeParameters=[T92] thisType=T92
-T92 TypeParameter(0x80000) TypeParameter symbol=$"Animal"/0x20@ClassDeclaration[232,373)@decl-only.ts constraint=T91 isThisType=true
-T93 Object(0x100000) of=0x5 InterfaceType symbol=$"Dog"/0x20@ClassDeclaration[373,507)@decl-only.ts target=T93 instantiations=#1[T93] resolvedTypeArguments=[T94] allTypeParameters=[T94,T95] thisType=T95
-T94 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[392,413)@decl-only.ts
-T95 TypeParameter(0x80000) TypeParameter symbol=$"Dog"/0x20@ClassDeclaration[373,507)@decl-only.ts constraint=T93 isThisType=true
-T96 Enum(0x10000) LiteralType symbol=$"Red"/0x8@EnumMember[528,532)@decl-only.ts freshType=T97 regularType=T96
-T97 Enum(0x10000) LiteralType symbol=$"Red"/0x8@EnumMember[528,532)@decl-only.ts freshType=T97 regularType=T96
-T98 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"Green"/0x8@EnumMember[533,543)@decl-only.ts value=4(jsnum.Number) freshType=T99 regularType=T98
-T99 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"Green"/0x8@EnumMember[533,543)@decl-only.ts value=4(jsnum.Number) freshType=T99 regularType=T98
-T100 Enum(0x10000) LiteralType symbol=$"Blue"/0x8@EnumMember[544,549)@decl-only.ts freshType=T101 regularType=T100
-T101 Enum(0x10000) LiteralType symbol=$"Blue"/0x8@EnumMember[544,549)@decl-only.ts freshType=T101 regularType=T100
-T102 EnumLiteral|Union(0x8008000) of=0x8000 UnionType symbol=$"Color"/0x100@EnumDeclaration[507,551)@decl-only.ts alias={symbol=$"Color"/0x100@EnumDeclaration[507,551)@decl-only.ts} types=[T96,T98,T100]
-T103 StringLiteral|EnumLiteral(0x8400) LiteralType symbol=$"A"/0x8@EnumMember[577,585)@decl-only.ts value="a"(string) freshType=T104 regularType=T103
-T104 StringLiteral|EnumLiteral(0x8400) LiteralType symbol=$"A"/0x8@EnumMember[577,585)@decl-only.ts value="a"(string) freshType=T104 regularType=T103
-T105 StringLiteral|EnumLiteral(0x8400) LiteralType symbol=$"B"/0x8@EnumMember[586,594)@decl-only.ts value="b"(string) freshType=T106 regularType=T105
-T106 StringLiteral|EnumLiteral(0x8400) LiteralType symbol=$"B"/0x8@EnumMember[586,594)@decl-only.ts value="b"(string) freshType=T106 regularType=T105
-T107 EnumLiteral|Union(0x8008000) of=0x8000 UnionType symbol=$"Flag"/0x80@EnumDeclaration[551,596)@decl-only.ts alias={symbol=$"Flag"/0x80@EnumDeclaration[551,596)@decl-only.ts} types=[T103,T105]
-T108 TypeParameter(0x80000) TypeParameter
-T109 TypeParameter(0x80000) TypeParameter
-T110 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) regularType=T110
-T111 Object(0x100000) of=0xc TupleType target=T111 instantiations=#1[T111] resolvedTypeArguments=[T108,T109] allTypeParameters=[T108,T109,T112] thisType=T112 declaredMembersResolved=true declaredMembers={"0":Y7 "1":Y8 "length":Y9} elementInfos=[{flags=0x1},{flags=0x1}] minLength=2 fixedLength=2 combinedFlags=0x1
-T112 TypeParameter(0x80000) TypeParameter constraint=T111 isThisType=true
-T113 TypeParameter(0x80000) TypeParameter symbol=$"A"/0x40000@TypeParameter[607,608)@decl-only.ts
-T114 TypeParameter(0x80000) TypeParameter symbol=$"B"/0x40000@TypeParameter[609,615)@decl-only.ts
-T115 Object(0x100000) of=0x4 TypeReference alias={symbol=$"Pair"/0x80000@TypeAliasDeclaration[596,626)@decl-only.ts typeArguments=[T113,T114]} target=T111 node=TupleType[618,625)@decl-only.ts
-T116 TypeParameter(0x80000) TypeParameter
-T117 TypeParameter(0x80000) TypeParameter
-T118 TypeParameter(0x80000) TypeParameter
-T119 Object(0x100000) of=0xc TupleType target=T119 instantiations=#1[T119] resolvedTypeArguments=[T116,T117,T118] allTypeParameters=[T116,T117,T118,T120] thisType=T120 declaredMembersResolved=true declaredMembers={"0":Y10 "1":Y11 "length":Y12} elementInfos=[{flags=0x1 labeledDeclaration=NamedTupleMember[641,654)@decl-only.ts},{flags=0x2 labeledDeclaration=NamedTupleMember[655,671)@decl-only.ts},{flags=0x4 labeledDeclaration=NamedTupleMember[672,691)@decl-only.ts}] minLength=1 fixedLength=2 combinedFlags=0x7
-T120 TypeParameter(0x80000) TypeParameter constraint=T119 isThisType=true
-T121 Object(0x100000) of=0x4 TypeReference alias={symbol=$"Named"/0x80000@TypeAliasDeclaration[626,693)@decl-only.ts} target=T119 node=TupleType[639,692)@decl-only.ts
-T122 Index(0x200000) IndexType target=T86
-T123 TemplateLiteral(0x400000) TemplateLiteralType texts=["data-",""] types=[T14]
-T124 StringLiteral(0x400) LiteralType value="x"(string) freshType=T129 regularType=T124
-T125 StringLiteral(0x400) LiteralType value="y"(string) regularType=T125
-T126 StringLiteral(0x400) LiteralType value="z"(string) regularType=T126
-T127 StringLiteral(0x400) LiteralType value="w"(string) regularType=T127
-T128 Union(0x8000000) UnionType types=[T127,T124,T125,T126,T123] origin=T122
-T129 StringLiteral(0x400) LiteralType value="x"(string) freshType=T129 regularType=T124
-T130 Object(0x100000) of=0x40200004 TypeReference symbol=$"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts members={"map":Y14 "value":Y13 "w":$"w"/0x4@PropertySignature[219,230)@decl-only.ts "x":$"x"/0x4@PropertySignature[17,28)@decl-only.ts "y":$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts "z":$"z"/0x4@PropertySignature[40,61)@decl-only.ts} properties=[Y13,Y14,$"x"/0x4@PropertySignature[17,28)@decl-only.ts,$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts,$"z"/0x4@PropertySignature[40,61)@decl-only.ts,$"w"/0x4@PropertySignature[219,230)@decl-only.ts] signatures=[G7,G8] callSignatureCount=1 indexInfos=[{keyType=T123 valueType=T9 declaration=IndexSignature[61,95)@decl-only.ts}] target=T87 resolvedTypeArguments=[T14]
-T131 StringLiteral(0x400) LiteralType value="value"(string) freshType=T132 regularType=T131
-T132 StringLiteral(0x400) LiteralType value="value"(string) freshType=T132 regularType=T131
-T133 Union(0x8000000) of=0x8000 UnionType alias={symbol=$"Lookup"/0x80000@TypeAliasDeclaration[718,767)@decl-only.ts} types=[T14,T15]
-T134 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[778,779)@decl-only.ts
-T135 Conditional(0x4000000) ConditionalType alias={symbol=$"Cond"/0x80000@TypeAliasDeclaration[767,839)@decl-only.ts typeArguments=[T134]} root={node=ConditionalType[782,838)@decl-only.ts checkType=T134 extendsType=T14 isDistributive=true outerTypeParameters=[T134] instantiations=#1[T135] alias={symbol=$"Cond"/0x80000@TypeAliasDeclaration[767,839)@decl-only.ts typeArguments=[T134]}} checkType=T134 extendsType=T14
-T136 Object(0x100000) of=0x20 MappedType symbol=$"\xfetype"/0x800@MappedType[856,891)@decl-only.ts alias={symbol=$"Mapped"/0x80000@TypeAliasDeclaration[839,892)@decl-only.ts typeArguments=[T137]} declaration=MappedType[856,891)@decl-only.ts typeParameter=T138 constraintType=T139
-T137 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[852,853)@decl-only.ts
-T138 TypeParameter(0x80000) TypeParameter symbol=$"P"/0x40000@TypeParameter[869,881)@decl-only.ts resolvedBaseConstraint=T30 constraint=T139
-T139 Index(0x200000) IndexType resolvedBaseConstraint=T30 target=T137
-T140 TemplateLiteral(0x400000) TemplateLiteralType texts=["id-",""] types=[T15]
-T141 TypeParameter(0x80000) TypeParameter symbol=$"S"/0x40000@TypeParameter[76317,76333)@lib.es5.d.ts
-T142 StringLiteral(0x400) LiteralType value="ab"(string) freshType=T143 regularType=T142
-T143 StringLiteral(0x400) LiteralType value="ab"(string) freshType=T143 regularType=T142
-T144 StringLiteral(0x400) LiteralType value="AB"(string) regularType=T144
-T145 Union(0x8000000) UnionType alias={symbol=$"Tpl"/0x80000@TypeAliasDeclaration[892,937)@decl-only.ts} types=[T144,T140]
-T146 Object(0x100000) of=0x10 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[958,976)@decl-only.ts
-T147 Intersection(0x10000000) IntersectionType alias={symbol=$"Inter"/0x80000@TypeAliasDeclaration[937,977)@decl-only.ts} types=[T86,T146]
-T148 Object(0x100000) of=0x10 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[987,1046)@decl-only.ts alias={symbol=$"Fn"/0x80000@TypeAliasDeclaration[977,1047)@decl-only.ts}
-T149 Object(0x100000) of=0x10 ObjectType symbol=$"\xfetype"/0x800@ConstructorType[1059,1085)@decl-only.ts alias={symbol=$"Ctor"/0x80000@TypeAliasDeclaration[1047,1086)@decl-only.ts}
-T150 Object(0x100000) of=0x10 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[1097,1132)@decl-only.ts alias={symbol=$"Rec"/0x80000@TypeAliasDeclaration[1086,1133)@decl-only.ts}
-T151 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[1702,1703)@decl-only.ts
-T152 TypeParameter(0x80000) TypeParameter symbol=$"U"/0x40000@TypeParameter[1704,1722)@decl-only.ts
+T89 TypeParameter(0x80000) TypeParameter symbol=$"U"/0x40000@TypeParameter[145,146)@decl-only.ts
+T90 Object(0x100000) of=0x5 InterfaceType symbol=$"Animal"/0x20@ClassDeclaration[232,373)@decl-only.ts target=T90 instantiations=#1[T90] allTypeParameters=[T115] thisType=T115
+T91 Object(0x100000) of=0x5 InterfaceType symbol=$"Dog"/0x20@ClassDeclaration[373,507)@decl-only.ts target=T91 instantiations=#1[T91] resolvedTypeArguments=[T92] allTypeParameters=[T92,T116] thisType=T116
+T92 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[392,413)@decl-only.ts
+T93 EnumLiteral|Union(0x8008000) of=0x8000 UnionType symbol=$"Color"/0x100@EnumDeclaration[507,551)@decl-only.ts alias={symbol=$"Color"/0x100@EnumDeclaration[507,551)@decl-only.ts} types=[T117,T118,T119]
+T94 EnumLiteral|Union(0x8008000) of=0x8000 UnionType symbol=$"Flag"/0x80@EnumDeclaration[551,596)@decl-only.ts alias={symbol=$"Flag"/0x80@EnumDeclaration[551,596)@decl-only.ts} types=[T120,T121]
+T95 Object(0x100000) of=0x4 TypeReference alias={symbol=$"Pair"/0x80000@TypeAliasDeclaration[596,626)@decl-only.ts typeArguments=[T96,T97]} target=T122 node=TupleType[618,625)@decl-only.ts
+T96 TypeParameter(0x80000) TypeParameter symbol=$"A"/0x40000@TypeParameter[607,608)@decl-only.ts
+T97 TypeParameter(0x80000) TypeParameter symbol=$"B"/0x40000@TypeParameter[609,615)@decl-only.ts
+T98 Object(0x100000) of=0x4 TypeReference alias={symbol=$"Named"/0x80000@TypeAliasDeclaration[626,693)@decl-only.ts} target=T123 node=TupleType[639,692)@decl-only.ts
+T99 Union(0x8000000) UnionType types=[T124,T125,T126,T127,T113] origin=T128
+T100 Union(0x8000000) of=0x8000 UnionType alias={symbol=$"Lookup"/0x80000@TypeAliasDeclaration[718,767)@decl-only.ts} types=[T14,T15]
+T101 Conditional(0x4000000) ConditionalType alias={symbol=$"Cond"/0x80000@TypeAliasDeclaration[767,839)@decl-only.ts typeArguments=[T102]} root={node=ConditionalType[782,838)@decl-only.ts checkType=T102 extendsType=T14 isDistributive=true outerTypeParameters=[T102] instantiations=#1[T101] alias={symbol=$"Cond"/0x80000@TypeAliasDeclaration[767,839)@decl-only.ts typeArguments=[T102]}} checkType=T102 extendsType=T14
+T102 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[778,779)@decl-only.ts
+T103 Object(0x100000) of=0x20 MappedType symbol=$"\xfetype"/0x800@MappedType[856,891)@decl-only.ts alias={symbol=$"Mapped"/0x80000@TypeAliasDeclaration[839,892)@decl-only.ts typeArguments=[T104]} declaration=MappedType[856,891)@decl-only.ts typeParameter=T105 constraintType=T129
+T104 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[852,853)@decl-only.ts
+T105 TypeParameter(0x80000) TypeParameter symbol=$"P"/0x40000@TypeParameter[869,881)@decl-only.ts resolvedBaseConstraint=T30 constraint=T129
+T106 Union(0x8000000) UnionType alias={symbol=$"Tpl"/0x80000@TypeAliasDeclaration[892,937)@decl-only.ts} types=[T130,T131]
+T107 Intersection(0x10000000) IntersectionType alias={symbol=$"Inter"/0x80000@TypeAliasDeclaration[937,977)@decl-only.ts} types=[T86,T132]
+T108 Object(0x100000) of=0x10 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[987,1046)@decl-only.ts alias={symbol=$"Fn"/0x80000@TypeAliasDeclaration[977,1047)@decl-only.ts}
+T109 Object(0x100000) of=0x10 ObjectType symbol=$"\xfetype"/0x800@ConstructorType[1059,1085)@decl-only.ts alias={symbol=$"Ctor"/0x80000@TypeAliasDeclaration[1047,1086)@decl-only.ts}
+T110 Object(0x100000) of=0x10 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[1097,1132)@decl-only.ts alias={symbol=$"Rec"/0x80000@TypeAliasDeclaration[1086,1133)@decl-only.ts}
+T111 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[1702,1703)@decl-only.ts
+T112 TypeParameter(0x80000) TypeParameter symbol=$"U"/0x40000@TypeParameter[1704,1722)@decl-only.ts
+T113 TemplateLiteral(0x400000) TemplateLiteralType texts=["data-",""] types=[T14]
+T114 TypeParameter(0x80000) TypeParameter symbol=$"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts constraint=T87 isThisType=true
+T115 TypeParameter(0x80000) TypeParameter symbol=$"Animal"/0x20@ClassDeclaration[232,373)@decl-only.ts constraint=T90 isThisType=true
+T116 TypeParameter(0x80000) TypeParameter symbol=$"Dog"/0x20@ClassDeclaration[373,507)@decl-only.ts constraint=T91 isThisType=true
+T117 Enum(0x10000) LiteralType symbol=$"Red"/0x8@EnumMember[528,532)@decl-only.ts freshType=T133 regularType=T117
+T118 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"Green"/0x8@EnumMember[533,543)@decl-only.ts value=4(jsnum.Number) freshType=T134 regularType=T118
+T119 Enum(0x10000) LiteralType symbol=$"Blue"/0x8@EnumMember[544,549)@decl-only.ts freshType=T135 regularType=T119
+T120 StringLiteral|EnumLiteral(0x8400) LiteralType symbol=$"A"/0x8@EnumMember[577,585)@decl-only.ts value="a"(string) freshType=T136 regularType=T120
+T121 StringLiteral|EnumLiteral(0x8400) LiteralType symbol=$"B"/0x8@EnumMember[586,594)@decl-only.ts value="b"(string) freshType=T137 regularType=T121
+T122 Object(0x100000) of=0xc TupleType target=T122 instantiations=#1[T122] resolvedTypeArguments=[T138,T139] allTypeParameters=[T138,T139,T140] thisType=T140 declaredMembersResolved=true declaredMembers={"0":Y7 "1":Y8 "length":Y9} elementInfos=[{flags=0x1},{flags=0x1}] minLength=2 fixedLength=2 combinedFlags=0x1
+T123 Object(0x100000) of=0xc TupleType target=T123 instantiations=#1[T123] resolvedTypeArguments=[T141,T142,T143] allTypeParameters=[T141,T142,T143,T144] thisType=T144 declaredMembersResolved=true declaredMembers={"0":Y10 "1":Y11 "length":Y12} elementInfos=[{flags=0x1 labeledDeclaration=NamedTupleMember[641,654)@decl-only.ts},{flags=0x2 labeledDeclaration=NamedTupleMember[655,671)@decl-only.ts},{flags=0x4 labeledDeclaration=NamedTupleMember[672,691)@decl-only.ts}] minLength=1 fixedLength=2 combinedFlags=0x7
+T124 StringLiteral(0x400) LiteralType value="w"(string) regularType=T124
+T125 StringLiteral(0x400) LiteralType value="x"(string) freshType=T145 regularType=T125
+T126 StringLiteral(0x400) LiteralType value="y"(string) regularType=T126
+T127 StringLiteral(0x400) LiteralType value="z"(string) regularType=T127
+T128 Index(0x200000) IndexType target=T86
+T129 Index(0x200000) IndexType resolvedBaseConstraint=T30 target=T104
+T130 StringLiteral(0x400) LiteralType value="AB"(string) regularType=T130
+T131 TemplateLiteral(0x400000) TemplateLiteralType texts=["id-",""] types=[T15]
+T132 Object(0x100000) of=0x10 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[958,976)@decl-only.ts
+T133 Enum(0x10000) LiteralType symbol=$"Red"/0x8@EnumMember[528,532)@decl-only.ts freshType=T133 regularType=T117
+T134 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"Green"/0x8@EnumMember[533,543)@decl-only.ts value=4(jsnum.Number) freshType=T134 regularType=T118
+T135 Enum(0x10000) LiteralType symbol=$"Blue"/0x8@EnumMember[544,549)@decl-only.ts freshType=T135 regularType=T119
+T136 StringLiteral|EnumLiteral(0x8400) LiteralType symbol=$"A"/0x8@EnumMember[577,585)@decl-only.ts value="a"(string) freshType=T136 regularType=T120
+T137 StringLiteral|EnumLiteral(0x8400) LiteralType symbol=$"B"/0x8@EnumMember[586,594)@decl-only.ts value="b"(string) freshType=T137 regularType=T121
+T138 TypeParameter(0x80000) TypeParameter
+T139 TypeParameter(0x80000) TypeParameter
+T140 TypeParameter(0x80000) TypeParameter constraint=T122 isThisType=true
+T141 TypeParameter(0x80000) TypeParameter
+T142 TypeParameter(0x80000) TypeParameter
+T143 TypeParameter(0x80000) TypeParameter
+T144 TypeParameter(0x80000) TypeParameter constraint=T123 isThisType=true
+T145 StringLiteral(0x400) LiteralType value="x"(string) freshType=T145 regularType=T125
+T146 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) regularType=T146
+T147 StringLiteral(0x400) LiteralType value="value"(string) freshType=T151 regularType=T147
+T148 StringLiteral(0x400) LiteralType value="ab"(string) freshType=T152 regularType=T148
+T149 Object(0x100000) of=0x40200004 TypeReference symbol=$"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts members={"map":Y13 "value":Y14 "w":$"w"/0x4@PropertySignature[219,230)@decl-only.ts "x":$"x"/0x4@PropertySignature[17,28)@decl-only.ts "y":$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts "z":$"z"/0x4@PropertySignature[40,61)@decl-only.ts} properties=[Y14,Y13,$"x"/0x4@PropertySignature[17,28)@decl-only.ts,$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts,$"z"/0x4@PropertySignature[40,61)@decl-only.ts,$"w"/0x4@PropertySignature[219,230)@decl-only.ts] signatures=[G7,G8] callSignatureCount=1 indexInfos=[{keyType=T113 valueType=T9 declaration=IndexSignature[61,95)@decl-only.ts}] target=T87 resolvedTypeArguments=[T14]
+T150 TypeParameter(0x80000) TypeParameter symbol=$"S"/0x40000@TypeParameter[76317,76333)@lib.es5.d.ts
+T151 StringLiteral(0x400) LiteralType value="value"(string) freshType=T151 regularType=T147
+T152 StringLiteral(0x400) LiteralType value="ab"(string) freshType=T152 regularType=T148
 == signatures
 G1 resolvedMinArgumentCount=-1 resolvedReturnType=T1
 G2 resolvedMinArgumentCount=-1 resolvedReturnType=T5
@@ -110,8 +110,8 @@ G3 resolvedMinArgumentCount=-1 resolvedReturnType=T1
 G4 resolvedMinArgumentCount=-1 resolvedReturnType=T25
 G5 resolvedMinArgumentCount=-1 declaration=CallSignature[192,199)@decl-only.ts
 G6 flags=0x4 minArgumentCount=1 resolvedMinArgumentCount=-1 declaration=ConstructSignature[172,192)@decl-only.ts parameters=[$"v"/0x1@Parameter[178,182)@decl-only.ts]
-G7 resolvedMinArgumentCount=-1 declaration=CallSignature[192,199)@decl-only.ts target=G5 mapper=Array{sources=[T88,T89] targets=[T14,T130]}
-G8 flags=0x4 minArgumentCount=1 resolvedMinArgumentCount=-1 declaration=ConstructSignature[172,192)@decl-only.ts parameters=[Y15] target=G6 mapper=Array{sources=[T88,T89] targets=[T14,T130]}
+G7 resolvedMinArgumentCount=-1 declaration=CallSignature[192,199)@decl-only.ts target=G5 mapper=Array{sources=[T88,T114] targets=[T14,T149]}
+G8 flags=0x4 minArgumentCount=1 resolvedMinArgumentCount=-1 declaration=ConstructSignature[172,192)@decl-only.ts parameters=[Y15] target=G6 mapper=Array{sources=[T88,T114] targets=[T14,T149]}
 == symbols
 Y1 Flags=0x2000004 Name="undefined"
 Y2 Flags=0x2000004 Name="arguments"
@@ -125,8 +125,8 @@ Y9 Flags=0x2000004 Name="length"
 Y10 Flags=0x2000004 Name="0"
 Y11 Flags=0x3000004 Name="1"
 Y12 Flags=0x2000004 Name="length"
-Y13 Flags=0x2000004 CheckFlags=0x1 Name="value" Declarations=[PropertySignature[130,140)@decl-only.ts] ValueDeclaration=PropertySignature[130,140)@decl-only.ts Parent=$"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts
-Y14 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[140,172)@decl-only.ts] ValueDeclaration=MethodSignature[140,172)@decl-only.ts Parent=$"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts
+Y13 Flags=0x2002000 CheckFlags=0x1 Name="map" Declarations=[MethodSignature[140,172)@decl-only.ts] ValueDeclaration=MethodSignature[140,172)@decl-only.ts Parent=$"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts
+Y14 Flags=0x2000004 CheckFlags=0x1 Name="value" Declarations=[PropertySignature[130,140)@decl-only.ts] ValueDeclaration=PropertySignature[130,140)@decl-only.ts Parent=$"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts
 Y15 Flags=0x2000001 CheckFlags=0x1 Name="v" Declarations=[Parameter[178,182)@decl-only.ts] ValueDeclaration=Parameter[178,182)@decl-only.ts
 == links
 L nodeLinks EnumDeclaration[507,551)@decl-only.ts flags=0x400
@@ -142,35 +142,35 @@ L symbolNodeLinks TypeReference[782,784)@decl-only.ts resolvedSymbol=$"T"/0x4000
 L symbolNodeLinks TypeReference[879,881)@decl-only.ts resolvedSymbol=$"T"/0x40000@TypeParameter[852,853)@decl-only.ts
 L symbolNodeLinks TypeReference[920,936)@decl-only.ts resolvedSymbol=$"Uppercase"/0x80000@TypeAliasDeclaration[76243,76347)@lib.es5.d.ts
 L symbolNodeLinks TypeReference[950,956)@decl-only.ts resolvedSymbol=$"Point"/0x40@InterfaceDeclaration[0,97)@decl-only.ts
-L typeNodeLinks ConditionalType[782,838)@decl-only.ts resolvedType=T135
-L typeNodeLinks ConstructorType[1059,1085)@decl-only.ts resolvedType=T149
+L typeNodeLinks ConditionalType[782,838)@decl-only.ts resolvedType=T101
+L typeNodeLinks ConstructorType[1059,1085)@decl-only.ts resolvedType=T109
 L typeNodeLinks IndexedAccessType[732,743)@decl-only.ts resolvedType=T15
 L typeNodeLinks IndexedAccessType[745,766)@decl-only.ts resolvedType=T14
-L typeNodeLinks IntersectionType[950,976)@decl-only.ts resolvedType=T147
-L typeNodeLinks LiteralType[739,742)@decl-only.ts resolvedType=T124
-L typeNodeLinks LiteralType[758,765)@decl-only.ts resolvedType=T131
-L typeNodeLinks LiteralType[931,935)@decl-only.ts resolvedType=T142
-L typeNodeLinks MappedType[856,891)@decl-only.ts resolvedType=T136
-L typeNodeLinks TemplateLiteralType[67,84)@decl-only.ts resolvedType=T123
-L typeNodeLinks TemplateLiteralType[903,918)@decl-only.ts resolvedType=T140
-L typeNodeLinks TupleType[618,625)@decl-only.ts resolvedType=T115
-L typeNodeLinks TupleType[639,692)@decl-only.ts resolvedType=T121
-L typeNodeLinks TypeLiteral[1097,1132)@decl-only.ts resolvedType=T150
-L typeNodeLinks TypeLiteral[958,976)@decl-only.ts resolvedType=T146
-L typeNodeLinks TypeLiteral[987,1046)@decl-only.ts resolvedType=T148
-L typeNodeLinks TypeOperator[705,717)@decl-only.ts resolvedType=T128
-L typeNodeLinks TypeOperator[873,881)@decl-only.ts resolvedType=T139
+L typeNodeLinks IntersectionType[950,976)@decl-only.ts resolvedType=T107
+L typeNodeLinks LiteralType[739,742)@decl-only.ts resolvedType=T125
+L typeNodeLinks LiteralType[758,765)@decl-only.ts resolvedType=T147
+L typeNodeLinks LiteralType[931,935)@decl-only.ts resolvedType=T148
+L typeNodeLinks MappedType[856,891)@decl-only.ts resolvedType=T103
+L typeNodeLinks TemplateLiteralType[67,84)@decl-only.ts resolvedType=T113
+L typeNodeLinks TemplateLiteralType[903,918)@decl-only.ts resolvedType=T131
+L typeNodeLinks TupleType[618,625)@decl-only.ts resolvedType=T95
+L typeNodeLinks TupleType[639,692)@decl-only.ts resolvedType=T98
+L typeNodeLinks TypeLiteral[1097,1132)@decl-only.ts resolvedType=T110
+L typeNodeLinks TypeLiteral[958,976)@decl-only.ts resolvedType=T132
+L typeNodeLinks TypeLiteral[987,1046)@decl-only.ts resolvedType=T108
+L typeNodeLinks TypeOperator[705,717)@decl-only.ts resolvedType=T99
+L typeNodeLinks TypeOperator[873,881)@decl-only.ts resolvedType=T129
 L typeNodeLinks TypeReference[122,128)@decl-only.ts resolvedType=T86
 L typeNodeLinks TypeReference[137,139)@decl-only.ts resolvedType=T88
 L typeNodeLinks TypeReference[711,717)@decl-only.ts resolvedType=T86
 L typeNodeLinks TypeReference[732,738)@decl-only.ts resolvedType=T86
-L typeNodeLinks TypeReference[745,757)@decl-only.ts resolvedType=T130
-L typeNodeLinks TypeReference[782,784)@decl-only.ts resolvedType=T134
-L typeNodeLinks TypeReference[879,881)@decl-only.ts resolvedType=T137
-L typeNodeLinks TypeReference[920,936)@decl-only.ts resolvedType=T144
+L typeNodeLinks TypeReference[745,757)@decl-only.ts resolvedType=T149
+L typeNodeLinks TypeReference[782,784)@decl-only.ts resolvedType=T102
+L typeNodeLinks TypeReference[879,881)@decl-only.ts resolvedType=T104
+L typeNodeLinks TypeReference[920,936)@decl-only.ts resolvedType=T130
 L typeNodeLinks TypeReference[950,956)@decl-only.ts resolvedType=T86
-L typeNodeLinks UnionType[732,766)@decl-only.ts resolvedType=T133
-L typeNodeLinks UnionType[903,936)@decl-only.ts resolvedType=T145
+L typeNodeLinks UnionType[732,766)@decl-only.ts resolvedType=T100
+L typeNodeLinks UnionType[903,936)@decl-only.ts resolvedType=T106
 L enumMemberLinks EnumMember[533,543)@decl-only.ts value={Value=4(jsnum.Number)}
 L enumMemberLinks EnumMember[577,585)@decl-only.ts value={Value="a"(string) IsSyntacticallyString=true}
 L enumMemberLinks EnumMember[586,594)@decl-only.ts value={Value="b"(string) IsSyntacticallyString=true}
@@ -180,71 +180,71 @@ L symbolReferenceLinks $"T"/0x40000@TypeParameter[852,853)@decl-only.ts referenc
 L valueSymbolLinks $"value"/0x4@PropertySignature[130,140)@decl-only.ts resolvedType=T88
 L valueSymbolLinks $"x"/0x4@PropertySignature[17,28)@decl-only.ts resolvedType=T15
 L valueSymbolLinks Y1 resolvedType=T10
-L valueSymbolLinks Y10 resolvedType=T116
-L valueSymbolLinks Y11 resolvedType=T117
+L valueSymbolLinks Y10 resolvedType=T141
+L valueSymbolLinks Y11 resolvedType=T142
 L valueSymbolLinks Y12 resolvedType=T15
-L valueSymbolLinks Y13 resolvedType=T14 target=$"value"/0x4@PropertySignature[130,140)@decl-only.ts mapper=Array{sources=[T88,T89] targets=[T14,T130]}
-L valueSymbolLinks Y14 target=$"map"/0x2000@MethodSignature[140,172)@decl-only.ts mapper=Array{sources=[T88,T89] targets=[T14,T130]}
-L valueSymbolLinks Y15 target=$"v"/0x1@Parameter[178,182)@decl-only.ts mapper=Array{sources=[T88,T89] targets=[T14,T130]}
+L valueSymbolLinks Y13 target=$"map"/0x2000@MethodSignature[140,172)@decl-only.ts mapper=Array{sources=[T88,T114] targets=[T14,T149]}
+L valueSymbolLinks Y14 resolvedType=T14 target=$"value"/0x4@PropertySignature[130,140)@decl-only.ts mapper=Array{sources=[T88,T114] targets=[T14,T149]}
+L valueSymbolLinks Y15 target=$"v"/0x1@Parameter[178,182)@decl-only.ts mapper=Array{sources=[T88,T114] targets=[T14,T149]}
 L valueSymbolLinks Y2 resolvedType=T63
 L valueSymbolLinks Y4 resolvedType=T5
 L valueSymbolLinks Y5 resolvedType=T64
-L valueSymbolLinks Y7 resolvedType=T108
-L valueSymbolLinks Y8 resolvedType=T109
-L valueSymbolLinks Y9 resolvedType=T110
+L valueSymbolLinks Y7 resolvedType=T138
+L valueSymbolLinks Y8 resolvedType=T139
+L valueSymbolLinks Y9 resolvedType=T146
 L membersAndExportsLinks $"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts [-,{"T":$"T"/0x40000@TypeParameter[112,113)@decl-only.ts "\xfecall":$"\xfecall"/0x20000@CallSignature[192,199)@decl-only.ts "\xfenew":$"\xfenew"/0x20000@ConstructSignature[172,192)@decl-only.ts "map":$"map"/0x2000@MethodSignature[140,172)@decl-only.ts "value":$"value"/0x4@PropertySignature[130,140)@decl-only.ts}]
 L membersAndExportsLinks $"Point"/0x40@InterfaceDeclaration[0,97)@decl-only.ts [-,{"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[61,95)@decl-only.ts "w":$"w"/0x4@PropertySignature[219,230)@decl-only.ts "x":$"x"/0x4@PropertySignature[17,28)@decl-only.ts "y":$"y"/0x1000004@PropertySignature[28,40)@decl-only.ts "z":$"z"/0x4@PropertySignature[40,61)@decl-only.ts}]
 L membersAndExportsLinks $"\xfetype"/0x800@ConstructorType[1059,1085)@decl-only.ts [-,{"\xfenew":$"\xfenew"/0x20000@ConstructorType[1059,1085)@decl-only.ts}]
 L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[1097,1132)@decl-only.ts [-,{"items":$"items"/0x4@PropertySignature[1117,1130)@decl-only.ts "next":$"next"/0x4@PropertySignature[1099,1117)@decl-only.ts}]
 L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[958,976)@decl-only.ts [-,{"extra":$"extra"/0x4@PropertySignature[960,974)@decl-only.ts}]
 L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[987,1046)@decl-only.ts [-,{"\xfecall":$"\xfecall"/0x20000@CallSignature[989,1010)@decl-only.ts}]
-L typeAliasLinks $"Cond"/0x80000@TypeAliasDeclaration[767,839)@decl-only.ts declaredType=T135 typeParameters=[T134] instantiations=#1[T135]
-L typeAliasLinks $"Ctor"/0x80000@TypeAliasDeclaration[1047,1086)@decl-only.ts declaredType=T149
-L typeAliasLinks $"Fn"/0x80000@TypeAliasDeclaration[977,1047)@decl-only.ts declaredType=T148
-L typeAliasLinks $"Inter"/0x80000@TypeAliasDeclaration[937,977)@decl-only.ts declaredType=T147
-L typeAliasLinks $"Keys"/0x80000@TypeAliasDeclaration[693,718)@decl-only.ts declaredType=T128
-L typeAliasLinks $"Lookup"/0x80000@TypeAliasDeclaration[718,767)@decl-only.ts declaredType=T133
-L typeAliasLinks $"Mapped"/0x80000@TypeAliasDeclaration[839,892)@decl-only.ts declaredType=T136 typeParameters=[T137] instantiations=#1[T136]
-L typeAliasLinks $"Named"/0x80000@TypeAliasDeclaration[626,693)@decl-only.ts declaredType=T121
-L typeAliasLinks $"Pair"/0x80000@TypeAliasDeclaration[596,626)@decl-only.ts declaredType=T115 typeParameters=[T113,T114] instantiations=#1[T115]
-L typeAliasLinks $"Rec"/0x80000@TypeAliasDeclaration[1086,1133)@decl-only.ts declaredType=T150
-L typeAliasLinks $"Tpl"/0x80000@TypeAliasDeclaration[892,937)@decl-only.ts declaredType=T145
-L typeAliasLinks $"Uppercase"/0x80000@TypeAliasDeclaration[76243,76347)@lib.es5.d.ts declaredType=T8 typeParameters=[T141] instantiations=#1[T8]
-L declaredTypeLinks $"A"/0x40000@TypeParameter[607,608)@decl-only.ts declaredType=T113
-L declaredTypeLinks $"A"/0x8@EnumMember[577,585)@decl-only.ts declaredType=T104
-L declaredTypeLinks $"Animal"/0x20@ClassDeclaration[232,373)@decl-only.ts declaredType=T91
+L typeAliasLinks $"Cond"/0x80000@TypeAliasDeclaration[767,839)@decl-only.ts declaredType=T101 typeParameters=[T102] instantiations=#1[T101]
+L typeAliasLinks $"Ctor"/0x80000@TypeAliasDeclaration[1047,1086)@decl-only.ts declaredType=T109
+L typeAliasLinks $"Fn"/0x80000@TypeAliasDeclaration[977,1047)@decl-only.ts declaredType=T108
+L typeAliasLinks $"Inter"/0x80000@TypeAliasDeclaration[937,977)@decl-only.ts declaredType=T107
+L typeAliasLinks $"Keys"/0x80000@TypeAliasDeclaration[693,718)@decl-only.ts declaredType=T99
+L typeAliasLinks $"Lookup"/0x80000@TypeAliasDeclaration[718,767)@decl-only.ts declaredType=T100
+L typeAliasLinks $"Mapped"/0x80000@TypeAliasDeclaration[839,892)@decl-only.ts declaredType=T103 typeParameters=[T104] instantiations=#1[T103]
+L typeAliasLinks $"Named"/0x80000@TypeAliasDeclaration[626,693)@decl-only.ts declaredType=T98
+L typeAliasLinks $"Pair"/0x80000@TypeAliasDeclaration[596,626)@decl-only.ts declaredType=T95 typeParameters=[T96,T97] instantiations=#1[T95]
+L typeAliasLinks $"Rec"/0x80000@TypeAliasDeclaration[1086,1133)@decl-only.ts declaredType=T110
+L typeAliasLinks $"Tpl"/0x80000@TypeAliasDeclaration[892,937)@decl-only.ts declaredType=T106
+L typeAliasLinks $"Uppercase"/0x80000@TypeAliasDeclaration[76243,76347)@lib.es5.d.ts declaredType=T8 typeParameters=[T150] instantiations=#1[T8]
+L declaredTypeLinks $"A"/0x40000@TypeParameter[607,608)@decl-only.ts declaredType=T96
+L declaredTypeLinks $"A"/0x8@EnumMember[577,585)@decl-only.ts declaredType=T136
+L declaredTypeLinks $"Animal"/0x20@ClassDeclaration[232,373)@decl-only.ts declaredType=T90
 L declaredTypeLinks $"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts declaredType=T65
-L declaredTypeLinks $"B"/0x40000@TypeParameter[609,615)@decl-only.ts declaredType=T114
-L declaredTypeLinks $"B"/0x8@EnumMember[586,594)@decl-only.ts declaredType=T106
-L declaredTypeLinks $"Blue"/0x8@EnumMember[544,549)@decl-only.ts declaredType=T101
+L declaredTypeLinks $"B"/0x40000@TypeParameter[609,615)@decl-only.ts declaredType=T97
+L declaredTypeLinks $"B"/0x8@EnumMember[586,594)@decl-only.ts declaredType=T137
+L declaredTypeLinks $"Blue"/0x8@EnumMember[544,549)@decl-only.ts declaredType=T135
 L declaredTypeLinks $"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts declaredType=T74
 L declaredTypeLinks $"Box"/0x40@InterfaceDeclaration[97,201)@decl-only.ts declaredType=T87
 L declaredTypeLinks $"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts declaredType=T70
-L declaredTypeLinks $"Color"/0x100@EnumDeclaration[507,551)@decl-only.ts declaredType=T102
-L declaredTypeLinks $"Dog"/0x20@ClassDeclaration[373,507)@decl-only.ts declaredType=T93
-L declaredTypeLinks $"Flag"/0x80@EnumDeclaration[551,596)@decl-only.ts declaredType=T107
+L declaredTypeLinks $"Color"/0x100@EnumDeclaration[507,551)@decl-only.ts declaredType=T93
+L declaredTypeLinks $"Dog"/0x20@ClassDeclaration[373,507)@decl-only.ts declaredType=T91
+L declaredTypeLinks $"Flag"/0x80@EnumDeclaration[551,596)@decl-only.ts declaredType=T94
 L declaredTypeLinks $"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts declaredType=T69
-L declaredTypeLinks $"Green"/0x8@EnumMember[533,543)@decl-only.ts declaredType=T99
+L declaredTypeLinks $"Green"/0x8@EnumMember[533,543)@decl-only.ts declaredType=T134
 L declaredTypeLinks $"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts declaredType=T63
 L declaredTypeLinks $"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts declaredType=T71
 L declaredTypeLinks $"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts declaredType=T73
 L declaredTypeLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts declaredType=T68
-L declaredTypeLinks $"P"/0x40000@TypeParameter[869,881)@decl-only.ts declaredType=T138
+L declaredTypeLinks $"P"/0x40000@TypeParameter[869,881)@decl-only.ts declaredType=T105
 L declaredTypeLinks $"Point"/0x40@InterfaceDeclaration[0,97)@decl-only.ts declaredType=T86
 L declaredTypeLinks $"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts declaredType=T79
-L declaredTypeLinks $"Red"/0x8@EnumMember[528,532)@decl-only.ts declaredType=T97
+L declaredTypeLinks $"Red"/0x8@EnumMember[528,532)@decl-only.ts declaredType=T133
 L declaredTypeLinks $"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts declaredType=T75
-L declaredTypeLinks $"S"/0x40000@TypeParameter[76317,76333)@lib.es5.d.ts declaredType=T141
+L declaredTypeLinks $"S"/0x40000@TypeParameter[76317,76333)@lib.es5.d.ts declaredType=T150
 L declaredTypeLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts declaredType=T72
 L declaredTypeLinks $"T"/0x40000@TypeParameter[112,113)@decl-only.ts declaredType=T88
-L declaredTypeLinks $"T"/0x40000@TypeParameter[1702,1703)@decl-only.ts declaredType=T151
-L declaredTypeLinks $"T"/0x40000@TypeParameter[392,413)@decl-only.ts declaredType=T94
+L declaredTypeLinks $"T"/0x40000@TypeParameter[1702,1703)@decl-only.ts declaredType=T111
+L declaredTypeLinks $"T"/0x40000@TypeParameter[392,413)@decl-only.ts declaredType=T92
 L declaredTypeLinks $"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts declaredType=T80
 L declaredTypeLinks $"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts declaredType=T66
 L declaredTypeLinks $"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts declaredType=T84
-L declaredTypeLinks $"T"/0x40000@TypeParameter[778,779)@decl-only.ts declaredType=T134
-L declaredTypeLinks $"T"/0x40000@TypeParameter[852,853)@decl-only.ts declaredType=T137
+L declaredTypeLinks $"T"/0x40000@TypeParameter[778,779)@decl-only.ts declaredType=T102
+L declaredTypeLinks $"T"/0x40000@TypeParameter[852,853)@decl-only.ts declaredType=T104
 L declaredTypeLinks $"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts declaredType=T83
-L declaredTypeLinks $"U"/0x40000@TypeParameter[145,146)@decl-only.ts declaredType=T90
-L declaredTypeLinks $"U"/0x40000@TypeParameter[1704,1722)@decl-only.ts declaredType=T152
+L declaredTypeLinks $"U"/0x40000@TypeParameter[145,146)@decl-only.ts declaredType=T89
+L declaredTypeLinks $"U"/0x40000@TypeParameter[1704,1722)@decl-only.ts declaredType=T112
 == diagnostics

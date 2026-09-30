@@ -9,6 +9,7 @@ import (
 	"sort"
 
 	"github.com/microsoft/typescript-go/cmd/oracle/bind"
+	"github.com/microsoft/typescript-go/cmd/oracle/canon"
 	"github.com/microsoft/typescript-go/cmd/oracle/check"
 	"github.com/microsoft/typescript-go/cmd/oracle/decl"
 	"github.com/microsoft/typescript-go/cmd/oracle/diagfmt"
@@ -40,10 +41,11 @@ var commands = map[string]command{
 	"tree":        {tree.Main, "[-force] [-jsx] [-nojsdoc] <outdir> <name>=<path>...   tree of the parser, one <name>.tsgo.txt per file"},
 	"bind":        {bind.Main, "[-force] [-jsx] [-symbols <dir>] <outdir> <name>=<path>...   what the binder wrote, one <name>.bind.txt per file"},
 	"init":        {func() { checker.ProbeRecord = true; initp.Main() }, "[-strict|-nostrict] [-exact] [-max N] [-aliases] <name>=<path>...   checker state after NewChecker"},
-	"types":       {func() { checker.ProbeRecord = true; types.Main() }, "[-strict|-nostrict] [-exact] [-checkjs] [-stage s]... [-from N] <name>=<path>...   every type, signature and created symbol in creation order, and the link stores"},
+	"types":       {func() { checker.ProbeRecord = true; types.Main() }, "[-strict|-nostrict] [-exact] [-checkjs] [-o key=value]... [-stage s]... [-from N] [-nolinks] [-schema] <name>=<path>...   every type, signature and created symbol in creation order, and the link stores; pipe it through canon"},
 	"k4":          {k4.Main, "[-strict|-nostrict] [-checkjs] <name>=<path>...   diagnostics, resolution stack, counters"},
 	"rel":         {rel.Main, "[-strict|-nostrict] [-exact] [-trace] [-funcs] [-rel relation:source:target]... <name>=<path>...   diagnostics and relation caches; the trace needs the trace build"},
 	"rel-all":     {func() { checker.RelTraceAll = true; rel.Main() }, "same as rel, with the entry of every checker function in the trace (trace build)"},
+	"canon":       {canon.Main, "(stdin: a types dump)   the dump with numbers that do not depend on the creation order of a run"},
 	"check":       {check.Main, "[-strict|-nostrict] [-unreachable-error] [-suggestions] [-maxstack N] <name>=<path>...   diagnostics with chains and related information, state counters"},
 	"decl":        {decl.Main, "[-strict] [-checkjs] [-sugg] [-o key=value]... <name>=<path>...   parse counts, diagnostics and suggestions with chosen options"},
 	"pien":        {pien.Main, "(stdin)   parser.ParseIsolatedEntityName of each line"},

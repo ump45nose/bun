@@ -2,9 +2,9 @@
 // Parses and binds the files, runs typescript-go's NewChecker, runs the drive steps in the order given, and prints
 // every type, signature, transient symbol and symbol link record that exists then, in creation order.
 // usage: state [-strict|-nostrict] [-checkjs] [-o key=value]... [-drive step[,step...]]... [-all] [-marks] [-fields]
-//              [-globals] [-nolinks] [-lazyids] [-diagtext] [-dumpeach] <virtual-name>=<path>...
+//              [-globals] [-nolinks] [-diagtext] [-dumpeach] <virtual-name>=<path>...
 // A file whose virtual name starts with lib. is a library file: it is loaded but not driven.
-// Without -all the dump starts after the types, signatures and transient symbols that NewChecker made.
+// Without -all the dump starts after the types and signatures that NewChecker made.
 package state
 
 import (
@@ -190,7 +190,7 @@ func Main() {
 	options := &core.CompilerOptions{}
 	var steps []string
 	var shown []string
-	all, marks, fields, globals, links, lazy, diagText, each := false, false, false, false, true, false, false, false
+	all, marks, fields, globals, links, diagText, each := false, false, false, false, true, false, false
 	for len(args) > 0 && strings.HasPrefix(args[0], "-") {
 		switch args[0] {
 		case "-strict":
@@ -220,8 +220,6 @@ func Main() {
 			globals = true
 		case "-nolinks":
 			links = false
-		case "-lazyids":
-			lazy = true
 		case "-diagtext":
 			diagText = true
 		case "-dumpeach":
@@ -283,16 +281,16 @@ func Main() {
 			user = append(user, f)
 		}
 	}
-	o := checker.ProbeStateOptions{Marks: marks, Fields: fields, Globals: globals, Links: links, LazyIds: lazy, DiagText: diagText, Files: p.files}
+	o := checker.ProbeStateOptions{Marks: marks, Fields: fields, Globals: globals, Links: links, DiagText: diagText, Files: p.files}
 	if !all {
-		o.SinceType, o.SinceSignature, o.SinceSymbol = checker.ProbeCounts(c)
+		o.SinceType, o.SinceSignature = checker.ProbeCounts(c)
 	}
 	fmt.Print("checker-state v1\n")
 	fmt.Printf("OPTIONS [%s]\n", strings.Join(shown, " "))
 	for _, f := range p.files {
 		fmt.Printf("FILE %s\n", f.FileName())
 	}
-	fmt.Printf("SINCE type=%d signature=%d symbol=%d\n", o.SinceType, o.SinceSignature, o.SinceSymbol)
+	fmt.Printf("SINCE type=%d signature=%d\n", o.SinceType, o.SinceSignature)
 	for _, step := range steps {
 		fmt.Printf("DRIVE %s\n", step)
 		for _, l := range checker.ProbeDrive(c, user, step, o.SinceType) {

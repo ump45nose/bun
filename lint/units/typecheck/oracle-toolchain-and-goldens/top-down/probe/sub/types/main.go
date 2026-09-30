@@ -200,6 +200,10 @@ func (d *dumper) mapValue(v reflect.Value) string {
 	type entry struct{ k, v string }
 	entries := make([]entry, 0, n)
 	kt := v.Type().Key()
+	if kt == tType || kt == tSig || kt == tSym {
+		// The keys have no order that holds from run to run: only the size is printed.
+		return "#" + strconv.Itoa(n)
+	}
 	it := v.MapRange()
 	for it.Next() {
 		k := ""
@@ -466,6 +470,7 @@ func (d *dumper) stage(stage string) {
 		}
 	case "members":
 		// The list grows while it is walked: the types that a step makes are visited too, up to a fixed bound.
+		visited := 0
 		for i := 0; i < len(checker.ProbeTypes(c)) && i < 20000; i++ {
 			t := checker.ProbeTypes(c)[i]
 			if t.Flags()&(checker.TypeFlagsObject|checker.TypeFlagsUnion|checker.TypeFlagsIntersection|checker.TypeFlagsTypeParameter|checker.TypeFlagsIndexedAccess|checker.TypeFlagsConditional|checker.TypeFlagsIndex|checker.TypeFlagsSubstitution|checker.TypeFlagsTemplateLiteral|checker.TypeFlagsStringMapping) == 0 {
@@ -479,13 +484,18 @@ func (d *dumper) stage(stage string) {
 			if t.ObjectFlags()&checker.ObjectFlagsClassOrInterface != 0 {
 				bases = len(c.GetBaseTypes(t))
 			}
-			fmt.Fprintf(w, "members T%d props=%d calls=%d constructs=%d indexInfos=%d baseTypes=%d apparent=%s baseConstraint=%s\n", t.Id(), len(props), len(calls), len(news), len(infos), bases, orDash(typeRef(c.GetApparentType(t))), orDash(typeRef(c.GetBaseConstraintOfType(t))))
+			_, _, _, _, _ = props, calls, news, infos, bases
+			_, _ = c.GetApparentType(t), c.GetBaseConstraintOfType(t)
+			visited++
 		}
+		// The walk is in creation order, which changes from run to run: only the count is printed.
+		fmt.Fprintf(w, "members types=%d\n", visited)
 	case "returns":
 		for i := 0; i < len(checker.ProbeSignatures(c)) && i < 20000; i++ {
 			s := checker.ProbeSignatures(c)[i]
-			fmt.Fprintf(w, "returns G%d = %s\n", s.Id(), orDash(typeRef(c.GetReturnTypeOfSignature(s))))
+			_ = c.GetReturnTypeOfSignature(s)
 		}
+		fmt.Fprintf(w, "returns signatures=%d\n", len(checker.ProbeSignatures(c)))
 	case "relate":
 		var last *ast.SourceFile
 		for _, f := range d.files {

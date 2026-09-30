@@ -173,6 +173,13 @@ fn binder_writes_then_freeze_and_share() {
         ..SymbolRec::default()
     });
     let locals = table.bound.push_symbol_table(1, &[(b"x", SymbolId(1))]);
+    // The binder numbers its flow data nodes past the nodes of the tree and appends them when it hands over.
+    let promised = table.next_flow_data_id(0);
+    let data = table.push_flow_switch_clause_data(NodeId(2), 0, 3);
+    assert_eq!(data, promised);
+    assert_eq!(data, NodeId(9));
+    let number = crate::ast::program::next_symbol_id();
+    assert!(crate::ast::program::next_symbol_id() > number);
     table.bound.flow_nodes.push(FlowNodeRec {
         flags: 2,
         ..FlowNodeRec::default()
@@ -215,6 +222,12 @@ fn binder_writes_then_freeze_and_share() {
                 .is_nil()
         );
         assert_eq!(a.flow_node(statement.flow_node_data(&a).flow_node).flags, 2);
+        let data = NodeId(9 + delta).as_flow_switch_clause_data(&a);
+        assert_eq!(
+            (data.switch_statement, data.clause_start, data.clause_end),
+            (statement, 0, 3)
+        );
+        assert_eq!(NodeId(9 + delta).kind(&a), Kind::Unknown);
         let other_file = other.root;
         assert_eq!(other_file.statements(&a).at(0usize).parent(&a), other_file);
         assert_eq!(a.log.count(), 0);
@@ -553,6 +566,24 @@ fn rewind_and_synthetic_table() {
     assert_eq!(a.list_nodes(list).at(0usize), kept);
     assert_eq!(a.log.count(), 0);
 
+    // A node that nothing holds is dropped by finish, and a node that two parents hold is reported.
+    let orphan = f.new_identifier(b"orphan");
+    let shared = f.new_parenthesized_expression(kept);
+    let twice = f.new_binary_expression(
+        crate::ids::ModifierListId::NIL,
+        shared,
+        NodeId::NIL,
+        f.new_token(Kind::PlusToken),
+        shared,
+    );
+    let table = a.finish(twice, Vec::new(), FileData::default());
+    assert_eq!(table.node_count(), 4);
+    assert!(!orphan.is_nil());
+    assert_eq!(
+        a.log.snapshot().last().map(|fault| fault.kind),
+        Some(FaultKind::SharedNode)
+    );
+
     // The import specifier a program makes for a file: its parent is the node of a frozen file.
     let ids = IdAllocator::new();
     let mut file = min_table();
@@ -582,4 +613,29 @@ fn rewind_and_synthetic_table() {
     assert_eq!(specifier.parent(&c), import);
     assert_eq!(import.parent(&c).kind(&c), Kind::SourceFile);
     assert_eq!(c.log.count(), 0);
+}
+
+// A module that imports the port of upstream's package `core` by name: `core::` is that package here, the
+// standard library is `std::` (or `::core::`), and macros of other crates still expand.
+mod core_name_probe {
+    use crate::core;
+
+    bitflags::bitflags! {
+        #[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
+        pub struct ProbeFlags: u32 {
+            const A = 1;
+        }
+    }
+
+    #[test]
+    fn module_named_core() {
+        let range = core::new_text_range(1, 2);
+        assert_eq!(range.len(), 1);
+        assert!(ProbeFlags::A.contains(ProbeFlags::A));
+        let (mut a, mut b) = (1, 2);
+        std::mem::swap(&mut a, &mut b);
+        assert_eq!((a, b), (2, 1));
+        assert_eq!(::core::mem::size_of::<u32>(), 4);
+        assert!(matches!(format!("{range:?}").len(), 1..));
+    }
 }

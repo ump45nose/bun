@@ -3,7 +3,7 @@
 // a file keeps its ids in every program that uses it, whatever the other files are and whatever their order is.
 use crate::ast::table::NodeTable;
 use crate::ids::{PAGE_SHIFT, PAGE_SIZE, SYNTH};
-use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
 
 pub struct IdAllocator {
     next_page: AtomicU32,
@@ -54,4 +54,12 @@ pub fn freeze(table: &mut NodeTable, ids: &IdAllocator) -> bool {
         }
         None => false,
     }
+}
+
+static NEXT_SYMBOL_ID: AtomicU64 = AtomicU64::new(0);
+
+// ast.GetSymbolId for a symbol that has no number yet: the next number of the process (utilities.go:34).
+// The binder keeps it in SymbolRec::lazy_id, a checker keeps it in its own table.
+pub fn next_symbol_id() -> u64 {
+    NEXT_SYMBOL_ID.fetch_add(1, Ordering::Relaxed) + 1
 }

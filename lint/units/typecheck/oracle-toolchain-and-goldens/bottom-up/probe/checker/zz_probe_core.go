@@ -14,6 +14,9 @@ type probeState struct {
 	symbols    []*ast.Symbol
 	signatures []*Signature
 	marks      []string
+	// transient symbols in the order in which a state dump first names them
+	canon     map[*ast.Symbol]int
+	canonList []*ast.Symbol
 }
 
 // ProbeRecordOn turns the recording hooks on. Off, the hooks keep nothing and the checker behaves as the reference.

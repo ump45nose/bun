@@ -8,75 +8,75 @@ after NewChecker types=85 symbols=6 signatures=4
 == stage declared
 declared InterfaceDeclaration[0,62)@rich.ts = T86
 declared TypeParameter[14,15)@rich.ts = T87
-declared TypeParameter[33,34)@rich.ts = T89
-declared TypeAliasDeclaration[62,92)@rich.ts = T97
-declared TypeParameter[73,74)@rich.ts = T95
-declared TypeParameter[75,81)@rich.ts = T96
-declared TypeAliasDeclaration[92,116)@rich.ts = T99
-declared TypeParameter[103,104)@rich.ts = T98
-declared TypeAliasDeclaration[116,171)@rich.ts = T100
-declared TypeParameter[128,129)@rich.ts = T101
-declared TypeParameter[130,148)@rich.ts = T102
-declared TypeParameter[155,161)@rich.ts = T103
-declared TypeAliasDeclaration[171,243)@rich.ts = T106
-declared TypeParameter[182,183)@rich.ts = T105
-declared TypeAliasDeclaration[243,292)@rich.ts = T111
-declared TypeParameter[256,257)@rich.ts = T107
-declared TypeParameter[280,282)@rich.ts = T108
-declared EnumDeclaration[292,339)@rich.ts = T122
-declared ClassDeclaration[339,412)@rich.ts = T123
-declared ClassDeclaration[412,526)@rich.ts = T125
-declared TypeParameter[427,443)@rich.ts = T126
-declared TypeParameter[546,547)@rich.ts = T128
-declared TypeAliasDeclaration[1192,1237)@rich.ts = T131
+declared TypeParameter[33,34)@rich.ts = T88
+declared TypeAliasDeclaration[62,92)@rich.ts = T89
+declared TypeParameter[73,74)@rich.ts = T90
+declared TypeParameter[75,81)@rich.ts = T91
+declared TypeAliasDeclaration[92,116)@rich.ts = T92
+declared TypeParameter[103,104)@rich.ts = T93
+declared TypeAliasDeclaration[116,171)@rich.ts = T94
+declared TypeParameter[128,129)@rich.ts = T95
+declared TypeParameter[130,148)@rich.ts = T96
+declared TypeParameter[155,161)@rich.ts = T97
+declared TypeAliasDeclaration[171,243)@rich.ts = T98
+declared TypeParameter[182,183)@rich.ts = T99
+declared TypeAliasDeclaration[243,292)@rich.ts = T100
+declared TypeParameter[256,257)@rich.ts = T101
+declared TypeParameter[280,282)@rich.ts = T102
+declared EnumDeclaration[292,339)@rich.ts = T103
+declared ClassDeclaration[339,412)@rich.ts = T104
+declared ClassDeclaration[412,526)@rich.ts = T105
+declared TypeParameter[427,443)@rich.ts = T106
+declared TypeParameter[546,547)@rich.ts = T107
+declared TypeAliasDeclaration[1192,1237)@rich.ts = T108
 == counts types=131 symbols=9 signatures=4 files=1
 == types
-T86 Object(0x100000) of=0x6 InterfaceType symbol=$"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts target=T86 instantiations=#3[T86,T109,T110] resolvedTypeArguments=[T87] allTypeParameters=[T87,T88] thisType=T88
+T86 Object(0x100000) of=0x6 InterfaceType symbol=$"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts target=T86 instantiations=#3[T86,T112,T129] resolvedTypeArguments=[T87] allTypeParameters=[T87,T109] thisType=T109
 T87 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[14,15)@rich.ts resolvedBaseConstraint=T43 constraint=T43
-T88 TypeParameter(0x80000) TypeParameter symbol=$"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts constraint=T86 isThisType=true
-T89 TypeParameter(0x80000) TypeParameter symbol=$"U"/0x40000@TypeParameter[33,34)@rich.ts
-T90 TypeParameter(0x80000) TypeParameter
-T91 TypeParameter(0x80000) TypeParameter
-T92 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) regularType=T92
-T93 Object(0x100000) of=0xc TupleType target=T93 instantiations=#1[T93] resolvedTypeArguments=[T90,T91] allTypeParameters=[T90,T91,T94] thisType=T94 declaredMembersResolved=true declaredMembers={"0":Y7 "1":Y8 "length":Y9} elementInfos=[{flags=0x1},{flags=0x1}] minLength=2 fixedLength=2 combinedFlags=0x1
-T94 TypeParameter(0x80000) TypeParameter constraint=T93 isThisType=true
-T95 TypeParameter(0x80000) TypeParameter symbol=$"A"/0x40000@TypeParameter[73,74)@rich.ts
-T96 TypeParameter(0x80000) TypeParameter symbol=$"B"/0x40000@TypeParameter[75,81)@rich.ts
-T97 Object(0x100000) of=0x4 TypeReference alias={symbol=$"Pair"/0x80000@TypeAliasDeclaration[62,92)@rich.ts typeArguments=[T95,T96]} target=T93 node=TupleType[84,91)@rich.ts
-T98 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[103,104)@rich.ts
-T99 Index(0x200000) IndexType target=T98
-T100 Object(0x100000) of=0x20 MappedType symbol=$"\xfetype"/0x800@MappedType[151,170)@rich.ts alias={symbol=$"Pick2"/0x80000@TypeAliasDeclaration[116,171)@rich.ts typeArguments=[T101,T102]} declaration=MappedType[151,170)@rich.ts typeParameter=T103 constraintType=T102
-T101 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[128,129)@rich.ts
-T102 TypeParameter(0x80000) TypeParameter symbol=$"K"/0x40000@TypeParameter[130,148)@rich.ts resolvedBaseConstraint=T30 constraint=T104
-T103 TypeParameter(0x80000) TypeParameter symbol=$"P"/0x40000@TypeParameter[155,161)@rich.ts resolvedBaseConstraint=T30 constraint=T102
-T104 Index(0x200000) IndexType resolvedBaseConstraint=T30 target=T101
-T105 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[182,183)@rich.ts
-T106 Conditional(0x4000000) ConditionalType alias={symbol=$"Cond"/0x80000@TypeAliasDeclaration[171,243)@rich.ts typeArguments=[T105]} root={node=ConditionalType[186,242)@rich.ts checkType=T105 extendsType=T14 isDistributive=true outerTypeParameters=[T105] instantiations=#1[T106] alias={symbol=$"Cond"/0x80000@TypeAliasDeclaration[171,243)@rich.ts typeArguments=[T105]}} checkType=T105 extendsType=T14
-T107 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[256,257)@rich.ts
-T108 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"U"/0x40000@TypeParameter[280,282)@rich.ts resolvedBaseConstraint=T43 constraint=T43
-T109 Object(0x100000) of=0x40180004 TypeReference symbol=$"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts target=T86 resolvedTypeArguments=[T108]
-T110 Object(0x100000) of=0x4 TypeReference symbol=$"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts target=T86 resolvedTypeArguments=[T9]
-T111 Conditional(0x4000000) ConditionalType alias={symbol=$"Unwrap"/0x80000@TypeAliasDeclaration[243,292)@rich.ts typeArguments=[T107]} root={node=ConditionalType[260,291)@rich.ts checkType=T107 extendsType=T109 isDistributive=true inferTypeParameters=[T108] outerTypeParameters=[T107] instantiations=#1[T111] alias={symbol=$"Unwrap"/0x80000@TypeAliasDeclaration[243,292)@rich.ts typeArguments=[T107]}} checkType=T107 extendsType=T109 combinedMapper=Inference{c=&Checker n=&InferenceContext fixing=true}
-T112 StringLiteral(0x400) LiteralType value="d"(string) freshType=T113 regularType=T112
-T113 StringLiteral(0x400) LiteralType value="d"(string) freshType=T113 regularType=T112
-T114 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"A"/0x8@EnumMember[301,307)@rich.ts value=1(jsnum.Number) freshType=T115 regularType=T114
-T115 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"A"/0x8@EnumMember[301,307)@rich.ts value=1(jsnum.Number) freshType=T115 regularType=T114
-T116 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"B"/0x8@EnumMember[308,310)@rich.ts value=2(jsnum.Number) freshType=T117 regularType=T116
-T117 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"B"/0x8@EnumMember[308,310)@rich.ts value=2(jsnum.Number) freshType=T117 regularType=T116
-T118 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"C"/0x8@EnumMember[311,321)@rich.ts value=3(jsnum.Number) freshType=T119 regularType=T118
-T119 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"C"/0x8@EnumMember[311,321)@rich.ts value=3(jsnum.Number) freshType=T119 regularType=T118
-T120 Enum(0x10000) LiteralType symbol=$"D"/0x8@EnumMember[322,337)@rich.ts freshType=T121 regularType=T120
-T121 Enum(0x10000) LiteralType symbol=$"D"/0x8@EnumMember[322,337)@rich.ts freshType=T121 regularType=T120
-T122 EnumLiteral|Union(0x8008000) of=0x8000 UnionType symbol=$"E"/0x100@EnumDeclaration[292,339)@rich.ts alias={symbol=$"E"/0x100@EnumDeclaration[292,339)@rich.ts} types=[T114,T116,T118,T120]
-T123 Object(0x100000) of=0x5 InterfaceType symbol=$"Base"/0x20@ClassDeclaration[339,412)@rich.ts target=T123 instantiations=#1[T123] allTypeParameters=[T124] thisType=T124
-T124 TypeParameter(0x80000) TypeParameter symbol=$"Base"/0x20@ClassDeclaration[339,412)@rich.ts constraint=T123 isThisType=true
-T125 Object(0x100000) of=0x5 InterfaceType symbol=$"Derived"/0x20@ClassDeclaration[412,526)@rich.ts target=T125 instantiations=#1[T125] resolvedTypeArguments=[T126] allTypeParameters=[T126,T127] thisType=T127
-T126 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[427,443)@rich.ts
-T127 TypeParameter(0x80000) TypeParameter symbol=$"Derived"/0x20@ClassDeclaration[412,526)@rich.ts constraint=T125 isThisType=true
-T128 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[546,547)@rich.ts
-T129 Object(0x100000) of=0x10 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[1210,1227)@rich.ts
-T130 Intersection(0x10000000) IntersectionType types=[T14,T129]
-T131 Union(0x8000000) of=0x2000000 UnionType alias={symbol=$"U"/0x80000@TypeAliasDeclaration[1192,1237)@rich.ts} types=[T15,T130]
+T88 TypeParameter(0x80000) TypeParameter symbol=$"U"/0x40000@TypeParameter[33,34)@rich.ts
+T89 Object(0x100000) of=0x4 TypeReference alias={symbol=$"Pair"/0x80000@TypeAliasDeclaration[62,92)@rich.ts typeArguments=[T90,T91]} target=T110 node=TupleType[84,91)@rich.ts
+T90 TypeParameter(0x80000) TypeParameter symbol=$"A"/0x40000@TypeParameter[73,74)@rich.ts
+T91 TypeParameter(0x80000) TypeParameter symbol=$"B"/0x40000@TypeParameter[75,81)@rich.ts
+T92 Index(0x200000) IndexType target=T93
+T93 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[103,104)@rich.ts
+T94 Object(0x100000) of=0x20 MappedType symbol=$"\xfetype"/0x800@MappedType[151,170)@rich.ts alias={symbol=$"Pick2"/0x80000@TypeAliasDeclaration[116,171)@rich.ts typeArguments=[T95,T96]} declaration=MappedType[151,170)@rich.ts typeParameter=T97 constraintType=T96
+T95 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[128,129)@rich.ts
+T96 TypeParameter(0x80000) TypeParameter symbol=$"K"/0x40000@TypeParameter[130,148)@rich.ts resolvedBaseConstraint=T30 constraint=T111
+T97 TypeParameter(0x80000) TypeParameter symbol=$"P"/0x40000@TypeParameter[155,161)@rich.ts resolvedBaseConstraint=T30 constraint=T96
+T98 Conditional(0x4000000) ConditionalType alias={symbol=$"Cond"/0x80000@TypeAliasDeclaration[171,243)@rich.ts typeArguments=[T99]} root={node=ConditionalType[186,242)@rich.ts checkType=T99 extendsType=T14 isDistributive=true outerTypeParameters=[T99] instantiations=#1[T98] alias={symbol=$"Cond"/0x80000@TypeAliasDeclaration[171,243)@rich.ts typeArguments=[T99]}} checkType=T99 extendsType=T14
+T99 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[182,183)@rich.ts
+T100 Conditional(0x4000000) ConditionalType alias={symbol=$"Unwrap"/0x80000@TypeAliasDeclaration[243,292)@rich.ts typeArguments=[T101]} root={node=ConditionalType[260,291)@rich.ts checkType=T101 extendsType=T112 isDistributive=true inferTypeParameters=[T102] outerTypeParameters=[T101] instantiations=#1[T100] alias={symbol=$"Unwrap"/0x80000@TypeAliasDeclaration[243,292)@rich.ts typeArguments=[T101]}} checkType=T101 extendsType=T112 combinedMapper=Inference{c=&Checker n=&InferenceContext fixing=true}
+T101 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[256,257)@rich.ts
+T102 TypeParameter(0x80000) of=0x180000 TypeParameter symbol=$"U"/0x40000@TypeParameter[280,282)@rich.ts resolvedBaseConstraint=T43 constraint=T43
+T103 EnumLiteral|Union(0x8008000) of=0x8000 UnionType symbol=$"E"/0x100@EnumDeclaration[292,339)@rich.ts alias={symbol=$"E"/0x100@EnumDeclaration[292,339)@rich.ts} types=[T113,T114,T115,T116]
+T104 Object(0x100000) of=0x5 InterfaceType symbol=$"Base"/0x20@ClassDeclaration[339,412)@rich.ts target=T104 instantiations=#1[T104] allTypeParameters=[T117] thisType=T117
+T105 Object(0x100000) of=0x5 InterfaceType symbol=$"Derived"/0x20@ClassDeclaration[412,526)@rich.ts target=T105 instantiations=#1[T105] resolvedTypeArguments=[T106] allTypeParameters=[T106,T118] thisType=T118
+T106 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[427,443)@rich.ts
+T107 TypeParameter(0x80000) TypeParameter symbol=$"T"/0x40000@TypeParameter[546,547)@rich.ts
+T108 Union(0x8000000) of=0x2000000 UnionType alias={symbol=$"U"/0x80000@TypeAliasDeclaration[1192,1237)@rich.ts} types=[T15,T119]
+T109 TypeParameter(0x80000) TypeParameter symbol=$"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts constraint=T86 isThisType=true
+T110 Object(0x100000) of=0xc TupleType target=T110 instantiations=#1[T110] resolvedTypeArguments=[T120,T121] allTypeParameters=[T120,T121,T122] thisType=T122 declaredMembersResolved=true declaredMembers={"0":Y7 "1":Y8 "length":Y9} elementInfos=[{flags=0x1},{flags=0x1}] minLength=2 fixedLength=2 combinedFlags=0x1
+T111 Index(0x200000) IndexType resolvedBaseConstraint=T30 target=T95
+T112 Object(0x100000) of=0x40180004 TypeReference symbol=$"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts target=T86 resolvedTypeArguments=[T102]
+T113 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"A"/0x8@EnumMember[301,307)@rich.ts value=1(jsnum.Number) freshType=T123 regularType=T113
+T114 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"B"/0x8@EnumMember[308,310)@rich.ts value=2(jsnum.Number) freshType=T124 regularType=T114
+T115 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"C"/0x8@EnumMember[311,321)@rich.ts value=3(jsnum.Number) freshType=T125 regularType=T115
+T116 Enum(0x10000) LiteralType symbol=$"D"/0x8@EnumMember[322,337)@rich.ts freshType=T126 regularType=T116
+T117 TypeParameter(0x80000) TypeParameter symbol=$"Base"/0x20@ClassDeclaration[339,412)@rich.ts constraint=T104 isThisType=true
+T118 TypeParameter(0x80000) TypeParameter symbol=$"Derived"/0x20@ClassDeclaration[412,526)@rich.ts constraint=T105 isThisType=true
+T119 Intersection(0x10000000) IntersectionType types=[T14,T127]
+T120 TypeParameter(0x80000) TypeParameter
+T121 TypeParameter(0x80000) TypeParameter
+T122 TypeParameter(0x80000) TypeParameter constraint=T110 isThisType=true
+T123 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"A"/0x8@EnumMember[301,307)@rich.ts value=1(jsnum.Number) freshType=T123 regularType=T113
+T124 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"B"/0x8@EnumMember[308,310)@rich.ts value=2(jsnum.Number) freshType=T124 regularType=T114
+T125 NumberLiteral|EnumLiteral(0x8800) LiteralType symbol=$"C"/0x8@EnumMember[311,321)@rich.ts value=3(jsnum.Number) freshType=T125 regularType=T115
+T126 Enum(0x10000) LiteralType symbol=$"D"/0x8@EnumMember[322,337)@rich.ts freshType=T126 regularType=T116
+T127 Object(0x100000) of=0x10 ObjectType symbol=$"\xfetype"/0x800@TypeLiteral[1210,1227)@rich.ts
+T128 NumberLiteral(0x800) LiteralType value=2(jsnum.Number) regularType=T128
+T129 Object(0x100000) of=0x4 TypeReference symbol=$"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts target=T86 resolvedTypeArguments=[T9]
+T130 StringLiteral(0x400) LiteralType value="d"(string) freshType=T131 regularType=T130
+T131 StringLiteral(0x400) LiteralType value="d"(string) freshType=T131 regularType=T130
 == signatures
 G1 resolvedMinArgumentCount=-1 resolvedReturnType=T1
 G2 resolvedMinArgumentCount=-1 resolvedReturnType=T5
@@ -101,22 +101,22 @@ L symbolNodeLinks TypeReference[159,161)@rich.ts resolvedSymbol=$"K"/0x40000@Typ
 L symbolNodeLinks TypeReference[186,188)@rich.ts resolvedSymbol=$"T"/0x40000@TypeParameter[182,183)@rich.ts
 L symbolNodeLinks TypeReference[260,262)@rich.ts resolvedSymbol=$"T"/0x40000@TypeParameter[256,257)@rich.ts
 L symbolNodeLinks TypeReference[270,283)@rich.ts resolvedSymbol=$"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts
-L typeNodeLinks ConditionalType[186,242)@rich.ts resolvedType=T106
-L typeNodeLinks ConditionalType[260,291)@rich.ts resolvedType=T111
-L typeNodeLinks InferType[275,282)@rich.ts resolvedType=T108
-L typeNodeLinks IntersectionType[1201,1227)@rich.ts resolvedType=T130
-L typeNodeLinks MappedType[151,170)@rich.ts resolvedType=T100
-L typeNodeLinks TupleType[84,91)@rich.ts resolvedType=T97
-L typeNodeLinks TypeLiteral[1210,1227)@rich.ts resolvedType=T129
-L typeNodeLinks TypeOperator[107,115)@rich.ts resolvedType=T99
-L typeNodeLinks TypeOperator[140,148)@rich.ts resolvedType=T104
-L typeNodeLinks TypeReference[113,115)@rich.ts resolvedType=T98
-L typeNodeLinks TypeReference[146,148)@rich.ts resolvedType=T101
-L typeNodeLinks TypeReference[159,161)@rich.ts resolvedType=T102
-L typeNodeLinks TypeReference[186,188)@rich.ts resolvedType=T105
-L typeNodeLinks TypeReference[260,262)@rich.ts resolvedType=T107
-L typeNodeLinks TypeReference[270,283)@rich.ts resolvedType=T109
-L typeNodeLinks UnionType[1201,1236)@rich.ts resolvedType=T131
+L typeNodeLinks ConditionalType[186,242)@rich.ts resolvedType=T98
+L typeNodeLinks ConditionalType[260,291)@rich.ts resolvedType=T100
+L typeNodeLinks InferType[275,282)@rich.ts resolvedType=T102
+L typeNodeLinks IntersectionType[1201,1227)@rich.ts resolvedType=T119
+L typeNodeLinks MappedType[151,170)@rich.ts resolvedType=T94
+L typeNodeLinks TupleType[84,91)@rich.ts resolvedType=T89
+L typeNodeLinks TypeLiteral[1210,1227)@rich.ts resolvedType=T127
+L typeNodeLinks TypeOperator[107,115)@rich.ts resolvedType=T92
+L typeNodeLinks TypeOperator[140,148)@rich.ts resolvedType=T111
+L typeNodeLinks TypeReference[113,115)@rich.ts resolvedType=T93
+L typeNodeLinks TypeReference[146,148)@rich.ts resolvedType=T95
+L typeNodeLinks TypeReference[159,161)@rich.ts resolvedType=T96
+L typeNodeLinks TypeReference[186,188)@rich.ts resolvedType=T99
+L typeNodeLinks TypeReference[260,262)@rich.ts resolvedType=T101
+L typeNodeLinks TypeReference[270,283)@rich.ts resolvedType=T112
+L typeNodeLinks UnionType[1201,1236)@rich.ts resolvedType=T108
 L enumMemberLinks EnumMember[301,307)@rich.ts value={Value=1(jsnum.Number)}
 L enumMemberLinks EnumMember[308,310)@rich.ts value={Value=2(jsnum.Number)}
 L enumMemberLinks EnumMember[311,321)@rich.ts value={Value=3(jsnum.Number)}
@@ -132,51 +132,51 @@ L valueSymbolLinks Y1 resolvedType=T10
 L valueSymbolLinks Y2 resolvedType=T63
 L valueSymbolLinks Y4 resolvedType=T5
 L valueSymbolLinks Y5 resolvedType=T64
-L valueSymbolLinks Y7 resolvedType=T90
-L valueSymbolLinks Y8 resolvedType=T91
-L valueSymbolLinks Y9 resolvedType=T92
+L valueSymbolLinks Y7 resolvedType=T120
+L valueSymbolLinks Y8 resolvedType=T121
+L valueSymbolLinks Y9 resolvedType=T128
 L membersAndExportsLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts [-,{"\xfeindex":$"\xfeindex"/0x20000@IndexSignature[21413,21454)@lib.es5.d.ts "charAt":$"charAt"/0x2000@MethodSignature[15617,15791)@lib.es5.d.ts "charCodeAt":$"charCodeAt"/0x2000@MethodSignature[15791,16035)@lib.es5.d.ts "concat":$"concat"/0x2000@MethodSignature[16035,16250)@lib.es5.d.ts "indexOf":$"indexOf"/0x2000@MethodSignature[16250,16639)@lib.es5.d.ts "lastIndexOf":$"lastIndexOf"/0x2000@MethodSignature[16639,16996)@lib.es5.d.ts "length":$"length"/0x4@PropertySignature[20779,20862)@lib.es5.d.ts "localeCompare":$"localeCompare"/0x2000@MethodSignature[16996,17190)@lib.es5.d.ts "match":$"match"/0x2000@MethodSignature[17190,17493)@lib.es5.d.ts "replace":$"replace"/0x2000@MethodSignature[17493,18052)@lib.es5.d.ts "search":$"search"/0x2000@MethodSignature[18382,18595)@lib.es5.d.ts "slice":$"slice"/0x2000@MethodSignature[18595,19055)@lib.es5.d.ts "split":$"split"/0x2000@MethodSignature[19055,19512)@lib.es5.d.ts "substr":$"substr"/0x2000@MethodSignature[20862,21322)@lib.es5.d.ts "substring":$"substring"/0x2000@MethodSignature[19512,20039)@lib.es5.d.ts "toLocaleLowerCase":$"toLocaleLowerCase"/0x2000@MethodSignature[20146,20329)@lib.es5.d.ts "toLocaleUpperCase":$"toLocaleUpperCase"/0x2000@MethodSignature[20436,20653)@lib.es5.d.ts "toLowerCase":$"toLowerCase"/0x2000@MethodSignature[20039,20146)@lib.es5.d.ts "toString":$"toString"/0x2000@MethodSignature[15535,15617)@lib.es5.d.ts "toUpperCase":$"toUpperCase"/0x2000@MethodSignature[20329,20436)@lib.es5.d.ts "trim":$"trim"/0x2000@MethodSignature[20653,20779)@lib.es5.d.ts "valueOf":$"valueOf"/0x2000@MethodSignature[21322,21413)@lib.es5.d.ts}]
 L membersAndExportsLinks $"\xfetype"/0x800@TypeLiteral[1210,1227)@rich.ts [-,{"__brand":$"__brand"/0x4@PropertySignature[1212,1225)@rich.ts}]
-L typeAliasLinks $"Cond"/0x80000@TypeAliasDeclaration[171,243)@rich.ts declaredType=T106 typeParameters=[T105] instantiations=#1[T106]
-L typeAliasLinks $"Keys"/0x80000@TypeAliasDeclaration[92,116)@rich.ts declaredType=T99 typeParameters=[T98] instantiations=#1[T99]
-L typeAliasLinks $"Pair"/0x80000@TypeAliasDeclaration[62,92)@rich.ts declaredType=T97 typeParameters=[T95,T96] instantiations=#1[T97]
-L typeAliasLinks $"Pick2"/0x80000@TypeAliasDeclaration[116,171)@rich.ts declaredType=T100 typeParameters=[T101,T102] instantiations=#1[T100]
-L typeAliasLinks $"U"/0x80000@TypeAliasDeclaration[1192,1237)@rich.ts declaredType=T131
-L typeAliasLinks $"Unwrap"/0x80000@TypeAliasDeclaration[243,292)@rich.ts declaredType=T111 typeParameters=[T107] instantiations=#1[T111]
-L declaredTypeLinks $"A"/0x40000@TypeParameter[73,74)@rich.ts declaredType=T95
-L declaredTypeLinks $"A"/0x8@EnumMember[301,307)@rich.ts declaredType=T115
+L typeAliasLinks $"Cond"/0x80000@TypeAliasDeclaration[171,243)@rich.ts declaredType=T98 typeParameters=[T99] instantiations=#1[T98]
+L typeAliasLinks $"Keys"/0x80000@TypeAliasDeclaration[92,116)@rich.ts declaredType=T92 typeParameters=[T93] instantiations=#1[T92]
+L typeAliasLinks $"Pair"/0x80000@TypeAliasDeclaration[62,92)@rich.ts declaredType=T89 typeParameters=[T90,T91] instantiations=#1[T89]
+L typeAliasLinks $"Pick2"/0x80000@TypeAliasDeclaration[116,171)@rich.ts declaredType=T94 typeParameters=[T95,T96] instantiations=#1[T94]
+L typeAliasLinks $"U"/0x80000@TypeAliasDeclaration[1192,1237)@rich.ts declaredType=T108
+L typeAliasLinks $"Unwrap"/0x80000@TypeAliasDeclaration[243,292)@rich.ts declaredType=T100 typeParameters=[T101] instantiations=#1[T100]
+L declaredTypeLinks $"A"/0x40000@TypeParameter[73,74)@rich.ts declaredType=T90
+L declaredTypeLinks $"A"/0x8@EnumMember[301,307)@rich.ts declaredType=T123
 L declaredTypeLinks $"Array"/0x41@InterfaceDeclaration[58108,71219)@lib.es5.d.ts declaredType=T65
-L declaredTypeLinks $"B"/0x40000@TypeParameter[75,81)@rich.ts declaredType=T96
-L declaredTypeLinks $"B"/0x8@EnumMember[308,310)@rich.ts declaredType=T117
-L declaredTypeLinks $"Base"/0x20@ClassDeclaration[339,412)@rich.ts declaredType=T123
+L declaredTypeLinks $"B"/0x40000@TypeParameter[75,81)@rich.ts declaredType=T91
+L declaredTypeLinks $"B"/0x8@EnumMember[308,310)@rich.ts declaredType=T124
+L declaredTypeLinks $"Base"/0x20@ClassDeclaration[339,412)@rich.ts declaredType=T104
 L declaredTypeLinks $"Boolean"/0x41@InterfaceDeclaration[21801,21917)@lib.es5.d.ts declaredType=T74
 L declaredTypeLinks $"Box"/0x40@InterfaceDeclaration[0,62)@rich.ts declaredType=T86
-L declaredTypeLinks $"C"/0x8@EnumMember[311,321)@rich.ts declaredType=T119
+L declaredTypeLinks $"C"/0x8@EnumMember[311,321)@rich.ts declaredType=T125
 L declaredTypeLinks $"CallableFunction"/0x40@InterfaceDeclaration[11491,13479)@lib.es5.d.ts declaredType=T70
-L declaredTypeLinks $"D"/0x8@EnumMember[322,337)@rich.ts declaredType=T121
-L declaredTypeLinks $"Derived"/0x20@ClassDeclaration[412,526)@rich.ts declaredType=T125
-L declaredTypeLinks $"E"/0x100@EnumDeclaration[292,339)@rich.ts declaredType=T122
+L declaredTypeLinks $"D"/0x8@EnumMember[322,337)@rich.ts declaredType=T126
+L declaredTypeLinks $"Derived"/0x20@ClassDeclaration[412,526)@rich.ts declaredType=T105
+L declaredTypeLinks $"E"/0x100@EnumDeclaration[292,339)@rich.ts declaredType=T103
 L declaredTypeLinks $"Function"/0x41@InterfaceDeclaration[9286,10750)@lib.es5.d.ts declaredType=T69
 L declaredTypeLinks $"IArguments"/0x40@InterfaceDeclaration[15413,15513)@lib.es5.d.ts declaredType=T63
-L declaredTypeLinks $"K"/0x40000@TypeParameter[130,148)@rich.ts declaredType=T102
+L declaredTypeLinks $"K"/0x40000@TypeParameter[130,148)@rich.ts declaredType=T96
 L declaredTypeLinks $"NewableFunction"/0x40@InterfaceDeclaration[13479,15413)@lib.es5.d.ts declaredType=T71
 L declaredTypeLinks $"Number"/0x41@InterfaceDeclaration[22095,23260)@lib.es5.d.ts declaredType=T73
 L declaredTypeLinks $"Object"/0x41@InterfaceDeclaration[3290,4293)@lib.es5.d.ts declaredType=T68
-L declaredTypeLinks $"P"/0x40000@TypeParameter[155,161)@rich.ts declaredType=T103
+L declaredTypeLinks $"P"/0x40000@TypeParameter[155,161)@rich.ts declaredType=T97
 L declaredTypeLinks $"ReadonlyArray"/0x40@InterfaceDeclaration[48207,57929)@lib.es5.d.ts declaredType=T79
 L declaredTypeLinks $"RegExp"/0x41@InterfaceDeclaration[40902,42363)@lib.es5.d.ts declaredType=T75
 L declaredTypeLinks $"String"/0x41@InterfaceDeclaration[15513,21457)@lib.es5.d.ts declaredType=T72
-L declaredTypeLinks $"T"/0x40000@TypeParameter[103,104)@rich.ts declaredType=T98
-L declaredTypeLinks $"T"/0x40000@TypeParameter[128,129)@rich.ts declaredType=T101
+L declaredTypeLinks $"T"/0x40000@TypeParameter[103,104)@rich.ts declaredType=T93
+L declaredTypeLinks $"T"/0x40000@TypeParameter[128,129)@rich.ts declaredType=T95
 L declaredTypeLinks $"T"/0x40000@TypeParameter[14,15)@rich.ts declaredType=T87
-L declaredTypeLinks $"T"/0x40000@TypeParameter[182,183)@rich.ts declaredType=T105
-L declaredTypeLinks $"T"/0x40000@TypeParameter[256,257)@rich.ts declaredType=T107
-L declaredTypeLinks $"T"/0x40000@TypeParameter[427,443)@rich.ts declaredType=T126
+L declaredTypeLinks $"T"/0x40000@TypeParameter[182,183)@rich.ts declaredType=T99
+L declaredTypeLinks $"T"/0x40000@TypeParameter[256,257)@rich.ts declaredType=T101
+L declaredTypeLinks $"T"/0x40000@TypeParameter[427,443)@rich.ts declaredType=T106
 L declaredTypeLinks $"T"/0x40000@TypeParameter[48357,48358)@lib.es5.d.ts declaredType=T80
-L declaredTypeLinks $"T"/0x40000@TypeParameter[546,547)@rich.ts declaredType=T128
+L declaredTypeLinks $"T"/0x40000@TypeParameter[546,547)@rich.ts declaredType=T107
 L declaredTypeLinks $"T"/0x40000@TypeParameter[58128,58129)@lib.es5.d.ts declaredType=T66
 L declaredTypeLinks $"T"/0x40000@TypeParameter[76857,76858)@lib.es5.d.ts declaredType=T84
 L declaredTypeLinks $"ThisType"/0x40@InterfaceDeclaration[76786,76862)@lib.es5.d.ts declaredType=T83
-L declaredTypeLinks $"U"/0x40000@TypeParameter[280,282)@rich.ts declaredType=T108
-L declaredTypeLinks $"U"/0x40000@TypeParameter[33,34)@rich.ts declaredType=T89
+L declaredTypeLinks $"U"/0x40000@TypeParameter[280,282)@rich.ts declaredType=T102
+L declaredTypeLinks $"U"/0x40000@TypeParameter[33,34)@rich.ts declaredType=T88
 == diagnostics

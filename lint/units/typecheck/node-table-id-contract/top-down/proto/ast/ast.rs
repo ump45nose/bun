@@ -248,6 +248,29 @@ impl NodeId {
             },
         }
     }
+    // ast.go:238, MutableNode.SetModifiers: a node without modifiers ignores the call, as NodeDefault does.
+    pub fn set_modifiers(self, a: Ast<'_>, modifiers: ModifierListId) {
+        a.set_slot_by_table(self, &MODIFIERS_SLOT, modifiers.0);
+    }
+    // What the binder writes through DeclarationData, ExportableData, LocalsContainerData, FlowNodeData and BodyData.
+    pub fn set_symbol(self, a: Ast<'_>, symbol: SymbolId) -> bool {
+        a.set_slot_by_table(self, &SYMBOL_SLOT, symbol.0)
+    }
+    pub fn set_local_symbol(self, a: Ast<'_>, symbol: SymbolId) -> bool {
+        a.set_slot_by_table(self, &LOCAL_SYMBOL_SLOT, symbol.0)
+    }
+    pub fn set_locals(self, a: Ast<'_>, locals: SymbolTableId) -> bool {
+        a.set_slot_by_table(self, &LOCALS_SLOT, locals.0)
+    }
+    pub fn set_next_container(self, a: Ast<'_>, next: NodeId) -> bool {
+        a.set_slot_by_table(self, &NEXT_CONTAINER_SLOT, next.0)
+    }
+    pub fn set_flow_node(self, a: Ast<'_>, flow_node: FlowNodeId) -> bool {
+        a.set_slot_by_table(self, &FLOW_NODE_SLOT, flow_node.0)
+    }
+    pub fn set_end_flow_node(self, a: Ast<'_>, flow_node: FlowNodeId) -> bool {
+        a.set_slot_by_table(self, &END_FLOW_NODE_SLOT, flow_node.0)
+    }
     // ast.go:216: a nil FunctionLikeData is a panic upstream.
     pub fn parameter_list(self, a: Ast<'_>) -> NodeListId {
         match a.slot_by_table(self, &FUNCTION_LIKE_PARAMETERS_SLOT) {

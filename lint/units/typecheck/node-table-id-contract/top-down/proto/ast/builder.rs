@@ -263,6 +263,7 @@ impl<'a> AstContext<'a> {
                     .push((NodeId(first + index as u32), NodeListId(mapped)));
             }
         }
+        table.shrink();
         table.root = NodeId(roots.first().map_or(0, |root| map_node(root.0)));
         table.file.node_count = order.len() as u32;
         (table, new_id)

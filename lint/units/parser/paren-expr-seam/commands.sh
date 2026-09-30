@@ -35,16 +35,19 @@ python3 $T/summarize.py > $T/results.linked.txt
 python3 $T/objfn.py $S/link/stub/bun_js_parser.lto.o $S/link/v2m2/bun_js_parser.lto.o --cmp --all
 
 # 5. whole binaries and instruction counts for the finalists (about 200 s per link, 90 s per cgbench)
-for v in v1 v1t v2m v2m2 v5t topw p1a p1b p1c2 p1abc2 v2x; do /workspace/tools/lk python3 $T/relink.py $v $S/out/$v/libbun_js_parser-185fe25973f3a1f8.rlib full; done
-for v in base0 v1 v1t v2m v2m2 v5t topw p1a p1b p1c2 p1abc2; do /workspace/tools/lk /workspace/notes/lint/tools/cgbench.sh $S/link/$v/bun-profile $S/cg $v 20 > $S/cg.$v.txt; done
+for v in v1 v1t v2m v2m2 v5t topw topwjs p1a p1b p1c2 p1abc2 v2y; do /workspace/tools/lk python3 $T/relink.py $v $S/out/$v/libbun_js_parser-185fe25973f3a1f8.rlib full; done
+for v in base0 v1 v1t v2m v2m2 v5t topw topwjs p1a p1b p1c2 p1abc2; do /workspace/tools/lk /workspace/notes/lint/tools/cgbench.sh $S/link/$v/bun-profile $S/cg $v 20 > $S/cg.$v.txt; done
 python3 /workspace/notes/lint/units/parser/measure/tools/cgdiff.py $S/cg/base0.src-js.cg $S/cg/v2m2.src-js.cg
 python3 /workspace/notes/lint/tools/symsizes.py $S/link/v2m2/bun-profile
 
 # 6. the P1 edits do what they are for (p1abc2 against base0 and tsc 6.0.2)
 $S/link/base0/bun-profile $T/check/p1out.mjs > $S/p1.base.txt; $S/link/p1abc2/bun-profile $T/check/p1out.mjs > $S/p1.p1abc2.txt; bun $T/check/p1tsc.mjs > $S/p1.tsc.txt
 
-# 7. the lint twin records what tsc has (v2x: BUN_LINT_SEAM_OUT=<file> turns the records on)
+# 7. the lint twin records what tsc has (v2y: BUN_LINT_SEAM_OUT=<file> turns the records on; v2x is the same with the
+#    DecoratorMetadata sink as stand-in, which calls find_symbol inside attempts and prints a wrong alternate: see check/mini.mjs)
 bun $T/check/corpus.mjs $S/corpus.json
-$S/link/v2x/bun-profile $T/check/run.mjs $S/corpus.json $S/corpus.plain.jsonl
-rm -f $S/seam.dump; BUN_LINT_SEAM_OUT=$S/seam.dump $S/link/v2x/bun-profile $T/check/run.mjs $S/corpus.json $S/corpus.records.jsonl
+$S/link/v2y/bun-profile $T/check/run.mjs $S/corpus.json $S/corpus.plain.jsonl
+rm -f $S/seam.dump; BUN_LINT_SEAM_OUT=$S/seam.dump $S/link/v2y/bun-profile $T/check/run.mjs $S/corpus.json $S/corpus.records.jsonl
 bun $T/check/oracle.mjs $S/corpus.json $S/corpus.records.jsonl $S/corpus.plain.jsonl
+rm -f $S/rewind.dump; BUN_LINT_SEAM_OUT=$S/rewind.dump $S/link/v2y/bun-profile $T/check/rewind.mjs
+$S/link/base0/bun-profile test test/bundler/transpiler/transpiler.test.js --timeout 180000; $S/link/p1abc2/bun-profile test test/bundler/transpiler/transpiler.test.js --timeout 180000

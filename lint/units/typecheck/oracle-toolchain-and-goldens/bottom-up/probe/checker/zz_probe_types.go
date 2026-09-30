@@ -22,26 +22,41 @@ import (
 type ProbeStateOptions struct {
 	SinceType      int  // print types with id > SinceType
 	SinceSignature int  // print signatures with id > SinceSignature
-	SinceSymbol    int  // print transient symbols with creation index > SinceSymbol
 	Marks          bool // the counters at the marks inside NewChecker
 	Fields         bool // the named types, signatures and symbols of the checker
 	Globals        bool // the names of the globals table
 	Links          bool // the link records of bound and transient symbols
-	LazyIds        bool // the rank of the lazily assigned symbol ids
 	DiagText       bool // the text, chain and related information of diagnostics
 	Files          []*ast.SourceFile
 }
 
 type stateDumper struct {
-	c        *Checker
-	p        *probeState
-	sb       strings.Builder
-	symIndex map[*ast.Symbol]int
-	bound    []*ast.Symbol
-	boundSet map[*ast.Symbol]bool
-	roots    []*ConditionalRoot
-	rootIdx  map[*ConditionalRoot]int
-	idRank   map[uint64]int
+	c         *Checker
+	p         *probeState
+	sb        strings.Builder
+	transient map[*ast.Symbol]bool
+	bound     []*ast.Symbol
+	boundSet  map[*ast.Symbol]bool
+	roots     []*ConditionalRoot
+	rootIdx   map[*ConditionalRoot]int
+	idOwner   map[uint64]*ast.Symbol
+	recorded  int
+}
+
+// The symbols that the checker made since the last call are transient ones too.
+func (d *stateDumper) refresh() {
+	for ; d.recorded < len(d.p.symbols); d.recorded++ {
+		d.transient[d.p.symbols[d.recorded]] = true
+	}
+}
+
+func newStateDumper(c *Checker) *stateDumper {
+	d := &stateDumper{c: c, p: probeOf(c), transient: map[*ast.Symbol]bool{}, boundSet: map[*ast.Symbol]bool{}, rootIdx: map[*ConditionalRoot]int{}, idOwner: map[uint64]*ast.Symbol{}}
+	if d.p.canon == nil {
+		d.p.canon = map[*ast.Symbol]int{}
+	}
+	d.refresh()
+	return d
 }
 
 func probeQuote(s string) string {
@@ -84,7 +99,8 @@ func (d *stateDumper) nref(n *ast.Node) string {
 	return fmt.Sprintf("%s@%s:%d:%d", strings.TrimPrefix(n.Kind.String(), "Kind"), file, n.Pos(), n.End())
 }
 
-// A name that holds a lazily assigned symbol id (private members, unique symbols) is printed with the rank of that id.
+// A name that holds a lazily assigned symbol id (private members, unique symbols) is printed with the symbol of that id:
+// the ids are handed out in an order that changes from run to run.
 func (d *stateDumper) name(s string) string {
 	if !strings.HasPrefix(s, ast.InternalSymbolNamePrefix) {
 		return probeQuote(s)
@@ -93,23 +109,23 @@ func (d *stateDumper) name(s string) string {
 	if strings.HasPrefix(rest, "#") {
 		if at := strings.Index(rest, "@"); at > 1 {
 			if id, err := strconv.ParseUint(rest[1:at], 10, 64); err == nil {
-				return probeQuote(ast.InternalSymbolNamePrefix + "#<" + d.rank(id) + ">" + rest[at:])
+				return probeQuote(ast.InternalSymbolNamePrefix+"#") + "{" + d.owner(id) + "}" + probeQuote(rest[at:])
 			}
 		}
 	}
 	if strings.HasPrefix(rest, "@") {
 		if at := strings.LastIndex(rest, "@"); at > 0 {
 			if id, err := strconv.ParseUint(rest[at+1:], 10, 64); err == nil {
-				return probeQuote(ast.InternalSymbolNamePrefix + rest[:at+1] + "<" + d.rank(id) + ">")
+				return probeQuote(ast.InternalSymbolNamePrefix+rest[:at+1]) + "{" + d.owner(id) + "}"
 			}
 		}
 	}
 	return probeQuote(s)
 }
 
-func (d *stateDumper) rank(id uint64) string {
-	if r, ok := d.idRank[id]; ok {
-		return strconv.Itoa(r)
+func (d *stateDumper) owner(id uint64) string {
+	if s, ok := d.idOwner[id]; ok {
+		return d.sref(s)
 	}
 	return "?"
 }
@@ -118,8 +134,17 @@ func (d *stateDumper) sref(s *ast.Symbol) string {
 	if s == nil {
 		return "nil"
 	}
-	if i, ok := d.symIndex[s]; ok {
-		return "Y" + strconv.Itoa(i)
+	// A transient symbol has the number of its first mention in the dump: the reference creates the symbols of an
+	// instantiated member table in the order of a Go map, which changes from run to run.
+	d.refresh()
+	if d.transient[s] {
+		n, ok := d.p.canon[s]
+		if !ok {
+			n = len(d.p.canonList) + 1
+			d.p.canon[s] = n
+			d.p.canonList = append(d.p.canonList, s)
+		}
+		return "Y" + strconv.Itoa(n)
 	}
 	where := "-"
 	if len(s.Declarations) > 0 {
@@ -773,7 +798,7 @@ func (d *stateDumper) visitBound(root *ast.Symbol) {
 		if s == nil || d.boundSet[s] {
 			continue
 		}
-		if _, transient := d.symIndex[s]; transient {
+		if d.transient[s] {
 			continue
 		}
 		d.boundSet[s] = true
@@ -837,33 +862,24 @@ func probeWalk(root *ast.Node, visit func(n *ast.Node)) {
 	}
 }
 
-// ProbeCounts returns the three creation counters: a later dump can start after them.
-func ProbeCounts(c *Checker) (int, int, int) {
-	return int(c.TypeCount), int(c.SignatureCount), len(probeOf(c).symbols)
+// ProbeCounts returns the two creation counters that are the same in every run: a later dump can start after them.
+func ProbeCounts(c *Checker) (int, int) {
+	return int(c.TypeCount), int(c.SignatureCount)
 }
 
 // ProbeStateDump prints the state section of "checker-state v1".
 func ProbeStateDump(c *Checker, o ProbeStateOptions) string {
-	d := &stateDumper{c: c, p: probeOf(c), symIndex: map[*ast.Symbol]int{}, boundSet: map[*ast.Symbol]bool{}, rootIdx: map[*ConditionalRoot]int{}, idRank: map[uint64]int{}}
-	for i, s := range d.p.symbols {
-		d.symIndex[s] = i + 1
-	}
+	d := newStateDumper(c)
 	d.collectBound(o.Files)
-	// The rank of every lazily assigned symbol id that this dump can see.
-	var ids []uint64
 	for _, s := range d.bound {
 		if id := ast.ProbeSymbolId(s); id != 0 {
-			ids = append(ids, id)
+			d.idOwner[id] = s
 		}
 	}
 	for _, s := range d.p.symbols {
 		if id := ast.ProbeSymbolId(s); id != 0 {
-			ids = append(ids, id)
+			d.idOwner[id] = s
 		}
-	}
-	sort.Slice(ids, func(i, j int) bool { return ids[i] < ids[j] })
-	for i, id := range ids {
-		d.idRank[id] = i + 1
 	}
 	w := &d.sb
 	if o.Marks {
@@ -905,38 +921,11 @@ func ProbeStateDump(c *Checker, o ProbeStateOptions) string {
 			w.WriteByte('\n')
 		}
 	}
-	for i, s := range d.p.symbols {
-		if i+1 > o.SinceSymbol {
-			w.WriteString(d.symbolLine(i+1, s))
-			w.WriteByte('\n')
-		}
-	}
 	if o.Links {
 		for _, s := range d.bound {
 			if l := d.linksOf(s); l != "" {
 				fmt.Fprintf(w, "LINKS %s%s\n", d.sref(s), l)
 			}
-		}
-		for _, s := range d.p.symbols {
-			if l := d.linksOf(s); l != "" {
-				fmt.Fprintf(w, "LINKS %s%s\n", d.sref(s), l)
-			}
-		}
-	}
-	if o.LazyIds {
-		byId := map[uint64]*ast.Symbol{}
-		for _, s := range d.bound {
-			if id := ast.ProbeSymbolId(s); id != 0 {
-				byId[id] = s
-			}
-		}
-		for _, s := range d.p.symbols {
-			if id := ast.ProbeSymbolId(s); id != 0 {
-				byId[id] = s
-			}
-		}
-		for i, id := range ids {
-			fmt.Fprintf(w, "LAZYID %d %s\n", i+1, d.sref(byId[id]))
 		}
 	}
 	if o.Fields {
@@ -971,6 +960,17 @@ func ProbeStateDump(c *Checker, o ProbeStateOptions) string {
 	for _, x := range c.suggestionDiagnostics.GetDiagnostics() {
 		d.diagnostic("SUGGESTION", x, o.DiagText, "")
 	}
+	// The transient symbols that the lines above name, and the ones that these symbols name, in the order of first mention.
+	for i := 0; i < len(d.p.canonList); i++ {
+		s := d.p.canonList[i]
+		line := d.symbolLine(i+1, s)
+		if o.Links {
+			line += d.linksOf(s)
+		}
+		w.WriteString(line)
+		w.WriteByte('\n')
+	}
+	fmt.Fprintf(w, "SYMBOLS named=%d unnamed=%d\n", len(d.p.canonList), len(d.p.symbols)-len(d.p.canonList))
 	return w.String()
 }
 
@@ -1078,14 +1078,8 @@ func ProbeDrive(c *Checker, files []*ast.SourceFile, step string, since int) []s
 			}
 		}
 	}
-	d := &stateDumper{c: c, p: probeOf(c), symIndex: map[*ast.Symbol]int{}, idRank: map[uint64]int{}}
-	sym := func(s *ast.Symbol) string {
-		d.symIndex = map[*ast.Symbol]int{}
-		for i, x := range d.p.symbols {
-			d.symIndex[x] = i + 1
-		}
-		return d.sref(s)
-	}
+	d := newStateDumper(c)
+	sym := d.sref
 	switch step {
 	case "lit":
 		say := func(label string, t *Type) { out = append(out, "LIT "+label+" "+tref(t)) }
