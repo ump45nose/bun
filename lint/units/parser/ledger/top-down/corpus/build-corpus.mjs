@@ -20,7 +20,7 @@ import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const UNIT = join(HERE, "..", "..");
+const UNIT = join(HERE, "..", "..", "..");
 const args = process.argv.slice(2);
 const outPath = args.find(a => !a.startsWith("--"));
 const callsPath = args.find(a => a.startsWith("--calls="))?.slice(8);

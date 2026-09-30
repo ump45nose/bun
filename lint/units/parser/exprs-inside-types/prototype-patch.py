@@ -323,11 +323,13 @@ s = rep(s, '''        self.lexer.expect(T::TOpenParen)?;
             }
 
             if self.lexer.token == T::TCloseParen {
-                return self.lexer.next();
+                self.lexer.next()?;
+                return Ok(());
             }
             // "(a = 1)"
             if !self.skip_initializer_in_type(TypeExpr::Initializer)? {
-                return self.lexer.expect(T::TCloseParen);
+                self.lexer.expect(T::TCloseParen)?;
+                return Ok(());
             }
         }
     }

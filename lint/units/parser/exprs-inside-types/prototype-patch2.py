@@ -255,7 +255,8 @@ s = rep(s, '''        if self.try_skip_type_script_arrow_args_with_backtracking(
 
     fn skip_computed_name_in_type(&mut self) -> Result<(), Error> {
         let _ = self.parse_expr_in_type(TypeExpr::ComputedName)?;
-        self.lexer.expect(T::TCloseBracket)
+        self.lexer.expect(T::TCloseBracket)?;
+        Ok(())
     }
 ''')
 s = rep(s, '''const MEMBER_WITH_TYPE: u8 = 0;''', '''/// What the reader of the reference reads where a reader of today failed.
@@ -338,3 +339,30 @@ s = rep(s, '''            if self.lexer.token == T::TOpenBracket {
 ''')
 open(p, 'w').write(s)
 print('patched', d)
+
+# ------------------------------------------------------------------ p.rs: restore_parser_snapshot keeps the symbols
+p = d + '/p.rs'
+s = open(p).read()
+s = rep(s, '''        // Enum and namespace symbols also key `ref_to_ts_namespace_member`; a symbol
+        // that later reuses the index must not inherit their namespace data.
+        if self.symbols.len() > snapshot.symbols_len {
+            self.symbols.truncate(snapshot.symbols_len);
+            if TYPESCRIPT {
+                self.ts_use_counts.truncate(snapshot.symbols_len);
+            }
+            let stale: Vec<Ref> = self
+                .ref_to_ts_namespace_member
+                .keys()
+                .filter(|ref_| ref_.inner_index() as usize >= snapshot.symbols_len)
+                .copied()
+                .collect();
+            for ref_ in stale {
+                self.ref_to_ts_namespace_member.remove(&ref_);
+            }
+        }
+        self.allocated_names.truncate(snapshot.allocated_names_len);
+        self.import_records.truncate(snapshot.import_records_len);''', '''        // Symbols stay: a member of a live scope may name one (an unbound name that a type of a decorated member used).
+        let _ = (snapshot.symbols_len, snapshot.allocated_names_len);
+        self.import_records.truncate(snapshot.import_records_len);''')
+open(p, 'w').write(s)
+print('patched restore_parser_snapshot', d)
