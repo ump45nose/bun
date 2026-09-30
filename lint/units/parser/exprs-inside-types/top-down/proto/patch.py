@@ -5,8 +5,9 @@ variant: "all" (default) or a string of site letters, e.g. "B", "CH", "DE", "G",
 B parameter initializer, C binding pattern initializer and computed key, H parameter decorator,
 D/E member tail (property initializer, accessor body), G constraint expression, A computed name restart.
 The helper functions in p.rs, lexer.rs and the grammar file are always added.
+NOENUM=1 leaves SkipTypeOptions as it is (then G cannot be switched on).
 Compile with ../../../build-sink-positions/quick/run.py (RELAX=1) and compare with scmp.py."""
-import sys, re
+import sys, re, os
 root = sys.argv[1]; variant = sys.argv[2] if len(sys.argv) > 2 else 'all'
 def sub(path, old, new, count=1):
     p = root + '/' + path; s = open(p).read()
@@ -44,7 +45,7 @@ sub('lexer.rs', '''    /// Look ahead at the next n codepoints without advancing
     /// Look ahead at the next n codepoints without advancing the iterator.''')
 
 # ---------------------------------------------------------------- typescript.rs
-sub('typescript.rs', '''    AllowTupleLabels,
+if not os.environ.get('NOENUM'): sub('typescript.rs', '''    AllowTupleLabels,
     DisallowConditionalTypes,
 }''', '''    AllowTupleLabels,
     DisallowConditionalTypes,

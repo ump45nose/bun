@@ -88,7 +88,7 @@ function runWorker(argv, partPath) {
   return new Promise(resolve => {
     const child = spawn(process.execPath, [import.meta.filename, "--worker", ...argv].map(String), {
       stdio: ["ignore", "ignore", "pipe"],
-      env: { ...process.env, BUN_DEBUG_QUIET_LOGS: "1", BUN_NO_CORE_DUMP: "1" },
+      env: { ...process.env, BUN_DEBUG_QUIET_LOGS: "1", BUN_NO_CORE_DUMP: "1", BUN_ENABLE_CRASH_REPORTING: "0" },
     });
     let stderr = "";
     let hung = false;
