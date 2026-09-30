@@ -593,8 +593,8 @@ s = rep(s, '''    pub(crate) fn skip_type_script_object_type(&mut self) -> Resul
 
     pub(crate) fn skip_type_script_object_type(&mut self) -> Result<(), Error> {''')
 
-# the object type: remember at no cost whether the member was a signature, then hang the tail on today's error
-s = rep(s, '''            match self.lexer.token {
+# the object type: the end of a member is written once for each kind of member, so the kind costs nothing
+s = rep(s, """            match self.lexer.token {
                 T::TColon => {
                     // Regular property
                     if !found_key {
@@ -632,7 +632,7 @@ s = rep(s, '''            match self.lexer.token {
                     }
                 }
             }
-        }''', '''            let after_signature = match self.lexer.token {
+        }""", """            match self.lexer.token {
                 T::TColon => {
                     // Regular property
                     if !found_key {
@@ -641,7 +641,7 @@ s = rep(s, '''            match self.lexer.token {
 
                     self.lexer.next()?;
                     self.skip_type_script_type(Level::Lowest)?;
-                    false
+                    self.skip_member_end::<MEMBER_WITH_TYPE>()?;
                 }
                 T::TOpenParen => {
                     // Method signature
@@ -651,38 +651,52 @@ s = rep(s, '''            match self.lexer.token {
                         self.lexer.next()?;
                         self.skip_typescript_return_type()?;
                     }
-                    true
+                    self.skip_member_end::<MEMBER_SIGNATURE>()?;
                 }
                 _ => {
                     if !found_key {
                         self.lexer.unexpected()?;
                         return Err(crate::Error::SyntaxError);
                     }
-                    false
+                    self.skip_member_end::<MEMBER_NAME_ONLY>()?;
                 }
-            };
-            loop {
-                match self.lexer.token {
-                    T::TCloseBrace => {}
-                    T::TComma | T::TSemicolon => {
-                        self.lexer.next()?;
-                    }
-                    _ => {
-                        if !self.lexer.has_newline_before {
-                            // "{ a: b = 1 }", "{ get a() { } }"
-                            if self.skip_member_tail_in_type(after_signature)? {
-                                if after_signature {
-                                    break;
-                                }
-                                continue;
-                            }
-                            self.lexer.unexpected()?;
-                            return Err(crate::Error::SyntaxError);
-                        }
-                    }
-                }
-                break;
             }
-        }''')
+        }""")
+s = rep(s, """    pub(crate) fn skip_type_script_object_type(&mut self) -> Result<(), Error> {""", """    /// The separator after a member of an object type.
+    #[inline(always)]
+    fn skip_member_end<const MEMBER: u8>(&mut self) -> Result<(), Error> {
+        loop {
+            match self.lexer.token {
+                T::TCloseBrace => {}
+                T::TComma | T::TSemicolon => {
+                    self.lexer.next()?;
+                }
+                _ => {
+                    if !self.lexer.has_newline_before {
+                        // "{ a: b = 1 }", "{ get a() { } }"
+                        if MEMBER != MEMBER_NAME_ONLY
+                            && self.skip_member_tail_in_type(MEMBER == MEMBER_SIGNATURE)?
+                        {
+                            if MEMBER == MEMBER_SIGNATURE {
+                                break;
+                            }
+                            continue;
+                        }
+                        self.lexer.unexpected()?;
+                        return Err(crate::Error::SyntaxError);
+                    }
+                }
+            }
+            break;
+        }
+        Ok(())
+    }
+
+    pub(crate) fn skip_type_script_object_type(&mut self) -> Result<(), Error> {""")
+s = rep(s, """// Re-export so the parser-side type alias used in this file matches the""", """const MEMBER_WITH_TYPE: u8 = 0;
+const MEMBER_SIGNATURE: u8 = 1;
+const MEMBER_NAME_ONLY: u8 = 2;
+
+// Re-export so the parser-side type alias used in this file matches the""")
 open(p, 'w').write(s)
 print('patched', d)

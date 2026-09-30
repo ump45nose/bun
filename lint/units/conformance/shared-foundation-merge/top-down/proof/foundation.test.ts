@@ -128,13 +128,15 @@ describe("foundation", () => {
       for (let p = 0; p <= s.length; p++) {
         if (skipTrivia(s, p) !== v.skip[p]) bad.push(`trivia ${id} at ${p}`);
         const line = computeLineOfPosition(starts, p);
-        if (line !== v.lc[p][0] || utf16Len(s.slice(starts[line], p)) !== v.lc[p][1]) bad.push(`line and character ${id} at ${p}`);
+        if (line !== v.lc[p][0] || utf16Len(s.slice(starts[line], p)) !== v.lc[p][1])
+          bad.push(`line and character ${id} at ${p}`);
       }
       if (v.valid) {
         const text = byteStringToUtf8(s);
         if (hex(utf8ToByteString(trimSpace(text))) !== hex(b(v.trimSpace))) bad.push("trim " + id);
         if (hex(utf8ToByteString(toLower(text))) !== hex(b(v.toLower))) bad.push("lower " + id);
-        if (hex(utf8ToByteString(tspath.toFileNameLowerCase(text))) !== hex(b(v.toFileNameLowerCase))) bad.push("file name lower " + id);
+        if (hex(utf8ToByteString(tspath.toFileNameLowerCase(text))) !== hex(b(v.toFileNameLowerCase)))
+          bad.push("file name lower " + id);
       } else {
         expect(() => byteStringToUtf8(s)).toThrow(InvalidUtf8Error);
       }
@@ -170,14 +172,20 @@ describe("foundation", () => {
       if (tspath.toPath(name, dir, false) !== d(v.toPathCaseInsensitive)) bad.push("path " + id);
       if (tspath.comparePaths(name, dir, insensitive) !== v.comparePathsCaseInsensitive) bad.push("compare " + id);
       if (tspath.containsPath(dir, name, insensitive) !== v.containsPathCaseInsensitive) bad.push("contains " + id);
-      if (tspath.convertToRelativePath(name, { useCaseSensitiveFileNames: false, currentDirectory: dir }) !== d(v.convertToRelativePathCaseInsensitive)) bad.push("relative " + id);
+      if (
+        tspath.convertToRelativePath(name, { useCaseSensitiveFileNames: false, currentDirectory: dir }) !==
+        d(v.convertToRelativePathCaseInsensitive)
+      )
+        bad.push("relative " + id);
       if (tspath.changeExtension(name, ".ts") !== d(v.changeExtensionTs)) bad.push("extension " + id);
     }
     for (const v of of("ext")) {
       const list: string[] = v.extensions.map(d);
       const id = JSON.stringify([d(v.name), list, v.ignoreCase]);
-      if (tspath.getAnyExtensionFromPath(d(v.name), list, v.ignoreCase) !== d(v.getAnyExtensionFromPath)) bad.push("any extension " + id);
-      if (tspath.changeAnyExtension(d(v.name), ".x", list, v.ignoreCase) !== d(v.changeAnyExtension)) bad.push("change extension " + id);
+      if (tspath.getAnyExtensionFromPath(d(v.name), list, v.ignoreCase) !== d(v.getAnyExtensionFromPath))
+        bad.push("any extension " + id);
+      if (tspath.changeAnyExtension(d(v.name), ".x", list, v.ignoreCase) !== d(v.changeAnyExtension))
+        bad.push("change extension " + id);
     }
     expect(bad).toEqual([]);
   });
@@ -197,7 +205,12 @@ describe("foundation", () => {
     for (const v of of("atoi")) expect(atoi(b(v.s))).toBe(v.ok ? v.n : undefined);
     const sorted: string[] = of("sorted")[0].sorted.map(d);
     expect(sortedStrings([...sorted].reverse())).toEqual(sorted);
-    const pad = rows.find(v => v.k === undefined);
-    expect([padLeft("ab", 5), padLeft("abc", 1), padLeft("42", 4), padLeft("", 0)]).toEqual([pad.a, pad.b, pad.c, pad.d]);
+    const pad = of("pad")[0];
+    expect([padLeft("ab", 5), padLeft("abc", 1), padLeft("42", 4), padLeft("", 0)]).toEqual([
+      pad.a,
+      pad.b,
+      pad.c,
+      pad.d,
+    ]);
   });
 });
