@@ -45,7 +45,7 @@ Why (d), from the code:
   mechanism exists in the tree                partly             no                 no                     yes
 
 - The mechanism of (d) exists: a variable that names a file which the binary writes for a test
-  (BUN_BYTECODE_DIGEST_OUT, BUN_BYTECODE_ORDER_NAMES_OUT, BUN_BYTECODE_ORDER_OUT: src/bun_core/env_var.rs:44-50,
+  (BUN_BYTECODE_DIGEST_OUT, BUN_BYTECODE_ORDER_NAMES_OUT, BUN_BYTECODE_ORDER_OUT: src/bun_core/env_var.rs:45-50,
   read at src/jsc/BytecodeOrderRecorder.rs:67, used by test/bundler/bun-build-compile.test.ts:257).
 - The two halves have different owners and different dates. The report needs only what cli.md C2.1 already gives
   a diagnostic (file, start, length, category, code, text, chain, related information): cli can grant it alone.

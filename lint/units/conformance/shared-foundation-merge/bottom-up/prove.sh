@@ -14,7 +14,9 @@ mkdir -p "$W"
 echo "== 1. ground truth of Go and the merged bottom layer"
 python3 "$H/groundtruth/build.py" "$REF" "$W/gt-sfm"
 "$W/gt-sfm/gt" "$W/gt-sfm/vectors.jsonl"
-gzip -9 -n -c "$W/gt-sfm/vectors.jsonl" | cmp - "$H/vectors/go-vectors.jsonl.gz" && echo "the stored vectors are the ones that Go gives now"
+# The first line names the Go version: Go 1.24.4 and Go 1.26.0 give the same lines after it.
+tail -n +2 "$W/gt-sfm/vectors.jsonl" > "$W/now.jsonl"
+gunzip -c "$H/vectors/go-vectors.jsonl.gz" | tail -n +2 | cmp - "$W/now.jsonl" && echo "the stored vectors are the ones that Go gives now ($(head -c 60 "$W/gt-sfm/vectors.jsonl" | head -1))"
 bun "$H/verify/verify_go.ts" "$W/gt-sfm/vectors.jsonl" | tail -1
 bun "$H/overlay/comment_runs.ts" "$H"/runner/*.ts
 

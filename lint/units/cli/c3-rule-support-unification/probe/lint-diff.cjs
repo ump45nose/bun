@@ -32,7 +32,8 @@ for (let i = 0; i < files.length; i++) {
   for (const sourceType of ["module", "script", "commonjs"]) {
     const m = linter.verify(code, [{ languageOptions: { ecmaVersion: "latest", sourceType, parserOptions: { ecmaFeatures: { jsx: files[i].endsWith("x") } } },
       linterOptions: { noInlineConfig: true, reportUnusedDisableDirectives: "off" }, rules: Object.fromEntries(RULES.map(r => [r, "error"])) }]);
-    if (!m.some(x => x.fatal)) { messages = m; break; }
+    // A comment that configures ESLint is not read: what ESLint says about it is dropped.
+    if (!m.some(x => x.fatal)) { messages = m.filter(x => RULES.includes(x.ruleId)); break; }
   }
   if (!messages) { eslintRejects++; continue; }
   // byte offset -> line:col in UTF-16 units

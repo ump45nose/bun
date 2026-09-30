@@ -126,7 +126,10 @@ open(os.path.join(src, "extracted.go"), "w").write(header + text + "\n")
 shutil.copy(os.path.join(here, "main.go"), os.path.join(src, "main.go"))
 env = {**os.environ, "GOFLAGS": "-mod=mod", "GOTOOLCHAIN": "local", "GOPROXY": "off", "GOSUMDB": "off", "GOCACHE": os.path.join(out, "gocache")}
 if os.path.dirname(go):
-    env["GOROOT"] = os.path.dirname(os.path.dirname(os.path.abspath(go)))
+    # A toolchain that sits in its own tree needs its root; the go command of the system finds its own.
+    root = os.path.dirname(os.path.dirname(os.path.abspath(go)))
+    if os.path.isdir(os.path.join(root, "src", "unicode")):
+        env["GOROOT"] = root
     env["PATH"] = os.path.dirname(os.path.abspath(go)) + ":" + env["PATH"]
 r = subprocess.run([go, "build", "-o", os.path.join(out, "gt"), "."], cwd=src, env=env)
 sys.exit(r.returncode)
