@@ -103,6 +103,22 @@ export const ownPackages = (rows: Record<string, string>): Record<string, string
 export const aliasedPackages = (rows: Record<string, string>): Record<string, string> =>
   Object.fromEntries(Object.entries(rows).map(([name, alias]) => [name, alias.slice("npm:".length)]));
 
+/** What `installedNames` gives when each name of `rows` is the registry package of that name. */
+export const ownNames = (rows: Record<string, string>): Record<string, string> =>
+  Object.fromEntries(Object.keys(rows).map(name => [name, name]));
+
+/** What `installedNames` gives when each name of `rows` is its alias target. */
+export const targetNames = (rows: Record<string, string>): Record<string, string> =>
+  Object.fromEntries(
+    Object.entries(rows).map(([name, alias]) => [name, alias.slice("npm:".length, alias.lastIndexOf("@"))]),
+  );
+
+/** The `name` in the package.json of each of `names` in the node_modules of `cwd`. */
+export async function installedNames(cwd: string, names: string[]): Promise<Record<string, string>> {
+  const packageJson = (name: string) => Bun.file(join(cwd, "node_modules", name, "package.json")).json();
+  return Object.fromEntries(await Promise.all(names.map(async name => [name, (await packageJson(name)).name])));
+}
+
 /** `packages` as they are in bun.lock under the package at `parent`. */
 export const nestedIn = (parent: string, packages: Record<string, string>): Record<string, string> =>
   Object.fromEntries(Object.entries(packages).map(([name, id]) => [`${parent}/${name}`, id]));

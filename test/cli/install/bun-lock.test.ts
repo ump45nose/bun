@@ -18,12 +18,15 @@ import {
   aliasedPackages,
   aliasRegistry,
   aliasRows,
+  installedNames,
   lockedPackages,
   lockfileRows,
   manifestsOf,
   nestedIn,
+  ownNames,
   ownPackages,
   plainDependencies,
+  targetNames,
 } from "./npm-alias-fixtures";
 
 expect.extend({
@@ -1838,16 +1841,26 @@ describe.each(["hoisted", "isolated"] as const)("peer no published version satis
   });
 });
 
-// Only input that bun uses for a resolve registers an `npm:` alias, the entry that sends a plain
-// dependency with the name of the alias to the alias target. A row of bun.lock registers none: bun
-// can stop to use the lockfile after it read the row, and package.json can drop the entry that
-// bun.lock still has.
+// An `npm:` alias that bun knows sends a plain dependency with the name of the alias to the alias
+// target. The loader of bun.lock registers no alias: bun can stop to use the lockfile after the
+// loader read the row, and package.json can drop the entry that bun.lock still has.
 describe("npm: alias in a row of bun.lock", () => {
   const overrides = aliasRows("override");
+  // An override with rules for its own dependencies is an object in bun.lock. "." has its own value.
+  const groupedOverrides = aliasRows("grouped-override");
   const catalog = aliasRows("catalog");
   const namedCatalog = aliasRows("named-catalog");
-  const rows = { overrides, catalog, catalogs: { group: namedCatalog } };
-  const aliases = { ...overrides, ...catalog, ...namedCatalog };
+  const rows = {
+    overrides: {
+      ...overrides,
+      ...Object.fromEntries(
+        Object.entries(groupedOverrides).map(([name, alias]) => [name, { ".": alias, child: "1.0.0" }]),
+      ),
+    },
+    catalog,
+    catalogs: { group: namedCatalog },
+  };
+  const aliases = { ...overrides, ...groupedOverrides, ...catalog, ...namedCatalog };
 
   // Resolves `dependencies` next to `lockfile`, with a manifest cache of its own, so the requests
   // show what bun resolved.
@@ -1920,6 +1933,28 @@ describe("npm: alias in a row of bun.lock", () => {
       ...everyNameIsItsOwnPackage,
       packages: { ...ownPackages(aliases), unrelated: "unrelated@1.0.0" },
     });
+  });
+
+  // The install after the edit takes the registry package, as it does when an override that is
+  // not an alias goes away.
+  it("package.json drops an override that is installed", async () => {
+    using registry = await aliasRegistry(overrides);
+    using dir = tempDir("bun-lock-npm-alias-installed-", {
+      "package.json": JSON.stringify({ name: "app", dependencies: plainDependencies(overrides), overrides }),
+      "bunfig.toml": Bun.TOML.stringify({ install: { registry: registry.url } }),
+    });
+    const cwd = String(dir);
+    const installEnv = { ...env, BUN_INSTALL_CACHE_DIR: join(cwd, ".bun-cache") };
+
+    await runBunInstall(installEnv, cwd);
+    expect(await installedNames(cwd, Object.keys(overrides))).toEqual(targetNames(overrides));
+
+    await write(join(cwd, "package.json"), JSON.stringify({ name: "app", dependencies: plainDependencies(overrides) }));
+    await runBunInstall(installEnv, cwd);
+    expect({
+      installed: await installedNames(cwd, Object.keys(overrides)),
+      packages: await lockedPackages(cwd),
+    }).toEqual({ installed: ownNames(overrides), packages: ownPackages(overrides) });
   });
 
   // These two are the same before and after the loader stopped to register aliases.

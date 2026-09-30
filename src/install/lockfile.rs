@@ -2097,7 +2097,8 @@ fn record_npm_aliases(
         let _ = dependency::parse_with_tag(
             row.name,
             Some(row.name_hash),
-            literal.slice,
+            // A migration trims the literal before it looks for `npm:`, and stores it untrimmed.
+            strings::trim_left(literal.slice, b" \t\n\r"),
             dependency::Tag::Npm,
             &literal,
             None,
@@ -2168,6 +2169,7 @@ impl Lockfile {
     /// lockfile that bun does not use leaves none behind. The caller that keeps a lockfile of the
     /// binary format calls this: bun.lockb, and what package-lock.json and yarn.lock migrate to.
     /// A plain dependency follows the alias of a row of those, and not of bun.lock or pnpm-lock.yaml.
+    /// A row that the loader linked to a workspace is not an `npm:` row any more and registers none.
     #[cold]
     pub(crate) fn record_dependency_row_aliases(
         &self,
@@ -2178,7 +2180,8 @@ impl Lockfile {
     }
 
     /// Registers the `npm:` aliases of the flat overrides and of the catalogs, for the caller
-    /// that keeps the lockfile and parses no package.json, which registers them otherwise.
+    /// that keeps the lockfile and reads no overrides or catalogs from package.json. The parse
+    /// of those registers them otherwise.
     #[cold]
     pub(crate) fn record_override_and_catalog_aliases(
         &self,

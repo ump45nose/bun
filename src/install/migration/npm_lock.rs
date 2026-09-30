@@ -100,7 +100,7 @@ fn parent_dir(dir: &[u8]) -> &[u8] {
 
 struct Migrator<'a> {
     this: &'a mut Lockfile,
-    manager: &'a mut PackageManager,
+    manager: &'a PackageManager,
     entries: &'a [E::PropertyJSON],
     workspace_map: Option<&'a WorkspaceMap>,
     index: StringHashMap<u32>,
@@ -119,7 +119,7 @@ struct Migrator<'a> {
 
 pub(super) fn migrate_packages(
     this: &mut Lockfile,
-    manager: &mut PackageManager,
+    manager: &PackageManager,
     _log: &mut bun_ast::Log,
     packages_properties: &[E::PropertyJSON],
     workspace_map: Option<&WorkspaceMap>,

@@ -8,11 +8,14 @@ import {
   aliasRegistry,
   aliasRows,
   failAfterDependencyRows,
+  installedNames,
   lockedPackages,
   manifestsOf,
   nestedIn,
+  ownNames,
   ownPackages,
   plainDependencies,
+  targetNames,
 } from "./npm-alias-fixtures";
 
 const registry = new VerdaccioRegistry();
@@ -533,9 +536,9 @@ it("rejects a binary lockfile whose git resolved tag contains path separators", 
   expect(code).not.toBe(0);
 });
 
-// Only input that bun uses for a resolve registers an `npm:` alias, the entry that sends a plain
-// dependency with the name of the alias to the alias target. The loader of bun.lockb registers
-// none. bun registers the dependency rows of a bun.lockb when it keeps that lockfile.
+// An `npm:` alias that bun knows sends a plain dependency with the name of the alias to the alias
+// target. The loader of bun.lockb registers no alias. bun registers the dependency rows of a
+// bun.lockb when it keeps that lockfile.
 describe("npm: alias in a row of bun.lockb", () => {
   const aliases = aliasRows("dependency");
   const newDependency = { name: "new-dependency", version: "1.0.0", dependencies: plainDependencies(aliases) };
@@ -553,8 +556,9 @@ describe("npm: alias in a row of bun.lockb", () => {
     return { err, exitCode };
   }
 
-  async function createProject(registry: { url: string }, packageJson: object) {
+  async function createProject(registry: { url: string }, packageJson: object, files: Record<string, string> = {}) {
     const dir = tempDir("bun-lockb-npm-alias-", {
+      ...files,
       "package.json": JSON.stringify({ name: "app", ...packageJson }),
       "bunfig.toml": Bun.TOML.stringify({ install: { registry: registry.url, saveTextLockfile: false } }),
     });
@@ -615,16 +619,43 @@ describe("npm: alias in a row of bun.lockb", () => {
     });
   });
 
+  // The install after the edit takes the registry package, as it does when an override that is
+  // not an alias goes away.
+  it("package.json drops an override that is installed", async () => {
+    const overrides = aliasRows("override");
+    using registry = await aliasRegistry(overrides);
+    using dir = tempDir("bun-lockb-npm-alias-installed-", {
+      "package.json": JSON.stringify({ name: "app", dependencies: plainDependencies(overrides), overrides }),
+      "bunfig.toml": Bun.TOML.stringify({ install: { registry: registry.url, saveTextLockfile: false } }),
+    });
+    const cwd = String(dir);
+    const installEnv = { ...env, BUN_INSTALL_CACHE_DIR: join(cwd, ".bun-cache") };
+
+    await runBunInstall(installEnv, cwd);
+    expect(await exists(join(cwd, "bun.lockb"))).toBeTrue();
+    expect(await installedNames(cwd, Object.keys(overrides))).toEqual(targetNames(overrides));
+
+    await write(join(cwd, "package.json"), JSON.stringify({ name: "app", dependencies: plainDependencies(overrides) }));
+    await runBunInstall(installEnv, cwd, { saveTextLockfile: true });
+    expect({
+      installed: await installedNames(cwd, Object.keys(overrides)),
+      packages: await lockedPackages(cwd),
+    }).toEqual({ installed: ownNames(overrides), packages: ownPackages(overrides) });
+  });
+
   describe("a new dependency", () => {
-    it("does not follow the alias of an override for one parent", async () => {
+    // bun.lockb has a section for the overrides with a parent, a range, or both.
+    const ranged = Object.fromEntries(Object.entries(aliases).map(([name, alias]) => [`${name}@2`, alias]));
+    it.each([
+      ["one parent", { parent: aliases }, nestedIn("parent", aliasedPackages(aliases))],
+      ["one range", ranged, {}],
+      ["one parent and one range", { parent: ranged }, {}],
+    ])("does not follow the alias of an override for %s", async (_, overrides, overridden) => {
       using registry = await aliasRegistry(aliases, [
         newDependency,
         { name: "parent", version: "1.0.0", dependencies: plainDependencies(aliases) },
       ]);
-      using dir = await createProject(registry, {
-        dependencies: { parent: "1.0.0" },
-        overrides: { parent: aliases },
-      });
+      using dir = await createProject(registry, { dependencies: { parent: "1.0.0" }, overrides });
 
       const { err, ...result } = await resolveAgain(String(dir), registry, "add", "new-dependency");
       expect(err).not.toContain("error:");
@@ -634,9 +665,39 @@ describe("npm: alias in a row of bun.lockb", () => {
           ...ownPackages(aliases),
           "new-dependency": "new-dependency@1.0.0",
           parent: "parent@1.0.0",
-          ...nestedIn("parent", aliasedPackages(aliases)),
+          ...overridden,
         },
         requests: manifestsOf("new-dependency", ...Object.keys(aliases)),
+        exitCode: 0,
+      });
+    });
+
+    // The loader turns a row that resolves to a workspace into a workspace row. bun.lockb has
+    // the `npm:` row until bun saves it again.
+    it("does not follow the alias row that the loader links to a workspace", async () => {
+      const alias = { "alias-of-workspace": "npm:in-workspace@^1.0.0" };
+      using registry = await aliasRegistry(alias, [
+        { name: "has-alias", version: "1.0.0", dependencies: alias },
+        { name: "new-dependency", version: "1.0.0", dependencies: plainDependencies(alias) },
+      ]);
+      using dir = await createProject(
+        registry,
+        { workspaces: ["packages/*"], dependencies: { "has-alias": "1.0.0" } },
+        { "packages/in-workspace/package.json": JSON.stringify({ name: "in-workspace", version: "1.0.0" }) },
+      );
+
+      const { err, ...result } = await resolveAgain(String(dir), registry, "add", "new-dependency");
+      expect(err).not.toContain("error:");
+      expect(err).not.toContain("Ignoring lockfile");
+      expect(result).toEqual({
+        packages: {
+          "alias-of-workspace": "in-workspace@workspace:packages/in-workspace",
+          "has-alias": "has-alias@1.0.0",
+          "in-workspace": "in-workspace@workspace:packages/in-workspace",
+          "new-dependency": "new-dependency@1.0.0",
+          "new-dependency/alias-of-workspace": "alias-of-workspace@1.0.0",
+        },
+        requests: manifestsOf("alias-of-workspace", "new-dependency"),
         exitCode: 0,
       });
     });
