@@ -1,0 +1,1 @@
+## test + src/js (no node_modules), default identifiers
