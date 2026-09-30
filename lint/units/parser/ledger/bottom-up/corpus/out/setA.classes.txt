@@ -1,0 +1,74 @@
+==== view ts: set A = 17577 rows
+  rule G: {"A1c":2304,"A1s":2941,"A2":12332}
+  rule N: {"A1":1941,"A3":3304,"A2":12332}
+  rule V: {"A1":1964,"A3":3281,"A2":12332}
+  cross table:
+     12332  G=A2 N=A2 V=A2
+      2941  G=A1s N=A3 V=A3
+      1937  G=A1c N=A1 V=A1
+       336  G=A1c N=A3 V=A3
+        27  G=A1c N=A3 V=A1
+         4  G=A1c N=A1 V=A3
+  does the JavaScript that tsc prints parse with the js loader of the bun side (by class of rule N):
+        52  A1 js=REJECTED
+      1889  A1 js=parses
+      1211  A2 js=REJECTED
+        16  A2 js=emit threw
+     11105  A2 js=parses
+       173  A3 js=REJECTED
+      3131  A3 js=parses
+
+==== view tsx: set A = 16997 rows
+  rule G: {"A1s":2869,"A1c":2185,"A2":11943}
+  rule N: {"A3":3214,"A1":1840,"A2":11943}
+  rule V: {"A3":3197,"A1":1857,"A2":11943}
+  cross table:
+     11943  G=A2 N=A2 V=A2
+      2869  G=A1s N=A3 V=A3
+      1830  G=A1c N=A1 V=A1
+       318  G=A1c N=A3 V=A3
+        27  G=A1c N=A3 V=A1
+        10  G=A1c N=A1 V=A3
+  does the JavaScript that tsc prints parse with the js loader of the bun side (by class of rule N):
+        63  A1 js=REJECTED
+      1777  A1 js=parses
+      1209  A2 js=REJECTED
+        16  A2 js=emit threw
+     10718  A2 js=parses
+       165  A3 js=REJECTED
+      3049  A3 js=parses
+
+==== view deco: set A = 17426 rows
+  rule G: {"A1c":2485,"A1s":3001,"A2":11940}
+  rule N: {"A1":2062,"A3":3424,"A2":11940}
+  rule V: {"A1":2085,"A3":3401,"A2":11940}
+  cross table:
+     11940  G=A2 N=A2 V=A2
+      3001  G=A1s N=A3 V=A3
+      2058  G=A1c N=A1 V=A1
+       396  G=A1c N=A3 V=A3
+        27  G=A1c N=A3 V=A1
+         4  G=A1c N=A1 V=A3
+  does the JavaScript that tsc prints parse with the js loader of the bun side (by class of rule N):
+       270  A1 js=REJECTED
+      1792  A1 js=parses
+      1251  A2 js=REJECTED
+         4  A2 js=emit threw
+     10685  A2 js=parses
+       188  A3 js=REJECTED
+      3236  A3 js=parses
+
+==== view dts: set A = 17577 rows
+  rule G: {"A2":16575,"A1c":441,"A1s":561}
+  rule N: {"A2":16575,"A1":424,"A3":578}
+  rule V: {"A2":16575,"A1":422,"A3":580}
+  cross table:
+     16575  G=A2 N=A2 V=A2
+       561  G=A1s N=A3 V=A3
+       422  G=A1c N=A1 V=A1
+        17  G=A1c N=A3 V=A3
+         2  G=A1c N=A1 V=A3
+  does the JavaScript that tsc prints parse with the js loader of the bun side (by class of rule N):
+       424  A1 js=n/a
+     16575  A2 js=n/a
+       578  A3 js=n/a

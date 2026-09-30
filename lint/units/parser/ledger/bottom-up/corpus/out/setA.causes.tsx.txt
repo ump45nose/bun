@@ -1,0 +1,660 @@
+set A by cause, view tsx: the first message of the bun side (token text replaced). N: classes of rule N.
+
+  5177  Unexpected <token>
+        N: A1=1180 A2=3374 A3=623   G: A1c=1314 A1s=489 A2=3374   tsc's emit parses as js: 4860   rows with a pin: 18
+        checker codes outside NR: 1099x891 17020x602 7006x516 8020x360 1274x284 1018x240 2371x231 1206x204
+        origins: p11:formx310 p04:targsExprx234 p01:refx233 p01:jsdocx199 p01:corex166 p03:typeSigx125
+        A1: "await;"   "x as if;"   "x as var;"   "declare x"
+        A2: "f<*>;"   "f<?A>;"   "f<A?>;"   "x as *"
+        A3: "super.x"   "super.a!"   "super();"   "super.x!"
+  1863  Expected identifier but found <token>
+        N: A1=197 A2=1580 A3=86   G: A1c=226 A1s=57 A2=1580   tsc's emit parses as js: 1755   rows with a pin: 4
+        checker codes outside NR: 1098x603 1206x340 1497x294 7006x190 8020x101 7008x96 1187x92 2369x78
+        origins: p09:exprx284 p09:paramPosx191 p03:declSigx157 p06:paramPropx125 p07:exportSpecx38 gds:function-type/aliasx31
+        A1: "type as<> = 1"   "export { if }"   "export { if };"   "export { \"a\" };"
+        A2: "var;"   "x!.#y;"   "const;"   "class {}"
+        A3: "this.#x!"   "this.#x!;"   "f(this.#x!);"   "enum E { 1 }"
+   387  The modifier "out" is not valid here
+        N: A1=102 A2=264 A3=21   G: A1c=123 A1s=0 A2=264   tsc's emit parses as js: 343   rows with a pin: 11
+        checker codes outside NR: 1274x238 1094x34 7006x33 1030x14 1092x11 7032x11 2564x9 2637x6
+        origins: p04:tparamsx228 pin:transpiler.test.jsx11 resc:gct1a-42866/tparams.txtx9 p01:fnx6 p05:castx6 p11:formx6
+        A1: "<out = A>() => 0;"   "function f<out>() {}"   "f<<out >() => T>(x);"   "function* f<out>() {}"
+        A2: "f<<out T>() => T>(x);"   "type X<out out T> = T"   "class C<out out T> {}"   "type A<out out T> = T"
+        A3: "<out, T>(x) => x;"   "<out = A>(x) => x;"   "type as<out T> = T"   "f(<out, T>(x) => x);"
+  3887  Expected ")" but found <token>
+        N: A1=87 A2=2131 A3=1669   G: A1c=91 A1s=1665 A2=2131   tsc's emit parses as js: 3704   rows with a pin: 0
+        checker codes outside NR: 2369x1785 7006x959 2371x707 1228x409 1090x321 1187x177 2564x159 1206x135
+        origins: p06:paramPropx691 p03:declSigx596 p03:typeSigx316 p03:memberSigx300 p03:arrowSigx198 p11:positionx148
+        A1: "let x: (a: if) => void;"   "let x: (a: in) => void;"   "let x: (a: do) => void;"   "let x: (a: var) => void;"
+        A2: "(out a) => x"   "(a: A?) => x;"   "(static a) => x"   "(static a) => x;"
+        A3: "(private a) => x"   "(private a) => x;"   "(override a) => x"   "(override a) => x;"
+  1838  Expected ";" but found <token>
+        N: A1=80 A2=1499 A3=259   G: A1c=170 A1s=169 A2=1499   tsc's emit parses as js: 1759   rows with a pin: 0
+        checker codes outside NR: 1228x495 7006x372 1274x177 2564x125 1005x119 2371x100 1248x89 1031x83
+        origins: p06:modifierx396 p01:predx153 p04:targsExprx78 p11:formx69 p01:opx66 p11:positionx64
+        A1: "f<keyof if>(x);"   "type X = const<A>;"   "namespace as {}`x`"   "let x: import(\"m\")<>;"
+        A2: "let x: A?;"   "let a: A?;"   "module 'x'"   "module 'm'"
+        A3: "global {}"   "global { }"   "declare\nglobal {}"   "f<(a = 1) => B>();"
+   177  Expected "(" but found <token>
+        N: A1=25 A2=128 A3=24   G: A1c=28 A1s=21 A2=128   tsc's emit parses as js: 156   rows with a pin: 0
+        checker codes outside NR: 1042x73 7008x42 1040x24 1029x12 2500x11 1030x8 2499x7 7006x7
+        origins: p06:modifierx68 p06:memberx8 otg:h15bx7 p05:objLitx3 otg:broad3x3 otg:membersx3
+        A1: "type as<T> = T"   "f<function>(x);"   "type as<T> = T;"   "type as <T> = T"
+        A2: "a?.<b>`t`"   "f?.<A>`x`"   "a?.<T>`x`;"   "class C { async x; }"
+        A3: "class C implements new A {}"   "class A implements new B {}"   "class C implements new I {}"   "interface I extends new A {}"
+   174  Expected "{" but found <token>
+        N: A1=24 A2=69 A3=81   G: A1c=25 A1s=80 A2=69   tsc's emit parses as js: 149   rows with a pin: 0
+        checker codes outside NR: 2500x53 2499x31 1005x25 1174x10 1099x8 1172x6 1175x6 8020x5
+        origins: resc:gct1a-42866/heritage.txtx15 p05:objLitx12 otg:heritagex10 otg:heritage2x10 resc:otg_bottomup_7f3k/deco.txtx9 p04:targsHeritagex8
+        A1: "declare global;"   "f<A & class>(x);"   "x = <b c=<i /> />"   "var v = <Foo a=<b/> />;"
+        A2: "({ m(); });"   "x = { m() }"   "f({ m(); });"   "({ a(): A; });"
+        A3: "class C implements a() {}"   "class C implements A() {}"   "class C implements f() {}"   "class A implements B() {}"
+    24  Cannot use <word> as an identifier here
+        N: A1=17 A2=4 A3=3   G: A1c=17 A1s=3 A2=4   tsc's emit parses as js: 18   rows with a pin: 0
+        checker codes outside NR: 2480x6 1212x3 1359x1
+        origins: p07:importSpecx8 p08:declNamex4 resc:otg_bottomup_7f3k/imp2.txtx4 resc:otg_bottomup_7f3k/decl2.txtx3 otg:modules-specx3 otg:modulesx3
+        A1: "class await {}"   "declare class await {}"   "abstract class await {}"   "import { eval } from \"x\";"
+        A2: "let let = 1"   "let let = 1;"   "for (let let of x) {}"   "async function f() { class await {} }"
+        A3: "declare let let: T;"   "declare const let: T;"   "declare const let: number;"
+    20  Expected identifier but found end of file
+        N: A1=16 A2=4 A3=0   G: A1c=16 A1s=0 A2=4   tsc's emit parses as js: 18   rows with a pin: 0
+        checker codes outside NR: 1123x3 1212x1
+        origins: p02:ifaceNamex8 otg:h15bx8 otg:h15x4 resc:otg_bottomup_7f3k/edi.txtx4 resc:otg_bottomup_7f3k/h15.txtx3 gdt:01-contextual-keywordsx2
+        A1: "interface as {}"   "interface as\n{}"   "interface satisfies {}"   "export interface as {}"
+        A2: "interface"   "declare var"   "export const"   "declare const"
+    42  Expected "{" but found end of file
+        N: A1=15 A2=27 A3=0   G: A1c=15 A1s=0 A2=27   tsc's emit parses as js: 38   rows with a pin: 0
+        checker codes outside NR: 1097x16 1009x9 1213x2
+        origins: resc:otg_bottomup_7f3k/deco.txtx7 resc:gct1a-42866/heritage.txtx7 otg:heritagex5 p06:heritagex4 lex:td/codes-inputsx4 p04:targsHeritagex3
+        A1: "declare global"   "class C implements keyof {}"   "interface I extends keyof {}"   "class C implements keyof  {}"
+        A2: "class C extends {}"   "class A extends {}"   "class C extends  {}"   "class A extends { }"
+    24  Cannot use a declaration in a single-statement context
+        N: A1=14 A2=10 A3=0   G: A1c=14 A1s=0 A2=10   tsc's emit parses as js: 9   rows with a pin: 0
+        checker codes outside NR: 1344x5 1156x4 1101x1 2410x1
+        origins: resc:otg_bottomup_7f3k/enum2.txtx13 resc:otg_bottomup_7f3k/deco2.txtx5 lex:td/codes-inputsx4 p09:otherPosx3 lex:bu/codes-inputs-t2x2 resc:lexhooks/t2.jsonx2
+        A1: "if (a) class C {}"   "if (x) class C {}"   "if (x) class A {}"   "if (a) @d class C {}"
+        A2: "a: let x = 1"   "if (x) let a = 1"   "if (x) let y = 1"   "label: class C {}"
+   620  Expected ">" but found <token>
+        N: A1=13 A2=599 A3=8   G: A1c=13 A1s=8 A2=599   tsc's emit parses as js: 568   rows with a pin: 1
+        checker codes outside NR: 1273x397 1228x101 17019x84 1094x36 1005x15 7006x15 1092x12 7032x12
+        origins: p04:tparamsx344 p01:predx29 p01:targsx20 p01:corex15 gds:predicate/tparamx15 td01:postfix.question-postfix-in-targsx11
+        A1: "let x: A<import(\"x\")<T>>;"   "let v: import('m').A<A?>;"   "let z = a as typeof x << b;"   "let z = a as typeof x.y << b;"
+        A2: "a?.<A?>(x);"   "let x: A<B?>"   "let x: A<B?>;"   "let x: A<A?>;"
+        A3: "class C implements [A<B] {}"   "class C implements (a<B) {}"   "interface I extends [A<B] {}"   "interface I extends (a<B) {}"
+   158  Expected "class" but found <token>
+        N: A1=11 A2=147 A3=0   G: A1c=11 A1s=0 A2=147   tsc's emit parses as js: 148   rows with a pin: 1
+        checker codes outside NR: 1206x107 1497x26 1184x7 7006x5 8038x5 1030x2 1314x2 1540x2
+        origins: p09:otherPosx36 resc:otg_bottomup_7f3k/deco.txtx34 p09:exprx20 otg:decox18 p03:arrowSigx16 p09:classPosx16
+        A1: "@d()! class C {}"   "@d()!\nclass C {}"   "@d!()! class C {}"   "@d()<T>\nclass C {}"
+        A2: "@d let a"   "@d var a"   "@d var x;"   "@d let x;"
+    91  Expected ":" but found <token>
+        N: A1=11 A2=76 A3=4   G: A1c=15 A1s=0 A2=76   tsc's emit parses as js: 89   rows with a pin: 0
+        checker codes outside NR: 1228x16 17019x14 1162x13 1021x8 17020x7 7006x6 1042x5 1264x5
+        origins: td01:cond.true-optional-likex11 p01:condx10 p05:objLitx9 otg:membersx8 otg:misc1x5 p01:jsdocx4
+        A1: "let x: [function];"   "type X = [function];"   "let v = x as [function];"   "function f(a: [function]) {}"
+        A2: "let a!;"   "var a!;"   "let x!;"   "const a!;"
+        A3: "class K { @d p: [function]; }"   "class C { @d x: [function]; }"   "const v = y ? a ? ((b)) : c => d : z;"   "class C { m() { return a ? b => (c) : d => e } }"
+    26  <name> has already been declared
+        N: A1=9 A2=0 A3=17   G: A1c=16 A1s=10 A2=0   tsc's emit parses as js: 20   rows with a pin: 15
+        checker codes outside NR: 2300x10 2339x2 2567x2 7005x2 7034x2 2395x1 2451x1 2813x1
+        origins: pin:transpiler.test.jsx13 lex:bu/codes-inputs-t6x4 resc:lexhooks/t6.jsonx4 gdt:08-tsx-miscx3 p08:enumx2 otg:misc1x2
+        A1: "import a from 'x'; let a;"   "import Foo from \"./x\";\nclass Foo {}"   "import { Foo } from \"./x\";\nenum Foo {}"   "import { Foo } from \"./x\";\nvar Foo = 1;"
+        A3: "let a; let a;"   "enum E { A, A }"   "enum E {} let E;"   "enum E { \"a\", \"a\" }"
+   562  Expected "]" but found <token>
+        N: A1=7 A2=407 A3=148   G: A1c=7 A1s=148 A2=407   tsc's emit parses as js: 562   rows with a pin: 0
+        checker codes outside NR: 1228x98 2371x74 1170x71 2564x52 5086x52 1005x47 1096x44 7006x42
+        origins: p11:formx42 p01:predx29 p02:memberx27 p01:tuplex23 p06:memberx16 resc:gct1a-42866/object-types.txtx15
+        A1: "let x: [import(\"x\")<T>];"   "let x: [typeof import(\"x\")<C>];"   "let x: [import(\"x\", { with: { a: \"b\" } })<T>];"   "type T = A extends [infer U extends B | C ? 1 : 2] ? 1 : 2"
+        A2: "let x: A[B?];"   "type X = A[B?];"   "let x: [A[B?]];"   "let x: A<A[B?]>;"
+        A3: "f<[a: A?]>(x);"   "let x: [a: A?];"   "f<[a: ...A]>(x);"   "let x: [a?: A?];"
+    16  Cannot use "yield" or "await" here.
+        N: A1=7 A2=9 A3=0   G: A1c=7 A1s=0 A2=9   tsc's emit parses as js: 6   rows with a pin: 0
+        checker codes outside NR: 1359x5 1212x4 7006x2 7031x2 2355x1
+        origins: p03:declSigx6 p08:declNamex4 resc:otg_bottomup_7f3k/decl2.txtx4 resc:gte-probe/in11.txtx1 lex:bu/codes-inputs-t3x1 resc:lexhooks/t3.jsonx1
+        A1: "var await = 1;"   "declare var await: T;"   "declare let await: T;"   "declare const await: T;"
+        A2: "function* f(yield) {}"   "function* f(yield: A) {}"   "async function f(await) {}"   "async function f([await]) {}"
+    95  Expected "=>" but found <token>
+        N: A1=6 A2=46 A3=43   G: A1c=7 A1s=42 A2=46   tsc's emit parses as js: 95   rows with a pin: 0
+        checker codes outside NR: 2322x72 2369x29 2371x28 7006x12 17019x7 17020x7 7031x6 8020x6
+        origins: p03:typeSigx72 p05:arrowx20 td05:arrow.params.583x1 td05:arrow.params.584x1 resc:otg_bottomup_7f3k/arrow.txtx1
+        A1: "(): if => x"   "(): if => x;"   "f((): if => x);"   "const v = (): if => x;"
+        A2: "(): * => x;"   "(): ?A => x;"   "(): A? => x;"   "f((): * => x);"
+        A3: "const f = (): ((a = 1) => void) => 0;"   "const f = (): ((a = b) => void) => 0;"   "const f = (): ((a = {}) => void) => 0;"   "const f = (): ((a = b!) => void) => 0;"
+     7  Unexpected end of file
+        N: A1=5 A2=2 A3=0   G: A1c=5 A1s=0 A2=2   tsc's emit parses as js: 7   rows with a pin: 0
+        checker codes outside NR: 17019x2
+        origins: p08:declarex3 resc:otg_bottomup_7f3k/decl2.txtx2 resc:otg_bottomup_7f3k/h15.txtx2 otg:stmtkwx1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes.jsonx1
+        A1: "declare"   "declare!"   "declare as T"   "declare as {}"
+        A2: "x as A?"   "let v = x as A?"
+    37  Syntax Error
+        N: A1=3 A2=33 A3=1   G: A1c=4 A1s=0 A2=33   tsc's emit parses as js: 34   rows with a pin: 0
+        checker codes outside NR: 1098x33 7006x32 1212x4 2311x1
+        origins: gds:function-type/ternaryx31 td05:angle.038x1 td05:angle.stmt.038x1 side:wrappers/edgesx1 gds:contextual/targx1 gds:constructor-type/ternaryx1
+        A1: "await <A>x"   "await <T>a"   "var v = await <A>x;"
+        A2: "f<new <>(a: T) => A>(x);"   "let v = a ? (b): <>() => as => c : d;"   "let v = a ? (b): <>() => is => c : d;"   "let v = a ? (b): <>() => of => c : d;"
+        A3: "f<await<A>(x);"
+    28  Expected "?" but found <token>
+        N: A1=3 A2=25 A3=0   G: A1c=3 A1s=0 A2=25   tsc's emit parses as js: 26   rows with a pin: 0
+        checker codes outside NR: 1173x11 1172x9 1228x3 1176x1 1354x1
+        origins: resc:gct1a-42866/heritage.txtx4 p01:corex2 p02:ifaceHeadx2 otg:heritagex2 gds:conditional/iextendsx2 p06:heritagex2
+        A1: "let x: A extends keyof infer U extends B ? 1 : 2;"   "type X<Q> = Q extends keyof infer T extends A ? B : C;"   "type A = 1; type B = 2; type C = 3; type X<Q> = Q extends keyof infer T extends A ? B : C…
+        A2: "class C implements D extends B {}"   "class C implements I extends B {}"   "class C implements I extends D {}"   "class C implements I extends A {}"
+    41  The constant "x" must be initialized
+        N: A1=2 A2=39 A3=0   G: A1c=2 A1s=0 A2=39   tsc's emit parses as js: 3   rows with a pin: 0
+        checker codes outside NR: 1155x39 2391x5 7005x4 1540x1
+        origins: p10:bodylessx17 p10:topLevelx10 otg:dtsx5 p10:modulex3 lex:td/codes-inputsx2 p10:directivex2
+        A1: "// @ts-ignore\nexport const x: T;"   "// @ts-expect-error\nexport const x: T;"
+        A2: "const x"   "const\nx;"   "const x;"   "const x: T"
+   166  Expected "}" but found <token>
+        N: A1=1 A2=139 A3=26   G: A1c=1 A1s=26 A2=139   tsc's emit parses as js: 149   rows with a pin: 0
+        checker codes outside NR: 1042x74 1162x30 1184x21 18004x20 2371x16 1255x14 1098x6 1186x5
+        origins: p05:objLitx81 otg:membersx26 p03:memberSigx20 resc:otg_bottomup_7f3k/cls.txtx18 gdt:03-arrows-functionsx8 p01:corex3
+        A1: "type X<Q> = Q extends `${infer T extends A | B ? C : D}` ? 1 : 2;"
+        A2: "({ a? });"   "({ a! });"   "f({ a? });"   "f({ a! });"
+        A3: "({ a?: 1 } = b)"   "({ a?: 1 } = b);"   "f({ a?: 1 } = b);"   "const v = { a?: 1 } = b;"
+     4  Unsupported syntax: Legacy HTML comments not implemented yet!
+        N: A1=1 A2=0 A3=3   G: A1c=4 A1s=0 A2=0   tsc's emit parses as js: 4   rows with a pin: 0
+        checker codes outside NR: 2365x3
+        origins: lex:bu/codes-inputs-t5x1 resc:lexhooks/t5.jsonx1 lex:bu/codes-inputs-t7x1 resc:lexhooks/t7.jsonx1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes.jsonx1
+        A1: "f<A<!--B>(x);"
+        A3: "x = 1 <!-- c"   "x = 1 <!-- y"   "x = 1 <!-- c;"
+     1  Expected "from" but found ""x""
+        N: A1=1 A2=0 A3=0   G: A1c=1 A1s=0 A2=0   tsc's emit parses as js: 1   rows with a pin: 0
+        origins: p07:importTypex1 otg:importsx1 resc:otg_bottomup_7f3k/imp2.txtx1
+        A1: "import defer \"x\";"
+     1  JSX entity escape is too big: #x110000
+        N: A1=1 A2=0 A3=0   G: A1c=1 A1s=0 A2=0   tsc's emit parses as js: 0   rows with a pin: 0
+        origins: lex:bu/codes-inputs-t5x1 lex:bu/codes-inputs-t7x1 resc:lexhooks/t5.jsonx1 resc:lexhooks/t7.jsonx1
+        A1: "x = <a>&#x110000;</a>"
+     1  Invalid JSX entity escape: #xzz
+        N: A1=1 A2=0 A3=0   G: A1c=1 A1s=0 A2=0   tsc's emit parses as js: 0   rows with a pin: 0
+        origins: lex:bu/codes-inputs-t5x1 resc:lexhooks/t5.jsonx1
+        A1: "x = <a>&#xzz;</a>"
+     1  The keyword "await" cannot be escaped
+        N: A1=1 A2=0 A3=0   G: A1c=1 A1s=0 A2=0   tsc's emit parses as js: 0   rows with a pin: 0
+        origins: lex:td/codes-inputsx1 resc:lexhooks/inputs-codes.jsonx1
+        A1: "x = \\u0061wait"
+   449  The modifier "in" is not valid here
+        N: A1=0 A2=448 A3=1   G: A1c=1 A1s=0 A2=448   tsc's emit parses as js: 401   rows with a pin: 14
+        checker codes outside NR: 1274x412 1094x36 1030x21 7006x21 1029x15 2637x14 2564x13 1092x12
+        origins: p04:tparamsx256 pin:transpiler.test.jsx14 td03:sigctx.025x13 resc:gct1a-42866/tparams.txtx11 p11:formx9 p01:fnx6
+        A2: "({ m<in T>() {} })"   "type X<in in T> = T"   "class C<in in T> {}"   "type A<in in T> = T"
+        A3: "type as<in T> = T"
+   207  Expected string but found <token>
+        N: A1=0 A2=167 A3=40   G: A1c=0 A1s=40 A2=167   tsc's emit parses as js: 205   rows with a pin: 0
+        checker codes outside NR: 1141x166 2499x17 2500x17 2858x6 2857x1 18058x1
+        origins: p01:importx40 gds:import-type/heritagex17 gds:import-type/iextendsx17 p11:formx15 td01:import.type-argument-numberx11 td01:import.templatex11
+        A2: "import a from 5"   "let x: import(x)"   "let x: import(1)"   "let x: import(x);"
+        A3: "import 'a' with { type: 1 }"   "import \"m\" with { type: 1 };"   "class C implements import() {}"   "class C implements import(x) {}"
+   126  <word> is a reserved word and cannot be used in strict mode
+        N: A1=0 A2=126 A3=0   G: A1c=0 A1s=0 A2=126   tsc's emit parses as js: 8   rows with a pin: 0
+        checker codes outside NR: 1213x120 7006x63 7008x19 1206x8 1097x3 1214x2 1123x1 1175x1
+        origins: p06:paramPropx60 p09:exprx51 p04:targsHeritagex3 p07:exportDeclx3 p03:declSigx2 resc:otg_bottomup_7f3k/pp.txtx1
+        A2: "export let;"   "class C { @let a }"   "export default let;"   "class C { @let x; }"
+    89  Invalid binding pattern
+        N: A1=0 A2=14 A3=75   G: A1c=0 A1s=75 A2=14   tsc's emit parses as js: 77   rows with a pin: 0
+        checker codes outside NR: 2730x75 7006x28 1048x12 2680x8 2526x4 7041x4 1187x2 2369x2
+        origins: p03:arrowSigx34 p05:arrowx25 otg:arrowsx6 resc:otg_bottomup_7f3k/arrow.txtx5 td05:arrow.params.022x1 td05:arrow.params.114x1
+        A2: "(...a: A[] = []) => x;"   "f((...a: A[] = []) => x);"   "var v = (...a: A[] = []) => 1;"   "const f = (...a: A[] = []) => 0;"
+        A3: "(this) => x"   "(this) => x;"   "(this: A) => x"   "(this, a) => x"
+    49  Optional chaining is not allowed in decorator expressions; wrap the expression in parentheses to use it as a decorator
+        N: A1=0 A2=49 A3=0   G: A1c=0 A1s=0 A2=49   tsc's emit parses as js: 49   rows with a pin: 0
+        checker codes outside NR: 1497x44 7008x12 1206x5 7006x5
+        origins: p09:exprx40 otg:decox2 resc:otg_bottomup_7f3k/deco2.txtx2 td09:expr.class.049x1 gdt:07-decorator-metadatax1 td09:expr.class.050x1
+        A2: "@d?.e class C {}"   "@d?.e\nclass C {}"   "@a?.b class A {}"   "@d?.() class C {}"
+    42  The modifier "const" is not valid here
+        N: A1=0 A2=42 A3=0   G: A1c=0 A1s=0 A2=42   tsc's emit parses as js: 42   rows with a pin: 2
+        checker codes outside NR: 1277x42 2637x14
+        origins: p04:tparamsx20 resc:gct1a-42866/tparams.txtx5 p02:aliasHeadx3 gdt:01-contextual-keywordsx2 pin:transpiler.test.jsx2 p02:ifaceHeadx1
+        A2: "type X<const T> = T"   "type A<const T> = T"   "type X<const T> = 1;"   "type X<const T> = T;"
+    35  auto-accessor properties cannot have a method body
+        N: A1=0 A2=35 A3=0   G: A1c=0 A1s=0 A2=35   tsc's emit parses as js: 10   rows with a pin: 0
+        checker codes outside NR: 1275x33 1183x6 2391x3 1024x1 1031x1 1245x1 4112x1
+        origins: p06:modifierx16 p09:memberPosx5 p06:memberx4 gdt:04-classesx1 td06:member.252x1 td06:member.declare.252x1
+        A2: "class C { accessor m() {} }"   "class C { accessor a() {} }"   "class A { accessor x() {} }"   "class C { @d accessor x() {} }"
+    31  A decorator call expression cannot be followed by a property access; wrap the expression in parentheses to use it as a decorator
+        N: A1=0 A2=31 A3=0   G: A1c=0 A1s=0 A2=31   tsc's emit parses as js: 31   rows with a pin: 0
+        checker codes outside NR: 1497x27 7008x7 1206x4 7006x4
+        origins: p09:exprx20 resc:otg_bottomup_7f3k/deco2.txtx2 td09:expr.class.006x1 otg:decox1 td09:expr.member.006x1 td09:expr.param.006x1
+        A2: "@d().e class C {}"   "@d().e\nclass C {}"   "@a().b class A {}"   "@d().e() class C {}"
+    26  Invalid assignment target
+        N: A1=0 A2=5 A3=21   G: A1c=2 A1s=19 A2=5   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 2364x16 2357x3 1100x2 1215x2 1186x1 2405x1 2487x1 2711x1
+        origins: lex:bu/codes-inputs-t6x8 resc:lexhooks/t6.jsonx8 lex:td/codes-inputsx6 resc:lexhooks/inputs-codes2.jsonx6 p05:arrowx5 p08:declNamex5
+        A2: "eval = 1;"   "arguments = 1;"   "[...a = 1] = b;"   "export {}; eval = 1;"
+        A3: "1++"   "1++;"   "1 = 2;"   "f() = 2;"
+    20  "await" can only be used inside an "async" function
+        N: A1=0 A2=20 A3=0   G: A1c=0 A1s=0 A2=20   tsc's emit parses as js: 2   rows with a pin: 7
+        checker codes outside NR: 1308x19 2524x6 1066x1 1206x1 2474x1 2697x1 7006x1
+        origins: pin:transpiler.test.jsx7 lex:td/codes-inputsx2 p05:asx1 p08:namespacex1 p08:enumx1 p09:exprx1
+        A2: "enum E { A = await x }"   "enum E { A = await 1 }"   "enum x { y = await 1 }"   "namespace N { await x }"
+    19  Expected "from" but found <token>
+        N: A1=0 A2=19 A3=0   G: A1c=0 A1s=0 A2=19   tsc's emit parses as js: 19   rows with a pin: 2
+        checker codes outside NR: 1363x13 18058x3 18059x3 2300x2
+        origins: p07:importTypex4 otg:importsx4 gdt:06-imports-exportsx4 resc:otg_bottomup_7f3k/imp2.txtx3 pin:transpiler.test.jsx2 td07:import.004x1
+        A2: "import defer A from \"x\";"   "import defer a from \"m\";"   "import defer a from 'a';"   "import defer { A } from \"x\";"
+    17  A rest argument cannot have a default initializer
+        N: A1=0 A2=17 A3=0   G: A1c=0 A1s=0 A2=17   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1048x17 7031x2
+        origins: p03:arrowSigx6 p05:arrowx5 td05:arrow.params.021x1 td05:arrow.params.113x1 td05:arrow.params.337x1 td05:arrow.params.429x1
+        A2: "(...a = []) => x;"   "x = (...a = 1) => 1"   "f((...a = []) => x);"   "var v = (...a = []) => 1;"
+    16  Expected ";" but found ""x""
+        N: A1=0 A2=16 A3=0   G: A1c=0 A1s=0 A2=16   tsc's emit parses as js: 16   rows with a pin: 0
+        checker codes outside NR: 1274x8 1031x4 1248x4
+        origins: p06:modifierx16
+        A2: "class C { in \"x\": T; }"   "class C { out \"x\": T; }"   "class C { const \"x\": T; }"   "class C { export \"x\": T; }"
+    16  Private name "#e" must be declared in an enclosing class
+        N: A1=0 A2=2 A3=14   G: A1c=14 A1s=0 A2=2   tsc's emit parses as js: 2   rows with a pin: 0
+        checker codes outside NR: 2339x14 7008x6 1206x2 7006x2
+        origins: p09:exprx14 td09:expr.member.068x1 td09:expr.member.069x1 td09:expr.param.068x1 td09:expr.param.069x1 td09:expr.field.068x1
+        A2: "class C { m(@d.#e a) {} }"   "class C { m(@d.#e() a) {} }"
+        A3: "class C { @d.#e a }"   "class C { @d.#e x; }"   "class C { @d.#e\nx; }"   "class C { @d.#e() a }"
+    16  TypeScript does not allow decorators on class constructors
+        N: A1=0 A2=16 A3=0   G: A1c=0 A1s=0 A2=16   tsc's emit parses as js: 16   rows with a pin: 0
+        checker codes outside NR: 1206x16 1183x3
+        origins: p09:memberPosx15 td09:position.115x1 otg:decox1 resc:otg_bottomup_7f3k/deco2.txtx1 gdt:07-decorator-metadatax1 lex:bu/codes-inputs-t3x1
+        A2: "class C { @d constructor() {} }"   "class C { @d \"constructor\"() {} }"   "class A { @dec constructor() {} }"   "@x class C { @d constructor() {} }"
+    15  The constant "a" must be initialized
+        N: A1=0 A2=15 A3=0   G: A1c=0 A1s=0 A2=15   tsc's emit parses as js: 3   rows with a pin: 0
+        checker codes outside NR: 1155x13 7005x3 1228x2 2391x2 2483x2 1315x1
+        origins: p01:corex2 gdt:05-declarationsx2 td05:nonnull.135x1 td10:dts.004x1 td05:nonnull.136x1 td08:declare.228x1
+        A2: "const a"   "const a;"   "const a: A;"   "const a!: A;"
+    15  Expected ":" but found end of file
+        N: A1=0 A2=2 A3=13   G: A1c=13 A1s=0 A2=2   tsc's emit parses as js: 15   rows with a pin: 0
+        checker codes outside NR: 7006x13 1264x2
+        origins: resc:otg_bottomup_7f3k/misc1.txtx9 resc:otg_bottomup_7f3k/arrow.txtx2 p05:varAnnotx1 resc:otg_bottomup_7f3k/last.txtx1 resc:otg_bottomup_7f3k/paren.txtx1 side:wrappers/modifiersx1
+        A2: "let x!"   "var a!"
+        A3: "a ? b => (c) : d => e"   "a ? (b) => (c) : d => e"   "export const v = a ? x = (b) : c => d"   "export const v = a ? b => (c) : d => e"
+    14  Cannot use "declare" with a "using" declaration
+        N: A1=0 A2=14 A3=0   G: A1c=0 A1s=0 A2=14   tsc's emit parses as js: 13   rows with a pin: 5
+        checker codes outside NR: 1491x11 7005x4 1254x3 1545x3 1123x1
+        origins: pin:transpiler.test.jsx5 p08:declarex2 lex:td/codes-inputsx2 p05:varAnnotx1 td08:declare.028x1 gdt:05-declarationsx1
+        A2: "declare using x"   "declare using x: T"   "declare using x: T;"   "declare using a: A;"
+    13  Setter p must have exactly 1 argument (there are 2)
+        N: A1=0 A2=13 A3=0   G: A1c=0 A1s=0 A2=13   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1049x12 1206x4 7032x4 7006x3 1213x2 1016x1
+        origins: p03:declSigx8 p09:paramPosx4 p06:paramPropx2
+        A2: "class C { set p(a, b) {} }"   "class C { set p(a: A, b: B) {} }"   "class C { set p(public\n, y) {} }"   "class C { set p(a?: A, b: B) {} }"
+    13  Class constructor cannot be a getter
+        N: A1=0 A2=13 A3=0   G: A1c=0 A1s=0 A2=13   tsc's emit parses as js: 3   rows with a pin: 0
+        checker codes outside NR: 1341x13 2378x5 1183x3
+        origins: p06:modifierx4 p06:memberx4 lex:td/codes-inputsx2 otg:broad3x1 td06:member.089x1 td06:member.expr.089x1
+        A2: "class C { get constructor() {} }"   "class A { get constructor() {} }"   "declare class C { get constructor() {} }"   "abstract class C { get constructor() {} }"
+    13  A return statement cannot be used here
+        N: A1=0 A2=13 A3=0   G: A1c=0 A1s=0 A2=13   tsc's emit parses as js: 9   rows with a pin: 4
+        checker codes outside NR: 1108x5 1036x4 18041x4 1540x1
+        origins: p06:memberx4 pin:transpiler.test.jsx4 p08:declarex1 otg:broad1x1 p08:namespacex1 td08:namespace.051x1
+        A2: "namespace N { return }"   "module x { return 1; }"   "namespace x { return; }"   "namespace x { return 1; }"
+    13  Expected "=" but found <token>
+        N: A1=0 A2=13 A3=0   G: A1c=0 A1s=0 A2=13   tsc's emit parses as js: 13   rows with a pin: 2
+        checker codes outside NR: 1147x7 1191x6
+        origins: p07:importEqualsx3 pin:transpiler.test.jsx2 p07:importTypex1 otg:importsx1 p08:namespacex1 td07:export.304x1
+        A2: "export import A from \"x\";"   "export import a from 'm';"   "export import A from 'a';"   "export import type from \"x\";"
+    11  Declarations with the name "arguments" cannot be used in strict mode
+        N: A1=0 A2=11 A3=0   G: A1c=0 A1s=0 A2=11   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1210x11 7006x8 7031x3 7032x2
+        origins: p03:declSigx6 p06:paramPropx5
+        A2: "class C { m(arguments) {} }"   "class C { m({ arguments }) {} }"   "class C { set p(arguments) {} }"   "class C { set p({ arguments }) {} }"
+    11  Declarations with the name "eval" cannot be used in strict mode
+        N: A1=0 A2=11 A3=0   G: A1c=0 A1s=0 A2=11   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1210x11 7006x8 7031x3 7032x2
+        origins: p03:declSigx6 p06:paramPropx5
+        A2: "class C { m(eval) {} }"   "class C { m({ eval }) {} }"   "class C { set p(eval) {} }"   "class C { set p({ eval }) {} }"
+    11  Class constructor cannot be a setter
+        N: A1=0 A2=11 A3=0   G: A1c=0 A1s=0 A2=11   tsc's emit parses as js: 3   rows with a pin: 0
+        checker codes outside NR: 1341x11 7032x11 7006x7 1049x4 1183x3
+        origins: p06:modifierx4 p06:memberx4 td06:member.090x1 td06:member.expr.090x1 td06:member.declare.090x1
+        A2: "class C { set constructor() {} }"   "class C { set constructor(v) {} }"   "declare class C { set constructor() {} }"   "abstract class C { set constructor() {} }"
+    11  Expected ";" but found ""m""
+        N: A1=0 A2=11 A3=0   G: A1c=0 A1s=0 A2=11   tsc's emit parses as js: 5   rows with a pin: 0
+        checker codes outside NR: 1035x10 1155x3 1234x1 2668x1 2670x1
+        origins: p08:namespacex3 otg:dtsx3 otg:stmtkwx3 p10:topLevelx2 p10:modulex2 p08:declarex1
+        A2: "module \"m\""   "module \"m\";"   "module \"m\" {}"   "module \"m\"\n{}"
+    10  Cannot use "this" here
+        N: A1=0 A2=3 A3=7   G: A1c=0 A1s=7 A2=3   tsc's emit parses as js: 10   rows with a pin: 7
+        checker codes outside NR: 2683x10 2331x5 2332x5 1066x1 1254x1 18033x1
+        origins: pin:transpiler.test.jsx7 resc:otg_bottomup_7f3k/decl2.txtx2 p08:namespacex1 p08:enumx1 td08:enum.059x1 otg:misc1x1
+        A2: "enum x { y = () => this }"   "declare enum x { y = this }"   "declare namespace x { export const y = this; }"
+        A3: "enum E { A = this }"   "enum x { y = this }"   "namespace N { this.x }"   "namespace N { this.a }"
+    10  Expected identifier but found ""d""
+        N: A1=0 A2=10 A3=0   G: A1c=0 A1s=0 A2=10   tsc's emit parses as js: 10   rows with a pin: 0
+        checker codes outside NR: 1497x9 7008x2 1206x1 7006x1
+        origins: p09:exprx10
+        A2: "@\"d\" class C {}"   "@\"d\"\nclass C {}"   "class C { @\"d\" x; }"   "class C { @\"d\"\nx; }"
+     9  Cannot use "await" here
+        N: A1=0 A2=4 A3=5   G: A1c=5 A1s=0 A2=4   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 7031x6 18004x3 1359x1
+        origins: p03:arrowSigx6 p05:objLitx3
+        A2: "({ async, await });"   "f({ async, await });"   "const v = { async, await };"   "const f = async ({ await }) => 0;"
+        A3: "const f = ({ await }) => 0;"   "const f = <T,>({ await }) => 0;"   "const f = ({ await }): void => {};"   "const f = a ? ({ await }) => 0 : 1;"
+     9  Cannot use "yield" outside a generator function
+        N: A1=0 A2=9 A3=0   G: A1c=0 A1s=0 A2=9   tsc's emit parses as js: 1   rows with a pin: 1
+        checker codes outside NR: 1163x8 1206x1 7006x1 7008x1 7057x1
+        origins: p05:nonNullx3 td09:expr.class.043x1 td09:expr.member.043x1 td09:expr.field.043x1 td09:expr.param.043x1 lex:bu/codes-inputs-t6x1
+        A2: "yield x!;"   "f(yield x!);"   "const v = yield x!;"   "@(yield d) class C {}"
+     9  Class constructor cannot be an async function
+        N: A1=0 A2=9 A3=0   G: A1c=0 A1s=0 A2=9   tsc's emit parses as js: 5   rows with a pin: 0
+        checker codes outside NR: 1089x7 2377x3 1040x2 1183x2
+        origins: p06:modifierx4 p06:memberx4 otg:broad3x1 td06:member.088x1 td06:member.expr.088x1 td06:member.declare.088x1
+        A2: "class C { async constructor() {} }"   "class A { async constructor() {} }"   "declare class C { async constructor() {} }"   "abstract class C { async constructor() {} }"
+     8  Expected ";" but found ""s""
+        N: A1=0 A2=8 A3=0   G: A1c=0 A1s=0 A2=8   tsc's emit parses as js: 8   rows with a pin: 0
+        checker codes outside NR: 1005x8
+        origins: p01:opx6 p11:formx2
+        A2: "f<unique \"s\">(x);"   "let x: unique \"s\";"   "type X = unique \"s\";"   "const v = x as unique \"s\";"
+     8  Setter m must have exactly 1 argument (there are 0)
+        N: A1=0 A2=8 A3=0   G: A1c=0 A1s=0 A2=8   tsc's emit parses as js: 2   rows with a pin: 0
+        checker codes outside NR: 1049x8 7032x8 1183x2
+        origins: p06:modifierx8
+        A2: "class C { set m() {} }"   "class C { set\nm() {} }"   "declare class C { set m() {} }"   "declare class C { set\nm() {} }"
+     8  Class constructor cannot be a generator function
+        N: A1=0 A2=8 A3=0   G: A1c=0 A1s=0 A2=8   tsc's emit parses as js: 2   rows with a pin: 0
+        checker codes outside NR: 1368x8 1183x2 1221x2
+        origins: p06:memberx4 td06:member.087x1 td06:member.expr.087x1 td06:member.declare.087x1 lex:bu/codes-inputs-t3x1 lex:td/codes-inputsx1
+        A2: "class C { *constructor() {} }"   "class A { *constructor() {} }"   "declare class C { *constructor() {} }"   "const c = class { *constructor() {} };"
+     8  Invalid method name "#constructor"
+        N: A1=0 A2=8 A3=0   G: A1c=0 A1s=0 A2=8   tsc's emit parses as js: 2   rows with a pin: 0
+        checker codes outside NR: 18012x8 1183x2
+        origins: p06:memberx4 otg:broad3x1 td06:member.086x1 td06:member.expr.086x1 td06:member.declare.086x1 lex:bu/codes-inputs-t3x1
+        A2: "class C { #constructor() {} }"   "class A { #constructor() {} }"   "declare class C { #constructor() {} }"   "const c = class { #constructor() {} };"
+     7  Cannot use "declare" with an "await using" declaration
+        N: A1=0 A2=7 A3=0   G: A1c=0 A1s=0 A2=7   tsc's emit parses as js: 6   rows with a pin: 4
+        checker codes outside NR: 1495x6 7005x3 1254x2 1123x1 1546x1 2669x1
+        origins: pin:transpiler.test.jsx4 p08:declarex1 td08:declare.030x1 gdt:05-declarationsx1 lex:bu/codes-inputs-t3x1 resc:lexhooks/t3.jsonx1
+        A2: "declare await using x"   "declare await using x: T;"   "declare await using a: A;"   "declare await using x = y;"
+     7  Private name "#f" must be declared in an enclosing class
+        N: A1=0 A2=1 A3=6   G: A1c=6 A1s=0 A2=1   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 2339x6 7008x2 1206x1 7006x1
+        origins: p09:exprx7
+        A2: "class C { m(@d.e.#f a) {} }"
+        A3: "class C { @d.e.#f x; }"   "class C { @d.e.#f\nx; }"   "class C { @d.e.#f m() {} }"   "class C { @d.e.#f [x]() {} }"
+     6  Setter x must have exactly 1 argument (there are 0)
+        N: A1=0 A2=5 A3=1   G: A1c=0 A1s=1 A2=5   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1049x5 7032x5 1183x1 2784x1
+        origins: p06:memberx4 resc:otg_bottomup_7f3k/arrow.txtx1 lex:bu/codes-inputs-t3x1 resc:lexhooks/t3.jsonx1
+        A2: "class C { set x() {} }"   "class A { set x() {} }"   "declare class C { set x() {} }"   "const c = class { set x() {} };"
+        A3: "class C { set x(this: C) {} }"
+     6  Getter a must have zero arguments
+        N: A1=0 A2=6 A3=0   G: A1c=0 A1s=0 A2=6   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1054x6 7006x6 2378x2 1049x1 1183x1 7032x1
+        origins: lex:td/codes-inputsx2 td06:member.108x1 td06:member.expr.108x1 td06:member.declare.108x1 otg:membersx1 resc:lexhooks/inputs-codes.jsonx1
+        A2: "x = {get a(b) {}}"   "x = { get a(b) {} , set c() {} }"   "var o = { get a(x) { return 1 } };"   "var v = class {\n  get a(v) { return 1 }\n};"
+     5  Setter p must have exactly 1 argument (there are 0)
+        N: A1=0 A2=1 A3=4   G: A1c=0 A1s=4 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 2784x4 7032x2 1049x1 2502x1 7006x1
+        origins: p03:declSigx5
+        A2: "class C { set p() {} }"
+        A3: "class C { set p(this) {} }"   "class C { set p(this: A) {} }"   "class C { set p(this: this) {} }"   "class C { set p(this: typeof this) {} }"
+     5  Getter x must have zero arguments
+        N: A1=0 A2=5 A3=0   G: A1c=0 A1s=0 A2=5   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1054x5 7006x5 1183x1 2378x1
+        origins: p06:memberx4 lex:bu/codes-inputs-t3x1 resc:lexhooks/t3.jsonx1
+        A2: "class A { get x(a) {} }"   "class C { get x(a) { return 1 } }"   "declare class C { get x(a) { return 1 } }"   "const c = class { get x(a) { return 1 } };"
+     5  Setter a must have exactly 1 argument (there are 0)
+        N: A1=0 A2=5 A3=0   G: A1c=0 A1s=0 A2=5   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1049x5 7032x5 1183x1
+        origins: td06:member.109x1 td06:member.expr.109x1 td06:member.declare.109x1 otg:membersx1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes.jsonx1
+        A2: "x = {set a() {}}"   "var o = { set a() {} };"   "var v = class {\n  set a() {}\n};"   "abstract class C extends B {\n  set a() {}\n}"
+     5  Template literals cannot have an optional chain as a tag
+        N: A1=0 A2=5 A3=0   G: A1c=0 A1s=0 A2=5   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1358x5
+        origins: lex:bu/codes-inputs-t3x2 resc:lexhooks/t3.jsonx2 lex:td/codes-inputsx2 resc:lexhooks/inputs-codes2.jsonx2 otg:broad2x1
+        A2: "a?.b<T>`x`;"   "x = a?.b`c`"   "x = a?.b`t`"   "x = a?.[0]`t`"
+     4  The declaration "x" must be initialized
+        N: A1=0 A2=4 A3=0   G: A1c=0 A1s=0 A2=4   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1155x4 7005x1
+        origins: p05:varAnnotx1 p10:topLevelx1 otg:dtsx1 lex:bu/codes-inputs-t6x1 resc:lexhooks/t6.jsonx1
+        A2: "using x;"   "using x: T"   "using x: T;"   "using x: number;"
+     4  Setter set must have exactly 1 argument (there are 0)
+        N: A1=0 A2=4 A3=0   G: A1c=0 A1s=0 A2=4   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1049x4 7032x4 1183x1
+        origins: p06:modifierx4
+        A2: "class C { set set() {} }"   "declare class C { set set() {} }"   "abstract class C { set set() {} }"   "const c = class { set set() {} };"
+     4  Setter x must have exactly 1 argument (there are 2)
+        N: A1=0 A2=4 A3=0   G: A1c=0 A1s=0 A2=4   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1049x4 7006x4 7032x4 1183x1
+        origins: p06:memberx4
+        A2: "class C { set x(a, b) {} }"   "declare class C { set x(a, b) {} }"   "const c = class { set x(a, b) {} };"   "abstract class C extends B { set x(a, b) {} }"
+     4  Expected "meta" but found <token>
+        N: A1=0 A2=3 A3=1   G: A1c=1 A1s=0 A2=3   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 17012x2 2711x1 18061x1
+        origins: p07:importTypex3 otg:importsx2 resc:otg_bottomup_7f3k/imp2.txtx1 lex:bu/codes-inputs-t4x1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes.jsonx1
+        A2: "import.x;"   "x = import.foo"   "import.source(\"x\");"
+        A3: "import.defer(\"x\");"
+     4  This constant must be initialized
+        N: A1=0 A2=4 A3=0   G: A1c=0 A1s=0 A2=4   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1182x4
+        origins: p10:topLevelx2 p08:declNamex1 td10:dts.023x1
+        A2: "const\n{}"   "export const [a]: T;"   "export const { a }: T;"   "export const { a, b }: A;"
+     4  Invalid field name
+        N: A1=0 A2=3 A3=1   G: A1c=1 A1s=0 A2=3   tsc's emit parses as js: 4   rows with a pin: 0
+        checker codes outside NR: 18006x3 2699x1
+        origins: td06:member.084x1 td06:member.expr.084x1 td06:member.declare.084x1 otg:broad3x1
+        A2: "var v = class {\n  \"constructor\": A\n};"   "abstract class C extends B {\n  \"constructor\": A\n}"   "declare abstract class C extends B {\n  \"constructor\": A\n}"
+        A3: "class C { static prototype = 1 }"
+     4  Invalid field name "#constructor"
+        N: A1=0 A2=4 A3=0   G: A1c=0 A1s=0 A2=4   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 18012x4 7008x2
+        origins: td06:member.085x1 td06:member.expr.085x1 td06:member.declare.085x1 lex:bu/codes-inputs-t3x1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1
+        A2: "class A { #constructor = 1 }"   "var v = class {\n  #constructor\n};"   "abstract class C extends B {\n  #constructor\n}"   "declare abstract class C extends B {\n  #constructor\n}"
+     4  Setter a must have exactly 1 argument (there are 2)
+        N: A1=0 A2=4 A3=0   G: A1c=0 A1s=0 A2=4   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1049x4 7006x4 7032x4 1183x1
+        origins: td06:member.110x1 td06:member.expr.110x1 td06:member.declare.110x1 otg:membersx1
+        A2: "var o = { set a(x, y) {} };"   "var v = class {\n  set a(v, w) {}\n};"   "abstract class C extends B {\n  set a(v, w) {}\n}"   "declare abstract class C extends B {\n  set a(v, w) {}\n}"
+     4  Expected identifier but found ""s""
+        N: A1=0 A2=4 A3=0   G: A1c=0 A1s=0 A2=4   tsc's emit parses as js: 4   rows with a pin: 0
+        checker codes outside NR: 1497x3 1206x1 7006x1 7008x1
+        origins: td09:expr.class.078x1 otg:decox1 td09:expr.member.078x1 td09:expr.field.078x1 td09:expr.param.078x1
+        A2: "@\"s\" class C {}"   "class C { @\"s\" a }"   "class C { @\"s\" m() {} }"   "class C { m(@\"s\" a) {} }"
+     4  Expected "in" but found <token>
+        N: A1=0 A2=4 A3=0   G: A1c=0 A1s=0 A2=4   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1451x4 7008x3
+        origins: lex:td/codes-inputsx3 resc:lexhooks/inputs-codes2.jsonx3 lex:bu/codes-inputs-t2x1 resc:lexhooks/t2.jsonx1
+        A2: "class A { #a; m() { #a } }"   "class A { #x; m() { #x; } }"   "class A { #a; m() { #a + 1 } }"   "class A { constructor() { #a } }"
+     4  Expected "?" but found end of file
+        N: A1=0 A2=4 A3=0   G: A1c=0 A1s=0 A2=4   tsc's emit parses as js: 2   rows with a pin: 0
+        checker codes outside NR: 1172x2 1173x2
+        origins: gds:conditional/heritagex2 gds:conditional/iextendsx2
+        A2: "class C implements A extends {}"   "interface I extends A extends {}"   "class C implements A extends  {}"   "interface I extends A extends  {}"
+     3  Expected ")" but found ""s""
+        N: A1=0 A2=3 A3=0   G: A1c=0 A1s=0 A2=3   tsc's emit parses as js: 3   rows with a pin: 0
+        checker codes outside NR: 1005x3
+        origins: p01:opx2 p11:formx1
+        A2: "function f(a: unique \"s\") {}"   "const f = (a: unique \"s\") => 0;"   "class C { @d m(a: unique \"s\") {} }"
+     3  Cannot use "break" here
+        N: A1=0 A2=3 A3=0   G: A1c=0 A1s=0 A2=3   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1105x3
+        origins: p08:namespacex1 td08:namespace.054x1 p10:topLevelx1 td10:dts.233x1 lex:bu/codes-inputs-t6x1 resc:lexhooks/t6.jsonx1
+        A2: "break"   "break;"   "namespace N { break }"
+     3  The keyword "await" cannot be used here
+        N: A1=0 A2=2 A3=1   G: A1c=1 A1s=0 A2=2   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 18037x2 1036x1 2524x1
+        origins: td06:member.179x1 td06:member.declare.179x1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1
+        A2: "abstract class C extends B {\n  static { await a }\n}"   "declare abstract class C extends B {\n  static { await a }\n}"
+        A3: "async function f(a = await 1) {}"
+     3  for-of loop variables cannot have an initializer
+        N: A1=0 A2=3 A3=0   G: A1c=0 A1s=0 A2=3   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1190x3
+        origins: otg:misc1x2 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes.jsonx1
+        A2: "for (let x = 1 of y) {}"   "for (let a = 1 of []) {}"   "for (let a: any = 1 of []) {}"
+     3  Expected number but found <token>
+        N: A1=0 A2=3 A3=0   G: A1c=0 A1s=0 A2=3   tsc's emit parses as js: 3   rows with a pin: 0
+        checker codes outside NR: 1110x3
+        origins: gds:literal/tparamx2 resc:gct1a-42866/tparams2.txtx1
+        A2: "type A<T extends -a> = T"   "function f<U extends -a>() {}"   "function f<U extends -true>() {}"
+     3  For loop initializers cannot start with "async of"
+        N: A1=0 A2=3 A3=0   G: A1c=0 A1s=0 A2=3   tsc's emit parses as js: 0   rows with a pin: 2
+        checker codes outside NR: 1106x3
+        origins: pin:transpiler.test.jsx2 lex:bu/codes-inputs-t2x1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes.jsonx1 resc:lexhooks/t2.jsonx1
+        A2: "for (async of x) {}"   "for (async of [7]);"   "for (async\nof [7]);"
+     2  The constant "y" must be initialized
+        N: A1=0 A2=2 A3=0   G: A1c=0 A1s=0 A2=2   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1155x2 7005x2
+        origins: p05:asx2
+        A2: "const v = x as T, y;"   "const v = x satisfies T, y;"
+     2  Expected identifier but found ""x""
+        N: A1=0 A2=2 A3=0   G: A1c=0 A1s=0 A2=2   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1147x1 1191x1
+        origins: p07:importEqualsx2 otg:importsx1
+        A2: "export import \"x\";"   "namespace N { import \"x\"; }"
+     2  Cannot use "continue" here
+        N: A1=0 A2=2 A3=0   G: A1c=0 A1s=0 A2=2   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1104x2
+        origins: p10:topLevelx1 td10:dts.234x1 lex:bu/codes-inputs-t6x1 resc:lexhooks/t6.jsonx1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1
+        A2: "continue"   "continue;"
+     2  "a" cannot be bound multiple times in the same parameter list
+        N: A1=0 A2=0 A3=2   G: A1c=0 A1s=2 A2=0   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 2300x2 7006x1
+        origins: otg:arrows2x1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1
+        A3: "var f = (a: any, a: any) => 1;"   "function f(a, a) { 'use strict' }"
+     2  Invalid static method name "prototype"
+        N: A1=0 A2=0 A3=2   G: A1c=0 A1s=2 A2=0   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 2300x2 2699x2
+        origins: otg:broad3x1 lex:bu/codes-inputs-t3x1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1 resc:lexhooks/t3.jsonx1
+        A3: "class C { static prototype() {} }"   "class A { static prototype() {} }"
+     2  Expected ";" but found ""foo""
+        N: A1=0 A2=2 A3=0   G: A1c=0 A1s=0 A2=2   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1035x2
+        origins: resc:otg_bottomup_7f3k/h15.txtx2
+        A2: "module \"foo\";"   "module \"foo\" {}"
+     2  Cannot use "await" outside an async function
+        N: A1=0 A2=2 A3=0   G: A1c=0 A1s=0 A2=2   tsc's emit parses as js: 0   rows with a pin: 1
+        checker codes outside NR: 1103x2
+        origins: lex:bu/codes-inputs-t2x1 resc:lexhooks/t2.jsonx1 pin:transpiler.test.jsx1
+        A2: "namespace x { for await (const y of []); }"   "function f(){ for await (const x of y) {} }"
+     2  for-of loops must have a single declaration
+        N: A1=0 A2=2 A3=0   G: A1c=0 A1s=0 A2=2   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1188x2
+        origins: lex:bu/codes-inputs-t2x1 resc:lexhooks/t2.jsonx1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1
+        A2: "for (let x, z of y) {}"   "for (let x, y of z) {}"
+     2  There is no containing label named "foo"
+        N: A1=0 A2=2 A3=0   G: A1c=0 A1s=0 A2=2   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1116x2
+        origins: lex:bu/codes-inputs-t2x1 resc:lexhooks/t2.jsonx1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes.jsonx1
+        A2: "break foo"   "break foo;"
+     2  Cannot specify the "__proto__" property more than once per object
+        N: A1=0 A2=2 A3=0   G: A1c=0 A1s=0 A2=2   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1117x2
+        origins: lex:bu/codes-inputs-t6x1 resc:lexhooks/t6.jsonx1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1
+        A2: "x = { __proto__: 1, __proto__: 2 }"   "x = {a: 1, a: 2, __proto__: 1, __proto__: 2}"
+     1  Expected ">" but found ""s""
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1005x1
+        origins: p01:opx1
+        A2: "let x: A<unique \"s\">;"
+     1  Expected "]" but found ""s""
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1005x1
+        origins: p01:opx1
+        A2: "let x: [unique \"s\"];"
+     1  Setter p must have exactly 1 argument (there are 5)
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1049x1 1213x1 7006x1 7032x1
+        origins: p06:paramPropx1
+        A2: "class C { set p(public, private, protected, readonly, override) {} }"
+     1  Cannot use "export" with a "using" declaration
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1491x1
+        origins: p07:exportDeclx1
+        A2: "export declare using x: T;"
+     1  Expected "function" but found <token>
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1042x1
+        origins: p07:exportDeclx1 otg:broad1x1
+        A2: "export async class C {}"
+     1  Expected identifier but found ""y""
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1147x1
+        origins: p08:namespacex1
+        A2: "namespace N { import \"y\" }"
+     1  Setter p must have exactly 1 argument (there are 3)
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1049x1 1206x1
+        origins: p09:paramPosx1
+        A2: "class C { set p(a: A, b: B, @d c: C) {} }"
+     1  Getter p must have zero arguments
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1054x1 1206x1 7006x1
+        origins: otg:decox1
+        A2: "class C { get p(@d v) { return 1 } }"
+     1  Expected identifier but found ""a""
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 1497x1
+        origins: resc:otg_bottomup_7f3k/deco2.txtx1
+        A2: "@\"a\" class C {}"
+     1  Multiple default clauses are not allowed
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1113x1
+        origins: lex:bu/codes-inputs-t2x1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1 resc:lexhooks/t2.jsonx1
+        A2: "switch (x) { default: default: }"
+     1  for-in loop variables cannot have an initializer
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1189x1
+        origins: lex:bu/codes-inputs-t2x1 resc:lexhooks/t2.jsonx1
+        A2: "for (let x = 1 in y) {}"
+     1  An generator function expression cannot be named "yield"
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1212x1
+        origins: lex:bu/codes-inputs-t3x1 resc:lexhooks/t3.jsonx1
+        A2: "x = function* yield() {}"
+     1  Duplicate flag "g" in regular expression
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1500x1
+        origins: lex:bu/codes-inputs-t5x1 lex:td/codes-inputsx1 resc:lexhooks/inputs-codes.jsonx1 resc:lexhooks/t5.jsonx1
+        A2: "x = /a/gg"
+     1  Invalid flag "z" in regular expression
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1499x1
+        origins: lex:bu/codes-inputs-t5x1 resc:lexhooks/t5.jsonx1
+        A2: "x = /a/z"
+     1  An async function cannot be named "await"
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1359x1 2697x1
+        origins: lex:bu/codes-inputs-t6x1 resc:lexhooks/t6.jsonx1
+        A2: "x = async function await() {}"
+     1  Private name "#x" must be declared in an enclosing class
+        N: A1=0 A2=0 A3=1   G: A1c=1 A1s=0 A2=0   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 2339x1
+        origins: lex:bu/codes-inputs-t6x1 resc:lexhooks/t6.jsonx1
+        A3: "class A { m() { this.#x } }"
+     1  "#x" has already been declared
+        N: A1=0 A2=0 A3=1   G: A1c=0 A1s=1 A2=0   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 2300x1 7008x1
+        origins: lex:bu/codes-inputs-t6x1 resc:lexhooks/t6.jsonx1
+        A3: "class A { #x; #x; }"
+     1  Multiple exports with the same name "a"
+        N: A1=0 A2=0 A3=1   G: A1c=1 A1s=0 A2=0   tsc's emit parses as js: 1   rows with a pin: 0
+        checker codes outside NR: 2323x1 2484x1
+        origins: lex:bu/codes-inputs-t6x1 resc:lexhooks/t6.jsonx1
+        A3: "export const a = 1; export { a };"
+     1  Invalid flag "q" in regular expression
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1499x1
+        origins: lex:td/codes-inputsx1 resc:lexhooks/inputs-codes.jsonx1
+        A2: "x = /a/q"
+     1  The keyword "yield" cannot be used here
+        N: A1=0 A2=0 A3=1   G: A1c=1 A1s=0 A2=0   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 2523x1 7057x1
+        origins: lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1
+        A3: "function* g(a = yield 1) {}"
+     1  Deleting the private name "#a" is forbidden
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 7008x1 18011x1
+        origins: lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1
+        A2: "class A { #a; m() { delete this.#a } }"
+     1  The constant "z" must be initialized
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1155x1 7005x1
+        origins: lex:td/codes-inputsx1 resc:lexhooks/inputs-codes2.jsonx1
+        A2: "let x, y: number\nconst z"
+     1  The constant "c" must be initialized
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 0
+        checker codes outside NR: 1155x1 1315x1 2391x1 2564x1
+        origins: side:erased/tdx1
+        A2: "export function f(a: string): void;\nexport const c: number;\nexport class K { m(): void;…
+     1  Expected "class" but found end of file
+        N: A1=0 A2=1 A3=0   G: A1c=0 A1s=0 A2=1   tsc's emit parses as js: 0   rows with a pin: 1
+        checker codes outside NR: 1206x1
+        origins: pin:transpiler.test.jsx1
+        A2: "@dec export default abstract = 1"
